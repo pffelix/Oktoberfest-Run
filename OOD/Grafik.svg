@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
+<svg width="30cm" height="19cm" viewBox="164 91 592 365" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g>
+    <rect style="fill: #8790f3" x="166.3" y="92.6" width="232.35" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 3; stroke: #000000" x="166.3" y="92.6" width="232.35" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="282.475" y="111.6">render_player : QPixmap</text>
+    <rect style="fill: #8790f3" x="166.3" y="120.6" width="232.35" height="116"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 3; stroke: #000000" x="166.3" y="120.6" width="232.35" height="116"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="169.8" y="134.6">-position: struct</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="169.8" y="150.6">-attacks: bool</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="169.8" y="166.6">-is_dead: bool</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="169.8" y="182.6">-gets_damage: bool</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="169.8" y="198.6">-collects_powerup: bool</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="169.8" y="214.6">-jumps: bool</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="169.8" y="230.6">-runs: bool</text>
+    <rect style="fill: #8790f3" x="166.3" y="236.6" width="232.35" height="8"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 3; stroke: #000000" x="166.3" y="236.6" width="232.35" height="8"/>
+  </g>
+  <g>
+    <rect style="fill: #8790f3" x="471.9" y="92.6" width="236.1" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 3; stroke: #000000" x="471.9" y="92.6" width="236.1" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="589.95" y="111.6">render_enemy : QPixmap</text>
+    <rect style="fill: #8790f3" x="471.9" y="120.6" width="236.1" height="100"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 3; stroke: #000000" x="471.9" y="120.6" width="236.1" height="100"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="475.4" y="134.6">-position: struct</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="475.4" y="150.6">-attacks: bool</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="475.4" y="166.6">-is_dead: bool</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="475.4" y="182.6">-gets_damage: bool</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="475.4" y="198.6">-runs: bool</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="475.4" y="214.6">-enemy_Type: int</text>
+    <rect style="fill: #8790f3" x="471.9" y="220.6" width="236.1" height="8"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 3; stroke: #000000" x="471.9" y="220.6" width="236.1" height="8"/>
+  </g>
+  <g>
+    <rect style="fill: #8790f3" x="166.3" y="268.6" width="252.15" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 3; stroke: #000000" x="166.3" y="268.6" width="252.15" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="292.375" y="287.6">render_obstacle : QPixmap</text>
+    <rect style="fill: #8790f3" x="166.3" y="296.6" width="252.15" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 3; stroke: #000000" x="166.3" y="296.6" width="252.15" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="169.8" y="310.6">-position: struct</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="169.8" y="326.6">-obstacle_Type: int</text>
+    <rect style="fill: #8790f3" x="166.3" y="332.6" width="252.15" height="8"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 3; stroke: #000000" x="166.3" y="332.6" width="252.15" height="8"/>
+  </g>
+  <g>
+    <rect style="fill: #8790f3" x="471.9" y="268.6" width="232.95" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 3; stroke: #000000" x="471.9" y="268.6" width="232.95" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="588.375" y="287.6">render_attack : QPixmap</text>
+    <rect style="fill: #8790f3" x="471.9" y="296.6" width="232.95" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 3; stroke: #000000" x="471.9" y="296.6" width="232.95" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="475.4" y="310.6">-position: struct</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="475.4" y="326.6">-attack_Type: int</text>
+    <rect style="fill: #8790f3" x="471.9" y="332.6" width="232.95" height="8"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 3; stroke: #000000" x="471.9" y="332.6" width="232.95" height="8"/>
+  </g>
+  <g>
+    <rect style="fill: #8790f3" x="166.3" y="366.6" width="286" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 3; stroke: #000000" x="166.3" y="366.6" width="286" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="309.3" y="385.6">render_gui_element : QPixmap</text>
+    <rect style="fill: #8790f3" x="166.3" y="394.6" width="286" height="52"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 3; stroke: #000000" x="166.3" y="394.6" width="286" height="52"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="169.8" y="408.6">-position: struct</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="169.8" y="424.6">-type: int</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="169.8" y="440.6">-status: int</text>
+    <rect style="fill: #8790f3" x="166.3" y="446.6" width="286" height="8"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 3; stroke: #000000" x="166.3" y="446.6" width="286" height="8"/>
+  </g>
+  <g>
+    <rect style="fill: #8790f3" x="471.9" y="366.6" width="282.9" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 3; stroke: #000000" x="471.9" y="366.6" width="282.9" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="613.35" y="385.6">render_background : QPixmap</text>
+    <rect style="fill: #8790f3" x="471.9" y="394.6" width="282.9" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 3; stroke: #000000" x="471.9" y="394.6" width="282.9" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="475.4" y="408.6">-level: int</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="475.4" y="424.6">-is_moving: bool</text>
+    <rect style="fill: #8790f3" x="471.9" y="430.6" width="282.9" height="8"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 3; stroke: #000000" x="471.9" y="430.6" width="282.9" height="8"/>
+  </g>
+</svg>
