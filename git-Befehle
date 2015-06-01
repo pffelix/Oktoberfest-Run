@@ -1,0 +1,25 @@
+ 1368  git init
+ 1369  git remote add origin https://gitlab.ldv.ei.tum.de/cpp-gk15/gruppe1_hauptprojekt.git
+ 1370  git status
+ 1371  git pull
+ 1372  git commit -m "Leerer Commit"
+ 1373  git add *
+ 1374  git push -u origin master
+ 1375  cd ..
+ 1376  cd gruppe1_hauptprojekt/
+ 1377  ls
+ 1378  git add gameEntwurf.pdf
+ 1379  git commit -m "Entwurf auf Zetteln in pdf-Form hinzugefügt."
+ 1380  git push -u origin master
+ 1381  git status
+ 1382  git branch gameLogik
+ 1383  git checkout gameLogik
+ 1384  git commit -a -m "UML Diagramme für Game-Logik hinzugefügt."
+ 1385  git add *
+ 1386  git commit -m "UML Diagramme für Game-Logik hinzugefügt"
+ 1387  git push
+ 1388  git push -u origin gameLogik
+ 1389  git add *
+ 1390  git commit -m "gameLogik dia überarbeitet"
+ 1391  git push -u origin gameLogik
+
