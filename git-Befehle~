@@ -2,7 +2,16 @@
  1369  git remote add origin https://gitlab.ldv.ei.tum.de/cpp-gk15/gruppe1_hauptprojekt.git
  1370  git status
  1371  git pull
-
+ 1372  git commit -m "Leerer Commit"
+ 1373  git add *
+ 1374  git push -u origin master
+ 1375  cd ..
+ 1376  cd gruppe1_hauptprojekt/
+ 1377  ls
+ 1378  git add gameEntwurf.pdf
+ 1379  git commit -m "Entwurf auf Zetteln in pdf-Form hinzugefügt."
+ 1380  git push -u origin master
+ 1381  git status
 
 # Branch anlegen
  1382  git branch gameLogik
