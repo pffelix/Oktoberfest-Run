@@ -18,4 +18,7 @@
  1411  git checkout master
 # Master Branch mit gameLogik mergen
  1412  git merge gameLogik
+# Überflüssige Branch gameLogik löschen
+1422  git push origin --delete gameLogik
+
 
