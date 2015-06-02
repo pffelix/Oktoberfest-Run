@@ -1,0 +1,3 @@
+
+
+Durch das Ableiten von Klassen ergibt sich auch die so genannte Polymorphie. Jede Klasse repräsentiert einen eigenen Datentyp. Abgeleitete Klassen haben mindestens einen weiteren Datentyp, nämlich den der Basisklasse (auch als Oberklasse oder Superklasse bezeichnet). Dadurch ist es zum Beispiel möglich, eine Liste von Objekten der Klasse A zu benutzen, obwohl in Wirklichkeit auch Objekte der Klasse B (die von A abgeleitet wurde) in der Liste abgelegt sind.
