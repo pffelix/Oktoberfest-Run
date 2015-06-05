@@ -1,24 +1,48 @@
- 1368  git init
- 1369  git remote add origin https://gitlab.ldv.ei.tum.de/cpp-gk15/gruppe1_hauptprojekt.git
- 1370  git status
- 1371  git pull
+### Start
+git init
+
+git remote add origin https://gitlab.ldv.ei.tum.de/cpp-gk15/gruppe1_hauptprojekt.git
+
+# kann immer ausgeführt werden, gibt Überblick über den Status der Dateien
+git status
+
+### Neue Dateien und Änderungen herunterladen
+git pull
+
+### pushen
+# Dateien zum ändern vormerken
+git add geaenderte_datei
+# alternativ
+git add *
+#optional zum überprüfen
+git status
+
+git commit -m "Nachricht"
+
+# pushen, Änderungen werden hochgeladen, master=branch
+git push -u origin master
 
 
+### Branches
 # Branch anlegen
- 1382  git branch gameLogik
+git branch gameLogik
+
 # In Branch wechseln
- 1383  git checkout gameLogik
+git checkout gameLogik
+
 # Dateien hinzufügen und committen
- 1385  git add *
- 1386  git commit -m "UML Diagramme für Game-Logik hinzugefügt"
+git add *
+git commit -m "UML Diagramme für Game-Logik hinzugefügt"
+
 # In Branch pushen
- 1388  git push -u origin gameLogik
+git push -u origin gameLogik
 
 # In Branch master wechseln
- 1411  git checkout master
-# Master Branch mit gameLogik mergen
- 1412  git merge gameLogik
-# Überflüssige Branch gameLogik löschen
-1422  git push origin --delete gameLogik
+git checkout master
 
+# Master Branch mit gameLogik mergen
+git merge gameLogik
+
+# Überflüssige Branch gameLogik löschen
+git push origin --delete gameLogik
 
