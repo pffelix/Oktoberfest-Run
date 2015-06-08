@@ -1,38 +1,49 @@
-### Start
+### Beim ersten Mal
 git init
-
 git remote add origin https://gitlab.ldv.ei.tum.de/cpp-gk15/gruppe1_hauptprojekt.git
+git pull
+
+#######################
+### Wichtige Befehle
+#######################
 
 # kann immer ausgeführt werden, gibt Überblick über den Status der Dateien
 git status
 
-### Neue Dateien und Änderungen herunterladen
+# Neue Dateien und Änderungen herunterladen
 git pull
 
-### pushen
+########################
+### Hochladen
+########################
+
 # Dateien zum ändern vormerken
 git add geaenderte_datei
-# alternativ
-git add *
-#optional zum überprüfen
-git status
+# wenn Datei lokal gelöscht
+git rm entfernte_datei
 
-git commit -m "Nachricht"
+# immer mit git status überprüfen!!!!
 
-# pushen, Änderungen werden hochgeladen, master=branch
+# wenn verbockt
+git reset
+
+# wenn Status wie gewünscht
+git commit -m "Funktion XY hinzugefügt"
+
+# pushen, Änderungen werden hochgeladen, master=branch: erst hier wird was hochgeladen
 git push -u origin master
 
-
+########################
 ### Branches
+########################
+
 # Branch anlegen
 git branch gameLogik
 
 # In Branch wechseln
 git checkout gameLogik
-
-# Dateien hinzufügen und committen
-git add *
-git commit -m "UML Diagramme für Game-Logik hinzugefügt"
+# danach pull -> überschreibt lokale Datein mit gameLogik, also vorher auf anderm Branch pushen
+# jetzt kann ganz normal mit git rm/add/commit gearbeitet werden
 
 # In Branch pushen
 git push -u origin gameLogik
@@ -43,6 +54,6 @@ git checkout master
 # Master Branch mit gameLogik mergen
 git merge gameLogik
 
-# Überflüssige Branch gameLogik löschen
+# Überflüssige Branch gameLogik löschen (optional)
 git push origin --delete gameLogik
 
