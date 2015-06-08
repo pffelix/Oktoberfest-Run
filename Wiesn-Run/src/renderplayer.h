@@ -1,8 +1,7 @@
 #ifndef RENDERPLAYER_H
 #define RENDERPLAYER_H
 
-class RenderPlayer
-{
+class RenderPlayer {
 public:
     RenderPlayer();
 };

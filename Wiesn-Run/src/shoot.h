@@ -1,8 +1,7 @@
 #ifndef SHOOT_H
 #define SHOOT_H
 
-class Shoot
-{
+class Shoot {
 public:
     Shoot();
 };

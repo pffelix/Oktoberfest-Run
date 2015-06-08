@@ -1,8 +1,7 @@
 #ifndef RENDERGUIELEMENT_H
 #define RENDERGUIELEMENT_H
 
-class RenderGuiElement
-{
+class RenderGuiElement {
 public:
     RenderGuiElement();
 };

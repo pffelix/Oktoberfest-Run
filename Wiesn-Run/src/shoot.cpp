@@ -1,5 +1,4 @@
 #include "shoot.h"
 
-Shoot::Shoot()
-{
+Shoot::Shoot() {
 }

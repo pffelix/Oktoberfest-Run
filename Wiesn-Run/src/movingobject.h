@@ -1,8 +1,7 @@
 #ifndef MOVINGOBJECT_H
 #define MOVINGOBJECT_H
 
-class MovingObject
-{
+class MovingObject {
 public:
     MovingObject();
 };

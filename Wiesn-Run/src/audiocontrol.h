@@ -1,8 +1,7 @@
 #ifndef AUDIOCONTROL_H
 #define AUDIOCONTROL_H
 
-class AudioControl
-{
+class AudioControl {
 public:
     AudioControl();
 };

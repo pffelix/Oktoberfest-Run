@@ -1,8 +1,7 @@
 #ifndef RENDERBACKGROUND_H
 #define RENDERBACKGROUND_H
 
-class RenderBackground
-{
+class RenderBackground {
 public:
     RenderBackground();
 };

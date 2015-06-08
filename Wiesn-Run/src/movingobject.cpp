@@ -1,5 +1,4 @@
 #include "movingobject.h"
 
-MovingObject::MovingObject()
-{
+MovingObject::MovingObject() {
 }

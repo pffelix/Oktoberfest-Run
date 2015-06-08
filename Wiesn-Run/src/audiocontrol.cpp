@@ -1,5 +1,4 @@
 #include "audiocontrol.h"
 
-AudioControl::AudioControl()
-{
+AudioControl::AudioControl() {
 }

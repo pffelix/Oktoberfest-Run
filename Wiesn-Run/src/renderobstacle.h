@@ -1,8 +1,7 @@
 #ifndef RENDEROBSTACLE_H
 #define RENDEROBSTACLE_H
 
-class RenderObstacle
-{
+class RenderObstacle {
 public:
     RenderObstacle();
 };

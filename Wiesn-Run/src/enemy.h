@@ -1,8 +1,7 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
-class Enemy
-{
+class Enemy {
 public:
     Enemy();
 };

@@ -1,8 +1,7 @@
 #ifndef RENDERATTACK_H
 #define RENDERATTACK_H
 
-class RenderAttack
-{
+class RenderAttack {
 public:
     RenderAttack();
 };
