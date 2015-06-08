@@ -35,5 +35,6 @@ HEADERS += \
     src/renderobstacle.h \
     src/renderguielement.h \
     src/renderenemy.h \
-    src/renderattack.h
+    src/renderattack.h \
+    src/definitions.h
 
