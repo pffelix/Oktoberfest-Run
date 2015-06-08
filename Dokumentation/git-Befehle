@@ -9,6 +9,14 @@ git status
 ### Neue Dateien und Änderungen herunterladen
 git pull
 
+### Dateien im Remote-Repository löschen
+git rm [-r] filename
+    -> danach git commit und git push
+
+### Lokal Dateien löschen, die nicht im remote git-Repo sind
+git clean -n   (zeigt an, was gelöscht würde)
+git clean -f   (löscht tatsächlich)
+
 ### pushen
 # Dateien zum ändern vormerken
 git add geaenderte_datei
