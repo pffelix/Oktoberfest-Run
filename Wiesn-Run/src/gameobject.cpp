@@ -21,7 +21,7 @@ int GameObject::getLength() const {
     return lenght;
 }
 
-int GameObject::getHeight() cosnt {
+int GameObject::getHeight() const {
     return height;
 }
 
