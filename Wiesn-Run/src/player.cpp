@@ -38,7 +38,7 @@ void Player::decreaseAmmunation() {
     ammunation = ammunation - 1;
 }
 
-int Player::getImmunityCooldown() {
+int Player::getImmunityCooldown() const {
     return immunityCooldown;
 }
 
