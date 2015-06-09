@@ -1,5 +1,14 @@
 #include "movingobject.h"
 
+/**************************************************************************************************
+ * Code fehlt:
+ *      Konstruktor
+ *      update
+ *      updatePosition
+ *
+ **************************************************************************************************/
+
+
 MovingObject::MovingObject() {
 }
 
@@ -25,4 +34,8 @@ void MovingObject::setSpeedX(int speedX) {
 
 void MovingObject::setSpeedY(int speedY) {
     this->speedY = speedY;
+}
+
+void MovingObject::updatePosition() {
+
 }
