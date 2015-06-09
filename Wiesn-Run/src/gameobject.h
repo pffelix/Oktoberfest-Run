@@ -6,7 +6,7 @@ class GameObject {
 
 public:
     GameObject(int posX, int posY, int length, int hight, consistencyType collusionType, objectType type);
-    ~GameObject();
+    virtual ~GameObject();
 
     int getPosX() const;
     int getPosY() const;

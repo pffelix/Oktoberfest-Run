@@ -4,8 +4,8 @@
 #include <QList>
 #include <QSortedList>
 #include <QMultiHash>
-#include gameobject.h
-#include input.h
+#include "gameobject.h"
+#include "input.h"
 
 enum collisionType {
     obstacleCollision, enemyCollision, powerupCollision
