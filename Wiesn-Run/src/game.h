@@ -4,34 +4,9 @@
 
 #include <list>
 
-#include <QMultiHash>
+#include "definitions.h"
 #include "gameobject.h"
 #include "input.h"
-
-enum collisionType {
-    obstacleCollision, enemyCollision, powerupCollision
-};
-
-enum collisionDirection {
-    fromLeft, fromRight, fromAbove, fromBelow
-};
-
-struct eventStruct {
-    GameObject objectA;
-    GameObject objectB;
-    enum collisionType collision;
-    enum collisionDirection direction;
-};
-
-struct scoreStruct {
-    int enemiesKilled;
-    int distanceCovered;
-    int alcoholPoints;
-};
-
-struct stateStruct {
-    int a; // noch zu erstellen
-};
 
 bool operator<(GameObject const & lhs, GameObject & rhs) {
     return lhs.getPosX() < rhs.getPosX();
