@@ -16,7 +16,7 @@ GameObject::GameObject(int length, int height, objectType type, int posX, int po
     this->type = type;
     this->posX = posX;
     this->posY = posY;
-    this->collisionType = colType;
+    this->colType = colType;
 }
 
 int GameObject::getPosX() const {
@@ -40,5 +40,5 @@ objectType GameObject::getType() const	{
 }
 
 collisionType GameObject::getCollisionType() const {
-    return collisionType;
+    return colType;
 }
