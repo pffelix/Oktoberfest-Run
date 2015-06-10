@@ -6,7 +6,7 @@ class GameObject {
 
 public:
     //Konstruktor und Destruktor
-    GameObject(int posX, int posY, int length, int hight, consistencyType collusionType, objectType type);
+    GameObject(int posX, int posY, int length, int height, consistencyType collusionType, objectType type);
     virtual ~GameObject();
 
     //Position()
@@ -31,7 +31,7 @@ protected:
 private:
     //Größe
     int length;
-    int hight;
+    int height;
     //Objecttyp
     objectType type;
 

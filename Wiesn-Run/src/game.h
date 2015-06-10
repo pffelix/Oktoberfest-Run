@@ -1,8 +1,9 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include <QList>
-#include <QSortedList>
+
+#include <list>
+
 #include <QMultiHash>
 #include "gameobject.h"
 #include "input.h"
@@ -28,13 +29,23 @@ struct scoreStruct {
     int alcoholPoints;
 };
 
+struct stateStruct {
+    int a; // noch zu erstellen
+};
+
+bool operator<(GameObject const & lhs, GameObject & rhs) {
+    return lhs.getPosX() < rhs.getPosX();
+}
+
+
+
 class Game {
 public:
     Game();
     ~Game();
 
-    QList<struct eventStruct> eventsToHandle;
-    QMultiHash states;
+    std::list<struct eventStruct> eventsToHandle;
+    //QMultiHash<struct stateStruct> states;
 
 private:
     void startGame();
@@ -50,9 +61,9 @@ private:
     void playSound();
     void endGame();
 
-    QSortedList<GameObject> worldObjects;
-    QSortedList<GameObject> levelInitial;
-    QSortedList<GameObject> levelSpawn;
+    std::list<GameObject> worldObjects;
+    std::list<GameObject> levelInitial;
+    std::list<GameObject> levelSpawn;
     struct scoreStruct score;
     int stepSize;
     GameObject *playerObjPointer;

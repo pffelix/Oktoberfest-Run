@@ -1,7 +1,8 @@
 TEMPLATE = app
 CONFIG += console
-CONFIG -= app_bundle
-CONFIG -= qt
+# Diese Einstellungen würden qt-Bindings aus dem Projekt nehmen
+#CONFIG -= app_bundle
+#CONFIG -= qt
 
 SOURCES += src/main.cpp \
     src/game.cpp \
