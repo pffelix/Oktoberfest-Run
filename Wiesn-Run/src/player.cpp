@@ -146,9 +146,9 @@ void Player::resetJump() {
  * @brief Player::update
  * führt die Bewegung des Spielers aus und verringert Cooldown-Variablen
  */
-void Player::update() {
+virtual void Player::update() {
     //Bewegung ausführen
-    posX = posX + speedX;
+    posX = posX + this->getSpeedX();
     if (jumpActive) {
         posY = posY + jumpTable[jumpTableindex];
         jumpTableindex = jumpTableindex + 1;

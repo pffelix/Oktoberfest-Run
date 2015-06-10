@@ -26,11 +26,17 @@ public:
     virtual void update();
 
 private:
+    //Lebensstand
     int health;
+    //Feuergeschwindigkeit
     const int fireRate;
+    //verbleibende Nachladezeit
     int fireCooldown;
+    //Schaden, den Gegner verursacht
     int inflictedDamage;
+    //Todes-Zustand
     bool death;
+    //verbleibende Zeit nach Tod
     int DeathCooldown;
 };
 
