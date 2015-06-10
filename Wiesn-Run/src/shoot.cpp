@@ -11,6 +11,7 @@ int Shoot::getInflictedDamage() const {
     return inflictedDamage;
 }
 
-void Shoot::update() {
-
+virtual void Shoot::update() {
+    //Bewegung durchführen
+    posX = posX + this->getSpeedX();
 }
