@@ -6,6 +6,8 @@ class GameObject {
 
 public:
     //Konstruktor und Destruktor
+    //GameObject(int length, int hight, objectType type);
+    //GameObject(int length, int hight, objectType type, int posX, int posY,);
     GameObject(int posX, int posY, int length, int height, consistencyType collusionType, objectType type);
     virtual ~GameObject();
 
