@@ -25,10 +25,10 @@ int GameObject::getHeight() const {
     return height;
 }
 
-int GameObject::getType() const	{
+objectType GameObject::getType() const	{
     return type;
 }
 
-int GameObject::getCollisionType() const {
+consistencyType GameObject::getCollisionType() const {
     return collisionType;
 }
