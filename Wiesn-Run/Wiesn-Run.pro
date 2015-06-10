@@ -1,4 +1,4 @@
-﻿TEMPLATE = app
+TEMPLATE = app
 CONFIG += console
 # Diese Einstellungen würden qt-Bindings aus dem Projekt nehmen
 #CONFIG -= app_bundle
@@ -39,4 +39,3 @@ HEADERS += \
     src/renderenemy.h \
     src/renderattack.h \
     src/definitions.h
-
