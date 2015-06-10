@@ -1,5 +1,16 @@
+/**************************************************************************************************
+ * @brief
+ * Datei für alle benötigten Datentypen
+ *
+ * @latestUpdate:
+ * include GameObject.h fixed problems
+ *
+ * @author Johann, Simon
+ **************************************************************************************************/
+
 #ifndef DEFINITIONS_H
 #define DEFINITIONS_H
+
 
 /**
  * @brief Enumerator für den Objekt-Typ
@@ -71,7 +82,7 @@ struct stateStruct {
     bool playerJumping;
     bool playerAttacking;
     bool playerRunning;
-    bool playerThrowing
+    bool playerThrowing;
     bool playerHit;
     bool gameOver;
 
