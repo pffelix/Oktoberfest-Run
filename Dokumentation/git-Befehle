@@ -66,3 +66,7 @@ git merge gameLogik
 # Überflüssige Branch gameLogik löschen (optional)
 git push origin --delete gameLogik
 
+# eigenen Branch nach merge auf den aktuellen Stand vom Master-Zweig bringen
+git checkout xyz
+get rebase origin/master
+
