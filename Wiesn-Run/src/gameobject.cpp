@@ -13,11 +13,8 @@
  * @author Johann
  */
 GameObject::GameObject(int posX, int posY, int length, int height, objectType type, collisionType colType) {
-<<<<<<< HEAD
-=======
     this->posX = posX;
     this->posY = posY;
->>>>>>> master
     this->length = length;
     this->height = height;
     this->type = type;
