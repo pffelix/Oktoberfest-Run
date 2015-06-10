@@ -4,6 +4,7 @@
 /**
  * @brief Enumerator für den Objekt-Typ
  * Hier ist der Objekt-Typ gespeichert.
+ * @author Johann
  */
 enum objectType {
     player, enemy, obstacle, shot

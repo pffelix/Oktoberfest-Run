@@ -6,10 +6,7 @@ class GameObject {
 
 public:
     //Konstruktor und Destruktor
-    // SImon: GameObject(int posX, int posY, int length, int height, consistencyType collusionType, objectType type);
-    //GameObject(int length, int hight, objectType type);
-    //GameObject(int length, int hight, objectType type, int posX, int posY,);
-    GameObject(int length, int height, objectType type, int posX, int posY, consistencyType collusionType);
+    GameObject::GameObject(int length, int height, objectType type, int posX, int posY, collisionType colType) {
     virtual ~GameObject();
 
     //Position()
