@@ -74,14 +74,14 @@ void Enemy::setDeath(bool death) {
 void Enemy::update() {
     if (death) {
         DeathCooldown = DeathCooldown - 1;
-        if (DeathCooldown = 0) {
+        if (DeathCooldown == 0) {
 // Event: delete Enemy
         }
     } else {
         //Bewegung durchführen
         posX = posX + this->getSpeedX();
         //Feuern
-        if (fireCooldown = 0) {
+        if (fireCooldown == 0) {
 //Event: create Shoot
             fireCooldown = fireRate;
         } else {
