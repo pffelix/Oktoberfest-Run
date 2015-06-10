@@ -6,8 +6,8 @@ class GameObject {
 
 public:
     //Konstruktor und Destruktor
-    GameObject::GameObject(int length, int height, objectType type, int posX, int posY, collisionType colType) {
-    virtual ~GameObject();
+    GameObject(int length, int height, objectType type, int posX, int posY, collisionType colType);
+    ~GameObject();
 
     //Position()
     int getPosX() const;
@@ -26,7 +26,7 @@ protected:
     int posX;
     int posY;
     //Kollisionstyp
-    consistencyType collisionType;
+    collisionType colType;
 
 private:
     //Größe
