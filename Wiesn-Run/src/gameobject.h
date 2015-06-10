@@ -19,7 +19,7 @@ public:
 
     //Typen()
     objectType getType() const;
-    consistencyType getCollisionType() const;
+    collisionType getCollisionType() const;
 
 protected:
     //Position
