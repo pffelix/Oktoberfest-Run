@@ -11,7 +11,7 @@ class Input {
 public:
     Input();
     ~Input();
-    /// returns the variable keyactions
+    /// getKeyactions returns the variable keyactions
     QSet<int> getKeyactions();
 
 private:
