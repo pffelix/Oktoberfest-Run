@@ -1,6 +1,7 @@
 #include "player.h"
 
-///Klasse Player
+/// Class Player
+/// lastUpdate: update() 10.6 Johann
 
 Player::Player() {
 }

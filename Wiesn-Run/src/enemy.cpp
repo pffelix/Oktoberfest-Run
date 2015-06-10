@@ -1,5 +1,9 @@
 #include "enemy.h"
 
+/// Class Enemy
+/// lastUpdate:  update() 10.6 Johann
+
+
 Enemy::Enemy() {
 }
 
