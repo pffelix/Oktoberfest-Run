@@ -1,6 +1,8 @@
 #include "shoot.h"
 
-Shoot::Shoot() {
+Shoot::Shoot(posX, posY, length, hight, collisiontype, type, speedX, speedY) {
+    MovingObject(posX, posY, length, hight, collisiontype, type, speedX, speedY);
+    inflictedDamage = 10;
 }
 
 Shoot::~Shoot() {

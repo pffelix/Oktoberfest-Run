@@ -3,7 +3,16 @@
 /// Class Player
 /// lastUpdate: update() 10.6 Johann
 
-Player::Player() {
+Player::Player(int posX, int posY, int length, int hight, consistencyType collisionType, objectType type, int speedX, int speedY) {
+    MovingObject(posX, posY, length, hight, collisiontype, type, speedX, speedY);
+    health = 100;
+    alcoholLevel = 10;
+    jumpActive = false;
+    jumpTableIndex = 0;
+    ammunation = 0;
+    immunityCooldown = 0;
+    fireRate = 20;
+    fireCooldown = 0;
 }
 
 /**
@@ -131,7 +140,7 @@ void Player::setJump(bool jump) {
  */
 void Player::setFall() {
     jumpActive = true;
-    jumpTableindex = fallIndex;
+    jumpTableIndex = fallIndex;
 }
 
 /**
@@ -140,7 +149,7 @@ void Player::setFall() {
  */
 void Player::resetJump() {
     jumpActive = false;
-    jumpTableindex = 0;
+    jumpTableIndex = 0;
 }
 
 /**
@@ -151,8 +160,8 @@ virtual void Player::update() {
     //Bewegung ausführen
     posX = posX + this->getSpeedX();
     if (jumpActive) {
-        posY = posY + jumpTable[jumpTableindex];
-        jumpTableindex = jumpTableindex + 1;
+        posY = posY + jumpTable[jumpTableIndex];
+        jumpTableIndex = jumpTableIndex + 1;
     }
     //Alkoholpegel Zeitabbau
     if (alcoholLevel > 0) {

@@ -1,12 +1,29 @@
 #include "gameobject.h"
 
-GameObject::GameObject(int posX, int posY, int length, int hight, consistencyType collusionType, objectType type) {
-    this->posX = posX;
-    this->posY = posY;
+/*
+GameObject::GameObject(int length, int hight, objectType type) {
     this->length = length;
     this->hight = hight;
-    this->collisionType = collusionType;
     this->type = type;
+}
+*/
+/*
+GameObject::GameObject(int length, int hight, objectType type, int posX, int posY) {
+    this->length = length;
+    this->hight = hight;
+    this->type = type;
+    this->posX = posX;
+    this->posY = posY;
+}
+*/
+
+GameObject::GameObject(int length, int hight, objectType type, int posX, int posY, consistencyType collusionType) {
+    this->length = length;
+    this->hight = hight;
+    this->type = type;
+    this->posX = posX;
+    this->posY = posY;
+    this->collisionType = collusionType;
 }
 
 int GameObject::getPosX() const {

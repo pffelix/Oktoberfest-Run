@@ -7,7 +7,7 @@ class Shoot :public MovingObject {
 
 public:
     //Konstruktor und Destruktor
-    Shoot(posX);
+    Shoot(posX, posY, length, hight, collisiontype, type, speedX, speedY);
     ~Shoot();
 
     //Damage()

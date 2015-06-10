@@ -1,7 +1,10 @@
 #include "movingobject.h"
 
 
-MovingObject::MovingObject() {
+MovingObject::MovingObject(int posX, int posY, int length, int hight, consistencyType collisionType, objectType type, int speedX, int speedY) {
+    GameObject(length, hight, type, posX, posY, collisionType);
+    this->speedX = speedX;
+    this->speedY = speedY;
 }
 
 void MovingObject:: setPosX(int posX) {

@@ -6,8 +6,10 @@ class GameObject {
 
 public:
     //Konstruktor und Destruktor
-    GameObject(int posX, int posY, int length, int hight, consistencyType collusionType, objectType type);
-    virtual ~GameObject();
+    //GameObject(int length, int hight, objectType type);
+    //GameObject(int length, int hight, objectType type, int posX, int posY,);
+    GameObject(int length, int hight, objectType type, int posX, int posY, consistencyType collusionType);
+    ~GameObject();
 
     //Position()
     int getPosX() const;

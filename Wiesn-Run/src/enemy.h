@@ -8,7 +8,7 @@ class Enemy : public MovingObject {
 public:
 
     //Konstruktor und Destruktor
-    Enemy();
+    Enemy(int posX, int posY, int length, int hight, consistencyType collisionType, objectType type, int speedX, int speedY);
     ~Enemy();
 
     //Leben()
@@ -29,7 +29,7 @@ private:
     //Lebensstand
     int health;
     //Feuergeschwindigkeit
-    const int fireRate;
+    const int fireRate = 20;
     //verbleibende Nachladezeit
     int fireCooldown;
     //Schaden, den Gegner verursacht

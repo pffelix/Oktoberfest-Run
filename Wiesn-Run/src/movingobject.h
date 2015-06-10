@@ -7,8 +7,10 @@ class MovingObject : public GameObject{
 
 public:
     //Konstruktor und Destruktor
-    MovingObject();
-    virtual ~MovingObject();
+    //MovingObject(int length, int hight, objectType type);
+    //MovingObject(int length, int hight, objectType type, int posX, int posY);
+    MovingObject(int posX, int posY, int length, int hight, consistencyType collisionType, objectType type, int speedX, int speedY);
+    ~MovingObject();
 
     //Position()
     void setPosX(int posX);

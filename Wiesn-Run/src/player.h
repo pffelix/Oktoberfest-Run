@@ -7,8 +7,8 @@ class Player : public MovingObject {
 
 public:
     //Konstruktoren und Destruktoren
-    Player();
-    virtual ~Player();
+    Player(int posX, int posY, int length, int hight, consistencyType collisionType, objectType type, int speedX, int speedY);
+    ~Player();
 
     //Leben()
     int getHealth() const;
@@ -52,7 +52,7 @@ private:
     //In-der-Luft-Zustand
     bool jumpActive;
     //In-der-Luft-'Ort'
-    int jumpTableindex;
+    int jumpTableIndex;
     //In-der-Luft-Geschwindigkeiten
     int jumpTable[100];
 
