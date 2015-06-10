@@ -1,43 +1,32 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include <QList>
-#include <QSortedList>
-#include <QMultiHash>
+
+#include <list>
+
+#include "definitions.h"
 #include "gameobject.h"
 #include "input.h"
 
-enum collisionType {
-    obstacleCollision, enemyCollision, powerupCollision
-};
+bool operator<(GameObject const & lhs, GameObject & rhs) {
+    return lhs.getPosX() < rhs.getPosX();
+}
 
-enum collisionDirection {
-    fromLeft, fromRight, fromAbove, fromBelow
-};
 
-struct eventStruct {
-    GameObject objectA;
-    GameObject objectB;
-    enum collisionType collision;
-    enum collisionDirection direction;
-};
-
-struct scoreStruct {
-    int enemiesKilled;
-    int distanceCovered;
-    int alcoholPoints;
-};
 
 class Game {
 public:
     Game();
     ~Game();
 
-    QList<struct eventStruct> eventsToHandle;
-    QMultiHash states;
+    /// Startet das Spiel, wird einmalig von main() aufgerufen
+    void startGame();
+
+    std::list<struct eventStruct> eventsToHandle;
+    //QMultiHash<struct stateStruct> states;
+
 
 private:
-    void startGame();
     int getStepSize();
     void appendWorldObjects();
     void reduceWorldObjects();
@@ -50,9 +39,9 @@ private:
     void playSound();
     void endGame();
 
-    QSortedList<GameObject> worldObjects;
-    QSortedList<GameObject> levelInitial;
-    QSortedList<GameObject> levelSpawn;
+    std::list<GameObject> worldObjects;
+    std::list<GameObject> levelInitial;
+    std::list<GameObject> levelSpawn;
     struct scoreStruct score;
     int stepSize;
     GameObject *playerObjPointer;
