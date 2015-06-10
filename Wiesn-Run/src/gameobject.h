@@ -6,7 +6,7 @@ class GameObject {
 
 public:
     //Konstruktor und Destruktor
-    GameObject(int length, int height, objectType type, int posX, int posY, collisionType colType);
+    GameObject(int posX, int posY, int length, int height, objectType type, collisionType colType);
     ~GameObject();
 
     //Position()

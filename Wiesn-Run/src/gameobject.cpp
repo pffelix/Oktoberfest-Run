@@ -3,14 +3,16 @@
 /**
  * @brief GameObject::GameObject
  * Konstruktor
- * @param length
- * @param height
- * @param type
- * @param posX
- * @param posY
- * @param colType
+ * @param length    : Länge
+ * @param height    : Höhe
+ * @param type      : Typ
+ * @param posX      : X-Position
+ * @param posY      : Y-Position
+ * @param colType   : Kollisionstyp
+ *
+ * @author Johann
  */
-GameObject::GameObject(int length, int height, objectType type, int posX, int posY, collisionType colType) {
+GameObject::GameObject(int posX, int posY, int length, int height, objectType type, collisionType colType) {
     this->length = length;
     this->height = height;
     this->type = type;
