@@ -1,7 +1,6 @@
 #include "shoot.h"
 
-Shoot::Shoot(posX, posY, length, hight, collisiontype, type, speedX, speedY) {
-    MovingObject(posX, posY, length, hight, collisiontype, type, speedX, speedY);
+Shoot::Shoot(int posX, int posY, int length, int height, objectType type, collisionType colType, int speedX, int speedY) : MovingObject(posX, posY, length, height, type, colType, speedX, speedY) {
     inflictedDamage = 10;
 }
 
@@ -13,7 +12,6 @@ int Shoot::getInflictedDamage() const {
     return inflictedDamage;
 }
 
-virtual void Shoot::update() {
-    //Bewegung durchführen
+void Shoot::update() {
     posX = posX + this->getSpeedX();
 }

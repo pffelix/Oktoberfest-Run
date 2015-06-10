@@ -3,11 +3,11 @@
 
 #include "movingobject.h"
 
-class Shoot :public MovingObject {
+class Shoot : public MovingObject {
 
 public:
     //Konstruktor und Destruktor
-    Shoot(posX, posY, length, hight, collisiontype, type, speedX, speedY);
+    Shoot(int posX, int posY, int length, int height, objectType type, collisionType colType, int speedX, int speedY);
     ~Shoot();
 
     //Damage()

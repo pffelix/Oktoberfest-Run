@@ -42,20 +42,6 @@ enum collisionType {
  */
 enum collisionDirection {
     fromLeft, fromRight, fromAbove, fromBelow
-}; // the collisionDirection tells whether an enemy gets killed or whether we end up on top of an object
-
-/**
- * @brief Struktur für die Events
- * Enthält objectA als Objekt, aus dessen Sicht die Kollision berechnet wurde. objectA ist immer ein MovingObject,
- * objectB kann beides sein.
- * Die Art und Richtung der Kollision werden mit gespeichert.
- * @author Simon
- */
-struct eventStruct {
-    GameObject objectA;
-    GameObject objectB;
-    enum collisionType collision;
-    enum collisionDirection direction;
 };
 
 /**

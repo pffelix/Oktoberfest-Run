@@ -4,8 +4,7 @@
 /// lastUpdate:  update() 10.6 Johann
 
 
-Enemy::Enemy(int posX, int posY, int length, int hight, consistencyType collisionType, objectType type, int speedX, int speedY) {
-    MovingObject(posX, posY, length, hight, collisiontype, type, speedX, speedY);
+Enemy::Enemy(int posX, int posY, int length, int height, objectType type, collisionType colType, int speedX, int speedY) : MovingObject(posX, posY, length, height, type, colType, speedX, speedY) {
     health = 50;
     fireCooldown = 0;
     inflictedDamage = 10;
@@ -39,7 +38,7 @@ void Enemy::setHealth(int health) {
  *
  * @return : Schaden
  */
-int Enemy::getInflictedDamage() {
+int Enemy::getInflictedDamage() const {
     return inflictedDamage;
 }
 
@@ -49,7 +48,7 @@ int Enemy::getInflictedDamage() {
  *
  * @return : Zustand - TOT
  */
-bool Enemy::getDeath() {
+bool Enemy::getDeath() const {
     return death;
 }
 
@@ -72,7 +71,7 @@ void Enemy::setDeath(bool death) {
  *  1) DeleteEnemy : wenn gegner Tot ist und seine erscheinungszeit abgelaufen ist
  *  2) CreateShot : wenn Gegner bereit zum Schießen ist
  */
-virtual void Enemy::update() {
+void Enemy::update() {
     if (death) {
         DeathCooldown = DeathCooldown - 1;
         if (DeathCooldown = 0) {
