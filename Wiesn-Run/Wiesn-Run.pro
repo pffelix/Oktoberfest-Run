@@ -1,8 +1,5 @@
 TEMPLATE = app
 CONFIG += console
-# Diese Einstellungen würden qt-Bindings aus dem Projekt nehmen
-#CONFIG -= app_bundle
-#CONFIG -= qt
 CONFIG += c++11
 
 SOURCES += src/main.cpp \
