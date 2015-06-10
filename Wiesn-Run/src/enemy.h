@@ -8,7 +8,7 @@ class Enemy : public MovingObject {
 public:
 
     //Konstruktor und Destruktor
-    Enemy();
+    Enemy(int posX, int posY, int length, int hight, consistencyType collisionType, objectType type, int speedX, int speedY);
     ~Enemy();
 
     //Leben()
@@ -23,14 +23,20 @@ public:
     void setDeath(bool death);
 
     //update()
-    void update();
+    virtual void update();
 
 private:
+    //Lebensstand
     int health;
-    const int fireRate;
+    //Feuergeschwindigkeit
+    const int fireRate = 20;
+    //verbleibende Nachladezeit
     int fireCooldown;
+    //Schaden, den Gegner verursacht
     int inflictedDamage;
+    //Todes-Zustand
     bool death;
+    //verbleibende Zeit nach Tod
     int DeathCooldown;
 };
 

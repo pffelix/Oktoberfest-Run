@@ -7,14 +7,14 @@ class Shoot :public MovingObject {
 
 public:
     //Konstruktor und Destruktor
-    Shoot();
+    Shoot(posX, posY, length, hight, collisiontype, type, speedX, speedY);
     ~Shoot();
 
     //Damage()
     int getInflictedDamage() const;
 
     //update()
-    void update();
+    virtual void update();
 
 private:
     int inflictedDamage;

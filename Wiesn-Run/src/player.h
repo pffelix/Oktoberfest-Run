@@ -6,8 +6,9 @@
 class Player : public MovingObject {
 
 public:
-    Player();
-    virtual ~Player();
+    //Konstruktoren und Destruktoren
+    Player(int posX, int posY, int length, int hight, consistencyType collisionType, objectType type, int speedX, int speedY);
+    ~Player();
 
     //Leben()
     int getHealth() const;
@@ -16,7 +17,7 @@ public:
     //Alcoholpegel()
     int getAlcoholLevel() const;
     void increaseAlcoholLevel(int additionalAlcohol);
-    void decreaseAlcoholLevel();
+    bool decreaseAlcoholLevel(int decreaseLevel);
 
     //Munnition()
     int getAmmunatiuon() const;
@@ -33,18 +34,27 @@ public:
     void resetJump();
 
     //update()
-    void update();
+    virtual void update();
 
 private:
+    //Lebensstand
     int health;
+    //Alkoholpegel
     int alcoholLevel;
+    //verbleibende Munition
     int ammunation;
+    //Anzahl Frames Schadensimmunität (Unsterblichkeit)
     int immunityCooldown;
+    //verbleibende Nachladezeit
     int fireCooldown;
+    //Feuergeschwindigkeit
     int fireRate;
+    //In-der-Luft-Zustand
     bool jumpActive;
-    int jumpTableindex;
-    int jumpTable[];
+    //In-der-Luft-'Ort'
+    int jumpTableIndex;
+    //In-der-Luft-Geschwindigkeiten
+    int jumpTable[100];
 
     const int fallIndex = 20;
 
