@@ -20,6 +20,9 @@ GameObject::GameObject(int posX, int posY, int length, int height, objectType ty
     this->type = type;
     this->colType = colType;
 }
+GameObject::~GameObject() {
+
+}
 
 int GameObject::getPosX() const {
     return posX;

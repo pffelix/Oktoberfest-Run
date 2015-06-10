@@ -3,8 +3,7 @@
 /// Class Player
 /// lastUpdate: update() 10.6 Johann
 
-Player::Player(int posX, int posY, int length, int hight, consistencyType collisionType, objectType type, int speedX, int speedY) {
-    MovingObject(posX, posY, length, hight, collisiontype, type, speedX, speedY);
+Player::Player(int posX, int posY, int length, int height, objectType type, collisionType colType, int speedX, int speedY) : MovingObject(posX, posY, length, height, type, colType, speedX, speedY) {
     health = 100;
     alcoholLevel = 10;
     jumpActive = false;
@@ -71,7 +70,7 @@ void Player::increaseAlcoholLevel(int additionalAlcohol) {
 bool Player::decreaseAlcoholLevel(int decreaseLevel) {
     alcoholLevel = alcoholLevel - decreaseLevel;
     if (alcoholLevel > 0) {
-        return false
+        return false;
     } else {
         return true;
     }
@@ -156,7 +155,7 @@ void Player::resetJump() {
  * @brief Player::update
  * führt die Bewegung des Spielers aus und verringert Cooldown-Variablen
  */
-virtual void Player::update() {
+void Player::update() {
     //Bewegung ausführen
     posX = posX + this->getSpeedX();
     if (jumpActive) {

@@ -1,13 +1,30 @@
 #include "input.h"
 
-Input::Input() {
 
+Input::Input() {
     this->installEventFilter(this);
 }
 
 
-QSet<int> Input::getKeyactions();
+
+bool Input::eventFilter(QEvent *event){
+    if(event->type() == QEvent::KeyPress){
+         keyevents += ((QKeyEvent*)event)->key();
+    }
+    if(event->type()==QEvent::KeyRelease){
+        keyevents -= ((QKeyEvent*)event)->key();
+    }
+return false;
+}
 
 
-bool Input::eventFilter(QObject * obj, QEvent * event);
-void Input::updateKeyactions();
+void Input::updateKeyactions(){
+    if(keyevents.contains(Qt::Key_Up) && keyevents.contains(Qt::Key_Right)){
+    //keyactions += "jump_forward";
+    }
+
+}
+
+QSet<int> Input::getKeyactions(){
+    return keyactions;
+}
