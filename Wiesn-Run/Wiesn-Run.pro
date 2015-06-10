@@ -36,4 +36,3 @@ HEADERS += \
     src/renderenemy.h \
     src/renderattack.h \
     src/definitions.h
-
