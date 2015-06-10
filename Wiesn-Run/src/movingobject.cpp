@@ -5,6 +5,9 @@ MovingObject::MovingObject(int posX, int posY, int length, int height, objectTyp
     this->speedX = speedX;
     this->speedY = speedY;
 }
+MovingObject::~MovingObject() {
+
+}
 
 void MovingObject:: setPosX(int posX) {
     this->posX = posX;

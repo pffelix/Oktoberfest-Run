@@ -8,9 +8,11 @@
 #include "gameobject.h"
 #include "input.h"
 
-bool operator<(GameObject const & lhs, GameObject & rhs) {
+/*
+bool operator < (GameObject const & lhs, GameObject & rhs) {
     return lhs.getPosX() < rhs.getPosX();
 }
+*/
 
 /**
  * @brief Struktur für die Events
