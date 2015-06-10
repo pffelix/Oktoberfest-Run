@@ -14,7 +14,7 @@ public:
     int getInflictedDamage() const;
 
     //update()
-    void update();
+    virtual void update();
 
 private:
     int inflictedDamage;

@@ -23,7 +23,7 @@ public:
     void setDeath(bool death);
 
     //update()
-    void update();
+    virtual void update();
 
 private:
     int health;

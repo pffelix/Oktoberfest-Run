@@ -33,7 +33,7 @@ public:
     void resetJump();
 
     //update()
-    void update();
+    virtual void update();
 
 private:
     int health;
@@ -44,7 +44,7 @@ private:
     int fireRate;
     bool jumpActive;
     int jumpTableindex;
-    int jumpTable[];
+    int jumpTable[100];
 
     const int fallIndex = 20;
 
