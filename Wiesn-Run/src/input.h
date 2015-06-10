@@ -6,7 +6,6 @@
 #include <QObject>
 #include <QEvent>
 #include <QKeyEvent>
-#include <string>
 
 class Input : public QObject {
 public:
@@ -14,20 +13,20 @@ public:
     ~Input();
     /// getKeyactions returns the variable keyactions
     QSet<int> getKeyactions();
-    Q_OBJECT
+    //Q_OBJECT
 
 private:
     /// keyevents contains the id of all currently pressed keyboard buttons
     QSet<int> keyevents;
     /// keyactions contains the specifiers of all currently pressed game relevant keyboard button combinations
-    QSet<std::string> keyactions;
+    QSet<int> keyactions;
 
     /// generate specifiers for all currently pressed game relevant keyboard button combinations and save in variable keyactions
     void updateKeyactions();
 
 protected:
     /// eventFilter get's the currently presse keyboard buttons
-    bool eventFilter(QObject *obj, QEvent *event);
+    bool eventFilter(QEvent *event); //QObject *obj
 
 };
 
