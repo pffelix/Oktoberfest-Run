@@ -10,12 +10,12 @@
  * @param posY
  * @param colType
  */
-GameObject::GameObject(int length, int height, objectType type, int posX, int posY, collisionType colType) {
+GameObject::GameObject(int posX, int posY, int length, int height, objectType type, collisionType colType) {
+    this->posX = posX;
+    this->posY = posY;
     this->length = length;
     this->height = height;
     this->type = type;
-    this->posX = posX;
-    this->posY = posY;
     this->colType = colType;
 }
 
