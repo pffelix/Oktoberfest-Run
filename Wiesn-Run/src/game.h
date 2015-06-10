@@ -33,11 +33,13 @@ public:
     Game();
     ~Game();
 
+    /// Startet das Spiel, wird einmalig von main() aufgerufen
+    void startGame();
+
     QList<struct eventStruct> eventsToHandle;
     QMultiHash states;
 
 private:
-    void startGame();
     int getStepSize();
     void appendWorldObjects();
     void reduceWorldObjects();
