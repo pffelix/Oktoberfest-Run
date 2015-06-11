@@ -14,7 +14,6 @@ Game game;
 int main() {
     Game *game;
     game = new Game();                  // Spielinstanz erstellen
-    int return_code = game->startGame(); // Spiel starten, in startGame ist der Game-Loop implementiert
-    /// @todo startGame() schlechter Name, wenn darin der ganze Loop und damit das ganze Spiel läuft.
+    int return_code = game->exec(); // Spiel starten, in exec() ist der Game-Loop implementiert
     return return_code;                 // Rückgabewert von startGame an Betriebssystem übergeben
 }

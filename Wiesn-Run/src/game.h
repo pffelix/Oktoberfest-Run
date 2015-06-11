@@ -41,8 +41,8 @@ public:
     Game();
     ~Game();
 
-    /// Startet das Spiel, wird einmalig von main() aufgerufen
-    int startGame();
+    /// Startet das die Game-Loop, wird einmalig von main() aufgerufen
+    int exec();
 
     std::list<struct eventStruct> eventsToHandle;
     //QMultiHash<struct stateStruct> states;

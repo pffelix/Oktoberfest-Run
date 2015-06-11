@@ -7,6 +7,6 @@ Game::~Game() {
 
 }
 
-int Game::startGame() {
-
+int Game::exec() {
+    return 0;
 }
