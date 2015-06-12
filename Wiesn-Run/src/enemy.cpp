@@ -12,6 +12,10 @@ Enemy::Enemy(int posX, int posY, int length, int height, objectType type, collis
     DeathCooldown = 20;
 }
 
+Enemy::~Enemy() {
+
+}
+
 /**
  * @brief Enemy::getHealth
  * Gibt Lebensstand zurück

@@ -9,9 +9,9 @@
 #include "input.h"
 
 
-bool operator < (GameObject const & lhs, GameObject & rhs) {
-    return lhs.getPosX() < rhs.getPosX();
-}
+//bool operator < (GameObject const & lhs, GameObject & rhs) {
+//    return lhs.getPosX() < rhs.getPosX();
+//}
 
 
 /**

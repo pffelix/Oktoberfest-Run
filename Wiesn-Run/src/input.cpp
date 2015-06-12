@@ -5,6 +5,10 @@ Input::Input() {
     this->installEventFilter(this);
 }
 
+Input::~Input() {
+
+}
+
 
 
 bool Input::eventFilter(QEvent *event){

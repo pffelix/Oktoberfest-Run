@@ -33,6 +33,10 @@ void MovingObject::setSpeedY(int speedY) {
     this->speedY = speedY;
 }
 
+void MovingObject::update() {
+
+}
+
 void MovingObject::updatePosition() {
 
 }

@@ -14,6 +14,10 @@ Player::Player(int posX, int posY, int length, int height, objectType type, coll
     fireCooldown = 0;
 }
 
+Player::~Player() {
+
+}
+
 /**
  * @brief Player::getHealth
  * Gibt aktuellen Lebensstand zurück
