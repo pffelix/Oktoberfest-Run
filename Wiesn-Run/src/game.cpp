@@ -47,6 +47,18 @@ int Game::exec() {
 
     //while(1) {
         //std::cout << ".";
+
+        /*
+        appendWorldObjects();
+        reduceWorldObjects();
+        evaluateInput();
+        calculateMovement();
+        detectCollision();
+        correctMovement();
+        handleEvents();
+        renderGraphics();
+        playSound();
+        */
     //}
 
     sleep(5);
