@@ -33,9 +33,22 @@ Game::~Game() {
  */
 int Game::exec() {
     std::cout << "Game::exec() gestartet\nwarte 5 Sekunden\n";
+
+
+    // ist das nötig? wird der Konstruktor schon bei der Definition in game.h aufgerufen?
+    keyInputs = Input();
+
+    // levelInitial laden
+    // worldObjects = levelInitial
+
+    // Player erstellen und in worldObjects einfügen
+
+    // Qt Fenster anzeigen?
+
     //while(1) {
         //std::cout << ".";
     //}
+
     sleep(5);
     std::cout << "Game wird beendet\n";
     return 0;

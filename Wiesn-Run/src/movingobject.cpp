@@ -40,6 +40,7 @@ void MovingObject::setSpeedY(int speedY) {
 
 /**
  * @brief überschreibt die X und Y Position gemäß SpeedXY
+ * @author Rupert
  */
 void MovingObject::updatePosition() {
     setPosX(getPosX() + getSpeedX());
