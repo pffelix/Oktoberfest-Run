@@ -1,4 +1,6 @@
 #include "game.h"
+#include <iostream>
+#include <unistd.h>
 
 Game::Game() {
 }
@@ -11,6 +13,7 @@ Game::~Game() {
  * @brief Game-Loop
  * Diese Funktion wird von main() aufgerufen und ist für den kompletten Ablauf des Spiels verantwortlich.
  * grober Ablauf:
+ * - alles laden, Fenster anzeigen
  * LOOP:
  *  - Timer starten
  *  - Neue Objekte zur Welt hinzufügen
@@ -29,5 +32,11 @@ Game::~Game() {
  * @author Rupert
  */
 int Game::exec() {
+    std::cout << "Game::exec() gestartet\nwarte 5 Sekunden\n";
+    //while(1) {
+        //std::cout << ".";
+    //}
+    sleep(5);
+    std::cout << "Game wird beendet\n";
     return 0;
 }

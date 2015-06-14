@@ -1,4 +1,5 @@
 #include "game.h"
+#include <iostream>
 
 using namespace std;
 
@@ -12,6 +13,7 @@ Game game;
  * @author Rupert
  */
 int main() {
+    std::cout << "Spiel wird gestartet\n";
     Game *game;
     game = new Game();                  // Spielinstanz erstellen
     int return_code = game->exec(); // Spiel starten, in exec() ist der Game-Loop implementiert
