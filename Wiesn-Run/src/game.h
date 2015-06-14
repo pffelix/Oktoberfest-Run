@@ -7,7 +7,6 @@
 #include "definitions.h"
 #include "gameobject.h"
 #include "input.h"
-#include <QtGui>
 #include <QApplication>
 #include <QWidget>
 
@@ -46,7 +45,7 @@ public:
 
     /// Startet das die Game-Loop, wird einmalig von main() aufgerufen
     int exec();
-    /// Startet die QApplication app
+    /// Startet die Mockup QApplication app
     int run(QApplication& app);
 
     std::list<struct eventStruct> eventsToHandle;

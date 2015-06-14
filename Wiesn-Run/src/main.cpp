@@ -18,6 +18,7 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
     Game *game = new Game(argc, argv);                  // Spielinstanz erstellen
+
     //game->run();
 
     std::cout << "Spiel wird gestartet\n";

@@ -8,7 +8,7 @@
  */
 Input::Input() {
     // this->installEventFilter(this);
-    std::cout << "intitialze \n";
+    std::cout << "intitialze Input \n";
 }
 
 /**
