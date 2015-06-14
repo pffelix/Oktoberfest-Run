@@ -7,7 +7,7 @@
  * @author  Felix
  */
 Input::Input() {
-    this->installEventFilter(this);
+    // this->installEventFilter(this);
     std::cout << "intitialze \n";
 }
 
@@ -29,21 +29,18 @@ Input::~Input() {
  * @return  Flag
  * @author  Felix
  */
-
-
-
-bool Input::eventFilter(QObject *obj, QEvent *event){
-    if(event->type() == QEvent::KeyPress){
+bool Input::eventFilter(QObject *obj, QEvent *event) {
+    if(event->type() == QEvent::KeyPress) {
          keyevents += ((QKeyEvent*)event)->key();
          std::cout << "key pressed why";
          return true;
     }
-    else if(event->type()==QEvent::KeyRelease){
+    else if(event->type()==QEvent::KeyRelease) {
         keyevents -= ((QKeyEvent*)event)->key();
         std::cout << "key released";
         return true;
     }
-    else{
+    else {
         return QObject::eventFilter(obj, event);
     }
 }
@@ -58,9 +55,8 @@ bool Input::eventFilter(QObject *obj, QEvent *event){
  *         wird eine Aktion neu gedrückt wird die id in keycomb hinzugefügt
  * @author  Felix
  */
-
-void Input::updateKeycomb(){
-    if(keyevents.contains(Qt::Key_Up) && keyevents.contains(Qt::Key_Right)){
+void Input::updateKeycomb() {
+    if(keyevents.contains(Qt::Key_Up) && keyevents.contains(Qt::Key_Right)) {
     //keycomb += "jump_forward";
     }
 }
@@ -71,6 +67,6 @@ void Input::updateKeycomb(){
  * @return  Instanzvariable keycomb
  * @author  Felix
  */
-QSet<int> Input::getKeycomb(){
+QSet<int> Input::getKeycomb() {
     return keycomb;
 }

@@ -7,6 +7,9 @@
 #include "definitions.h"
 #include "gameobject.h"
 #include "input.h"
+#include <QtGui>
+#include <QApplication>
+#include <QWidget>
 
 
 //bool operator < (GameObject const & lhs, GameObject & rhs) {
@@ -38,11 +41,13 @@ struct eventStruct {
  */
 class Game {
 public:
-    Game();
+    Game(int argc, char *argv[]);
     ~Game();
 
     /// Startet das die Game-Loop, wird einmalig von main() aufgerufen
     int exec();
+    /// Startet die QApplication app
+    int run(QApplication& app);
 
     std::list<struct eventStruct> eventsToHandle;
     //QMultiHash<struct stateStruct> states;
@@ -67,6 +72,7 @@ private:
     struct scoreStruct score;
     int stepSize;
     GameObject *playerObjPointer;
+
 
 };
 
