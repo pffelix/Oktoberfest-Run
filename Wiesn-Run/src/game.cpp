@@ -14,8 +14,8 @@ Game::Game(int argc, char *argv[]) {
     QWidget inputwindow;
     inputwindow.resize(320, 240);
     inputwindow.show();
-    inputwindow.setWindowTitle(QApplication::translate("Main Widget", "Main Widget (Input Test)"));
-    qDebug("hall");
+    inputwindow.setWindowTitle(QApplication::translate("Game Widget", "Game Widget (Input Test)"));
+    qDebug("initialize inputwindow");
     Input *keyInputs = new Input();
     inputwindow.installEventFilter(keyInputs);
     run(app);
