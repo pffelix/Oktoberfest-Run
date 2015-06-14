@@ -33,10 +33,16 @@ void MovingObject::setSpeedY(int speedY) {
     this->speedY = speedY;
 }
 
-void MovingObject::update() {
+// Ist schon im Header mit =0 beschrieben
+/*void MovingObject::update() {
 
-}
+}*/
 
+/**
+ * @brief überschreibt die X und Y Position gemäß SpeedXY
+ * @author Rupert
+ */
 void MovingObject::updatePosition() {
-
+    setPosX(getPosX() + getSpeedX());
+    setPosY(getPosY() + getSpeedY());
 }

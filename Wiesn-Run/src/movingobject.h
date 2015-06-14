@@ -23,7 +23,7 @@ public:
     void setSpeedY(int speedY);
 
     //'Abstrakte Methode' update
-    virtual void update();
+    virtual void update()=0;
 
 protected:
     //Positionsupdate
