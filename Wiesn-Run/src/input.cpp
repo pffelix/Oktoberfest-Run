@@ -8,12 +8,12 @@
  */
 Input::Input() {
     this->installEventFilter(this);
+    std::cout << "intitialze \n";
 }
 
 /**
  * @brief  Input::~Input
  *         Destruktor löscht ein Objekt der Klasse Input
- * @param  installEventFilter(this)
  * @author  Felix
  */
 Input::~Input() {
@@ -25,19 +25,29 @@ Input::~Input() {
  *         und speichert die ids in der Instanzvariable keyevents:
  *         wird eine Taste nicht mehr gedrück wird die id in keyevents gelöscht
  *         wird eine Taste neu gedrückt wird die id in keyevents hinzugefügt
- * @param  QEvent *event
+ * @param  QObject *obj, QEvent *event
  * @return  Flag
  * @author  Felix
  */
-bool Input::eventFilter(QEvent *event){
+
+
+
+bool Input::eventFilter(QObject *obj, QEvent *event){
     if(event->type() == QEvent::KeyPress){
          keyevents += ((QKeyEvent*)event)->key();
+         std::cout << "key pressed why";
+         return true;
     }
-    if(event->type()==QEvent::KeyRelease){
+    else if(event->type()==QEvent::KeyRelease){
         keyevents -= ((QKeyEvent*)event)->key();
+        std::cout << "key released";
+        return true;
     }
-    return false;
+    else{
+        return QObject::eventFilter(obj, event);
+    }
 }
+
 
 /**
  * @brief  Input::updateKeycomb

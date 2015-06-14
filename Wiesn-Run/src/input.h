@@ -6,6 +6,7 @@
 #include <QObject>
 #include <QEvent>
 #include <QKeyEvent>
+#include <iostream>
 
 /**
  * @brief  Input-Klasse
@@ -15,12 +16,13 @@
  * @author  Felix
  */
 class Input : public QObject {
+    Q_OBJECT
+
 public:
 
     Input();
     ~Input();
     QSet<int> getKeycomb();
-    //Q_OBJECT
 
 private:
     /**
@@ -37,10 +39,11 @@ private:
      */
     QSet<int> keycomb;
 
+
     void updateKeycomb();
 
 protected:
-    bool eventFilter(QEvent *event); //QObject *obj
+    bool eventFilter(QObject *obj, QEvent *event);
 };
 
 #endif // INPUT_H

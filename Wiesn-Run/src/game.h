@@ -67,7 +67,7 @@ private:
     struct scoreStruct score;
     int stepSize;
     GameObject *playerObjPointer;
-    Input keyInputs;
+
 };
 
 #endif // GAME_H

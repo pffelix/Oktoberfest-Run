@@ -1,6 +1,7 @@
 TEMPLATE = app
 CONFIG += console
 CONFIG += c++11
+QT += gui declarative
 
 SOURCES += src/main.cpp \
     src/game.cpp \
