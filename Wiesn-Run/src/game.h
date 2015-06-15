@@ -18,14 +18,14 @@
 
 /**
  * @brief Struktur für die Events
- * Enthält objectA als Objekt, aus dessen Sicht die Kollision berechnet wurde. objectA ist immer ein MovingObject,
- * objectB kann beides sein.
+ * Enthält affectedObject als Objekt, aus dessen Sicht die Kollision berechnet wurde. affectedObject ist immer ein MovingObject,
+ * causingObject kann beides sein.
  * Die Art und Richtung der Kollision werden mit gespeichert.
- * @author Simon
+ * @author Simon, Johann(15.6)
  */
 struct eventStruct {
-    GameObject objectA;
-    GameObject objectB;
+    GameObject affectedObject;
+    GameObject causingObject;
     enum collisionType collision;
     enum collisionDirection direction;
 };
