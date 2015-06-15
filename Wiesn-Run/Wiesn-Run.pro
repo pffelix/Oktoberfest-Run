@@ -1,6 +1,10 @@
 TEMPLATE = app
 CONFIG += console
 CONFIG += c++11
+# Felix: QT += gui declarative  # geht bei mir nicht (Rupi)
+
+QT += core gui
+QT += widgets
 
 SOURCES += src/main.cpp \
     src/game.cpp \

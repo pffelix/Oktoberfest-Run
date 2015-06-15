@@ -12,6 +12,10 @@ Enemy::Enemy(int posX, int posY, int length, int height, objectType type, collis
     DeathCooldown = 20;
 }
 
+Enemy::~Enemy() {
+
+}
+
 /**
  * @brief Enemy::getHealth
  * Gibt Lebensstand zurück
@@ -79,7 +83,8 @@ void Enemy::update() {
         }
     } else {
         //Bewegung durchführen
-        posX = posX + this->getSpeedX();
+        //posX = posX + this->getSpeedX();
+        updatePosition();
         //Feuern
         if (fireCooldown == 0) {
 //Event: create Shoot

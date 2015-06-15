@@ -7,11 +7,13 @@
 #include "definitions.h"
 #include "gameobject.h"
 #include "input.h"
+#include <QApplication>
+#include <QWidget>
 
 
-bool operator < (GameObject const & lhs, GameObject & rhs) {
-    return lhs.getPosX() < rhs.getPosX();
-}
+//bool operator < (GameObject const & lhs, GameObject & rhs) {
+//    return lhs.getPosX() < rhs.getPosX();
+//}
 
 
 /**
@@ -38,11 +40,13 @@ struct eventStruct {
  */
 class Game {
 public:
-    Game();
+    Game(int argc, char *argv[]);
     ~Game();
 
-    /// Startet das Spiel, wird einmalig von main() aufgerufen
-    int startGame();
+    /// Startet das die Game-Loop, wird einmalig von main() aufgerufen
+    int exec();
+    /// Startet die Mockup QApplication app
+    int run(QApplication& app);
 
     std::list<struct eventStruct> eventsToHandle;
     //QMultiHash<struct stateStruct> states;
@@ -67,7 +71,8 @@ private:
     struct scoreStruct score;
     int stepSize;
     GameObject *playerObjPointer;
-    Input keyInputs;
+
+
 };
 
 #endif // GAME_H

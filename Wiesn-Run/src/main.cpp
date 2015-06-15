@@ -1,8 +1,11 @@
 #include "game.h"
 
-using namespace std;
+#include <QtGui>
+#include <QApplication>
 
-Game game;
+#include <iostream>
+
+using namespace std;
 
 
 /**
@@ -11,10 +14,15 @@ Game game;
  * @return 0 bei Erfolg, -1 bei Fehler
  * @author Rupert
  */
-int main() {
-    Game *game;
-    game = new Game();                  // Spielinstanz erstellen
-    int return_code = game->startGame(); // Spiel starten, in startGame ist der Game-Loop implementiert
-    /// @todo startGame() schlechter Name, wenn darin der ganze Loop und damit das ganze Spiel läuft.
-    return return_code;                     // Rückgabewert von startGame an Betriebssystem übergeben
+
+
+int main(int argc, char *argv[]) {
+    Game *game = new Game(argc, argv);                  // Spielinstanz erstellen
+
+    //game->run();
+
+    std::cout << "Spiel wird gestartet\n";
+
+    int return_code = game->exec();     // Spiel starten, in exec() ist der Game-Loop implementiert
+    return return_code;                 // Rückgabewert von startGame an Betriebssystem übergeben
 }

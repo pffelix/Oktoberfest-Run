@@ -6,28 +6,44 @@
 #include <QObject>
 #include <QEvent>
 #include <QKeyEvent>
+#include <iostream>
 
+/**
+ * @brief  Input-Klasse
+ *         Die Input-Klasse aktulisiert die für das Spiel releventanten Tastatureingaben.
+ *         Eine Instanz dieser Klasse wir innerhalb der game.h angelegt.
+ *         Die einzelnen Methoden werden in der input.cpp erklärt.
+ * @author  Felix
+ */
 class Input : public QObject {
+    Q_OBJECT
+
 public:
+
     Input();
     ~Input();
-    /// getKeyactions returns the variable keyactions
-    QSet<int> getKeyactions();
-    //Q_OBJECT
+    QSet<int> getKeycomb();
 
 private:
-    /// keyevents contains the id of all currently pressed keyboard buttons
+    /**
+     * @brief  keyevents
+     *         keyevents speichert die id aller im Momment gepressten Tasten.
+     * @author  Felix
+     */
     QSet<int> keyevents;
-    /// keyactions contains the specifiers of all currently pressed game relevant keyboard button combinations
-    QSet<int> keyactions;
+    /**
+     * @brief  keycomb
+     *         Die Variable keycomb speichert die id aller im Moment
+     *         gepressten Tastenkombinationen, welche für das Spiel relevant sind.
+     * @author  Felix
+     */
+    QSet<int> keycomb;
 
-    /// generate specifiers for all currently pressed game relevant keyboard button combinations and save in variable keyactions
-    void updateKeyactions();
+
+    void updateKeycomb();
 
 protected:
-    /// eventFilter get's the currently presse keyboard buttons
-    bool eventFilter(QEvent *event); //QObject *obj
-
+    bool eventFilter(QObject *obj, QEvent *event);
 };
 
 #endif // INPUT_H
