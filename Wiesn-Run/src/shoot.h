@@ -7,17 +7,23 @@ class Shoot : public MovingObject {
 
 public:
     //Konstruktor und Destruktor
-    Shoot(int posX, int posY, int length, int height, objectType type, collisionType colType, int speedX, int speedY);
+    Shoot(int posX, int posY, int length, int height, int speedX, objectType origin);
     ~Shoot();
 
     //Damage()
     int getInflictedDamage() const;
 
+    //Ursprung
+    objectType getOrigin();
+
     //update()
     virtual void update();
 
 private:
+    //Schaden den der Bierkrug zufügt
     int inflictedDamage;
+    //Wer hat den Bierkrug geworfen? Spieler oder Gegner
+    objectType origin;
 
 };
 

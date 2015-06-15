@@ -18,7 +18,7 @@
  * @author Johann
  */
 enum objectType {
-    player, enemy, obstacle, shot
+    player, enemy, obstacle, shot, powerUp
 };
 
 /**

@@ -90,3 +90,75 @@ int Game::run(QApplication& app) {
     return app.exec();
 }
 
+/**
+ * @brief Game::handleEvents
+ * Im Spiel auftretende Ereignisse verarbeiten
+ *      Kollisionen
+ *      Löschen von GameObjects
+ *      Erstellen von GameObjects
+ *
+ * @author Johann (15.6.15)
+ */
+
+void Game::handleEvents() {
+    eventStruct handleEvent;
+    //Schritt 1:  Kollisionen verarbeiten
+        /* mögliche Kollisionen
+         * Spieler  <-> Wand
+         * Spieler  <-> Gegner
+         * Spieler  <-> Schuss
+         * Spieler  <-> Power-Up
+         * Gegner   <-> Wand
+         * Gegner   <-> Schuss
+         * Gegner   <-> Gegner      passiert nichts
+         * Gegner   <-> Power-Up    passiert nichts
+         * Schuss   <-> Wand
+         * Schuss   <-> Power-Up    passiert nichts
+         */
+    while (!eventsToHandle.empty()) {
+     /* struct eventStruct {
+            GameObject affectedObject;
+            GameObject causingObject;
+            enum collisionType collision;       stopping, contacting, travesing
+            enum collisionDirection direction;  fromLeft, fromRight, fromAbove, fromBelow
+     */
+        //Erstes Event der Liste bearbeiten
+        handleEvent = eventsToHandle.front();
+        eventsToHandle.pop_front();
+
+        switch (handleEvent.affectedObject->getType()) {
+        case player: {
+            switch (handleEvent.causingObject->getType()) {
+            case obstacle: {
+                break;
+            }
+            case enemy: {
+                break;
+            }
+            case shot: {
+                break;
+            }
+            case powerUp: {
+                break;
+            }
+            }
+
+            break;
+        }
+        case enemy: {
+            switch (handleEvent.causingObject->getType()) {
+            case obstacle: {
+                break;
+            }
+            case shot: {
+                break;
+            }
+            }
+            break;
+        }
+        case shot: {
+            break;
+        }
+        }
+    }
+}

@@ -24,8 +24,8 @@
  * @author Simon
  */
 struct eventStruct {
-    GameObject objectA;
-    GameObject objectB;
+    GameObject *affectedObject;
+    GameObject *causingObject;
     enum collisionType collision;
     enum collisionDirection direction;
 };
