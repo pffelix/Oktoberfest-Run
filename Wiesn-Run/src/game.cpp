@@ -90,3 +90,68 @@ int Game::run(QApplication& app) {
     return app.exec();
 }
 
+/**
+ * @brief Game::detectCollision
+ * Diese Funktion berechnet die Kollisionen, welche zwischen ObjektA und ObjektB auftreten.
+ * Die Kollision wird dabei immer aus Sicht von ObjektA berechnet. D.h. Variablen wie movingRight
+ * bedeuten, dass ObjektA sich nach rechts bewegt hat und dabei ObejektB von Links getroffen hat.
+ * @todo Auslesen und durchgehen der Liste, setzen der Variablen, Erstellen der Kollisionsevents
+ * @author Simon
+ */
+void Game::detectCollision() {
+
+    int objASpeedX;
+    int objASpeedY;
+    bool movingRight;
+    bool movingDown;
+
+    int overlapX;
+    int overlapY;
+    int objBmaxX;
+    int objBminX;
+    int objBmaxY;
+    int objBminY;
+    int objAmaxX;
+    int objAminX;
+    int objAmaxY;
+    int objAminY;
+
+    bool horizontalCollision;
+
+    // Check whether collision happend from left
+    if (objASpeedX > 0) {
+        movingRight = true;
+    } else {
+        movingRight = false;
+    }
+
+    // Check whether collision happend from above
+    if (objASpeedY < 0) {
+        movingDown = true;
+    } else {
+        movingDown = false;
+    }
+
+    // Calculate overlap in the X coordinate
+    if (movingRight == true) {
+        overlapX = objAmaxX - objBminX;
+    } else {
+        overlapX = objBmaxX - objAminX;
+    }
+
+    // Calculate overlap in the Y coordinate
+    if (movingDown == true) {
+        overlapY = objBmaxY - objAminY;
+    } else {
+        overlapY = objAmaxY - objBminY;
+    }
+
+    // Detect dominant collision direction
+    if (overlapX > overlapY) {
+         horizontalCollision = true;
+
+    }
+
+
+
+}
