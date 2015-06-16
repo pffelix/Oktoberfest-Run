@@ -7,7 +7,7 @@ class Shoot : public MovingObject {
 
 public:
     //Konstruktor und Destruktor
-    Shoot(int posX, int posY, int length, int height, int speedX, objectType origin);
+    Shoot(int posX, int posY, int speedX, objectType origin);
     ~Shoot();
 
     //Damage()

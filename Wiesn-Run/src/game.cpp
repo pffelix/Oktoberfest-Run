@@ -90,18 +90,20 @@ int Game::run(QApplication& app) {
     return app.exec();
 }
 
+void Game::handleEvents() {
+
+}
+
 /**
- * @brief Game::handleEvents
- * Im Spiel auftretende Ereignisse verarbeiten
- *      Kollisionen
- *      Löschen von GameObjects
- *      Erstellen von GameObjects
+ * @brief Game::handleCollisions
  *
  * @author Johann (15.6.15)
  */
 
-void Game::handleEvents() {
+void Game::handleCollions() {
     eventStruct handleEvent;
+    Enemy *handleEnemy;
+    Shoot *handleShoot;
     //Schritt 1:  Kollisionen verarbeiten
         /* mögliche Kollisionen
          * Spieler  <-> Wand
@@ -127,7 +129,11 @@ void Game::handleEvents() {
         eventsToHandle.pop_front();
 
         switch (handleEvent.affectedObject->getType()) {
+
         case player: {
+            /*
+             *
+             */
             switch (handleEvent.causingObject->getType()) {
             case obstacle: {
                 break;
@@ -145,6 +151,7 @@ void Game::handleEvents() {
 
             break;
         }
+
         case enemy: {
             switch (handleEvent.causingObject->getType()) {
             case obstacle: {
@@ -153,11 +160,18 @@ void Game::handleEvents() {
             case shot: {
                 break;
             }
+            default: {
+
+            }
             }
             break;
         }
+
         case shot: {
             break;
+        }
+        default: {
+            //eigentlich unnötig
         }
         }
     }

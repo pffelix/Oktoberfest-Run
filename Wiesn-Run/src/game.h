@@ -6,6 +6,9 @@
 
 #include "definitions.h"
 #include "gameobject.h"
+#include "player.h"
+#include "enemy.h"
+#include "shoot.h"
 #include "input.h"
 #include <QApplication>
 #include <QWidget>
@@ -36,7 +39,10 @@ struct eventStruct {
  * Innerhalb der main.cpp wird eine Instanz dieser Klasse angelegt,
  * aus der heraus das gesamte Spiel läuft.
  * Die einzelnen Methoden werden in der game.cpp jeweils erklärt.
- * @author Simon
+ *
+ * @lastChanges funtion handleCollisions hinzugefügt
+ *
+ * @author Simon, Johann
  */
 class Game {
 public:
@@ -61,6 +67,7 @@ private:
     void detectCollision();
     void correctMovement();
     void handleEvents();
+    void handleCollision();
     void renderGraphics();
     void playSound();
     void endGame();
