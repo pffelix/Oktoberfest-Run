@@ -203,9 +203,13 @@ void Game::detectCollision(std::list<GameObject*> &objToCalculate) {
  * @author Rupert
  */
 void Game::makeTestWorld() {
-    GameObject object1 = new GameObject(10,0,4,5,obstacle,stopping);
-    GameObject object2 = new GameObject(20,0,4,5,obstacle,stopping);
-    Player objectPlayer = new Player(5,0,4,5,player,stopping);
+    GameObject *object1 = new GameObject(10,0,4,5,obstacle,stopping);
+    GameObject *object2 = new GameObject(20,0,4,5,obstacle,stopping);
+    Player *objectPlayer = new Player(5,0,4,5,player,stopping,1,0);
+    worldObjects.push_back(object1);
+    worldObjects.push_back(object2);
+    worldObjects.push_back(objectPlayer);
+
 }
 
 void Game::appendWorldObjects() {
