@@ -160,14 +160,12 @@ void Player::resetJump() {
  * führt die Bewegung des Spielers aus (über updatePosition) und verringert Cooldown-Variablen
  */
 void Player::update() {
-    //Bewegung ausführen
-    updatePosition();
-    //posX = posX + this->getSpeedX(); // das passiert in updatePosition
     if (jumpActive) {
-        //posY = posY + jumpTable[jumpTableIndex]; // jumpTable enthält Geschwindigkeiten, die werden in updatePosition berücksichtigt
         setSpeedY(jumpTable[jumpTableIndex]);
         jumpTableIndex++;
     }
+    //Bewegung ausführen
+    updatePosition();
     //Alkoholpegel Zeitabbau
     if (alcoholLevel > 0) {
         alcoholLevel = alcoholLevel - 1;

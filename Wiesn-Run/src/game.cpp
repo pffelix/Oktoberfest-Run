@@ -100,10 +100,10 @@ void Game::handleEvents() {
  * @author Johann (15.6.15)
  */
 
-void Game::handleCollions() {
+void Game::handleCollisions() {
 
-    eventStruct handleEvent;
-    int correctPosition;
+    collisionStruct handleEvent;
+    int overlay;
     Enemy *handleEnemy;
     Shoot *handleShoot;
 
@@ -115,44 +115,46 @@ void Game::handleCollions() {
         switch (handleEvent.affectedObject->getType()) {
 
         case player: {
-            /*
-             *
+            /*Zussammenstöße des Spielers bearbeiten
+             *  mit Wänden, Gegner, Schüssen, PowerUps
              */
             switch (handleEvent.causingObject->getType()) {
             case obstacle: {
-                // Bewegung des Spielers muss abgebrochen und die Position richtiggestellt werden
-                    // 4 Möglichkeiten: von oben, unten, links, rechts
+                /* Bewegung des Spielers muss abgebrochen und die Position richtiggestellt werden
+                 *      4 Möglichkeiten: von oben, unten, links, rechts
+                 */
                 switch (handleEvent.direction) {
                 case fromLeft: {
                     //Bewegung  in X-Richtungstoppen
                     playerObjPointer->setSpeedX(0);
                     //Überlappung berechnen und Spieler nach links versetzen
-                    correctPosition = (playerObjPointer->getPosX() + playerObjPointer->getLength()) - handleEvent.causingObject->getPosX();
-                    playerObjPointer->setPosX(playerObjPointer->getPosX() - correctPosition);
+                    overlay = (playerObjPointer->getPosX() + playerObjPointer->getLength()) - handleEvent.causingObject->getPosX();
+                    playerObjPointer->setPosX(playerObjPointer->getPosX() - overlay);
                     break;
                 }
                 case fromRight: {
                     //Bewegung in X-Richtung stoppen
                     playerObjPointer->setSpeedX(0);
                     //Überlappung berechnen und Spieler nach rechts versetzen
-                    correctPosition = (handleEvent.causingObject->getPosX() + handleEvent.causingObject->getLength()) - playerObjPointer->getPosX();
-                    playerObjPointer->setPosX(playerObjPointer->getPosX() + correctPosition);
+                    overlay = (handleEvent.causingObject->getPosX() + handleEvent.causingObject->getLength()) - playerObjPointer->getPosX();
+                    playerObjPointer->setPosX(playerObjPointer->getPosX() + overlay);
                     break;
                 }
                 case fromAbove: {
-                    //Bewegung in Y-Richtung stoppen
+                    //Bewegung in Y-Richtung stoppen, Sprung beenden!!
                     playerObjPointer->setSpeedY(0);
+                    playerObjPointer->resetJump();
                     //Überlappung berechnen und Spieler nach obern versetzen
-                    correctPosition = (handleEvent.causingObject->getPosY() + handleEvent.causingObject->getHeight()) - playerObjPointer->getPosY();
-                    playerObjPointer->setPosY(playerObjPointer->getPosY() + correctPosition);
+                    overlay = (handleEvent.causingObject->getPosY() + handleEvent.causingObject->getHeight()) - playerObjPointer->getPosY();
+                    playerObjPointer->setPosY(playerObjPointer->getPosY() + overlay);
                     break;
                 }
                 case fromBelow: {
-                    //Bewegung in Y-Richtung stoppen
-                    playerObjPointer->setSpeedY(0);
+                    //Wegen Zusammenstoß wird ein Fall initiiert
+                    playerObjPointer->setFall();
                     //Überlappung berechnen und Spieler nach obern versetzen
-                    correctPosition = (playerObjPointer->getPosY() + playerObjPointer->getHeight()) - handleEvent.causingObject->getPosY();
-                    playerObjPointer->setPosY(playerObjPointer->getPosY() + correctPosition);
+                    overlay = (playerObjPointer->getPosY() + playerObjPointer->getHeight()) - handleEvent.causingObject->getPosY();
+                    playerObjPointer->setPosY(playerObjPointer->getPosY() + overlay);
                     break;
                 }
                 }
@@ -160,10 +162,28 @@ void Game::handleCollions() {
                 break;
             }
             case enemy: {
-                // Schaden zufügen
-                    // 2 Möglichkeiten: an Spieler (Unverwundbarkeit,...), an Gegner (Tod,...)
+                /* Zusammenstoß mit Gegener
+                 *      2 Möglichkeiten:  Spieler kriegt Schaden, Gegner kriegt Schaden
+                 *      Nur erster Fall!!!       für 2.Fall siehe affectedObject==enemy
+                 */
+                //Spieler bekommt Schaden, wenn der Zusammenstoß von links, rechts oder unten mit dem Gegner erfolgt
+                if (!(handleEvent.direction == fromAbove)) {
+                    handleEnemy = reinterpret_cast<Enemy*>(handleEvent.causingObject);
+                    //Überprüfen ob der Spieler durch den zugefügten Schaden stirbt
+                    if (hurtPlayer(handleEnemy->getInflictedDamage())) {
+                        gameStats.gameOver = true;
+                    }
+                    handleEnemy = 0;
+                }
+            }
             case shot: {
-                // Spieler kriegt Schaden, Bierkrug löschen
+                // Spieler kriegt Schaden, Bierkrug zum löschen vormerken
+                handleShoot = reinterpret_cast<Shoot*>(handleEvent.causingObject);
+                if (hurtPlayer(handleShoot->getInflictedDamage())) {
+                    gameStats.gameOver = true;
+                }
+                shotsToDelete.push_back(handleShoot);
+                handleShoot = 0;
                 break;
             }
             case powerUp: {
@@ -208,4 +228,15 @@ void Game::handleCollions() {
  */
 bool Game::positionSort(GameObject *first, GameObject *second) {
     return (first->getPosX() < second->getPosX());
+}
+
+/**
+ * @brief Fügt dem Spieler Schaden zu
+ * @param Schaden
+ * @return true Spieler ist gestorben
+ */
+bool Game::hurtPlayer(int damage) {
+    playerObjPointer->setHealth(playerObjPointer->getHealth() - damage);
+    return !(playerObjPointer->getHealth() > 0);
+
 }
