@@ -37,7 +37,7 @@ struct eventStruct {
  * Innerhalb der main.cpp wird eine Instanz dieser Klasse angelegt,
  * aus der heraus das gesamte Spiel läuft.
  * Die einzelnen Methoden werden in der game.cpp jeweils erklärt.
- * @author Simon
+ * @author Simon, Johann
  */
 class Game : QObject {
     //Q_OBJECT
@@ -50,6 +50,7 @@ public:
     /// Startet die Mockup QApplication app
     int run(QApplication& app);
 
+    struct stateStruct gameStats;
     std::list<struct eventStruct> eventsToHandle;
     //QMultiHash<struct stateStruct> states;
     int start();
