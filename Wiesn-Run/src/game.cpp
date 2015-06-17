@@ -6,6 +6,8 @@
 #include <iomanip>
 #include <cmath>
 
+#include "player.h"
+
 /**
  * @brief Konstruktor
  * Initialisiert den appPointer
@@ -34,12 +36,10 @@ void Game::timerEvent(QTimerEvent *event)
 }
 
 /**
- * @brief Erstelle Mockup QApplication app mit Widget inputwindow (Eventfilter installiert) und Zeiger keyInputs auf Input Objekt.
+ * @brief Erstelle QApplication app mit Widget inputwindow (Eventfilter installiert) und Zeiger input auf Input Objekt.
  * Um Funktionen der Tastatur Eingabe entwickeln zu können ist ein Qt Widget Fenster nötig.
  * Auf dem Widget wird ein Eventfilter installiert welcher kontinuierlich Tastureingaben mitloggt.
- * Die Eingaben werden in dem Objekt der Input Klasse gespeichert und können über getKeycomb() abgerufen werden.
- * Das Fenster Mockup kann in einer späteren Code Version ersetzt werden.
- * Der Eventfilter muss dann auf dem neuen Widget Objekt installiert werden.
+ * Die Eingaben werden in dem Objekt der Input Klasse gespeichert und können über getKeyactions() abgerufen werden.
  *
  * Außerdem wird ein Timer gestartet, der in jedem Intervall timerEvent(...) aufruft, wo dann step() aufgerufen wirt.
  * Das ist dann unsere Game-Loop. Der Timer funktioniert auch bei 5ms Intervall noch genau.
@@ -60,8 +60,8 @@ int Game::start() {
     inputwindow.show();
     inputwindow.setWindowTitle(QApplication::translate("Game Widget", "Game Widget (Input Test)"));
     qDebug("initialize inputwindow");
-    Input *keyInputs = new Input();
-    inputwindow.installEventFilter(keyInputs);
+    Input *input = new Input();
+    inputwindow.installEventFilter(input);
 
     qDebug("Starte Timer mit 500msec-Intervall");
     Game::startTimer(500);
@@ -93,28 +93,24 @@ int Game::start() {
 int Game::step() {
     using namespace std::chrono;
 
+    /// Zeit seit dem letzten Aufruf ausrechnen und ausgeben
     high_resolution_clock::time_point akt = letzterAufruf;
     letzterAufruf = high_resolution_clock::now();
-
-//    milliseconds akt_ms = duration_cast<milliseconds>(akt);
-//    akt_ms.count();
-//    last_ms
-
     std::size_t ms = duration_cast<milliseconds>(letzterAufruf-akt).count();
     std::string msg = "Game::step() | Vergangene Zeit seit letztem step(): " + std::to_string(ms) + "ms";
     qDebug(msg.c_str());
-    //qDebug << "Test";
-    /*
-    appendWorldObjects();
-    reduceWorldObjects();
-    evaluateInput();
-    calculateMovement();
-    detectCollision();
-    correctMovement();
-    handleEvents();
-    renderGraphics();
-    playSound();
-    */
+
+
+//    appendWorldObjects();
+//    reduceWorldObjects();
+//    evaluateInput();
+//    calculateMovement();
+//    detectCollision();
+//    correctMovement();
+//    handleEvents();
+//    renderGraphics();
+//    playSound();
+
 
     return 0;
 }
@@ -204,3 +200,59 @@ void Game::detectCollision(std::list<GameObject*> &objToCalculate) {
         }
     }
 }
+
+/**
+ * @brief Erstellt ein paar Test-Objekte in worldObjects
+ * Was wird erstellt:
+ * - Objekt1 mit v=0 an x=10,y=0
+ * - Objekt2 mit v=0 an x=20,y=0
+ * - ObjektPlayer mit v=1 an x=5,y=0
+ * alle Objekte sind 4 breit und 5 hoch
+ * @author Rupert
+ */
+void Game::makeTestWorld() {
+    GameObject *object1 = new GameObject(10,0,4,5,obstacle,stopping);
+    GameObject *object2 = new GameObject(20,0,4,5,obstacle,stopping);
+    Player *objectPlayer = new Player(5,0,4,5,player,stopping,1,0);
+    worldObjects.push_back(object1);
+    worldObjects.push_back(object2);
+    worldObjects.push_back(objectPlayer);
+
+}
+
+void Game::appendWorldObjects() {
+
+}
+
+void Game::reduceWorldObjects() {
+
+}
+
+void Game::evaluateInput() {
+
+}
+
+void Game::calculateMovement() {
+
+}
+
+void Game::correctMovement() {
+
+}
+
+void Game::handleEvents() {
+
+}
+
+void Game::renderGraphics() {
+
+}
+
+void Game::playSound() {
+
+}
+
+void Game::endGame() {
+
+}
+
