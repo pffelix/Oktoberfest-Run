@@ -10,12 +10,8 @@
  * @param argv
  */
 Game::Game(int argc, char *argv[]) : QObject() {
-    /**
-     * @brief
-     * @author Felix Rupert
-     */
+    /// Initialisiert den appPointer mit der QApplication
     appPointer = new QApplication(argc,argv);
-
 }
 
 Game::~Game() {
@@ -46,9 +42,15 @@ void Game::timerEvent(QTimerEvent *event)
  *
  * Hier müssen auch die Sachen rein, die einmahlig beim Starten ausgeführt werden sollen
  * - alles laden, Fenster anzeigen
- * @return
+ * @return Rückgabewert von app.exec()
+ * @author Felix Rupert
  */
 int Game::start() {
+    // levelInitial laden
+    // worldObjects = levelInitial
+
+    // Player erstellen und in worldObjects einfügen
+
     QWidget inputwindow;
     inputwindow.resize(320, 240);
     inputwindow.show();
@@ -84,41 +86,16 @@ int Game::start() {
  * @author Rupert
  */
 int Game::step() {
-    //std::cout << "Game::exec() gestartet\nwarte 5 Sekunden\n";
-
-    // levelInitial laden
-    // worldObjects = levelInitial
-
-    // Player erstellen und in worldObjects einfügen
-
-    // Qt Fenster anzeigen?
-
-    //while(1) {
-        //std::cout << ".";
-
-        /*
-        appendWorldObjects();
-        reduceWorldObjects();
-        evaluateInput();
-        calculateMovement();
-        detectCollision();
-        correctMovement();
-        handleEvents();
-        renderGraphics();
-        playSound();
-        */
-    //}
-
-    //sleep(5);
-    //std::cout << "Game wird beendet\n";
+    /*
+    appendWorldObjects();
+    reduceWorldObjects();
+    evaluateInput();
+    calculateMovement();
+    detectCollision();
+    correctMovement();
+    handleEvents();
+    renderGraphics();
+    playSound();
+    */
     return 0;
 }
-/*
- * @brief Starte QApplication app
- * @author Felix
- */
-/*
-int Game::run(QApplication& app) {
-    return app.exec();
-}*/
-

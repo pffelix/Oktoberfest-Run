@@ -76,6 +76,7 @@ private:
     int stepSize;
     GameObject *playerObjPointer;
 
+    /// Zeiger auf QApplication
     QApplication *appPointer;
 
 
