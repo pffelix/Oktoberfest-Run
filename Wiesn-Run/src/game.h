@@ -12,11 +12,6 @@
 #include <chrono>
 
 
-//bool operator < (GameObject const & lhs, GameObject & rhs) {
-//    return lhs.getPosX() < rhs.getPosX();
-//}
-
-
 /**
  * @brief Struktur für die Events
  * Enthält affectedObject als Objekt, aus dessen Sicht die Kollision berechnet wurde. affectedObject ist immer ein MovingObject,
@@ -64,7 +59,7 @@ private:
     void reduceWorldObjects();
     void evaluateInput();
     void calculateMovement();
-    void detectCollision();
+    void detectCollision(std::list<GameObject> &objToCalculate);
     void correctMovement();
     void handleEvents();
     void renderGraphics();
