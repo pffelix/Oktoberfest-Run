@@ -103,6 +103,7 @@ void Game::handleEvents() {
 void Game::handleCollions() {
 
     eventStruct handleEvent;
+    int correctPosition;
     Enemy *handleEnemy;
     Shoot *handleShoot;
 
@@ -121,22 +122,57 @@ void Game::handleCollions() {
             case obstacle: {
                 // Bewegung des Spielers muss abgebrochen und die Position richtiggestellt werden
                     // 4 Möglichkeiten: von oben, unten, links, rechts
+                switch (handleEvent.direction) {
+                case fromLeft: {
+                    //Bewegung  in X-Richtungstoppen
+                    playerObjPointer->setSpeedX(0);
+                    //Überlappung berechnen und Spieler nach links versetzen
+                    correctPosition = (playerObjPointer->getPosX() + playerObjPointer->getLength()) - handleEvent.causingObject->getPosX();
+                    playerObjPointer->setPosX(playerObjPointer->getPosX() - correctPosition);
+                    break;
+                }
+                case fromRight: {
+                    //Bewegung in X-Richtung stoppen
+                    playerObjPointer->setSpeedX(0);
+                    //Überlappung berechnen und Spieler nach rechts versetzen
+                    correctPosition = (handleEvent.causingObject->getPosX() + handleEvent.causingObject->getLength()) - playerObjPointer->getPosX();
+                    playerObjPointer->setPosX(playerObjPointer->getPosX() + correctPosition);
+                    break;
+                }
+                case fromAbove: {
+                    //Bewegung in Y-Richtung stoppen
+                    playerObjPointer->setSpeedY(0);
+                    //Überlappung berechnen und Spieler nach obern versetzen
+                    correctPosition = (handleEvent.causingObject->getPosY() + handleEvent.causingObject->getHeight()) - playerObjPointer->getPosY();
+                    playerObjPointer->setPosY(playerObjPointer->getPosY() + correctPosition);
+                    break;
+                }
+                case fromBelow: {
+                    //Bewegung in Y-Richtung stoppen
+                    playerObjPointer->setSpeedY(0);
+                    //Überlappung berechnen und Spieler nach obern versetzen
+                    correctPosition = (playerObjPointer->getPosY() + playerObjPointer->getHeight()) - handleEvent.causingObject->getPosY();
+                    playerObjPointer->setPosY(playerObjPointer->getPosY() + correctPosition);
+                    break;
+                }
+                }
+
                 break;
             }
             case enemy: {
-                //
-                break;
-            }
+                // Schaden zufügen
+                    // 2 Möglichkeiten: an Spieler (Unverwundbarkeit,...), an Gegner (Tod,...)
             case shot: {
+                // Spieler kriegt Schaden, Bierkrug löschen
                 break;
             }
             case powerUp: {
+                    // Spieler erhält Zusatzfähigkeit mit zeitlicher Beschränkung
                 break;
             }
             }
-
             break;
-        }
+        } // Ende: Case player
 
         case enemy: {
             switch (handleEvent.causingObject->getType()) {

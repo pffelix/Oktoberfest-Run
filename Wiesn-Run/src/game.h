@@ -79,7 +79,7 @@ private:
     bool positionSort(GameObject *first, GameObject *second);
     struct scoreStruct score;
     int stepSize;
-    GameObject *playerObjPointer;
+    Player *playerObjPointer;
 
 
 };
