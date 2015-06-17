@@ -5,6 +5,8 @@
 #include <iomanip>
 #include <cmath>
 
+#include "player.h"
+
 /**
  * @brief Konstruktor
  * Initialisiert den appPointer
@@ -182,6 +184,21 @@ void Game::detectCollision(std::list<GameObject> &objToCalculate) {
         }
 
     }
+}
+
+/**
+ * @brief Erstellt ein paar Test-Objekte in worldObjects
+ * Was wird erstellt:
+ * - Objekt1 mit v=0 an x=10,y=0
+ * - Objekt2 mit v=0 an x=20,y=0
+ * - ObjektPlayer mit v=1 an x=5,y=0
+ * alle Objekte sind 4 breit und 5 hoch
+ * @author Rupert
+ */
+void Game::makeTestWorld() {
+    GameObject object1 = new GameObject(10,0,4,5,obstacle,stopping);
+    GameObject object2 = new GameObject(20,0,4,5,obstacle,stopping);
+    Player objectPlayer = new Player(5,0,4,5,player,stopping);
 }
 
 void Game::appendWorldObjects() {

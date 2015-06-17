@@ -66,6 +66,8 @@ private:
     void playSound();
     void endGame();
 
+    void makeTestWorld();
+
     // Enthält alle in der Welt befindlichen Objekte
     std::list<GameObject> worldObjects;
     // Enthält alle statischen Objekte, die zu Anfang gespawnt werden
