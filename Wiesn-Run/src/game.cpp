@@ -1,4 +1,5 @@
 #include "game.h"
+#include "movingobject.h"
 #include <iostream>
 #include <unistd.h>
 #include <chrono>
@@ -6,6 +7,9 @@
 #include <cmath>
 
 #include "player.h"
+#include "gameobject.h"
+#include "enemy.h"
+#include "shoot.h"
 
 /**
  * @brief Konstruktor
@@ -51,7 +55,7 @@ void Game::timerEvent(QTimerEvent *event)
 int Game::start() {
     // levelInitial laden
     // worldObjects = levelInitial
-
+    makeTestWorld();
     // Player erstellen und in worldObjects einfügen
 
     // QGraphicsView Widget (Anzeigefenster) erstellen und einstellen
@@ -104,11 +108,10 @@ int Game::step() {
     std::string msg = "Game::step() | Vergangene Zeit seit letztem step(): " + std::to_string(ms) + "ms";
     qDebug(msg.c_str());
 
-
 //    appendWorldObjects();
 //    reduceWorldObjects();
 //    evaluateInput();
-//    calculateMovement();
+      calculateMovement();
 //    detectCollision();
 //    correctMovement();
 //    handleEvents();
@@ -132,67 +135,76 @@ void Game::detectCollision(std::list<GameObject*> &objToCalculate) {
 
     for (std::list<GameObject*>::iterator it=objToCalculate.begin(); it != objToCalculate.end(); ++it) {
 
-        GameObject *currentObject = *it;
-        GameObject *onePrevious = *(--it);
-        GameObject *twoPrevious = *(--it);
-        ++it;
-        ++it;
-        GameObject *oneAhead = *(++it);
-        GameObject *twoAhead = *(++it);
+        // Anfang, Ende, current nicht moving
 
-        int objASpeedX;
-        int objASpeedY;
-        bool movingRight;
-        bool movingDown;
+        MovingObject *currentObject = dynamic_cast<MovingObject*>(*it);
+        // Prüfen, ob das aktuelle Objekt überhaupt vom Typ MovingObject ist
+        if (currentObject != 0) {
 
-        int overlapX;
-        int overlapY;
-        int objBmaxX;
-        int objBminX;
-        int objBmaxY;
-        int objBminY;
-        int objAmaxX;
-        int objAminX;
-        int objAmaxY;
-        int objAminY;
+            GameObject *onePrevious = *(std::prev(it));
+            GameObject *twoPrevious = *(std::prev(std::prev(it)));
+            GameObject *oneAhead = *(std::next(it));
+            GameObject *twoAhead = *(std::next(std::next(it)));
+            GameObject *possibleCollision[] = {onePrevious, twoPrevious, oneAhead, twoAhead};
 
-        bool horizontalCollision = false;
 
-        // Check whether collision happend from left
-        if (objASpeedX > 0) {
-            movingRight = true;
-        } else {
-            movingRight = false;
+            for (int i = 0; i <= 3; i++) {
+
+                int objASpeedX = currentObject->getSpeedX();
+                int objASpeedY = currentObject->getSpeedY();
+
+                bool movingRight;
+                bool movingDown;
+                int overlapX;
+                int overlapY;
+
+                int objBmaxX = possibleCollision[i]->getPosX() + (possibleCollision[i]->getLength() / 2);
+                int objBminX = possibleCollision[i]->getPosX() - (possibleCollision[i]->getLength() / 2);
+                int objBmaxY = possibleCollision[i]->getPosY() + (possibleCollision[i]->getHeight() / 2);
+                int objBminY = possibleCollision[i]->getPosY() - (possibleCollision[i]->getHeight() / 2);
+                int objAmaxX = currentObject->getPosX() + (currentObject->getLength() / 2);
+                int objAminX = currentObject->getPosX() - (currentObject->getLength() / 2);
+                int objAmaxY = currentObject->getPosY() + (currentObject->getHeight() / 2);
+                int objAminY = currentObject->getPosY() - (currentObject->getHeight() / 2);
+
+                bool horizontalCollision = false;
+
+                // Check whether collision happend from left
+                if (objASpeedX > 0) {
+                    movingRight = true;
+                } else {
+                    movingRight = false;
+                }
+
+                // Check whether collision happend from above
+                if (objASpeedY < 0) {
+                    movingDown = true;
+                } else {
+                    movingDown = false;
+                }
+
+                // Calculate overlap in the X coordinate
+                if (movingRight == true) {
+                    overlapX = objAmaxX - objBminX;
+                } else {
+                    overlapX = objBmaxX - objAminX;
+                }
+
+                // Calculate overlap in the Y coordinate
+                if (movingDown == true) {
+                    overlapY = objBmaxY - objAminY;
+                } else {
+                    overlapY = objAmaxY - objBminY;
+                }
+
+                // Detect dominant collision direction
+                if (overlapX > overlapY) {
+                    horizontalCollision = true;
+                } else {
+                    horizontalCollision = false;
+                }
+            }
         }
-
-        // Check whether collision happend from above
-        if (objASpeedY < 0) {
-            movingDown = true;
-        } else {
-            movingDown = false;
-        }
-
-        // Calculate overlap in the X coordinate
-        if (movingRight == true) {
-            overlapX = objAmaxX - objBminX;
-        } else {
-            overlapX = objBmaxX - objAminX;
-        }
-
-        // Calculate overlap in the Y coordinate
-        if (movingDown == true) {
-            overlapY = objBmaxY - objAminY;
-        } else {
-            overlapY = objAmaxY - objBminY;
-        }
-
-        // Detect dominant collision direction
-        if (overlapX > overlapY) {
-            horizontalCollision = true;
-        } else {
-            horizontalCollision = false;
-        }
-
     }
 }
 
@@ -227,8 +239,28 @@ void Game::evaluateInput() {
 
 }
 
+/**
+ * @brief Geht die worldObjects durch und aktualisiert bei jedem die Position
+ * wird momentan auch über Debug ausgegeben
+ * @author Rupert
+ */
 void Game::calculateMovement() {
+    using namespace std;               // für std::list
+    list<GameObject*>::iterator it;     // Iterator erstellen
+    /// Schleife startet beim ersten Element und geht bis zum letzen Element durch
+    for(it = worldObjects.begin(); it != worldObjects.end(); ++it) {
+        GameObject *aktObject = *it;
 
+        string msg = "OBJECT Position: XPos=" + to_string(aktObject->getPosX());
+        qDebug(msg.c_str());
+
+        MovingObject *aktMovingObject = dynamic_cast<MovingObject*> (aktObject);    // Versuche GameObject in Moving Object umzuwandeln
+        if(aktMovingObject != 0) {
+            aktMovingObject->update();          // Wenn der cast klappt, rufe update() auf.
+            qDebug("update() für letztes Objekt wird aufgerufen");
+        }
+
+    }
 }
 
 void Game::correctMovement() {
@@ -250,4 +282,3 @@ void Game::playSound() {
 void Game::endGame() {
 
 }
-

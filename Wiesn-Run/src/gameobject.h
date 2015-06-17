@@ -7,7 +7,7 @@ class GameObject {
 public:
     //Konstruktor und Destruktor
     GameObject(int posX, int posY, int length, int height, objectType type, collisionType colType);
-    ~GameObject();
+    virtual ~GameObject();
 
     //Position()
     int getPosX() const;
