@@ -39,7 +39,7 @@ void Game::timerEvent(QTimerEvent *event)
  * Der Eventfilter muss dann auf dem neuen Widget Objekt installiert werden.
  *
  * Außerdem wird ein Timer gestartet, der in jedem Intervall timerEvent(...) aufruft, wo dann step() aufgerufen wirt.
- * Das ist dann unsere Game-Loop
+ * Das ist dann unsere Game-Loop. Der Timer funktioniert auch bei 5ms Intervall noch genau.
  *
  * Hier müssen auch die Sachen rein, die einmahlig beim Starten ausgeführt werden sollen
  * - alles laden, Fenster anzeigen
@@ -60,8 +60,8 @@ int Game::start() {
     Input *keyInputs = new Input();
     inputwindow.installEventFilter(keyInputs);
 
-    qDebug("Starte Timer mit 2sec-Intervall");
-    Game::startTimer(2000);
+    qDebug("Starte Timer mit 500msec-Intervall");
+    Game::startTimer(500);
 
     return appPointer->exec();
 }
@@ -88,10 +88,20 @@ int Game::start() {
  * @author Rupert
  */
 int Game::step() {
-    auto akt = letzterAufruf;
-    letzterAufruf = std::chrono::high_resolution_clock::now();
-    std::size_t ms = std::chrono::duration_cast<std::chrono::milliseconds>(akt-letzterAufruf).count();
-    qDebug(std::to_string(ms).c_str());
+    using namespace std::chrono;
+
+    high_resolution_clock::time_point akt = letzterAufruf;
+    letzterAufruf = high_resolution_clock::now();
+
+//    milliseconds akt_ms = duration_cast<milliseconds>(akt);
+//    akt_ms.count();
+//    last_ms
+
+    std::size_t ms = duration_cast<milliseconds>(letzterAufruf-akt).count();
+    std::string msg = "Game::step() | Vergangene Zeit seit letztem step(): " + std::to_string(ms) + "ms";
+    qDebug(msg.c_str());
+
+
 
     //qDebug << "Test";
     /*
@@ -106,6 +116,5 @@ int Game::step() {
     playSound();
     */
 
-    qDebug("TimerEvent und Game::step()");
     return 0;
 }
