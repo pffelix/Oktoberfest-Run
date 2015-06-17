@@ -117,6 +117,8 @@ void Game::handleCollisions() {
         case player: {
             /*Zussammenstöße des Spielers bearbeiten
              *  mit Wänden, Gegner, Schüssen, PowerUps
+             *
+             * PowerUps FEHLT!!!!!
              */
             switch (handleEvent.causingObject->getType()) {
             case obstacle: {
@@ -195,8 +197,35 @@ void Game::handleCollisions() {
         } // Ende: Case player
 
         case enemy: {
+            /*Zussammenstöße des Gegners
+             *  mit Wänden, Spieler, Schüssen
+             *
+             * Ignorieren: Gegner, PowerUps
+             */
+            handleEnemy = reinterpret_cast<Enemy*>(handleEvent.affectedObject);
             switch (handleEvent.causingObject->getType()) {
             case obstacle: {
+                /* Bewegung des Gegners
+                 *
+                 */
+                if (handleEvent.direction == fromAbove) {
+                    //Gegner fällt auf Boden, Fall beendet
+                    handleEnemy->setSpeedY(0);
+                    overlay = (handleEvent.causingObject->getPosY() + handleEvent.causingObject->getHeight()) - handleEnemy->getPosY();
+                    handleEnemy->setPosY(handleEnemy->getPosY() + overlay);
+                } else {
+                    // Gegner rennt gegen Wand, dreht um
+                    handleEnemy->setSpeedX(-handleEnemy->getSpeedX());
+                    if (handleEnemy->getSpeedX() > 0) {
+                        //Gegner kommt von links
+                        overlay = (handleEnemy->getPosX() + handleEnemy->getLength()) - handleEvent.causingObject->getPosX();
+                        handleEnemy->setPosX(handleEnemy->getPosX() - overlay);
+                    } else {
+                        //Gegner kommt von rechts
+                        overlay = (handleEvent.causingObject->getPosX() + handleEvent.causingObject->getLength()) - handleEnemy->getPosX();
+                        handleEnemy->setPosX(handleEnemy->getPosX() + overlay);
+                    }
+                }
                 break;
             }
             case shot: {
