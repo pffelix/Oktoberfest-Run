@@ -9,6 +9,7 @@
 #include "input.h"
 #include <QApplication>
 #include <QWidget>
+#include <chrono>
 
 
 //bool operator < (GameObject const & lhs, GameObject & rhs) {
@@ -78,7 +79,8 @@ private:
 
     /// Zeiger auf QApplication
     QApplication *appPointer;
-
+    /// für Zeitmessung
+    std::chrono::high_resolution_clock::time_point letzterAufruf;
 
 };
 

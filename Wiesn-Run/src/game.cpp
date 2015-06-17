@@ -1,7 +1,9 @@
 #include "game.h"
 #include <iostream>
 #include <unistd.h>
-
+#include <chrono>
+#include <iomanip>
+#include <cmath>
 
 /**
  * @brief Konstruktor
@@ -24,7 +26,6 @@ Game::~Game() {
  */
 void Game::timerEvent(QTimerEvent *event)
 {
-    qDebug("Timer");
     step();
     ///@TODO return von step...
 }
@@ -59,6 +60,7 @@ int Game::start() {
     Input *keyInputs = new Input();
     inputwindow.installEventFilter(keyInputs);
 
+    qDebug("Starte Timer mit 2sec-Intervall");
     Game::startTimer(2000);
 
     return appPointer->exec();
@@ -86,6 +88,12 @@ int Game::start() {
  * @author Rupert
  */
 int Game::step() {
+    auto akt = letzterAufruf;
+    letzterAufruf = std::chrono::high_resolution_clock::now();
+    std::size_t ms = std::chrono::duration_cast<std::chrono::milliseconds>(akt-letzterAufruf).count();
+    qDebug(std::to_string(ms).c_str());
+
+    //qDebug << "Test";
     /*
     appendWorldObjects();
     reduceWorldObjects();
@@ -97,5 +105,7 @@ int Game::step() {
     renderGraphics();
     playSound();
     */
+
+    qDebug("TimerEvent und Game::step()");
     return 0;
 }
