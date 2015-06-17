@@ -92,17 +92,13 @@ int Game::start() {
 int Game::step() {
     using namespace std::chrono;
 
+    /// Zeit seit dem letzten Aufruf ausrechnen und ausgeben
     high_resolution_clock::time_point akt = letzterAufruf;
     letzterAufruf = high_resolution_clock::now();
-
-//    milliseconds akt_ms = duration_cast<milliseconds>(akt);
-//    akt_ms.count();
-//    last_ms
-
     std::size_t ms = duration_cast<milliseconds>(letzterAufruf-akt).count();
     std::string msg = "Game::step() | Vergangene Zeit seit letztem step(): " + std::to_string(ms) + "ms";
     qDebug(msg.c_str());
-    //qDebug << "Test";
+
     /*
     appendWorldObjects();
     reduceWorldObjects();
@@ -181,5 +177,41 @@ void Game::detectCollision() {
     } else {
         horizontalCollision = false;
     }
+
+}
+
+void Game::appendWorldObjects() {
+
+}
+
+void Game::reduceWorldObjects() {
+
+}
+
+void Game::evaluateInput() {
+
+}
+
+void Game::calculateMovement() {
+
+}
+
+void Game::correctMovement() {
+
+}
+
+void Game::handleEvents() {
+
+}
+
+void Game::renderGraphics() {
+
+}
+
+void Game::playSound() {
+
+}
+
+void Game::endGame() {
 
 }
