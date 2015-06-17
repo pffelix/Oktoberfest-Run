@@ -99,17 +99,17 @@ int Game::step() {
     std::string msg = "Game::step() | Vergangene Zeit seit letztem step(): " + std::to_string(ms) + "ms";
     qDebug(msg.c_str());
 
-    /*
-    appendWorldObjects();
-    reduceWorldObjects();
-    evaluateInput();
-    calculateMovement();
-    detectCollision();
-    correctMovement();
-    handleEvents();
-    renderGraphics();
-    playSound();
-    */
+
+//    appendWorldObjects();
+//    reduceWorldObjects();
+//    evaluateInput();
+//    calculateMovement();
+//    detectCollision();
+//    correctMovement();
+//    handleEvents();
+//    renderGraphics();
+//    playSound();
+
 
     return 0;
 }
