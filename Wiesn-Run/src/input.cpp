@@ -7,9 +7,9 @@
  * @author  Felix
  */
 Input::Input() {
-    // this->installEventFilter(this);
-    std::cout << "intitialze Input \n";
 }
+
+
 
 /**
  * @brief  Input::~Input
@@ -32,12 +32,14 @@ Input::~Input() {
 bool Input::eventFilter(QObject *obj, QEvent *event) {
     if(event->type() == QEvent::KeyPress) {
          keyevents += ((QKeyEvent*)event)->key();
-         std::cout << "key pressed why";
+         std::cout << "key pressed";
+         updateKeycomb();
          return true;
     }
     else if(event->type()==QEvent::KeyRelease) {
         keyevents -= ((QKeyEvent*)event)->key();
         std::cout << "key released";
+        updateKeycomb();
         return true;
     }
     else {
@@ -57,8 +59,11 @@ bool Input::eventFilter(QObject *obj, QEvent *event) {
  */
 void Input::updateKeycomb() {
     if(keyevents.contains(Qt::Key_Up) && keyevents.contains(Qt::Key_Right)) {
-    //keycomb += "jump_forward";
+    keycomb += key::left;
+    qDebug("jump_forward");
     }
+
+
 }
 
 /**

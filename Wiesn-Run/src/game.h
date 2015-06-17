@@ -9,6 +9,7 @@
 #include "input.h"
 #include <QApplication>
 #include <QWidget>
+#include <chrono>
 
 
 //bool operator < (GameObject const & lhs, GameObject & rhs) {
@@ -36,21 +37,26 @@ struct eventStruct {
  * Innerhalb der main.cpp wird eine Instanz dieser Klasse angelegt,
  * aus der heraus das gesamte Spiel läuft.
  * Die einzelnen Methoden werden in der game.cpp jeweils erklärt.
- * @author Simon
+ * @author Simon, Johann
  */
-class Game {
+class Game : QObject {
+    //Q_OBJECT
 public:
     Game(int argc, char *argv[]);
     ~Game();
 
     /// Startet das die Game-Loop, wird einmalig von main() aufgerufen
-    int exec();
+    int step();
     /// Startet die Mockup QApplication app
     int run(QApplication& app);
 
+    struct stateStruct gameStats;
     std::list<struct eventStruct> eventsToHandle;
     //QMultiHash<struct stateStruct> states;
+    int start();
 
+protected:
+    void timerEvent(QTimerEvent *event);
 
 private:
     int getStepSize();
@@ -72,6 +78,10 @@ private:
     int stepSize;
     GameObject *playerObjPointer;
 
+    /// Zeiger auf QApplication
+    QApplication *appPointer;
+    /// für Zeitmessung
+    std::chrono::high_resolution_clock::time_point letzterAufruf;
 
 };
 

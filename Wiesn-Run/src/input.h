@@ -3,6 +3,7 @@
 
 
 #include <QSet>
+#include <QString>
 #include <QObject>
 #include <QEvent>
 #include <QKeyEvent>
@@ -19,6 +20,17 @@ class Input : public QObject {
     Q_OBJECT
 
 public:
+    enum key{
+        left = 0,
+        right = 1,
+        up = 2,
+        down = 3,
+        jump_left = 4,
+        jump_right = 5,
+        jump_up = 6,
+        fire = 7,
+        exit = 8
+    };
 
     Input();
     ~Input();

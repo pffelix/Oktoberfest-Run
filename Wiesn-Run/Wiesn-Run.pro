@@ -6,6 +6,8 @@ CONFIG += c++11
 QT += core gui
 QT += widgets
 
+#QT += testlib
+
 SOURCES += src/main.cpp \
     src/game.cpp \
     src/gameobject.cpp \
