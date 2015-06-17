@@ -284,7 +284,7 @@ void Game::handleEvents() {
 }
 
 /**
- * @brief Game::handleCollisions
+ * @brief Alle Kollisionen die in Der Liste eventsToHandle enthalten sind werden nach und nach abgearbeitet.
  *
  * @author Johann (15.6.15)
  */
@@ -438,17 +438,6 @@ void Game::handleCollisions() {
 }
 
 /**
- * @brief Vergleichsoperand für die Sort-Methode der Listklasse.
- * Vergleicht die X-Positionen zweier Objekte.
- * @param first     : erstes Objekt
- * @param second    : zweites Objekt
- * @return true, wenn erstesObjekt weiter links
- */
-bool Game::positionSort(GameObject *first, GameObject *second) {
-    return (first->getPosX() < second->getPosX());
-}
-
-/**
  * @brief Fügt dem Spieler Schaden zu
  * @param Schaden
  * @return true Spieler ist gestorben
@@ -457,4 +446,15 @@ bool Game::hurtPlayer(int damage) {
     playerObjPointer->setHealth(playerObjPointer->getHealth() - damage);
     return !(playerObjPointer->getHealth() > 0);
 
+}
+
+/**
+ * @brief Verglecht zwei GameObjects, bezüglich der X-Position
+ * @param 1.Objekt
+ * @param 2.Objekt
+ * @return true, wenn 1.Objekt weiter links als 2.Objekt
+ * @author Simon
+ */
+bool Game::compGameObjects(const GameObject &objA, const GameObject &objB) {
+    return objA.getPosX() < objB.getPosX();
 }

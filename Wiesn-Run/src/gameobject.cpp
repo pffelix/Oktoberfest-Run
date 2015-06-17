@@ -47,7 +47,3 @@ objectType GameObject::getType() const	{
 collisionType GameObject::getCollisionType() const {
     return colType;
 }
-
-bool GameObject::compGameObjects(const GameObject &objA, const GameObject &objB) {
-    return objA.getPosX() < objB.getPosX();
-}
