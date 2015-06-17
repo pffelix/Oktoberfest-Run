@@ -66,7 +66,7 @@ private:
     void reduceWorldObjects();
     void evaluateInput();
     void calculateMovement();
-    void detectCollision(std::list<GameObject*> &objToCalculate);
+    void detectCollision(std::list<GameObject*> *objToCalculate);
     void correctMovement();
     void handleEvents();
     void handleCollisions();
