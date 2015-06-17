@@ -10,7 +10,6 @@
 #include <QApplication>
 #include <QWidget>
 
-
 //bool operator < (GameObject const & lhs, GameObject & rhs) {
 //    return lhs.getPosX() < rhs.getPosX();
 //}

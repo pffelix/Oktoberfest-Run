@@ -29,49 +29,82 @@ Input::~Input() {
  * @return  Flag
  * @author  Felix
  */
+
 bool Input::eventFilter(QObject *obj, QEvent *event) {
-    if(event->type() == QEvent::KeyPress) {
-         keyevents += ((QKeyEvent*)event)->key();
-         std::cout << "key pressed";
-         updateKeycomb();
-         return true;
-    }
-    else if(event->type()==QEvent::KeyRelease) {
-        keyevents -= ((QKeyEvent*)event)->key();
-        std::cout << "key released";
-        updateKeycomb();
+    if(event->type() == QEvent::KeyPress && ((QKeyEvent*)event)->isAutoRepeat() == false) {
+        qDebug("key pressed");
+        keyevents += ((QKeyEvent*)event)->key();
+        updateKeyactions();
         return true;
     }
+    else if(event->type() == QEvent::KeyRelease && ((QKeyEvent*)event)->isAutoRepeat() == false) {
+        qDebug("key released");
+        keyevents -= ((QKeyEvent*)event)->key();
+        updateKeyactions();
+        return true;
+        }
     else {
-        return QObject::eventFilter(obj, event);
+         return QObject::eventFilter(obj, event);
     }
 }
 
 
 /**
- * @brief  Input::updateKeycomb
- *         updateKeycomb sortiert aus allen in keyevents gespeicherten (im Momemnt
- *         gepressenten Tastatur Eingaben) die für das Spiel relevanten Kombinationen
- *         heraus und aktualisiert die ids in der Instanzvariable keycomb:
- *         wird eine Aktion nicht mehr gedrück wird die id in keycomb gelöscht
- *         wird eine Aktion neu gedrückt wird die id in keycomb hinzugefügt
+ * @brief  Input::updateKeyactions
+ *         updateKeyactions berechnet aus allen in keyevents gespeicherten Tastatureingaben
+ *         die für das Spiel relevanten Kombinationen und speichert diese in keyactions.
+ *         heraus und aktualisiert die ids in der Instanzvariable keyactions:
+ *         wird eine Aktion nicht mehr gedrück wird die id in keyactions gelöscht
+ *         wird eine Aktion neu gedrückt wird die id in keyactions hinzugefügt
  * @author  Felix
  */
-void Input::updateKeycomb() {
-    if(keyevents.contains(Qt::Key_Up) && keyevents.contains(Qt::Key_Right)) {
-    keycomb += key::left;
-    qDebug("jump_forward");
+void Input::updateKeyactions() {
+    keyactions.clear();
+    if(keyevents.contains(Qt::Key_Left)) {
+            keyactions += Key::Left;
+            qDebug("Left");
     }
-
-
+    if(keyevents.contains(Qt::Key_Right)) {
+            keyactions += Key::Right;
+            qDebug("Right");
+    }
+    if(keyevents.contains(Qt::Key_Up)) {
+            keyactions += Key::Up;
+            qDebug("Up");
+    }
+    if(keyevents.contains(Qt::Key_Down)) {
+            keyactions += Key::Down;
+            qDebug("Down");
+    }
+    if(keyevents.contains(Qt::Key_Left) && keyevents.contains(Qt::Key_Up)) {
+            keyactions += Key::Jump_Left;
+            qDebug("Jump_Left");
+    }
+    if(keyevents.contains(Qt::Key_Right) && keyevents.contains(Qt::Key_Up)) {
+            keyactions += Key::Jump_Right;
+            qDebug("Jump_Right");
+    }
+    if(keyevents.contains(Qt::Key_Space)) {
+            keyactions += Key::Shoot;
+            qDebug("Shoot");
+    }
+    if(keyevents.contains(Qt::Key_Escape)) {
+            keyactions += Key::Exit;
+            qDebug("Exit");
+    }
 }
 
 /**
- * @brief  Input::getKeycomb
- *         getKeycomb gibt bei Aufruf die Instanzvariable keycomb zurück
- * @return  Instanzvariable keycomb
+ * @brief  Input::getKeyactions
+ *         getKeyactions gibt bei Aufruf die Instanzvariable keyactions zurück.
+ *         Jede Tastaturkombination besitzt eine Integer ID welche in keyactions gespeichert ist.
+ *         Die IDs sind über die Enumeration Input::key mit lesbaren Spielbefehlen verknüpft.
+ *         Möchte man nun bespielsweiseprüfen ob der Spieler im Moment schießt so überprüft man:
+ *         input->getKeyactions().contains(Input::Key::Shoot) == True.
+ * @return  Instanzvariable keyactions
  * @author  Felix
  */
-QSet<int> Input::getKeycomb() {
-    return keycomb;
+QSet<int> Input::getKeyactions() {
+    return keyactions;
 }
+

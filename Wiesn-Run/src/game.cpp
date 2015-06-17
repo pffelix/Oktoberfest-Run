@@ -5,7 +5,7 @@ Game::Game(int argc, char *argv[]) {
      * @brief Erstelle Mockup QApplication app mit Widget inputwindow (Eventfilter installiert) und Zeiger keyInputs auf Input Objekt.
      * Um Funktionen der Tastatur Eingabe entwickeln zu können ist ein Qt Widget Fenster nötig.
      * Auf dem Widget wird ein Eventfilter installiert welcher kontinuierlich Tastureingaben mitloggt.
-     * Die Eingaben werden in dem Objekt der Input Klasse gespeichert und können über getKeycomb() abgerufen werden.
+     * Die Eingaben werden in dem Objekt der Input Klasse gespeichert und können über getKeyaction() abgerufen werden.
      * Das Fenster Mockup kann in einer späteren Code Version ersetzt werden.
      * Der Eventfilter muss dann auf dem neuen Widget Objekt installiert werden.
      * @author Felix
@@ -16,8 +16,8 @@ Game::Game(int argc, char *argv[]) {
     inputwindow.show();
     inputwindow.setWindowTitle(QApplication::translate("Game Widget", "Game Widget (Input Test)"));
     qDebug("initialize inputwindow");
-    Input *keyInputs = new Input();
-    inputwindow.installEventFilter(keyInputs);
+    Input *input = new Input();
+    inputwindow.installEventFilter(input);
     run(app);
 
 }
