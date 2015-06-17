@@ -10,6 +10,7 @@
  * Initialisiert den appPointer
  * @param argc
  * @param argv
+ * @author Rupert
  */
 Game::Game(int argc, char *argv[]) : QObject() {
     /// Initialisiert den appPointer mit der QApplication
@@ -23,6 +24,7 @@ Game::~Game() {
 /**
  * @brief wird regelmäßig aufgerufen
  * @param event
+ * @author Rupert
  */
 void Game::timerEvent(QTimerEvent *event)
 {
@@ -44,7 +46,7 @@ void Game::timerEvent(QTimerEvent *event)
  * Hier müssen auch die Sachen rein, die einmahlig beim Starten ausgeführt werden sollen
  * - alles laden, Fenster anzeigen
  * @return Rückgabewert von app.exec()
- * @author Felix Rupert
+ * @author Felix, Rupert
  */
 int Game::start() {
     // levelInitial laden
