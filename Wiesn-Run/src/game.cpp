@@ -284,7 +284,10 @@ void Game::handleEvents() {
 }
 
 /**
- * @brief Alle Kollisionen die in Der Liste eventsToHandle enthalten sind werden nach und nach abgearbeitet.
+ * @brief Kollisionen in der Liste eventsToHandle werden der Reihe nach aus Sicht des affectedOnjects bearbeitet.
+ * In einer Schleife wird das jeweils erst CollisionEvent bearbeitet. Dabei werden nur an dem Objekt affectedObject Änderungen vorgenommen.
+ * Mögliche Objekte: Spieler(player), Gegner(enemy), Bierkrug(shot)
+ * mögliche Kollision mit Spieler(player), Spielumfeld(obstacle), Gegner(enemy), Bierkrug(shot), Power-Up(powerUp)
  *
  * @author Johann (15.6.15)
  */
@@ -304,14 +307,17 @@ void Game::handleCollisions() {
         switch (handleEvent.affectedObject->getType()) {
 
         case player: {
-            /*Zussammenstöße des Spielers bearbeiten
-             *  mit Wänden, Gegner, Schüssen, PowerUps
+            /*Zusammenstöße des Spielers
+             *  mit Umfeld, Gegner, Schüssen, PowerUps
+             *
+             * default: Spieler
              *
              * PowerUps FEHLT!!!!!
              */
             switch (handleEvent.causingObject->getType()) {
             case obstacle: {
-                /* Bewegung des Spielers muss abgebrochen und die Position richtiggestellt werden
+                /* Zusammenstoß mit Umfeld
+                 * Bewegungsabbruch, Positionskorrektur
                  *      4 Möglichkeiten: von oben, unten, links, rechts
                  */
                 switch (handleEvent.direction) {
@@ -354,22 +360,27 @@ void Game::handleCollisions() {
             }
             case enemy: {
                 /* Zusammenstoß mit Gegener
-                 *      2 Möglichkeiten:  Spieler kriegt Schaden, Gegner kriegt Schaden
-                 *      Nur erster Fall!!!       für 2.Fall siehe affectedObject==enemy
+                 *      Spieler läuft in Gegner oder Gegner fällt auf Spieler (sonst siehe affectedObject==enemy)
+                 *      Dem Spieler wird Schaden zugefügt und er erhält einen kurzen immunitätsbonus, falls nicht schon vorhanden
                  */
-                //Spieler bekommt Schaden, wenn der Zusammenstoß von links, rechts oder unten mit dem Gegner erfolgt
                 if (!(handleEvent.direction == fromAbove)) {
-                    handleEnemy = reinterpret_cast<Enemy*>(handleEvent.causingObject);
-                    //Überprüfen ob der Spieler durch den zugefügten Schaden stirbt
-                    if (hurtPlayer(handleEnemy->getInflictedDamage())) {
-                        gameStats.gameOver = true;
+                    //Überprüfen ob dem Spieler Schaden zugefügt werden kann
+                    if (!(playerObjPointer->getImmunityCooldown() > 0)) {
+                        handleEnemy = dynamic_cast<Enemy*>(handleEvent.causingObject);
+                        //Stirbt der Spieler durch den zugefügten Schaden -> GameOver
+                        if (hurtPlayer(handleEnemy->getInflictedDamage())) {
+                            gameStats.gameOver = true;
+                        } else {
+                            //Immunitätsbonus einer haleben Sekunde
+                            playerObjPointer->setImmunityCooldown(10);
+                        }
+                        handleEnemy = 0;
                     }
-                    handleEnemy = 0;
                 }
             }
             case shot: {
-                // Spieler kriegt Schaden, Bierkrug zum löschen vormerken
-                handleShoot = reinterpret_cast<Shoot*>(handleEvent.causingObject);
+                // Spieler kriegt Schaden, Bierkrug zum löschen vormerken, treffen mit eigenem Krug nicht möglich
+                handleShoot = dynamic_cast<Shoot*>(handleEvent.causingObject);
                 if (hurtPlayer(handleShoot->getInflictedDamage())) {
                     gameStats.gameOver = true;
                 }
@@ -381,30 +392,46 @@ void Game::handleCollisions() {
                     // Spieler erhält Zusatzfähigkeit mit zeitlicher Beschränkung
                 break;
             }
+            default: {
+                /* Zusammenstoß mit Spieler
+                 *      nicht möglich
+                 */
+            }
             }
             break;
-        } // Ende: Case player
+        } // end (case player)
 
         case enemy: {
-            /*Zussammenstöße des Gegners
-             *  mit Wänden, Spieler, Schüssen
+            /*Zusammenstöße des Gegners
+             *  mit Spieler, Umfeld, Schüssen
              *
-             * Ignorieren: Gegner, PowerUps
+             * default: Gegner, PowerUps
+             *      werden durchlaufen ohne Effekt
              */
-            handleEnemy = reinterpret_cast<Enemy*>(handleEvent.affectedObject);
+            handleEnemy = dynamic_cast<Enemy*>(handleEvent.affectedObject);
+
             switch (handleEvent.causingObject->getType()) {
+            case player: {
+                /* Zusammenstoß mit Spieler
+                 *      Spieler springt auf Gegner (sonst siehe affectedObject==player)
+                 * Der Gegner wird getötet
+                 */
+                handleEnemy->setDeath(true);
+                break;
+            }
             case obstacle: {
-                /* Bewegung des Gegners
-                 *
+                /* Zusammenstoß mit Umfeld
+                 *  Bewegungsabbruch, Positionskorrektur, neue Bewegungsrichtung
                  */
                 if (handleEvent.direction == fromAbove) {
-                    //Gegner fällt auf Boden, Fall beendet
+                    //Fall wird beendet, X-Bewegung uneingeschränkt
                     handleEnemy->setSpeedY(0);
                     overlay = (handleEvent.causingObject->getPosY() + handleEvent.causingObject->getHeight()) - handleEnemy->getPosY();
                     handleEnemy->setPosY(handleEnemy->getPosY() + overlay);
                 } else {
-                    // Gegner rennt gegen Wand, dreht um
+                    // Bewegungsabbruch, neue Bewegungsrichtung
                     handleEnemy->setSpeedX(-handleEnemy->getSpeedX());
+                    //PositionsKorrektur
                     if (handleEnemy->getSpeedX() > 0) {
                         //Gegner kommt von links
                         overlay = (handleEnemy->getPosX() + handleEnemy->getLength()) - handleEvent.causingObject->getPosX();
@@ -418,20 +445,53 @@ void Game::handleCollisions() {
                 break;
             }
             case shot: {
+                /* Zusammenstoß mit Bierkrug
+                 *  Fügt Schaden zu, falls von Spieler geworfen,
+                 *  Bierkrug zum löschen vormerken
+                 */
+                handleShoot = dynamic_cast<Shoot*>(handleEvent.causingObject);
+                if (handleShoot->getOrigin() == player) {
+                    //Schaden zufügen
+                    handleEnemy->setHealth(handleEnemy->getHealth() - handleShoot->getInflictedDamage());
+                    //Bierkrug zum löschen vormerken
+                    shotsToDelete.push_back(handleShoot);
+                    //Im Falle des Todes
+                    if (handleEnemy->getHealth() < 0) {
+                        handleEnemy->setDeath(true);
+                    }
+                }
+                handleShoot = 0;
                 break;
             }
             default: {
-
+                /*Zusammenstoß mit Gegner, PowerUp
+                 *      kein Effekt
+                 */
             }
             }
             break;
-        }
+        }//end (case enemy)
 
         case shot: {
+            /*Zusammenstöße des Bierkrugs
+             * mit Umfeld
+             *
+             * default: Spieler, Gegner, PowerUps
+             *      wird jeweils in der Situation Spieler/Gegner bearbeitet, bei PowerUps keinen effekt
+             */
+
+            //Bierkrug löschen, bei Kollision mit Spielumfeld
+            if (handleEvent.causingObject->getType() == obstacle) {
+                shotsToDelete.push_back(dynamic_cast<Shoot*>(handleEvent.affectedObject));
+            }
             break;
-        }
+        }//end (case shot)
         default: {
-            //eigentlich unnötig
+            /*Zusammenstöße von Umfeld und PowerUps
+             *      NICHT MÖGLICH!!!   da keine MovingObjects
+             *
+             * default nur um Fehlermeldungen zu vermeiden
+             */
         }
         }
     }

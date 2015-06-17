@@ -22,6 +22,16 @@ Shoot::~Shoot() {
 }
 
 /**
+ * @brief Shoot::getOrigin
+ * gibt den Ursprung des Bierkrugs zurück, Wer hat ihn geworfen (Player/Enemy)
+ * @return Ursprung des Bierkruges
+ * @author Johann
+ */
+objectType Shoot::getOrigin() {
+    return origin;
+}
+
+/**
  * @brief Shoot::getInflictedDamage
  * gibt den Schaden den der Schuss zufügt zurück
  * @return Schaden

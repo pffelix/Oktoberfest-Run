@@ -97,7 +97,6 @@ private:
     QApplication *appPointer;
     /// für Zeitmessung
     std::chrono::high_resolution_clock::time_point letzterAufruf;
-
 };
 
 #endif // GAME_H
