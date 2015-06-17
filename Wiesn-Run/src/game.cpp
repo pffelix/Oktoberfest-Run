@@ -123,11 +123,18 @@ int Game::step() {
  * @todo Auslesen und durchgehen der Liste, setzen der Variablen, Erstellen der Kollisionsevents
  * @author Simon
  */
-void Game::detectCollision(std::list<GameObject> &objToCalculate) {
+void Game::detectCollision(std::list<GameObject*> &objToCalculate) {
 
-    for (std::list<GameObject>::iterator it=objToCalculate.begin(); it != objToCalculate.end(); ++it) {
+    for (std::list<GameObject*>::iterator it=objToCalculate.begin(); it != objToCalculate.end(); ++it) {
 
-        // *it ist aktuelles Objekt
+        GameObject *currentObject = *it;
+        GameObject *onePrevious = *(--it);
+        GameObject *twoPrevious = *(--it);
+        ++it;
+        ++it;
+        GameObject *oneAhead = *(++it);
+        GameObject *twoAhead = *(++it);
+
         int objASpeedX;
         int objASpeedY;
         bool movingRight;
