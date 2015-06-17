@@ -35,12 +35,10 @@ void Game::timerEvent(QTimerEvent *event)
 }
 
 /**
- * @brief Erstelle Mockup QApplication app mit Widget inputwindow (Eventfilter installiert) und Zeiger keyInputs auf Input Objekt.
+ * @brief Erstelle QApplication app mit Widget inputwindow (Eventfilter installiert) und Zeiger input auf Input Objekt.
  * Um Funktionen der Tastatur Eingabe entwickeln zu können ist ein Qt Widget Fenster nötig.
  * Auf dem Widget wird ein Eventfilter installiert welcher kontinuierlich Tastureingaben mitloggt.
- * Die Eingaben werden in dem Objekt der Input Klasse gespeichert und können über getKeycomb() abgerufen werden.
- * Das Fenster Mockup kann in einer späteren Code Version ersetzt werden.
- * Der Eventfilter muss dann auf dem neuen Widget Objekt installiert werden.
+ * Die Eingaben werden in dem Objekt der Input Klasse gespeichert und können über getKeyactions() abgerufen werden.
  *
  * Außerdem wird ein Timer gestartet, der in jedem Intervall timerEvent(...) aufruft, wo dann step() aufgerufen wirt.
  * Das ist dann unsere Game-Loop. Der Timer funktioniert auch bei 5ms Intervall noch genau.
@@ -61,8 +59,8 @@ int Game::start() {
     inputwindow.show();
     inputwindow.setWindowTitle(QApplication::translate("Game Widget", "Game Widget (Input Test)"));
     qDebug("initialize inputwindow");
-    Input *keyInputs = new Input();
-    inputwindow.installEventFilter(keyInputs);
+    Input *input = new Input();
+    inputwindow.installEventFilter(input);
 
     qDebug("Starte Timer mit 500msec-Intervall");
     Game::startTimer(500);
@@ -247,3 +245,40 @@ void Game::playSound() {
 void Game::endGame() {
 
 }
+
+void Game::appendWorldObjects() {
+
+}
+
+void Game::reduceWorldObjects() {
+
+}
+
+void Game::evaluateInput() {
+
+}
+
+void Game::calculateMovement() {
+
+}
+
+void Game::correctMovement() {
+
+}
+
+void Game::handleEvents() {
+
+}
+
+void Game::renderGraphics() {
+
+}
+
+void Game::playSound() {
+
+}
+
+void Game::endGame() {
+
+}
+
