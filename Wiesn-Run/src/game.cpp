@@ -6,6 +6,9 @@
 #include <cmath>
 
 #include "player.h"
+#include "gameobject.h"
+#include "enemy.h"
+#include "shoot.h"
 
 /**
  * @brief Konstruktor
@@ -99,11 +102,10 @@ int Game::step() {
     std::string msg = "Game::step() | Vergangene Zeit seit letztem step(): " + std::to_string(ms) + "ms";
     qDebug(msg.c_str());
 
-
 //    appendWorldObjects();
 //    reduceWorldObjects();
 //    evaluateInput();
-//    calculateMovement();
+      calculateMovement();
 //    detectCollision();
 //    correctMovement();
 //    handleEvents();
@@ -222,8 +224,28 @@ void Game::evaluateInput() {
 
 }
 
+/**
+ * @brief Geht die worldObjects durch und aktualisiert bei jedem die Position
+ * wird momentan auch über Debug ausgegeben
+ * @author Rupert
+ */
 void Game::calculateMovement() {
+    using namespace std;               // für std::list
+    list<GameObject*>::iterator it;     // Iterator erstellen
+    /// Schleife startet beim ersten Element und geht bis zum letzen Element durch
+    for(it = worldObjects.begin(); it != worldObjects.end(); ++it) {
+        GameObject *aktObject = *it;
 
+        string msg = "OBJECT Position: XPos=" + to_string(aktObject->getPosX());
+        qDebug(msg.c_str());
+
+        MovingObject *aktMovingObject = dynamic_cast<MovingObject*> (aktObject);    // Versuche GameObject in Moving Object umzuwandeln
+        if(aktMovingObject != 0) {
+            aktMovingObject->update();          // Wenn der cast klappt, rufe update() auf.
+            qDebug("update() für letztes Objekt wird aufgerufen");
+        }
+
+    }
 }
 
 void Game::correctMovement() {
@@ -245,40 +267,3 @@ void Game::playSound() {
 void Game::endGame() {
 
 }
-
-void Game::appendWorldObjects() {
-
-}
-
-void Game::reduceWorldObjects() {
-
-}
-
-void Game::evaluateInput() {
-
-}
-
-void Game::calculateMovement() {
-
-}
-
-void Game::correctMovement() {
-
-}
-
-void Game::handleEvents() {
-
-}
-
-void Game::renderGraphics() {
-
-}
-
-void Game::playSound() {
-
-}
-
-void Game::endGame() {
-
-}
-
