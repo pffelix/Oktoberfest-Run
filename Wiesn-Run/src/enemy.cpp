@@ -83,7 +83,8 @@ void Enemy::update() {
         }
     } else {
         //Bewegung durchführen
-        posX = posX + this->getSpeedX();
+        //posX = posX + this->getSpeedX();
+        updatePosition();
         //Feuern
         if (fireCooldown == 0) {
 //Event: create Shoot

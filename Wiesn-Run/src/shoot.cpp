@@ -13,5 +13,6 @@ int Shoot::getInflictedDamage() const {
 }
 
 void Shoot::update() {
-    posX = posX + this->getSpeedX();
+    //posX = posX + this->getSpeedX();
+    updatePosition();
 }
