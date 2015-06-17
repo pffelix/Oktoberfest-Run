@@ -145,7 +145,7 @@ void Game::detectCollision() {
     int objAmaxY;
     int objAminY;
 
-    bool horizontalCollision;
+    bool horizontalCollision = false;
 
     // Check whether collision happend from left
     if (objASpeedX > 0) {
@@ -177,6 +177,9 @@ void Game::detectCollision() {
 
     // Detect dominant collision direction
     if (overlapX > overlapY) {
-         horizontalCollision = true;
-
+        horizontalCollision = true;
+    } else {
+        horizontalCollision = false;
     }
+
+}
