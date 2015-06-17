@@ -35,18 +35,18 @@ void Game::timerEvent(QTimerEvent *event)
 }
 
 /**
- * @brief Erstelle QApplication app mit Widget inputwindow (Eventfilter installiert) und Zeiger input auf Input Objekt.
+ * @brief Erstelle QApplication app mit QGraphicsView Widget window (Eventfilter installiert) und Zeiger input auf Input Objekt.
  * Um Funktionen der Tastatur Eingabe entwickeln zu können ist ein Qt Widget Fenster nötig.
  * Auf dem Widget wird ein Eventfilter installiert welcher kontinuierlich Tastureingaben mitloggt.
  * Die Eingaben werden in dem Objekt der Input Klasse gespeichert und können über getKeyactions() abgerufen werden.
  *
- * Außerdem wird ein Timer gestartet, der in jedem Intervall timerEvent(...) aufruft, wo dann step() aufgerufen wirt.
+ * Außerdem wird ein Timer gestartet, der in jedem Intervall timerEvent(...) aufruft, wo dann step() aufgerufen wird.
  * Das ist dann unsere Game-Loop. Der Timer funktioniert auch bei 5ms Intervall noch genau.
  *
  * Hier müssen auch die Sachen rein, die einmahlig beim Starten ausgeführt werden sollen
  * - alles laden, Fenster anzeigen
  * @return Rückgabewert von app.exec()
- * @author Felix, Rupert
+ * @author Felix, Rupert, Flo
  */
 int Game::start() {
     // levelInitial laden
@@ -54,13 +54,18 @@ int Game::start() {
 
     // Player erstellen und in worldObjects einfügen
 
-    QWidget inputwindow;
-    inputwindow.resize(320, 240);
-    inputwindow.show();
-    inputwindow.setWindowTitle(QApplication::translate("Game Widget", "Game Widget (Input Test)"));
-    qDebug("initialize inputwindow");
-    Input *input = new Input();
-    inputwindow.installEventFilter(input);
+    // QGraphicsView Widget (Anzeigefenster) erstellen und einstellen
+    QGraphicsView * window = new QGraphicsView();
+    window->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    window->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    window->setFixedSize(800,600);
+    window->setWindowTitle(QApplication::translate("Game Widget", "Game Widget (Input Test)"));
+    window->show();
+    qDebug("initialize window");
+
+    //Timer installieren
+    Input *keyInputs = new Input();
+    window->installEventFilter(keyInputs);
 
     qDebug("Starte Timer mit 500msec-Intervall");
     Game::startTimer(500);
