@@ -267,10 +267,6 @@ void Game::correctMovement() {
 
 }
 
-void Game::handleEvents() {
-
-}
-
 void Game::renderGraphics() {
 
 }

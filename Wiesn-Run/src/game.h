@@ -69,7 +69,7 @@ private:
     void detectCollision(std::list<GameObject*> &objToCalculate);
     void correctMovement();
     void handleEvents();
-    void handleCollisions() ;
+    void handleCollisions();
     void renderGraphics();
     void playSound();
     void endGame();
