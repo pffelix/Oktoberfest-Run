@@ -24,7 +24,7 @@
  * Die Art und Richtung der Kollision werden mit gespeichert.
  * @author Simon, Johann(15.6)
  */
-struct eventStruct {
+struct collisionStruct {
     GameObject *affectedObject;
     GameObject *causingObject;
     enum collisionType collision;
@@ -51,7 +51,7 @@ public:
     int run(QApplication& app);
 
     struct stateStruct gameStats;
-    std::list<struct eventStruct> eventsToHandle;
+    std::list<struct collisionStruct> eventsToHandle;
     //QMultiHash<struct stateStruct> states;
     int start();
 
