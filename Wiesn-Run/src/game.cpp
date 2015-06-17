@@ -51,7 +51,7 @@ void Game::timerEvent(QTimerEvent *event)
 int Game::start() {
     // levelInitial laden
     // worldObjects = levelInitial
-
+    makeTestWorld();
     // Player erstellen und in worldObjects einfügen
 
     QWidget inputwindow;
