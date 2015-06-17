@@ -101,30 +101,13 @@ void Game::handleEvents() {
  */
 
 void Game::handleCollions() {
+
     eventStruct handleEvent;
     Enemy *handleEnemy;
     Shoot *handleShoot;
-    //Schritt 1:  Kollisionen verarbeiten
-        /* mögliche Kollisionen
-         * Spieler  <-> Wand
-         * Spieler  <-> Gegner
-         * Spieler  <-> Schuss
-         * Spieler  <-> Power-Up
-         * Gegner   <-> Wand
-         * Gegner   <-> Schuss
-         * Gegner   <-> Gegner      passiert nichts
-         * Gegner   <-> Power-Up    passiert nichts
-         * Schuss   <-> Wand
-         * Schuss   <-> Power-Up    passiert nichts
-         */
+
+    //Liste mit den Events abarbeiten
     while (!eventsToHandle.empty()) {
-     /* struct eventStruct {
-            GameObject affectedObject;
-            GameObject causingObject;
-            enum collisionType collision;       stopping, contacting, travesing
-            enum collisionDirection direction;  fromLeft, fromRight, fromAbove, fromBelow
-     */
-        //Erstes Event der Liste bearbeiten
         handleEvent = eventsToHandle.front();
         eventsToHandle.pop_front();
 
@@ -136,9 +119,12 @@ void Game::handleCollions() {
              */
             switch (handleEvent.causingObject->getType()) {
             case obstacle: {
+                // Bewegung des Spielers muss abgebrochen und die Position richtiggestellt werden
+                    // 4 Möglichkeiten: von oben, unten, links, rechts
                 break;
             }
             case enemy: {
+                //
                 break;
             }
             case shot: {
@@ -175,4 +161,15 @@ void Game::handleCollions() {
         }
         }
     }
+}
+
+/**
+ * @brief Vergleichsoperand für die Sort-Methode der Listklasse.
+ * Vergleicht die X-Positionen zweier Objekte.
+ * @param first     : erstes Objekt
+ * @param second    : zweites Objekt
+ * @return true, wenn erstesObjekt weiter links
+ */
+bool Game::positionSort(GameObject *first, GameObject *second) {
+    return (first->getPosX() < second->getPosX());
 }

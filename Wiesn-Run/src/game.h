@@ -24,7 +24,7 @@
  * Enthält objectA als Objekt, aus dessen Sicht die Kollision berechnet wurde. objectA ist immer ein MovingObject,
  * objectB kann beides sein.
  * Die Art und Richtung der Kollision werden mit gespeichert.
- * @author Simon
+ * @author Simon, Johann
  */
 struct eventStruct {
     GameObject *affectedObject;
@@ -75,6 +75,8 @@ private:
     std::list<GameObject> worldObjects;
     std::list<GameObject> levelInitial;
     std::list<GameObject> levelSpawn;
+    std::list<GameObject> deleteItems;
+    bool positionSort(GameObject *first, GameObject *second);
     struct scoreStruct score;
     int stepSize;
     GameObject *playerObjPointer;
