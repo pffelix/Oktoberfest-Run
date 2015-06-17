@@ -246,39 +246,3 @@ void Game::endGame() {
 
 }
 
-void Game::appendWorldObjects() {
-
-}
-
-void Game::reduceWorldObjects() {
-
-}
-
-void Game::evaluateInput() {
-
-}
-
-void Game::calculateMovement() {
-
-}
-
-void Game::correctMovement() {
-
-}
-
-void Game::handleEvents() {
-
-}
-
-void Game::renderGraphics() {
-
-}
-
-void Game::playSound() {
-
-}
-
-void Game::endGame() {
-
-}
-
