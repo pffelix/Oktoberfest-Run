@@ -7,6 +7,9 @@
 #include <cmath>
 
 #include "player.h"
+#include "gameobject.h"
+#include "enemy.h"
+#include "shoot.h"
 
 /**
  * @brief Konstruktor
@@ -36,32 +39,37 @@ void Game::timerEvent(QTimerEvent *event)
 }
 
 /**
- * @brief Erstelle QApplication app mit Widget inputwindow (Eventfilter installiert) und Zeiger input auf Input Objekt.
+ * @brief Erstelle QApplication app mit QGraphicsView Widget window (Eventfilter installiert) und Zeiger input auf Input Objekt.
  * Um Funktionen der Tastatur Eingabe entwickeln zu können ist ein Qt Widget Fenster nötig.
  * Auf dem Widget wird ein Eventfilter installiert welcher kontinuierlich Tastureingaben mitloggt.
  * Die Eingaben werden in dem Objekt der Input Klasse gespeichert und können über getKeyactions() abgerufen werden.
  *
- * Außerdem wird ein Timer gestartet, der in jedem Intervall timerEvent(...) aufruft, wo dann step() aufgerufen wirt.
+ * Außerdem wird ein Timer gestartet, der in jedem Intervall timerEvent(...) aufruft, wo dann step() aufgerufen wird.
  * Das ist dann unsere Game-Loop. Der Timer funktioniert auch bei 5ms Intervall noch genau.
  *
  * Hier müssen auch die Sachen rein, die einmahlig beim Starten ausgeführt werden sollen
  * - alles laden, Fenster anzeigen
  * @return Rückgabewert von app.exec()
- * @author Felix, Rupert
+ * @author Felix, Rupert, Flo
  */
 int Game::start() {
     // levelInitial laden
     // worldObjects = levelInitial
-
+    makeTestWorld();
     // Player erstellen und in worldObjects einfügen
 
-    QWidget inputwindow;
-    inputwindow.resize(320, 240);
-    inputwindow.show();
-    inputwindow.setWindowTitle(QApplication::translate("Game Widget", "Game Widget (Input Test)"));
-    qDebug("initialize inputwindow");
-    Input *input = new Input();
-    inputwindow.installEventFilter(input);
+    // QGraphicsView Widget (Anzeigefenster) erstellen und einstellen
+    QGraphicsView * window = new QGraphicsView();
+    window->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    window->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    window->setFixedSize(800,600);
+    window->setWindowTitle(QApplication::translate("Game Widget", "Game Widget (Input Test)"));
+    window->show();
+    qDebug("initialize window");
+
+    //Timer installieren
+    Input *keyInputs = new Input();
+    window->installEventFilter(keyInputs);
 
     qDebug("Starte Timer mit 500msec-Intervall");
     Game::startTimer(500);
@@ -100,11 +108,10 @@ int Game::step() {
     std::string msg = "Game::step() | Vergangene Zeit seit letztem step(): " + std::to_string(ms) + "ms";
     qDebug(msg.c_str());
 
-
 //    appendWorldObjects();
 //    reduceWorldObjects();
 //    evaluateInput();
-//    calculateMovement();
+      calculateMovement();
 //    detectCollision();
 //    correctMovement();
 //    handleEvents();
@@ -232,8 +239,28 @@ void Game::evaluateInput() {
 
 }
 
+/**
+ * @brief Geht die worldObjects durch und aktualisiert bei jedem die Position
+ * wird momentan auch über Debug ausgegeben
+ * @author Rupert
+ */
 void Game::calculateMovement() {
+    using namespace std;               // für std::list
+    list<GameObject*>::iterator it;     // Iterator erstellen
+    /// Schleife startet beim ersten Element und geht bis zum letzen Element durch
+    for(it = worldObjects.begin(); it != worldObjects.end(); ++it) {
+        GameObject *aktObject = *it;
 
+        string msg = "OBJECT Position: XPos=" + to_string(aktObject->getPosX());
+        qDebug(msg.c_str());
+
+        MovingObject *aktMovingObject = dynamic_cast<MovingObject*> (aktObject);    // Versuche GameObject in Moving Object umzuwandeln
+        if(aktMovingObject != 0) {
+            aktMovingObject->update();          // Wenn der cast klappt, rufe update() auf.
+            qDebug("update() für letztes Objekt wird aufgerufen");
+        }
+
+    }
 }
 
 void Game::correctMovement() {

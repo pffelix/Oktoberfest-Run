@@ -11,7 +11,7 @@
 #include "shoot.h"
 #include "input.h"
 #include <QApplication>
-#include <QWidget>
+#include <QGraphicsView>
 #include <chrono>
 
 
