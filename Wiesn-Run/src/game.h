@@ -59,7 +59,7 @@ private:
     void reduceWorldObjects();
     void evaluateInput();
     void calculateMovement();
-    void detectCollision(std::list<GameObject> &objToCalculate);
+    void detectCollision(std::list<GameObject*> &objToCalculate);
     void correctMovement();
     void handleEvents();
     void renderGraphics();
@@ -67,11 +67,11 @@ private:
     void endGame();
 
     // Enthält alle in der Welt befindlichen Objekte
-    std::list<GameObject> worldObjects;
+    std::list<GameObject*> worldObjects;
     // Enthält alle statischen Objekte, die zu Anfang gespawnt werden
-    std::list<GameObject> levelInitial;
+    std::list<GameObject*> levelInitial;
     // Enthält alle Objekte, die während des Spiels gespawnt werden
-    std::list<GameObject> levelSpawn;
+    std::list<GameObject*> levelSpawn;
     struct scoreStruct score;
     int stepSize;
     GameObject *playerObjPointer;
