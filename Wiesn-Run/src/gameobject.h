@@ -21,6 +21,16 @@ public:
     objectType getType() const;
     collisionType getCollisionType() const;
 
+    /**
+     * @brief compGameObjects
+     * @param objA
+     * @param objB
+     * Diese Funktion wird für das sortieren der Liste benötigt.
+     * Sie wird über meineList.sort(compGameObjects()) aufgerufen.
+     * @author Simon
+     */
+    bool compGameObjects(const GameObject &objA, const GameObject &objB);
+
 protected:
     //Position
     int posX;
