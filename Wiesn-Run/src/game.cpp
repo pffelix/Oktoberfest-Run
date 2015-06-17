@@ -2,25 +2,19 @@
 #include <iostream>
 #include <unistd.h>
 
-Game::Game(int argc, char *argv[]) {
+
+/**
+ * @brief Konstruktor
+ * Initialisiert den appPointer
+ * @param argc
+ * @param argv
+ */
+Game::Game(int argc, char *argv[]) : QObject() {
     /**
-     * @brief Erstelle Mockup QApplication app mit Widget inputwindow (Eventfilter installiert) und Zeiger keyInputs auf Input Objekt.
-     * Um Funktionen der Tastatur Eingabe entwickeln zu können ist ein Qt Widget Fenster nötig.
-     * Auf dem Widget wird ein Eventfilter installiert welcher kontinuierlich Tastureingaben mitloggt.
-     * Die Eingaben werden in dem Objekt der Input Klasse gespeichert und können über getKeycomb() abgerufen werden.
-     * Das Fenster Mockup kann in einer späteren Code Version ersetzt werden.
-     * Der Eventfilter muss dann auf dem neuen Widget Objekt installiert werden.
-     * @author Felix
+     * @brief
+     * @author Felix Rupert
      */
-    QApplication app(argc, argv);
-    QWidget inputwindow;
-    inputwindow.resize(320, 240);
-    inputwindow.show();
-    inputwindow.setWindowTitle(QApplication::translate("Game Widget", "Game Widget (Input Test)"));
-    qDebug("initialize inputwindow");
-    Input *keyInputs = new Input();
-    inputwindow.installEventFilter(keyInputs);
-    run(app);
+    appPointer = new QApplication(argc,argv);
 
 }
 
@@ -29,10 +23,49 @@ Game::~Game() {
 }
 
 /**
- * @brief Game-Loop
- * Diese Funktion wird von main() aufgerufen und ist für den kompletten Ablauf des Spiels verantwortlich.
- * grober Ablauf:
+ * @brief wird regelmäßig aufgerufen
+ * @param event
+ */
+void Game::timerEvent(QTimerEvent *event)
+{
+    qDebug("Timer");
+    step();
+    ///@TODO return von step...
+}
+
+/**
+ * @brief Erstelle Mockup QApplication app mit Widget inputwindow (Eventfilter installiert) und Zeiger keyInputs auf Input Objekt.
+ * Um Funktionen der Tastatur Eingabe entwickeln zu können ist ein Qt Widget Fenster nötig.
+ * Auf dem Widget wird ein Eventfilter installiert welcher kontinuierlich Tastureingaben mitloggt.
+ * Die Eingaben werden in dem Objekt der Input Klasse gespeichert und können über getKeycomb() abgerufen werden.
+ * Das Fenster Mockup kann in einer späteren Code Version ersetzt werden.
+ * Der Eventfilter muss dann auf dem neuen Widget Objekt installiert werden.
+ *
+ * Außerdem wird ein Timer gestartet, der in jedem Intervall timerEvent(...) aufruft, wo dann step() aufgerufen wirt.
+ * Das ist dann unsere Game-Loop
+ *
+ * Hier müssen auch die Sachen rein, die einmahlig beim Starten ausgeführt werden sollen
  * - alles laden, Fenster anzeigen
+ * @return
+ */
+int Game::start() {
+    QWidget inputwindow;
+    inputwindow.resize(320, 240);
+    inputwindow.show();
+    inputwindow.setWindowTitle(QApplication::translate("Game Widget", "Game Widget (Input Test)"));
+    qDebug("initialize inputwindow");
+    Input *keyInputs = new Input();
+    inputwindow.installEventFilter(keyInputs);
+
+    Game::startTimer(2000);
+
+    return appPointer->exec();
+}
+
+/**
+ * @brief Game-Loop
+ * Diese Funktion wird von timerEvent() aufgerufen und ist für den kompletten Ablauf des Spiels verantwortlich.
+ * grober Ablauf:
  * LOOP:
  *  - Timer starten
  *  - Neue Objekte zur Welt hinzufügen
@@ -50,9 +83,8 @@ Game::~Game() {
  * @return 0 bei fehlerfreiem Beenden
  * @author Rupert
  */
-int Game::exec() {
-    std::cout << "Game::exec() gestartet\nwarte 5 Sekunden\n";
-
+int Game::step() {
+    //std::cout << "Game::exec() gestartet\nwarte 5 Sekunden\n";
 
     // levelInitial laden
     // worldObjects = levelInitial
@@ -77,16 +109,16 @@ int Game::exec() {
         */
     //}
 
-    sleep(5);
-    std::cout << "Game wird beendet\n";
+    //sleep(5);
+    //std::cout << "Game wird beendet\n";
     return 0;
 }
-
-/**
+/*
  * @brief Starte QApplication app
  * @author Felix
  */
+/*
 int Game::run(QApplication& app) {
     return app.exec();
-}
+}*/
 

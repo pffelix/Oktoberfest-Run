@@ -38,19 +38,23 @@ struct eventStruct {
  * Die einzelnen Methoden werden in der game.cpp jeweils erklärt.
  * @author Simon
  */
-class Game {
+class Game : QObject {
+    //Q_OBJECT
 public:
     Game(int argc, char *argv[]);
     ~Game();
 
     /// Startet das die Game-Loop, wird einmalig von main() aufgerufen
-    int exec();
+    int step();
     /// Startet die Mockup QApplication app
     int run(QApplication& app);
 
     std::list<struct eventStruct> eventsToHandle;
     //QMultiHash<struct stateStruct> states;
+    int start();
 
+protected:
+    void timerEvent(QTimerEvent *event);
 
 private:
     int getStepSize();
@@ -71,6 +75,8 @@ private:
     struct scoreStruct score;
     int stepSize;
     GameObject *playerObjPointer;
+
+    QApplication *appPointer;
 
 
 };
