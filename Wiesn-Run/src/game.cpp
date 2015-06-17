@@ -5,6 +5,8 @@
 #include <iomanip>
 #include <cmath>
 
+#include "player.h"
+
 /**
  * @brief Konstruktor
  * Initialisiert den appPointer
@@ -97,17 +99,17 @@ int Game::step() {
     std::string msg = "Game::step() | Vergangene Zeit seit letztem step(): " + std::to_string(ms) + "ms";
     qDebug(msg.c_str());
 
-    /*
-    appendWorldObjects();
-    reduceWorldObjects();
-    evaluateInput();
-    calculateMovement();
-    detectCollision();
-    correctMovement();
-    handleEvents();
-    renderGraphics();
-    playSound();
-    */
+
+//    appendWorldObjects();
+//    reduceWorldObjects();
+//    evaluateInput();
+//    calculateMovement();
+//    detectCollision();
+//    correctMovement();
+//    handleEvents();
+//    renderGraphics();
+//    playSound();
+
 
     return 0;
 }
@@ -187,6 +189,25 @@ void Game::detectCollision(std::list<GameObject*> &objToCalculate) {
         }
 
     }
+}
+
+/**
+ * @brief Erstellt ein paar Test-Objekte in worldObjects
+ * Was wird erstellt:
+ * - Objekt1 mit v=0 an x=10,y=0
+ * - Objekt2 mit v=0 an x=20,y=0
+ * - ObjektPlayer mit v=1 an x=5,y=0
+ * alle Objekte sind 4 breit und 5 hoch
+ * @author Rupert
+ */
+void Game::makeTestWorld() {
+    GameObject *object1 = new GameObject(10,0,4,5,obstacle,stopping);
+    GameObject *object2 = new GameObject(20,0,4,5,obstacle,stopping);
+    Player *objectPlayer = new Player(5,0,4,5,player,stopping,1,0);
+    worldObjects.push_back(object1);
+    worldObjects.push_back(object2);
+    worldObjects.push_back(objectPlayer);
+
 }
 
 void Game::appendWorldObjects() {
