@@ -2,3 +2,7 @@
 
 RenderPlayer::RenderPlayer() {
 }
+
+RenderPlayer::~RenderPlayer() {
+
+}

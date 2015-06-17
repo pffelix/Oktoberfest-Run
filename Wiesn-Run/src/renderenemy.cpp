@@ -2,3 +2,7 @@
 
 RenderEnemy::RenderEnemy() {
 }
+
+RenderEnemy::~RenderEnemy() {
+
+}

@@ -2,3 +2,7 @@
 
 RenderAttack::RenderAttack() {
 }
+
+RenderAttack::~RenderAttack() {
+
+}

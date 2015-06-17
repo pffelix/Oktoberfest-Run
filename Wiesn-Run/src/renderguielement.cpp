@@ -2,3 +2,7 @@
 
 RenderGuiElement::RenderGuiElement() {
 }
+
+RenderGuiElement::~RenderGuiElement() {
+
+}

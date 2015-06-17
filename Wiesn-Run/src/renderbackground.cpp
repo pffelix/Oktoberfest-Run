@@ -2,3 +2,7 @@
 
 RenderBackground::RenderBackground() {
 }
+
+RenderBackground::~RenderBackground() {
+
+}
