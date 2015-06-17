@@ -24,7 +24,7 @@
  * Die Art und Richtung der Kollision werden mit gespeichert.
  * @author Simon, Johann(15.6)
  */
-struct eventStruct {
+struct collisionStruct {
     GameObject *affectedObject;
     GameObject *causingObject;
     enum collisionType collision;
@@ -51,7 +51,7 @@ public:
     int run(QApplication& app);
 
     struct stateStruct gameStats;
-    std::list<struct eventStruct> eventsToHandle;
+    std::list<struct collisionStruct> eventsToHandle;
     //QMultiHash<struct stateStruct> states;
     int start();
 
@@ -71,9 +71,12 @@ private:
     void playSound();
     void endGame();
 
-    std::list<GameObject> worldObjects;
-    std::list<GameObject> levelInitial;
-    std::list<GameObject> levelSpawn;
+    // Liste für Level, enthält alles, was noch im Level kommt
+    std::list<GameObject*> levelInitial;
+    // Statischen Elemente im Spiel, obstacles und powerUps
+    std::list<GameObject*> worldObjects;
+    // Bewegende Elemente im Spiel, player, enemy, shots
+    std::list<GameObject*> levelSpawn;
     struct scoreStruct score;
     int stepSize;
     GameObject *playerObjPointer;
