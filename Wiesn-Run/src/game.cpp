@@ -131,6 +131,7 @@ void Game::detectCollision(std::list<GameObject> &objToCalculate) {
 
     for (std::list<GameObject>::iterator it=objToCalculate.begin(); it != objToCalculate.end(); ++it) {
 
+        // *it ist aktuelles Objekt
         int objASpeedX;
         int objASpeedY;
         bool movingRight;
