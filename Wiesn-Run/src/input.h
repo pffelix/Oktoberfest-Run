@@ -20,7 +20,7 @@ class Input : public QObject {
     Q_OBJECT
 
 public:
-    enum Key{
+    enum Keyaction{
         Left = 0,
         Right = 1,
         Up = 2,
