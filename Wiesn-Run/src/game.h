@@ -71,11 +71,11 @@ private:
     void playSound();
     void endGame();
 
-    // Liste für Level, enthält alles, was noch im Level kommt
-    std::list<GameObject*> levelInitial;
-    // Statischen Elemente im Spiel, obstacles und powerUps
+    // Enthält alle in der Welt befindlichen Objekte
     std::list<GameObject*> worldObjects;
-    // Bewegende Elemente im Spiel, player, enemy, shots
+    // Enthält alle statischen Objekte, die zu Anfang gespawnt werden
+    std::list<GameObject*> levelInitial;
+    // Enthält alle Objekte, die während des Spiels gespawnt werden
     std::list<GameObject*> levelSpawn;
     struct scoreStruct score;
     int stepSize;
