@@ -86,8 +86,6 @@ private:
     // Schüsse, die gelöscht werden müssen
     std::list<Shoot*> shotsToDelete;
 
-    //Vergleichsoperator für die list.sort-Methode
-    bool compGameObjects(const GameObject &objA, const GameObject &objB);
 
     struct scoreStruct score;
     int stepSize;

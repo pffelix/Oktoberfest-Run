@@ -11,6 +11,22 @@
 #include "enemy.h"
 #include "shoot.h"
 
+
+
+/**
+ * @brief Verglecht zwei GameObjects, bezüglich der X-Position
+ * @param 1.Objekt
+ * @param 2.Objekt
+ * @return true, wenn 1.Objekt weiter links als 2.Objekt
+ * @author Simon
+ */
+struct compareGameObjects {
+    bool operator()(GameObject *objA, GameObject *objB) {
+        return objA->getPosX() < objB->getPosX();
+    }
+};
+
+
 /**
  * @brief Konstruktor
  * Initialisiert den appPointer
@@ -108,11 +124,13 @@ int Game::step() {
     std::string msg = "Game::step() | Vergangene Zeit seit letztem step(): " + std::to_string(ms) + "ms";
     qDebug(msg.c_str());
 
+    worldObjects.sort(compareGameObjects());
+
 //    appendWorldObjects();
 //    reduceWorldObjects();
 //    evaluateInput();
-      calculateMovement();
-      detectCollision(&worldObjects);
+    calculateMovement();
+    detectCollision(&worldObjects);
 //    correctMovement();
 //    handleEvents();
 //    renderGraphics();
@@ -128,122 +146,108 @@ int Game::step() {
  * Diese Funktion berechnet die Kollisionen, welche zwischen ObjektA und ObjektB auftreten.
  * Die Kollision wird dabei immer aus Sicht von ObjektA berechnet. D.h. Variablen wie movingRight
  * bedeuten, dass ObjektA sich nach rechts bewegt hat und dabei ObejektB von Links getroffen hat.
- * @todo Auslesen und durchgehen der Liste, setzen der Variablen, Erstellen der Kollisionsevents
+ * @todo Objekt-Definitionen mit eventHandling abstimmen, Koordinatendefinition, Overlap-Problem, <= Fälle
  * @author Simon
  */
 void Game::detectCollision(std::list<GameObject *> *objToCalculate) {
 
+
     for (std::list<GameObject*>::iterator it=objToCalculate->begin(); it != objToCalculate->end(); ++it) {
 
-        // Anfang, Ende, current nicht moving
-
-        MovingObject *currentObject = dynamic_cast<MovingObject*>(*it);
+        MovingObject *objA = dynamic_cast<MovingObject*>(*it);
         // Prüfen, ob das aktuelle Objekt überhaupt vom Typ MovingObject ist
-        if (currentObject != 0) {
+        if (objA != 0) {
 
             // Liste möglicher Kollisionen anlegen
             std::list<GameObject*> possibleCollision;
 
-            if (std::prev(it) != objToCalculate->begin()) {
+            // Vorheriges Element hinzufügen, falls currentObject nicht das erste Element ist.
+            if (it != objToCalculate->begin()) {
                 possibleCollision.push_back(*std::prev(it));
             }
-            if (std::next(it) != objToCalculate->end()) {
+            // Nächstes Element hinzufügen, falls currentObject nicht das letze Element ist.
+            if (it != objToCalculate->end()) {
                 possibleCollision.push_back(*std::next(it));
             }
 
             while (!(possibleCollision.empty())) {
 
-                GameObject *objB = *possibleCollision.begin();
-                possibleCollision.pop_front();
-
-                int objASpeedX = currentObject->getSpeedX();
-                int objASpeedY = currentObject->getSpeedY();
-
-                bool movingRight;
-                bool movingDown;
                 int overlapX;
                 int overlapY;
 
-                int objBmaxX = objB->getPosX() + (objB->getLength() / 2);
-                int objBminX = objB->getPosX() - (objB->getLength() / 2);
-                int objBmaxY = objB->getPosY() + (objB->getHeight() / 2);
-                int objBminY = objB->getPosY() - (objB->getHeight() / 2);
-                int objAmaxX = currentObject->getPosX() + (currentObject->getLength() / 2);
-                int objAminX = currentObject->getPosX() - (currentObject->getLength() / 2);
-                int objAmaxY = currentObject->getPosY() + (currentObject->getHeight() / 2);
-                int objAminY = currentObject->getPosY() - (currentObject->getHeight() / 2);
+                GameObject *objB = *possibleCollision.begin();
+                possibleCollision.pop_front();
+
+                bool ALeftFromB = objA->getPosX() < objB->getPosX();
+                bool AAboveB = (objA->getPosY() + objA->getHeight()) >= (objB->getPosY() + objB->getHeight());
+
+                if (ALeftFromB) {
+                    overlapX = objA->getPosX() + (objA->getLength() / 2) - (objB->getPosX() - (objB->getLength() / 2));
+                } else {
+                    overlapX = (objB->getPosX() + (objB->getLength() / 2)) - (objA->getPosX() - (objA->getLength() / 2));
+                }
+
+                // OverlapY hängt stark mit der Koordinatendefinition zusammen
+                if (AAboveB) {
+                    overlapY = (objB->getPosY() + (objB->getHeight() / 1)) - (objA->getPosY());
+                } else {
+                    overlapY = (objA->getPosY() + (objA->getHeight() / 1)) - (objB->getPosY());
+                }
 
                 collisionDirection colDir;
 
-                // Check whether collision happend from left
-                if (objASpeedX > 0) {
-                    movingRight = true;
-                } else {
-                    movingRight = false;
-                }
-
-                // Check whether collision happend from above
-                if (objASpeedY < 0) {
-                    movingDown = true;
-                } else {
-                    movingDown = false;
-                }
-
-                // Calculate overlap in the X coordinate
-                if (movingRight == true) {
-                    overlapX = objAmaxX - objBminX;
-                } else {
-                    overlapX = objBmaxX - objAminX;
-                }
-
-                // Calculate overlap in the Y coordinate
-                if (movingDown == true) {
-                    overlapY = objBmaxY - objAminY;
-                } else {
-                    overlapY = objAmaxY - objBminY;
-                }
-
-                if (overlapX > overlapY) {
-                    if (movingRight) {
+                if ((overlapX < overlapY) && (overlapX > 0)) {
+                    if (ALeftFromB) {
                         colDir = fromLeft;
+                        collisionStruct newCollision = {objB, objA, objB->getCollisionType(), colDir};
+                        eventsToHandle.push_back(newCollision);
+                        std::string msg = "Kollision von Links hat stattgefunden";
+                        qDebug(msg.c_str());
                     } else {
                         colDir = fromRight;
+                        collisionStruct newCollision = {objB, objA, objB->getCollisionType(), colDir};
+                        eventsToHandle.push_back(newCollision);
+                        std::string msg = "Kollision von Rechts hat stattgefunden";
+                        qDebug(msg.c_str());
                     }
                 } else {
-                    if (movingDown) {
-                        colDir = fromAbove;
-                    } else {
-                        colDir = fromBelow;
+                    if ((overlapY <= overlapX) && (overlapY > 0)) {
+                        if (AAboveB) {
+                            colDir = fromAbove;
+                            colDir = fromRight;
+                            collisionStruct newCollision = {objB, objA, objB->getCollisionType(), colDir};
+                            eventsToHandle.push_back(newCollision);
+                            std::string msg = "Kollision von Oben hat stattgefunden";
+                            qDebug(msg.c_str());
+                        } else {
+                            colDir = fromBelow;
+                            colDir = fromRight;
+                            collisionStruct newCollision = {objB, objA, objB->getCollisionType(), colDir};
+                            eventsToHandle.push_back(newCollision);
+                            std::string msg = "Kollision von Unten hat stattgefunden";
+                            qDebug(msg.c_str());
+                        }
                     }
                 }
 
-                if ((overlapX > 0) || (overlapY > 0)) {
-                    collisionStruct newCollision = {objB, currentObject, objB->getCollisionType(), colDir};
-                    eventsToHandle.push_back(newCollision);
-                    std::string msg = "Kollision hat stattgefunden";
-                    qDebug(msg.c_str());
-                }
-
-                std::string msg = "detectCollision ausgeführt";
-                qDebug(msg.c_str());
-            }
-        }
-    }
-}
+            } // while
+        } // if
+    } // for
+} // function
 
 /**
  * @brief Erstellt ein paar Test-Objekte in worldObjects
  * Was wird erstellt:
- * - Objekt1 mit v=0 an x=10,y=0
- * - Objekt2 mit v=0 an x=20,y=0
- * - ObjektPlayer mit v=1 an x=5,y=0
- * alle Objekte sind 4 breit und 5 hoch
- * @author Rupert
+ * - Objekt1 mit v=0 an x=100,y=0
+ * - Objekt2 mit v=0 an x=180,y=0
+ * - ObjektPlayer mit v=8 an x=20,y=0
+ * Die Objekte sind 60 breit und 80 hoch. Dimensionen müssen immer durch zwei teilbar sein.
+ * @author Rupert, Simon
  */
 void Game::makeTestWorld() {
-    GameObject *object1 = new GameObject(10,0,4,5,obstacle,stopping);
-    GameObject *object2 = new GameObject(20,0,4,5,obstacle,stopping);
-    Player *objectPlayer = new Player(5,0,4,5,player,stopping,1,0);
+    GameObject *object1 = new GameObject(100,0,60,80,obstacle,stopping);
+    GameObject *object2 = new GameObject(180,0,60,80,obstacle,stopping);
+    Player *objectPlayer = new Player(20,0,20,60,player,stopping,8,0);
     worldObjects.push_back(object1);
     worldObjects.push_back(object2);
     worldObjects.push_back(objectPlayer);
@@ -531,13 +535,3 @@ bool Game::hurtPlayer(int damage) {
 
 }
 
-/**
- * @brief Verglecht zwei GameObjects, bezüglich der X-Position
- * @param 1.Objekt
- * @param 2.Objekt
- * @return true, wenn 1.Objekt weiter links als 2.Objekt
- * @author Simon
- */
-bool Game::compGameObjects(const GameObject &objA, const GameObject &objB) {
-    return objA.getPosX() < objB.getPosX();
-}
