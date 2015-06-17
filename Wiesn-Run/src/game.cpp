@@ -121,60 +121,107 @@ int Game::step() {
  * @todo Auslesen und durchgehen der Liste, setzen der Variablen, Erstellen der Kollisionsevents
  * @author Simon
  */
-void Game::detectCollision() {
+void Game::detectCollision(std::list<GameObject*> &objToCalculate) {
 
-    int objASpeedX;
-    int objASpeedY;
-    bool movingRight;
-    bool movingDown;
+    for (std::list<GameObject*>::iterator it=objToCalculate.begin(); it != objToCalculate.end(); ++it) {
 
-    int overlapX;
-    int overlapY;
-    int objBmaxX;
-    int objBminX;
-    int objBmaxY;
-    int objBminY;
-    int objAmaxX;
-    int objAminX;
-    int objAmaxY;
-    int objAminY;
+        GameObject *currentObject = *it;
+        GameObject *onePrevious = *(--it);
+        GameObject *twoPrevious = *(--it);
+        ++it;
+        ++it;
+        GameObject *oneAhead = *(++it);
+        GameObject *twoAhead = *(++it);
 
-    bool horizontalCollision = false;
+        int objASpeedX;
+        int objASpeedY;
+        bool movingRight;
+        bool movingDown;
 
-    // Check whether collision happend from left
-    if (objASpeedX > 0) {
-        movingRight = true;
-    } else {
-        movingRight = false;
+        int overlapX;
+        int overlapY;
+        int objBmaxX;
+        int objBminX;
+        int objBmaxY;
+        int objBminY;
+        int objAmaxX;
+        int objAminX;
+        int objAmaxY;
+        int objAminY;
+
+        bool horizontalCollision = false;
+
+        // Check whether collision happend from left
+        if (objASpeedX > 0) {
+            movingRight = true;
+        } else {
+            movingRight = false;
+        }
+
+        // Check whether collision happend from above
+        if (objASpeedY < 0) {
+            movingDown = true;
+        } else {
+            movingDown = false;
+        }
+
+        // Calculate overlap in the X coordinate
+        if (movingRight == true) {
+            overlapX = objAmaxX - objBminX;
+        } else {
+            overlapX = objBmaxX - objAminX;
+        }
+
+        // Calculate overlap in the Y coordinate
+        if (movingDown == true) {
+            overlapY = objBmaxY - objAminY;
+        } else {
+            overlapY = objAmaxY - objBminY;
+        }
+
+        // Detect dominant collision direction
+        if (overlapX > overlapY) {
+            horizontalCollision = true;
+        } else {
+            horizontalCollision = false;
+        }
+
     }
+}
 
-    // Check whether collision happend from above
-    if (objASpeedY < 0) {
-        movingDown = true;
-    } else {
-        movingDown = false;
-    }
+void Game::appendWorldObjects() {
 
-    // Calculate overlap in the X coordinate
-    if (movingRight == true) {
-        overlapX = objAmaxX - objBminX;
-    } else {
-        overlapX = objBmaxX - objAminX;
-    }
+}
 
-    // Calculate overlap in the Y coordinate
-    if (movingDown == true) {
-        overlapY = objBmaxY - objAminY;
-    } else {
-        overlapY = objAmaxY - objBminY;
-    }
+void Game::reduceWorldObjects() {
 
-    // Detect dominant collision direction
-    if (overlapX > overlapY) {
-        horizontalCollision = true;
-    } else {
-        horizontalCollision = false;
-    }
+}
+
+void Game::evaluateInput() {
+
+}
+
+void Game::calculateMovement() {
+
+}
+
+void Game::correctMovement() {
+
+}
+
+void Game::handleEvents() {
+
+}
+
+void Game::renderGraphics() {
+
+}
+
+void Game::playSound() {
+
+}
+
+void Game::endGame() {
 
 }
 
