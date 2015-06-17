@@ -99,7 +99,7 @@ void Input::updateKeyactions() {
 /**
  * @brief  Input::getKeyactions
  *         getKeyactions gibt bei Aufruf die Instanzvariable keyactions zurück.
- *         Jede Tastaturkombination besitzt eine Integer ID welche in keyactions gespeichert ist.
+ *         Jede Tastaturkombination besitzt eine Integer ID welche im QSet keyactions gespeichert ist.
  *         Die IDs sind über die Enumeration Input::Keyaction mit lesbaren Spielbefehlen verknüpft.
  *         Möchte man nun bespielsweise abfragen ob der Spieler im Moment schießt so überprüft man:
  *         input->getKeyactions().contains(Input::Keyaction::Shoot) == True.
