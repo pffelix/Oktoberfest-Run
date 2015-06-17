@@ -12,19 +12,15 @@
 #include "input.h"
 #include <QApplication>
 #include <QWidget>
-
-
-//bool operator < (GameObject const & lhs, GameObject & rhs) {
-//    return lhs.getPosX() < rhs.getPosX();
-//}
+#include <chrono>
 
 
 /**
  * @brief Struktur für die Events
- * Enthält objectA als Objekt, aus dessen Sicht die Kollision berechnet wurde. objectA ist immer ein MovingObject,
- * objectB kann beides sein.
+ * Enthält affectedObject als Objekt, aus dessen Sicht die Kollision berechnet wurde. affectedObject ist immer ein MovingObject,
+ * causingObject kann beides sein.
  * Die Art und Richtung der Kollision werden mit gespeichert.
- * @author Simon, Johann
+ * @author Simon, Johann(15.6)
  */
 struct collisionStruct {
     GameObject *affectedObject;
@@ -44,13 +40,14 @@ struct collisionStruct {
  *
  * @author Simon, Johann
  */
-class Game {
+class Game : QObject {
+    //Q_OBJECT
 public:
     Game(int argc, char *argv[]);
     ~Game();
 
     /// Startet das die Game-Loop, wird einmalig von main() aufgerufen
-    int exec();
+    int step();
     /// Startet die Mockup QApplication app
     int run(QApplication& app);
 
@@ -58,7 +55,10 @@ public:
     //Liste von Kollisionen
     std::list<struct collisionStruct> eventsToHandle;
     //QMultiHash<struct stateStruct> states;
+    int start();
 
+protected:
+    void timerEvent(QTimerEvent *event);
 
 private:
     int getStepSize();
@@ -66,7 +66,7 @@ private:
     void reduceWorldObjects();
     void evaluateInput();
     void calculateMovement();
-    void detectCollision();
+    void detectCollision(std::list<GameObject*> &objToCalculate);
     void correctMovement();
     void handleEvents();
     void handleCollisions() ;
@@ -75,20 +75,28 @@ private:
     void endGame();
     bool hurtPlayer(int damage);
 
-    // Liste für Level, enthält alles, was noch im Level kommt
-    std::list<GameObject*> levelInitial;
-    // Statischen Elemente im Spiel, obstacles und powerUps
+    void makeTestWorld();
+
+    // Enthält alle in der Welt befindlichen Objekte
     std::list<GameObject*> worldObjects;
-    // Bewegende Elemente im Spiel, player, enemy, shots
+    // Enthält alle statischen Objekte, die zu Anfang gespawnt werden
+    std::list<GameObject*> levelInitial;
+    // Enthält alle Objekte, die während des Spiels gespawnt werden
     std::list<GameObject*> levelSpawn;
     // Schüsse, die gelöscht werden müssen
     std::list<Shoot*> shotsToDelete;
     bool positionSort(GameObject *first, GameObject *second);
+
     struct scoreStruct score;
     int stepSize;
     Player *playerObjPointer;
 
+    /// Zeiger auf QApplication
+    QApplication *appPointer;
+    /// für Zeitmessung
+    std::chrono::high_resolution_clock::time_point letzterAufruf;
 
 };
 
 #endif // GAME_H
+

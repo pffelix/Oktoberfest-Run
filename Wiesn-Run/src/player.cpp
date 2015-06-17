@@ -157,7 +157,8 @@ void Player::resetJump() {
 
 /**
  * @brief Player::update
- * führt die Bewegung des Spielers aus (über updatePosition) und verringert Cooldown-Variablen
+ * führt die Bewegung des Spielers aus (über updatePosition) und verringert Cooldown-Variable
+ * @author Johann
  */
 void Player::update() {
     if (jumpActive) {

@@ -1,27 +1,23 @@
 #include "game.h"
+#include "movingobject.h"
 #include <iostream>
 #include <unistd.h>
+#include <chrono>
+#include <iomanip>
+#include <cmath>
 
-Game::Game(int argc, char *argv[]) {
-    /**
-     * @brief Erstelle Mockup QApplication app mit Widget inputwindow (Eventfilter installiert) und Zeiger keyInputs auf Input Objekt.
-     * Um Funktionen der Tastatur Eingabe entwickeln zu können ist ein Qt Widget Fenster nötig.
-     * Auf dem Widget wird ein Eventfilter installiert welcher kontinuierlich Tastureingaben mitloggt.
-     * Die Eingaben werden in dem Objekt der Input Klasse gespeichert und können über getKeycomb() abgerufen werden.
-     * Das Fenster Mockup kann in einer späteren Code Version ersetzt werden.
-     * Der Eventfilter muss dann auf dem neuen Widget Objekt installiert werden.
-     * @author Felix
-     */
-    QApplication app(argc, argv);
-    QWidget inputwindow;
-    inputwindow.resize(320, 240);
-    inputwindow.show();
-    inputwindow.setWindowTitle(QApplication::translate("Game Widget", "Game Widget (Input Test)"));
-    qDebug("initialize inputwindow");
-    Input *keyInputs = new Input();
-    inputwindow.installEventFilter(keyInputs);
-    run(app);
+#include "player.h"
 
+/**
+ * @brief Konstruktor
+ * Initialisiert den appPointer
+ * @param argc
+ * @param argv
+ * @author Rupert
+ */
+Game::Game(int argc, char *argv[]) : QObject() {
+    /// Initialisiert den appPointer mit der QApplication
+    appPointer = new QApplication(argc,argv);
 }
 
 Game::~Game() {
@@ -29,10 +25,54 @@ Game::~Game() {
 }
 
 /**
- * @brief Game-Loop
- * Diese Funktion wird von main() aufgerufen und ist für den kompletten Ablauf des Spiels verantwortlich.
- * grober Ablauf:
+ * @brief wird regelmäßig aufgerufen
+ * @param event
+ * @author Rupert
+ */
+void Game::timerEvent(QTimerEvent *event)
+{
+    step();
+    ///@TODO return von step...
+}
+
+/**
+ * @brief Erstelle QApplication app mit Widget inputwindow (Eventfilter installiert) und Zeiger input auf Input Objekt.
+ * Um Funktionen der Tastatur Eingabe entwickeln zu können ist ein Qt Widget Fenster nötig.
+ * Auf dem Widget wird ein Eventfilter installiert welcher kontinuierlich Tastureingaben mitloggt.
+ * Die Eingaben werden in dem Objekt der Input Klasse gespeichert und können über getKeyactions() abgerufen werden.
+ *
+ * Außerdem wird ein Timer gestartet, der in jedem Intervall timerEvent(...) aufruft, wo dann step() aufgerufen wirt.
+ * Das ist dann unsere Game-Loop. Der Timer funktioniert auch bei 5ms Intervall noch genau.
+ *
+ * Hier müssen auch die Sachen rein, die einmahlig beim Starten ausgeführt werden sollen
  * - alles laden, Fenster anzeigen
+ * @return Rückgabewert von app.exec()
+ * @author Felix, Rupert
+ */
+int Game::start() {
+    // levelInitial laden
+    // worldObjects = levelInitial
+
+    // Player erstellen und in worldObjects einfügen
+
+    QWidget inputwindow;
+    inputwindow.resize(320, 240);
+    inputwindow.show();
+    inputwindow.setWindowTitle(QApplication::translate("Game Widget", "Game Widget (Input Test)"));
+    qDebug("initialize inputwindow");
+    Input *input = new Input();
+    inputwindow.installEventFilter(input);
+
+    qDebug("Starte Timer mit 500msec-Intervall");
+    Game::startTimer(500);
+
+    return appPointer->exec();
+}
+
+/**
+ * @brief Game-Loop
+ * Diese Funktion wird von timerEvent() aufgerufen und ist für den kompletten Ablauf des Spiels verantwortlich.
+ * grober Ablauf:
  * LOOP:
  *  - Timer starten
  *  - Neue Objekte zur Welt hinzufügen
@@ -50,44 +90,170 @@ Game::~Game() {
  * @return 0 bei fehlerfreiem Beenden
  * @author Rupert
  */
-int Game::exec() {
-    std::cout << "Game::exec() gestartet\nwarte 5 Sekunden\n";
+int Game::step() {
+    using namespace std::chrono;
+
+    /// Zeit seit dem letzten Aufruf ausrechnen und ausgeben
+    high_resolution_clock::time_point akt = letzterAufruf;
+    letzterAufruf = high_resolution_clock::now();
+    std::size_t ms = duration_cast<milliseconds>(letzterAufruf-akt).count();
+    std::string msg = "Game::step() | Vergangene Zeit seit letztem step(): " + std::to_string(ms) + "ms";
+    qDebug(msg.c_str());
 
 
-    // levelInitial laden
-    // worldObjects = levelInitial
+//    appendWorldObjects();
+//    reduceWorldObjects();
+//    evaluateInput();
+//    calculateMovement();
+//    detectCollision();
+//    correctMovement();
+//    handleEvents();
+//    renderGraphics();
+//    playSound();
 
-    // Player erstellen und in worldObjects einfügen
 
-    // Qt Fenster anzeigen?
-
-    //while(1) {
-        //std::cout << ".";
-
-        /*
-        appendWorldObjects();
-        reduceWorldObjects();
-        evaluateInput();
-        calculateMovement();
-        detectCollision();
-        correctMovement();
-        handleEvents();
-        renderGraphics();
-        playSound();
-        */
-    //}
-
-    sleep(5);
-    std::cout << "Game wird beendet\n";
     return 0;
 }
 
+
 /**
- * @brief Starte QApplication app
- * @author Felix
+ * @brief Game::detectCollision
+ * Diese Funktion berechnet die Kollisionen, welche zwischen ObjektA und ObjektB auftreten.
+ * Die Kollision wird dabei immer aus Sicht von ObjektA berechnet. D.h. Variablen wie movingRight
+ * bedeuten, dass ObjektA sich nach rechts bewegt hat und dabei ObejektB von Links getroffen hat.
+ * @todo Auslesen und durchgehen der Liste, setzen der Variablen, Erstellen der Kollisionsevents
+ * @author Simon
  */
-int Game::run(QApplication& app) {
-    return app.exec();
+void Game::detectCollision(std::list<GameObject*> &objToCalculate) {
+
+    for (std::list<GameObject*>::iterator it=objToCalculate.begin(); it != objToCalculate.end(); ++it) {
+
+        // Anfang, Ende, current nicht moving
+
+        MovingObject *currentObject = dynamic_cast<MovingObject*>(*it);
+        // Prüfen, ob das aktuelle Objekt überhaupt vom Typ MovingObject ist
+        if (currentObject != 0) {
+
+            GameObject *onePrevious = *(std::prev(it));
+            GameObject *twoPrevious = *(std::prev(std::prev(it)));
+            GameObject *oneAhead = *(std::next(it));
+            GameObject *twoAhead = *(std::next(std::next(it)));
+            GameObject *possibleCollision[] = {onePrevious, twoPrevious, oneAhead, twoAhead};
+
+
+            for (int i = 0; i <= 3; i++) {
+
+                int objASpeedX = currentObject->getSpeedX();
+                int objASpeedY = currentObject->getSpeedY();
+
+                bool movingRight;
+                bool movingDown;
+                int overlapX;
+                int overlapY;
+
+                int objBmaxX = possibleCollision[i]->getPosX() + (possibleCollision[i]->getLength() / 2);
+                int objBminX = possibleCollision[i]->getPosX() - (possibleCollision[i]->getLength() / 2);
+                int objBmaxY = possibleCollision[i]->getPosY() + (possibleCollision[i]->getHeight() / 2);
+                int objBminY = possibleCollision[i]->getPosY() - (possibleCollision[i]->getHeight() / 2);
+                int objAmaxX = currentObject->getPosX() + (currentObject->getLength() / 2);
+                int objAminX = currentObject->getPosX() - (currentObject->getLength() / 2);
+                int objAmaxY = currentObject->getPosY() + (currentObject->getHeight() / 2);
+                int objAminY = currentObject->getPosY() - (currentObject->getHeight() / 2);
+
+                bool horizontalCollision = false;
+
+                // Check whether collision happend from left
+                if (objASpeedX > 0) {
+                    movingRight = true;
+                } else {
+                    movingRight = false;
+                }
+
+                // Check whether collision happend from above
+                if (objASpeedY < 0) {
+                    movingDown = true;
+                } else {
+                    movingDown = false;
+                }
+
+                // Calculate overlap in the X coordinate
+                if (movingRight == true) {
+                    overlapX = objAmaxX - objBminX;
+                } else {
+                    overlapX = objBmaxX - objAminX;
+                }
+
+                // Calculate overlap in the Y coordinate
+                if (movingDown == true) {
+                    overlapY = objBmaxY - objAminY;
+                } else {
+                    overlapY = objAmaxY - objBminY;
+                }
+
+                // Detect dominant collision direction
+                if (overlapX > overlapY) {
+                    horizontalCollision = true;
+                } else {
+                    horizontalCollision = false;
+                }
+            }
+        }
+    }
+}
+
+/**
+ * @brief Erstellt ein paar Test-Objekte in worldObjects
+ * Was wird erstellt:
+ * - Objekt1 mit v=0 an x=10,y=0
+ * - Objekt2 mit v=0 an x=20,y=0
+ * - ObjektPlayer mit v=1 an x=5,y=0
+ * alle Objekte sind 4 breit und 5 hoch
+ * @author Rupert
+ */
+void Game::makeTestWorld() {
+    GameObject *object1 = new GameObject(10,0,4,5,obstacle,stopping);
+    GameObject *object2 = new GameObject(20,0,4,5,obstacle,stopping);
+    Player *objectPlayer = new Player(5,0,4,5,player,stopping,1,0);
+    worldObjects.push_back(object1);
+    worldObjects.push_back(object2);
+    worldObjects.push_back(objectPlayer);
+
+}
+
+void Game::appendWorldObjects() {
+
+}
+
+void Game::reduceWorldObjects() {
+
+}
+
+void Game::evaluateInput() {
+
+}
+
+void Game::calculateMovement() {
+
+}
+
+void Game::correctMovement() {
+
+}
+
+void Game::handleEvents() {
+
+}
+
+void Game::renderGraphics() {
+
+}
+
+void Game::playSound() {
+
+}
+
+void Game::endGame() {
+
 }
 
 void Game::handleEvents() {
