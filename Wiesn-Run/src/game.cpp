@@ -206,14 +206,12 @@ void Game::detectCollision(std::list<GameObject *> *objToCalculate) {
                         colDir = fromLeft;
                         collisionStruct newCollision = {objB, objA, objB->getCollisionType(), colDir};
                         eventsToHandle.push_back(newCollision);
-                        std::string msg = "->Kollision von Links hat stattgefunden";
-                        qDebug(msg.c_str());
+                        qDebug("->Kollision von Links hat stattgefunden");
                     } else {
                         colDir = fromRight;
                         collisionStruct newCollision = {objB, objA, objB->getCollisionType(), colDir};
                         eventsToHandle.push_back(newCollision);
-                        std::string msg = "->Kollision von Rechts hat stattgefunden";
-                        qDebug(msg.c_str());
+                        qDebug("->Kollision von Rechts hat stattgefunden");
                     }
                 } else {
                     if ((overlapY <= overlapX) && (overlapY > 0)) {
@@ -222,15 +220,13 @@ void Game::detectCollision(std::list<GameObject *> *objToCalculate) {
                             colDir = fromRight;
                             collisionStruct newCollision = {objB, objA, objB->getCollisionType(), colDir};
                             eventsToHandle.push_back(newCollision);
-                            std::string msg = "->Kollision von Oben hat stattgefunden";
-                            qDebug(msg.c_str());
+                            qDebug("->Kollision von Oben hat stattgefunden");
                         } else {
                             colDir = fromBelow;
                             colDir = fromRight;
                             collisionStruct newCollision = {objB, objA, objB->getCollisionType(), colDir};
                             eventsToHandle.push_back(newCollision);
-                            std::string msg = "->Kollision von Unten hat stattgefunden";
-                            qDebug(msg.c_str());
+                            qDebug("->Kollision von Unten hat stattgefunden");
                         }
                     }
                 }
