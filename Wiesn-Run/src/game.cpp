@@ -68,7 +68,7 @@ void Game::timerEvent(QTimerEvent *event)
  * Hier müssen auch die Sachen rein, die einmahlig beim Starten ausgeführt werden sollen
  * - alles laden, Fenster anzeigen
  * @return Rückgabewert von app.exec()
- * @author Felix, Rupert, Flo
+ * @author Felix, Rupert, Flo, Simon
  */
 int Game::start() {
     // levelInitial laden
@@ -89,8 +89,6 @@ int Game::start() {
         levelInitial.pop_front();
     }
 
-
-    // Player erstellen und in worldObjects einfügen
 
     // QGraphicsView Widget (Anzeigefenster) erstellen und einstellen
     QGraphicsView * window = new QGraphicsView();
@@ -194,6 +192,7 @@ void Game::detectCollision(std::list<GameObject*> *objToCalculate) {
             // Vorheriges Element hinzufügen, falls currentObject nicht das erste Element ist.
             if (it != objToCalculate->begin()) {
                 possibleCollision.push_back(*std::prev(it));
+                // Da das vorherige Element erfolgreich hinzugefügt wurde, prüfe, ob noch ein Element hinzugefügt werden kann
                 if (std::prev(it) != objToCalculate->begin()) {
                     possibleCollision.push_back(*std::prev(it, 2));
                 }
@@ -201,29 +200,34 @@ void Game::detectCollision(std::list<GameObject*> *objToCalculate) {
             // Nächstes Element hinzufügen, falls currentObject nicht das letze Element ist.
             if (it != objToCalculate->end()) {
                 possibleCollision.push_back(*std::next(it));
+                // Da nächstes Element erfolgreich hinzugefügt wurde, prüfe, ob noch ein Element hinzugefügt werden kann
                 if (std::next(it) != objToCalculate->end()) {
                     possibleCollision.push_back(*std::next(it, 2));
                 }
             }
 
+            // Durchlaufe die Liste der möglichen Kollisionen, bis sie leer ist
             while (!(possibleCollision.empty())) {
 
                 int overlapX;
                 int overlapY;
 
+                // Setze das erste Objekt in der Liste als ObjektB (das getroffene Objekt) und lösche es aus der Liste
                 GameObject *objB = *possibleCollision.begin();
                 possibleCollision.pop_front();
 
+                // Pürfen und Setzen, ob sich A links/rechts bzw. über/unter B befindet
                 bool ALeftFromB = objA->getPosX() < objB->getPosX();
                 bool AAboveB = (objA->getPosY() + objA->getHeight()) >= (objB->getPosY() + objB->getHeight());
 
+                // Berechne die Überschneidung in X-Richtung abhänging von der relativen Position von A zu B
                 if (ALeftFromB) {
                     overlapX = objA->getPosX() + (objA->getLength() / 2) - (objB->getPosX() - (objB->getLength() / 2));
                 } else {
                     overlapX = (objB->getPosX() + (objB->getLength() / 2)) - (objA->getPosX() - (objA->getLength() / 2));
                 }
 
-                // OverlapY hängt stark mit der Koordinatendefinition zusammen
+                // Berechne die Überschneidung in Y-Richtung abhängig von der relativen Position von A zu B
                 if (AAboveB) {
                     overlapY = (objB->getPosY() + (objB->getHeight() / 1)) - (objA->getPosY());
                 } else {
@@ -232,6 +236,12 @@ void Game::detectCollision(std::list<GameObject*> *objToCalculate) {
 
                 collisionDirection colDir;
 
+                // Prüfe, aus welcher Richtung die Kollision stattgefunden hat.
+                // Für eine Kollision muss gelten...
+                // ...von Links: (overlapX < overlapY) && (overlapX > 0) && ALeftFromB
+                // ...von Rechts: (overlapX < overlapY) && (overlapx > 0) && !ALeftFromB
+                //...von Oben: (overlapY < overlapX) && (overlapY > 0) && AAboveB
+                //...von Unten: (overlapY < overlapX) && (overlapY > 0) && !AAboveB
                 if ((overlapX < overlapY) && (overlapX > 0)) {
                     if (ALeftFromB) {
                         colDir = fromLeft;
