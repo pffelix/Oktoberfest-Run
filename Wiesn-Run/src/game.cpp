@@ -73,14 +73,30 @@ void Game::timerEvent(QTimerEvent *event)
 int Game::start() {
     // levelInitial laden
     // worldObjects = levelInitial
-    makeTestWorld();
+    // makeTestWorld();
+
+
+    // Level1 erstellen bedeutet levelInitial und levelSpawn füllen
+    makeLevel1();
+    // Spieler hinzufügen
+    worldObjects.push_back(playerObjPointer);
+    // Spawn-Distanz setzen
+    spawnDistance = 300;
+    // Zeiger auf Objekte aus levelInitial in worldObjects verlegen
+    while (!(levelInitial.empty())) {
+        GameObject *currentObject = *levelInitial.begin();
+        worldObjects.push_back(currentObject);
+        levelInitial.pop_front();
+    }
+
+
     // Player erstellen und in worldObjects einfügen
 
     // QGraphicsView Widget (Anzeigefenster) erstellen und einstellen
     QGraphicsView * window = new QGraphicsView();
     window->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     window->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    window->setFixedSize(800,600);
+    window->setFixedSize(1024,768);
     window->setWindowTitle(QApplication::translate("Game Widget", "Game Widget (Input Test)"));
     window->show();
     qDebug("initialize window");
@@ -122,6 +138,7 @@ int Game::step() {
     using namespace std::chrono;
 
     /// Zeit seit dem letzten Aufruf ausrechnen und ausgeben
+
     //high_resolution_clock::time_point akt = letzterAufruf;
     //letzterAufruf = high_resolution_clock::now();
     //qDebug("Game::step() | Vergangene Zeit seit letztem step(): %d ms", static_cast<int>(duration_cast<milliseconds>(letzterAufruf-akt).count()));
@@ -139,7 +156,7 @@ int Game::step() {
         case running:
             worldObjects.sort(compareGameObjects());
 
-            //    appendWorldObjects();
+            appendWorldObjects(playerObjPointer);
             //    reduceWorldObjects();
             //    evaluateInput();
             calculateMovement();
@@ -150,6 +167,7 @@ int Game::step() {
             //    playSound();
             break;
     }
+
     return 0;
 }
 
@@ -162,7 +180,7 @@ int Game::step() {
  * @todo Objekt-Definitionen mit eventHandling abstimmen, Koordinatendefinition, Overlap-Problem, <= Fälle
  * @author Simon
  */
-void Game::detectCollision(std::list<GameObject *> *objToCalculate) {
+void Game::detectCollision(std::list<GameObject*> *objToCalculate) {
 
     for (std::list<GameObject*>::iterator it=objToCalculate->begin(); it != objToCalculate->end(); ++it) {
 
@@ -268,8 +286,46 @@ void Game::makeTestWorld() {
 
 }
 
-void Game::appendWorldObjects() {
 
+/**
+ * @brief Game::makeLevel1
+ * Erstellt die Listen levelInitial und levelSpawn für den ersten Level. Diese müssen dann ausgelesen werden.
+ * Kann zu Testzwecken verwendet werden.
+ * @author Simon
+ */
+void Game::makeLevel1() {
+    int obs = 10; // objectScale
+    GameObject *obstackle1 = new GameObject(10*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle2 = new GameObject(20*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle3 = new GameObject(28*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle4 = new GameObject(35*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle5 = new GameObject(46*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle6 = new GameObject(60*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    levelInitial.push_back(obstackle1);
+    levelInitial.push_back(obstackle2);
+    levelInitial.push_back(obstackle3);
+    levelInitial.push_back(obstackle4);
+    levelInitial.push_back(obstackle5);
+    levelInitial.push_back(obstackle6);
+    levelInitial.sort(compareGameObjects());
+
+    // GameObject *enemy1 = new Enemy(30*obs, 0*obs, 2*obs, 8*obs, enemy, contacting, -1*obs, 0*obs);
+    GameObject *playerObject = new Player(2*obs, 0*obs, 2*obs, 6*obs, player, stopping, 1*obs, 0*obs);
+    playerObjPointer = dynamic_cast<Player*>(playerObject);
+
+}
+
+void Game::appendWorldObjects(Player *playerPointer) {
+    int playerPosX = playerPointer->getPosX();
+    for (std::list<GameObject*>::iterator it = levelSpawn.begin(); it != levelSpawn.end(); ++it) {
+        GameObject *currentObj = *it;
+        if ( (currentObj->getPosX() - playerPosX) < spawnDistance ) {
+            worldObjects.push_back(currentObj);
+            levelSpawn.pop_front();
+        } else {
+            break;
+        }
+    }
 }
 
 void Game::reduceWorldObjects() {

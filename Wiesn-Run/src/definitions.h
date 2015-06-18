@@ -11,6 +11,7 @@
 #ifndef DEFINITIONS_H
 #define DEFINITIONS_H
 
+#include <iostream>
 
 /**
  * @brief Enumerator für den aktuellen Spielstatus
@@ -69,10 +70,32 @@ struct scoreStruct {
 };
 
 /**
+ * @brief Enumerator playTypeEnum
+ * Enumerator für die Abspieltypen der Sounds.
+ * Wird z.B. ein Bier geworfen, so ist der playType über die gesamte Zeit "continous".
+ * Wird das Objekt zerstört, so wird einmal der playType "stop" gesendet.
+ * Einmalige Signale werden mit playType "once" gesendet.
+ */
+enum playTypeEnum {
+    continous, stop, once
+};
+
+/**
+ * @brief Sound-Struktur
+ * Der Sound-Engine arbeitet Events von dieser Struktur ab. Jedes Sound-Event hat einen Namen,
+ * eine Distanz und einen playType.
+ */
+struct soundStruct {
+    std::string name;
+    int distance;
+    enum playTypeEnum playType;
+};
+
+/**
  * @brief Struktur für die States des Spiels
  * Sowohl Sound- als auch Grafik-Ausgabe erhalten aus den States Informationen darüber, was gerade im Spiel passiert,
  * z.B. dass gerade der Spieler angreift, ein Gegner stribt etc.
- * @todo Es fehlen noch die States selbst.
+ * @todo Diese Struktur ist vermutlich überflüssig.
  * @author Simon
  */
 struct stateStruct {
@@ -83,13 +106,13 @@ struct stateStruct {
     bool playerHit;
     bool gameOver;
 
-    bool enemyHit;
     bool enemyAttacking;
     bool enemyThrowing;
     bool enemyDead;
 
     bool beerCollected;
     bool chickenCollected;
+
 };
 
 
