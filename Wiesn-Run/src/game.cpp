@@ -72,14 +72,14 @@ void Game::timerEvent(QTimerEvent *event)
  * @author Felix, Rupert, Flo, Simon
  */
 int Game::start() {
-    // levelInitial laden
-    // worldObjects = levelInitial
-    // makeTestWorld();
-
 
     // Level erstellen bedeutet levelInitial und levelSpawn füllen
+    //makeTestWorld();
     //loadLevel1();
     loadLevel2();
+
+    // Fundamentale stepSize setzen
+    stepSize = 200;
 
     // Spieler hinzufügen
     worldObjects.push_back(playerObjPointer);
@@ -111,7 +111,7 @@ int Game::start() {
     window->installEventFilter(keyInputs);
 
     qDebug("Starte Timer mit 500msec-Intervall");
-    Game::startTimer(500);
+    Game::startTimer(stepSize);
 
     return appPointer->exec();
 }
@@ -349,7 +349,7 @@ void Game::calculateMovement() {
         GameObject *aktObject = *it;
 
         string msg = "OBJECT Position: XPos=" + to_string(aktObject->getPosX());
-        qDebug("OBJECT Position: XPos=%d",aktObject->getPosX());
+        qDebug("Object Position: XPos=%d",aktObject->getPosX());
         MovingObject *aktMovingObject = dynamic_cast<MovingObject*> (aktObject);    // Versuche GameObject in Moving Object umzuwandeln
         if(aktMovingObject != 0) {
             aktMovingObject->update();          // Wenn der cast klappt, rufe update() auf.
