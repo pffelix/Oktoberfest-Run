@@ -94,6 +94,10 @@ void Input::updateKeyactions() {
             keyactions += Keyaction::Exit;
             qDebug("Exit");
     }
+    if(keyevents.contains(Qt::Key_Enter) || keyevents.contains(Qt::Key_Return))  {
+            keyactions += Keyaction::Enter;
+            qDebug("Enter");
+    }
 }
 
 /**
