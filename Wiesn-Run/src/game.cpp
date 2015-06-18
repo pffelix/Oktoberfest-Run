@@ -48,7 +48,7 @@ Game::~Game() {
  * @param event
  * @author Rupert
  */
-void Game::timerEvent(QTimerEvent *event)
+void Game::timerEvent(/*QTimerEvent *event*/)
 {
     step();
     ///@TODO return von step...
