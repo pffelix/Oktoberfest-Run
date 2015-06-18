@@ -86,7 +86,9 @@ int Game::start() {
     qDebug("initialize window");
 
     //Timer installieren
-    Input *keyInputs = new Input();
+    //Input *keyInputs = new Input();
+    // -> das ist jetzt in game.h
+
     window->installEventFilter(keyInputs);
 
     qDebug("Starte Timer mit 500msec-Intervall");
@@ -120,14 +122,19 @@ int Game::step() {
     using namespace std::chrono;
 
     /// Zeit seit dem letzten Aufruf ausrechnen und ausgeben
-    high_resolution_clock::time_point akt = letzterAufruf;
-    letzterAufruf = high_resolution_clock::now();
-    qDebug("Game::step() | Vergangene Zeit seit letztem step(): %d ms", static_cast<int>(duration_cast<milliseconds>(letzterAufruf-akt).count()));
+    //high_resolution_clock::time_point akt = letzterAufruf;
+    //letzterAufruf = high_resolution_clock::now();
+    //qDebug("Game::step() | Vergangene Zeit seit letztem step(): %d ms", static_cast<int>(duration_cast<milliseconds>(letzterAufruf-akt).count()));
 
     switch(state) {
         case menuStart:
         case menuEnd:
             // Menü-Anzeige
+            qDebug("Menü -- Leertaste für Spielstart");
+            if(keyInputs->getKeyactions().contains(Input::Keyaction::Shoot)) {
+                // Leertaste gedrückt
+                state = running;
+            }
             break;
         case running:
             worldObjects.sort(compareGameObjects());

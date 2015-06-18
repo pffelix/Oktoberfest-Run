@@ -92,12 +92,14 @@ private:
     Player *playerObjPointer;
 
     /// aktueller Spielzustand (running, menuStart, menuEnd)
-    gameState state = running;
+    gameState state = menuStart;
 
     /// Zeiger auf QApplication
     QApplication *appPointer;
     /// für Zeitmessung
     std::chrono::high_resolution_clock::time_point letzterAufruf;
+    /// für Inputs
+    Input *keyInputs = new Input();
 };
 
 #endif // GAME_H

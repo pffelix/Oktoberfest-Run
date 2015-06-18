@@ -32,13 +32,13 @@ Input::~Input() {
 
 bool Input::eventFilter(QObject *obj, QEvent *event) {
     if(event->type() == QEvent::KeyPress && ((QKeyEvent*)event)->isAutoRepeat() == false) {
-        qDebug("key pressed");
+        //qDebug("key pressed");
         keyevents += ((QKeyEvent*)event)->key();
         updateKeyactions();
         return true;
     }
     else if(event->type() == QEvent::KeyRelease && ((QKeyEvent*)event)->isAutoRepeat() == false) {
-        qDebug("key released");
+        //qDebug("key released");
         keyevents -= ((QKeyEvent*)event)->key();
         updateKeyactions();
         return true;
