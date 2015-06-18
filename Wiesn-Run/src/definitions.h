@@ -13,6 +13,17 @@
 
 
 /**
+ * @brief Enumerator für den aktuellen Spielstatus
+ * ähnlich zu einer StateMachine
+ * wird in step() über switch abgefragt
+ * @author Rupert
+ */
+enum gameState {
+    running, menuStart, menuEnd
+};
+
+
+/**
  * @brief Enumerator für den Objekt-Typ
  * Hier ist der Objekt-Typ gespeichert.
  * @author Johann

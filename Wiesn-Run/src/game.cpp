@@ -124,19 +124,25 @@ int Game::step() {
     letzterAufruf = high_resolution_clock::now();
     qDebug("Game::step() | Vergangene Zeit seit letztem step(): %d ms", static_cast<int>(duration_cast<milliseconds>(letzterAufruf-akt).count()));
 
-    worldObjects.sort(compareGameObjects());
+    switch(state) {
+        case menuStart:
+        case menuEnd:
+            // Menü-Anzeige
+            break;
+        case running:
+            worldObjects.sort(compareGameObjects());
 
-//    appendWorldObjects();
-//    reduceWorldObjects();
-//    evaluateInput();
-    calculateMovement();
-    detectCollision(&worldObjects);
-//    correctMovement();
-//    handleEvents();
-//    renderGraphics();
-//    playSound();
-
-
+            //    appendWorldObjects();
+            //    reduceWorldObjects();
+            //    evaluateInput();
+            calculateMovement();
+            detectCollision(&worldObjects);
+            //    correctMovement();
+            //    handleEvents();
+            //    renderGraphics();
+            //    playSound();
+            break;
+    }
     return 0;
 }
 

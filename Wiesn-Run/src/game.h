@@ -91,6 +91,9 @@ private:
     int stepSize;
     Player *playerObjPointer;
 
+    /// aktueller Spielzustand (running, menuStart, menuEnd)
+    gameState state = running;
+
     /// Zeiger auf QApplication
     QApplication *appPointer;
     /// für Zeitmessung
