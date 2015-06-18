@@ -11,6 +11,7 @@
 #ifndef DEFINITIONS_H
 #define DEFINITIONS_H
 
+#include <iostream>
 
 /**
  * @brief Enumerator für den Objekt-Typ
@@ -83,7 +84,7 @@ struct soundStruct {
  * @brief Struktur für die States des Spiels
  * Sowohl Sound- als auch Grafik-Ausgabe erhalten aus den States Informationen darüber, was gerade im Spiel passiert,
  * z.B. dass gerade der Spieler angreift, ein Gegner stribt etc.
- * @todo Es fehlen noch die States selbst.
+ * @todo Diese Struktur ist vermutlich überflüssig.
  * @author Simon
  */
 struct stateStruct {

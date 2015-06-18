@@ -71,7 +71,16 @@ void Game::timerEvent(QTimerEvent *event)
 int Game::start() {
     // levelInitial laden
     // worldObjects = levelInitial
-    makeTestWorld();
+    //makeTestWorld();
+
+
+    makeLevel1();
+    while (!(levelInitial.empty())) {
+        GameObject *currentObject = *levelInitial.begin();
+        worldObjects.push_back(currentObject);
+        levelInitial.pop_front();
+    }
+
     // Player erstellen und in worldObjects einfügen
 
     // QGraphicsView Widget (Anzeigefenster) erstellen und einstellen
@@ -262,7 +271,7 @@ void Game::makeTestWorld() {
 
 /**
  * @brief Game::makeLevel1
- * Erstellt die Listen worldObjects, LevelInitial und LevelSpawn für den ersten Level.
+ * Erstellt die Listen levelInitial und levelSpawn für den ersten Level. Diese müssen dann ausgelesen werden.
  * Kann zu Testzwecken verwendet werden.
  * @author Simon
  */
@@ -282,8 +291,8 @@ void Game::makeLevel1() {
     levelInitial.push_back(obstackle6);
 
     // GameObject *enemy1 = new Enemy(30*obs, 0*obs, 2*obs, 8*obs, enemy, contacting, -1*obs, 0*obs);
-    GameObject *player = new Player(2*obs, 0*obs, 2*obs, 6*obs, player, stopping, 1*obs, 0*obs);
-    levelSpawn.push_back(player);
+    GameObject *playerObject = new Player(2*obs, 0*obs, 2*obs, 6*obs, player, stopping, 1*obs, 0*obs);
+    levelSpawn.push_back(playerObject);
 }
 
 void Game::appendWorldObjects() {
