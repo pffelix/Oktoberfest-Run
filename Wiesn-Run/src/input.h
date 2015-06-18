@@ -28,7 +28,8 @@ public:
         Jump_Left = 4,
         Jump_Right = 5,
         Shoot = 6,
-        Exit = 7
+        Exit = 7,
+        Enter = 8
     };
 
     Input();

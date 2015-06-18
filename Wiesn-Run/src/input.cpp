@@ -10,7 +10,6 @@ Input::Input() {
 }
 
 
-
 /**
  * @brief  Input::~Input
  *         Destruktor löscht ein Objekt der Klasse Input
@@ -47,7 +46,6 @@ bool Input::eventFilter(QObject *obj, QEvent *event) {
          return QObject::eventFilter(obj, event);
     }
 }
-
 
 /**
  * @brief  Input::updateKeyactions
@@ -93,6 +91,10 @@ void Input::updateKeyactions() {
     if(keyevents.contains(Qt::Key_Escape)) {
             keyactions += Keyaction::Exit;
             qDebug("Exit");
+    }
+    if(keyevents.contains(Qt::Key_Enter) || keyevents.contains(Qt::Key_Return))  {
+            keyactions += Keyaction::Enter;
+            qDebug("Enter");
     }
 }
 
