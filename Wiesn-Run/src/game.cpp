@@ -56,6 +56,7 @@ void Game::timerEvent(QTimerEvent *event)
     ///@TODO return von step...
 }
 
+
 /**
  * @brief Erstelle QApplication app mit QGraphicsView Widget window (Eventfilter installiert) und Zeiger input auf Input Objekt.
  * Um Funktionen der Tastatur Eingabe entwickeln zu können ist ein Qt Widget Fenster nötig.
@@ -110,6 +111,7 @@ int Game::start() {
 
     return appPointer->exec();
 }
+
 
 /**
  * @brief Game-Loop
@@ -277,6 +279,7 @@ void Game::detectCollision(std::list<GameObject*> *objToCalculate) {
     } // for
 } // function
 
+
 /**
  * @brief Erstellt ein paar Test-Objekte in worldObjects
  * Was wird erstellt:
@@ -300,31 +303,49 @@ void Game::makeTestWorld() {
 /**
  * @brief Game::makeLevel1
  * Erstellt die Listen levelInitial und levelSpawn für den ersten Level. Diese müssen dann ausgelesen werden.
- * Kann zu Testzwecken verwendet werden.
+ * Der Spieler wird auch als GameObject erstellt. Um den Zeiger auf das Spielerobjekt playerObjPointer setzen
+ * zu können, wird ein dynamic_cast auf das Spieler-Objekt ausgeführt.
  * @author Simon
  */
 void Game::makeLevel1() {
-    int obs = 10; // objectScale
+    // Skalierungsfaktor Objekte im Spiel
+    int obs = 10;
+
+    // Erstelle statische Objekte
     GameObject *obstackle1 = new GameObject(10*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
     GameObject *obstackle2 = new GameObject(20*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
     GameObject *obstackle3 = new GameObject(28*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
     GameObject *obstackle4 = new GameObject(35*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
     GameObject *obstackle5 = new GameObject(46*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
     GameObject *obstackle6 = new GameObject(60*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    // Füge statische Objekte der Liste levelInitial hinzu
     levelInitial.push_back(obstackle1);
     levelInitial.push_back(obstackle2);
     levelInitial.push_back(obstackle3);
     levelInitial.push_back(obstackle4);
     levelInitial.push_back(obstackle5);
     levelInitial.push_back(obstackle6);
+    // Sortiere die Liste levelInitial
     levelInitial.sort(compareGameObjects());
 
     // GameObject *enemy1 = new Enemy(30*obs, 0*obs, 2*obs, 8*obs, enemy, contacting, -1*obs, 0*obs);
+
+    // Erstelle das Spieler-Objekt und setze den playerObjPointer
     GameObject *playerObject = new Player(2*obs, 0*obs, 2*obs, 6*obs, player, stopping, 1*obs, 0*obs);
     playerObjPointer = dynamic_cast<Player*>(playerObject);
-
 }
 
+
+/**
+ * @brief Game::appendWorldObjects
+ * @param playerPointer
+ * Diese Funktion fügt der Spielwelt dynamisch Gegner hinzu. In jedem Zeitschritt wird die sortierte Liste
+ * levelSpawn vom Anfang her durchlaufen. Ist die Distanz des Spielers zum Gegner kleiner als die Distanz levelSpawn,
+ * so wird das Objekt den worldObjects hinzugefügt und aus levelSpawn gelöscht. Die for-Schleife läuft solange, bis
+ * das erste Mal ein Objekt weiter als levelSpawn vom Spieler entfernt ist. Dann wird abgebrochen, da alle folgenden
+ * Objekte auf Grund der Sortierung noch weiter entfernt sein werden.
+ * @author Simon
+ */
 void Game::appendWorldObjects(Player *playerPointer) {
     int playerPosX = playerPointer->getPosX();
     for (std::list<GameObject*>::iterator it = levelSpawn.begin(); it != levelSpawn.end(); ++it) {
@@ -338,13 +359,16 @@ void Game::appendWorldObjects(Player *playerPointer) {
     }
 }
 
+
 void Game::reduceWorldObjects() {
 
 }
 
+
 void Game::evaluateInput() {
 
 }
+
 
 /**
  * @brief Geht die worldObjects durch und aktualisiert bei jedem die Position
@@ -369,35 +393,34 @@ void Game::calculateMovement() {
     }
 }
 
-void Game::correctMovement() {
-
-}
 
 void Game::renderGraphics() {
 
 }
 
+
 void Game::playSound() {
 
 }
 
+
 void Game::endGame() {
 
 }
+
 
 void Game::handleEvents() {
 
 }
 
 /**
- * @brief Kollisionen in der Liste eventsToHandle werden der Reihe nach aus Sicht des affectedOnjects bearbeitet.
+ * @brief Kollisionen in der Liste eventsToHandle werden der Reihe nach aus Sicht des affectedObjects bearbeitet.
  * In einer Schleife wird das jeweils erst CollisionEvent bearbeitet. Dabei werden nur an dem Objekt affectedObject Änderungen vorgenommen.
  * Mögliche Objekte: Spieler(player), Gegner(enemy), Bierkrug(shot)
  * mögliche Kollision mit Spieler(player), Spielumfeld(obstacle), Gegner(enemy), Bierkrug(shot), Power-Up(powerUp)
  *
  * @author Johann (15.6.15)
  */
-
 void Game::handleCollisions() {
 
     collisionStruct handleEvent;
@@ -602,6 +625,7 @@ void Game::handleCollisions() {
         }
     }
 }
+
 
 /**
  * @brief Fügt dem Spieler Schaden zu

@@ -67,7 +67,6 @@ private:
     void evaluateInput();
     void calculateMovement();
     void detectCollision(std::list<GameObject*> *objToCalculate);
-    void correctMovement();
     void handleEvents();
     void handleCollisions();
     void renderGraphics();
