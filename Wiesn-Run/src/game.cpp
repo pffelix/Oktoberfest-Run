@@ -73,18 +73,22 @@ void Game::timerEvent(QTimerEvent *event)
 int Game::start() {
     // levelInitial laden
     // worldObjects = levelInitial
-    //makeTestWorld();
+    // makeTestWorld();
+
 
     // Level1 erstellen bedeutet levelInitial und levelSpawn füllen
     makeLevel1();
     // Spieler hinzufügen
     worldObjects.push_back(playerObjPointer);
+    // Spawn-Distanz setzen
+    spawnDistance = 300;
     // Zeiger auf Objekte aus levelInitial in worldObjects verlegen
     while (!(levelInitial.empty())) {
         GameObject *currentObject = *levelInitial.begin();
         worldObjects.push_back(currentObject);
         levelInitial.pop_front();
     }
+
 
     // Player erstellen und in worldObjects einfügen
 
@@ -293,7 +297,7 @@ void Game::makeLevel1() {
     // GameObject *enemy1 = new Enemy(30*obs, 0*obs, 2*obs, 8*obs, enemy, contacting, -1*obs, 0*obs);
     GameObject *playerObject = new Player(2*obs, 0*obs, 2*obs, 6*obs, player, stopping, 1*obs, 0*obs);
     playerObjPointer = dynamic_cast<Player*>(playerObject);
-    levelSpawn.push_back(playerObject);
+
 }
 
 void Game::appendWorldObjects(Player *playerPointer) {
