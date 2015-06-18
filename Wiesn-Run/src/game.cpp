@@ -151,7 +151,6 @@ int Game::step() {
  */
 void Game::detectCollision(std::list<GameObject *> *objToCalculate) {
 
-
     for (std::list<GameObject*>::iterator it=objToCalculate->begin(); it != objToCalculate->end(); ++it) {
 
         MovingObject *objA = dynamic_cast<MovingObject*>(*it);
@@ -164,10 +163,16 @@ void Game::detectCollision(std::list<GameObject *> *objToCalculate) {
             // Vorheriges Element hinzufügen, falls currentObject nicht das erste Element ist.
             if (it != objToCalculate->begin()) {
                 possibleCollision.push_back(*std::prev(it));
+                if (std::prev(it) != objToCalculate->begin()) {
+                    possibleCollision.push_back(*std::prev(it, 2));
+                }
             }
             // Nächstes Element hinzufügen, falls currentObject nicht das letze Element ist.
             if (it != objToCalculate->end()) {
                 possibleCollision.push_back(*std::next(it));
+                if (std::next(it) != objToCalculate->end()) {
+                    possibleCollision.push_back(*std::next(it, 2));
+                }
             }
 
             while (!(possibleCollision.empty())) {
@@ -201,13 +206,13 @@ void Game::detectCollision(std::list<GameObject *> *objToCalculate) {
                         colDir = fromLeft;
                         collisionStruct newCollision = {objB, objA, objB->getCollisionType(), colDir};
                         eventsToHandle.push_back(newCollision);
-                        std::string msg = "Kollision von Links hat stattgefunden";
+                        std::string msg = "->Kollision von Links hat stattgefunden";
                         qDebug(msg.c_str());
                     } else {
                         colDir = fromRight;
                         collisionStruct newCollision = {objB, objA, objB->getCollisionType(), colDir};
                         eventsToHandle.push_back(newCollision);
-                        std::string msg = "Kollision von Rechts hat stattgefunden";
+                        std::string msg = "->Kollision von Rechts hat stattgefunden";
                         qDebug(msg.c_str());
                     }
                 } else {
@@ -217,14 +222,14 @@ void Game::detectCollision(std::list<GameObject *> *objToCalculate) {
                             colDir = fromRight;
                             collisionStruct newCollision = {objB, objA, objB->getCollisionType(), colDir};
                             eventsToHandle.push_back(newCollision);
-                            std::string msg = "Kollision von Oben hat stattgefunden";
+                            std::string msg = "->Kollision von Oben hat stattgefunden";
                             qDebug(msg.c_str());
                         } else {
                             colDir = fromBelow;
                             colDir = fromRight;
                             collisionStruct newCollision = {objB, objA, objB->getCollisionType(), colDir};
                             eventsToHandle.push_back(newCollision);
-                            std::string msg = "Kollision von Unten hat stattgefunden";
+                            std::string msg = "->Kollision von Unten hat stattgefunden";
                             qDebug(msg.c_str());
                         }
                     }
@@ -284,7 +289,7 @@ void Game::calculateMovement() {
         MovingObject *aktMovingObject = dynamic_cast<MovingObject*> (aktObject);    // Versuche GameObject in Moving Object umzuwandeln
         if(aktMovingObject != 0) {
             aktMovingObject->update();          // Wenn der cast klappt, rufe update() auf.
-            qDebug("update() für letztes Objekt wird aufgerufen");
+            // qDebug("update() für letztes Objekt wird aufgerufen");
         }
 
     }
