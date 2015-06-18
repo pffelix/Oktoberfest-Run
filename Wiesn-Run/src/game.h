@@ -54,7 +54,7 @@ public:
     struct stateStruct gameStats;
     //Liste von Kollisionen
     std::list<struct collisionStruct> eventsToHandle;
-    //QMultiHash<struct stateStruct> states;
+    struct stateStruct states;
     int start();
 
 protected:
@@ -76,6 +76,7 @@ private:
     bool hurtPlayer(int damage);
 
     void makeTestWorld();
+    void makeLevel1();
 
     // Enthält alle in der Welt befindlichen Objekte
     std::list<GameObject*> worldObjects;
