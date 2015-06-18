@@ -1,0 +1,9 @@
+Milestones:
+
+10.6. Klassen fertig definiert
+18.6. Testwelt + Input
+21.6. Testlauf mit einfacher Grafik, ohne Sound, ein Level ohne Menüs
+24.6. Sound, Grafik, Menüs laufen
+28.6. Spiel läuft
+30.6. Präsentation fertig
+1.7. Vorstellung
