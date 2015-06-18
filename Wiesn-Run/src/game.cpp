@@ -259,6 +259,33 @@ void Game::makeTestWorld() {
 
 }
 
+
+/**
+ * @brief Game::makeLevel1
+ * Erstellt die Listen worldObjects, LevelInitial und LevelSpawn für den ersten Level.
+ * Kann zu Testzwecken verwendet werden.
+ * @author Simon
+ */
+void Game::makeLevel1() {
+    int obs = 10; // objectScale
+    GameObject *obstackle1 = new GameObject(10*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle2 = new GameObject(20*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle3 = new GameObject(28*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle4 = new GameObject(35*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle5 = new GameObject(46*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle6 = new GameObject(60*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    levelInitial.push_back(obstackle1);
+    levelInitial.push_back(obstackle2);
+    levelInitial.push_back(obstackle3);
+    levelInitial.push_back(obstackle4);
+    levelInitial.push_back(obstackle5);
+    levelInitial.push_back(obstackle6);
+
+    // GameObject *enemy1 = new Enemy(30*obs, 0*obs, 2*obs, 8*obs, enemy, contacting, -1*obs, 0*obs);
+    GameObject *player = new Player(2*obs, 0*obs, 2*obs, 6*obs, player, stopping, 1*obs, 0*obs);
+    levelSpawn.push_back(player);
+}
+
 void Game::appendWorldObjects() {
 
 }
