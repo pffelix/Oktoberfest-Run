@@ -75,7 +75,8 @@ private:
     bool hurtPlayer(int damage);
 
     void makeTestWorld();
-    void makeLevel1();
+    void loadLevel1();
+    void loadLevel2();
 
     /// In der Welt befindliche Objekte
     std::list<GameObject*> worldObjects;

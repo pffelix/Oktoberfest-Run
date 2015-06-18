@@ -77,12 +77,16 @@ int Game::start() {
     // makeTestWorld();
 
 
-    // Level1 erstellen bedeutet levelInitial und levelSpawn füllen
-    makeLevel1();
+    // Level erstellen bedeutet levelInitial und levelSpawn füllen
+    //loadLevel1();
+    loadLevel2();
+
     // Spieler hinzufügen
     worldObjects.push_back(playerObjPointer);
     // Spawn-Distanz setzen
     spawnDistance = 300;
+    // Szenen-Breite setzen
+    sceneWidth = 300;
     // Zeiger auf Objekte aus levelInitial in worldObjects verlegen
     while (!(levelInitial.empty())) {
         GameObject *currentObject = *levelInitial.begin();
@@ -281,60 +285,7 @@ void Game::detectCollision(std::list<GameObject*> *objToCalculate) {
 } // function
 
 
-/**
- * @brief Erstellt ein paar Test-Objekte in worldObjects
- * Was wird erstellt:
- * - Objekt1 mit v=0 an x=100,y=0
- * - Objekt2 mit v=0 an x=180,y=0
- * - ObjektPlayer mit v=8 an x=20,y=0
- * Die Objekte sind 60 breit und 80 hoch. Dimensionen müssen immer durch zwei teilbar sein.
- * @author Rupert, Simon
- */
-void Game::makeTestWorld() {
-    GameObject *object1 = new GameObject(100,0,60,80,obstacle,stopping);
-    GameObject *object2 = new GameObject(180,0,60,80,obstacle,stopping);
-    Player *objectPlayer = new Player(20,0,20,60,player,stopping,8,0);
-    worldObjects.push_back(object1);
-    worldObjects.push_back(object2);
-    worldObjects.push_back(objectPlayer);
 
-}
-
-
-/**
- * @brief Game::makeLevel1
- * Erstellt die Listen levelInitial und levelSpawn für den ersten Level. Diese müssen dann ausgelesen werden.
- * Der Spieler wird auch als GameObject erstellt. Um den Zeiger auf das Spielerobjekt playerObjPointer setzen
- * zu können, wird ein dynamic_cast auf das Spieler-Objekt ausgeführt.
- * @author Simon
- */
-void Game::makeLevel1() {
-    /// Skalierungsfaktor für Objekte im Spiel
-    int obs = 10;
-
-    // Erstelle statische Objekte
-    GameObject *obstackle1 = new GameObject(10*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle2 = new GameObject(20*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle3 = new GameObject(28*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle4 = new GameObject(35*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle5 = new GameObject(46*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle6 = new GameObject(60*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    // Füge statische Objekte der Liste levelInitial hinzu
-    levelInitial.push_back(obstackle1);
-    levelInitial.push_back(obstackle2);
-    levelInitial.push_back(obstackle3);
-    levelInitial.push_back(obstackle4);
-    levelInitial.push_back(obstackle5);
-    levelInitial.push_back(obstackle6);
-    // Sortiere die Liste levelInitial
-    levelInitial.sort(compareGameObjects());
-
-    // GameObject *enemy1 = new Enemy(30*obs, 0*obs, 2*obs, 8*obs, enemy, contacting, -1*obs, 0*obs);
-
-    // Erstelle das Spieler-Objekt und setze den playerObjPointer
-    GameObject *playerObject = new Player(2*obs, 0*obs, 2*obs, 6*obs, player, stopping, 1*obs, 0*obs);
-    playerObjPointer = dynamic_cast<Player*>(playerObject);
-}
 
 
 /**
@@ -348,8 +299,8 @@ void Game::makeLevel1() {
  * @author Simon
  */
 void Game::appendWorldObjects(Player *playerPointer) {
-    for (std::list<GameObject*>::iterator it = levelSpawn.begin(); it != levelSpawn.end(); ++it) {
-        GameObject *currentObj = *it;
+    while (!(levelSpawn.empty())) {
+        GameObject *currentObj = *levelSpawn.begin();
         if ( (currentObj->getPosX() - playerPointer->getPosX()) < spawnDistance ) {
             worldObjects.push_back(currentObj);
             levelSpawn.pop_front();
@@ -686,3 +637,95 @@ bool Game::hurtPlayer(int damage) {
 
 }
 
+
+/**
+ * @brief Erstellt ein paar Test-Objekte in worldObjects
+ * Was wird erstellt:
+ * - Objekt1 mit v=0 an x=100,y=0
+ * - Objekt2 mit v=0 an x=180,y=0
+ * - ObjektPlayer mit v=8 an x=20,y=0
+ * Die Objekte sind 60 breit und 80 hoch. Dimensionen müssen immer durch zwei teilbar sein.
+ * @author Rupert, Simon
+ */
+void Game::makeTestWorld() {
+    GameObject *object1 = new GameObject(100,0,60,80,obstacle,stopping);
+    GameObject *object2 = new GameObject(180,0,60,80,obstacle,stopping);
+    Player *objectPlayer = new Player(20,0,20,60,player,stopping,8,0);
+    worldObjects.push_back(object1);
+    worldObjects.push_back(object2);
+    worldObjects.push_back(objectPlayer);
+
+}
+
+
+/**
+ * @brief Game::makeLevel1
+ * Erstellt die Listen levelInitial und levelSpawn für den ersten Level. Diese müssen dann ausgelesen werden.
+ * Der Spieler wird auch als GameObject erstellt. Um den Zeiger auf das Spielerobjekt playerObjPointer setzen
+ * zu können, wird ein dynamic_cast auf das Spieler-Objekt ausgeführt.
+ * @author Simon
+ */
+void Game::loadLevel1() {
+    /// Skalierungsfaktor für Objekte im Spiel
+    int obs = 10;
+
+    // Erstelle statische Objekte
+    GameObject *obstackle1 = new GameObject(10*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle2 = new GameObject(20*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle3 = new GameObject(28*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle4 = new GameObject(35*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle5 = new GameObject(46*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle6 = new GameObject(60*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    // Füge statische Objekte der Liste levelInitial hinzu
+    levelInitial.push_back(obstackle1);
+    levelInitial.push_back(obstackle2);
+    levelInitial.push_back(obstackle3);
+    levelInitial.push_back(obstackle4);
+    levelInitial.push_back(obstackle5);
+    levelInitial.push_back(obstackle6);
+    // Sortiere die Liste levelInitial
+    levelInitial.sort(compareGameObjects());
+
+    // Erstelle das Spieler-Objekt und setze den playerObjPointer
+    GameObject *playerObject = new Player(2*obs, 0*obs, 2*obs, 6*obs, player, stopping, 1*obs, 0*obs);
+    playerObjPointer = dynamic_cast<Player*>(playerObject);
+}
+
+
+void Game::loadLevel2() {
+    /// Skalierungsfaktor für Objekte im Spiel
+    int obs = 10;
+
+    // Erstelle statische Objekte
+    GameObject *obstackle1 = new GameObject(10*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle2 = new GameObject(20*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle3 = new GameObject(28*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle4 = new GameObject(35*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle5 = new GameObject(46*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle6 = new GameObject(60*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    // Füge statische Objekte der Liste levelInitial hinzu
+    levelInitial.push_back(obstackle1);
+    levelInitial.push_back(obstackle2);
+    levelInitial.push_back(obstackle3);
+    levelInitial.push_back(obstackle4);
+    levelInitial.push_back(obstackle5);
+    levelInitial.push_back(obstackle6);
+    // Sortiere die Liste levelInitial
+    levelInitial.sort(compareGameObjects());
+
+    // Erstelle Gegner
+    GameObject *enemy1 = new Enemy(30*obs, 0*obs, 2*obs, 8*obs, enemy, contacting, -1*obs, 0*obs);
+    GameObject *enemy2 = new Enemy(35*obs, 0*obs, 2*obs, 8*obs, enemy, contacting, -1*obs, 0*obs);
+    GameObject *enemy3 = new Enemy(40*obs, 0*obs, 2*obs, 8*obs, enemy, contacting, -1*obs, 0*obs);
+    GameObject *speedEnemy1 = new Enemy(29*obs, 0*obs, 2*obs, 8*obs, enemy, contacting, -2*obs, 0*obs);
+    levelSpawn.push_back(enemy1);
+    levelSpawn.push_back(enemy2);
+    levelSpawn.push_back(enemy3);
+    levelSpawn.push_back(speedEnemy1);
+    // Sortiere die Liste levelSpawn
+    levelSpawn.sort(compareGameObjects());
+
+    // Erstelle das Spieler-Objekt und setze den playerObjPointer
+    GameObject *playerObject = new Player(2*obs, 0*obs, 2*obs, 6*obs, player, stopping, 1*obs, 0*obs);
+    playerObjPointer = dynamic_cast<Player*>(playerObject);
+}
