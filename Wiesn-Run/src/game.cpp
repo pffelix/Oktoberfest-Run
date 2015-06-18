@@ -45,12 +45,13 @@ Game::~Game() {
 
 /**
  * @brief wird regelmäßig aufgerufen
- * event muss drinstehen, damit der TImer die Funktion aufruft
+ * event muss drinstehen, damit der Timer die Funktion aufruft
  * @param event
  * @author Rupert
  */
 void Game::timerEvent(QTimerEvent *event)
 {
+    Q_UNUSED (event)        // Warnung unterdrücken
     step();
     ///@TODO return von step...
 }
@@ -121,9 +122,7 @@ int Game::step() {
     /// Zeit seit dem letzten Aufruf ausrechnen und ausgeben
     high_resolution_clock::time_point akt = letzterAufruf;
     letzterAufruf = high_resolution_clock::now();
-    std::size_t ms = duration_cast<milliseconds>(letzterAufruf-akt).count();
-    std::string msg = "Game::step() | Vergangene Zeit seit letztem step(): " + std::to_string(ms) + "ms";
-    qDebug(msg.c_str());
+    qDebug("Game::step() | Vergangene Zeit seit letztem step(): %d ms", static_cast<int>(duration_cast<milliseconds>(letzterAufruf-akt).count()));
 
     worldObjects.sort(compareGameObjects());
 
