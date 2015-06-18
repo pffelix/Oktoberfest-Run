@@ -45,10 +45,11 @@ Game::~Game() {
 
 /**
  * @brief wird regelmäßig aufgerufen
+ * event muss drinstehen, damit der TImer die Funktion aufruft
  * @param event
  * @author Rupert
  */
-void Game::timerEvent(/*QTimerEvent *event*/)
+void Game::timerEvent(QTimerEvent *event)
 {
     step();
     ///@TODO return von step...
@@ -284,8 +285,7 @@ void Game::calculateMovement() {
         GameObject *aktObject = *it;
 
         string msg = "OBJECT Position: XPos=" + to_string(aktObject->getPosX());
-        qDebug(msg.c_str());
-
+        qDebug("OBJECT Position: XPos=%d",aktObject->getPosX());
         MovingObject *aktMovingObject = dynamic_cast<MovingObject*> (aktObject);    // Versuche GameObject in Moving Object umzuwandeln
         if(aktMovingObject != 0) {
             aktMovingObject->update();          // Wenn der cast klappt, rufe update() auf.
