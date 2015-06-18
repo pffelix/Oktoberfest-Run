@@ -155,9 +155,10 @@ int Game::step() {
             break;
         case running:
             worldObjects.sort(compareGameObjects());
+            qDebug("---Nächster Zeitschritt---");
 
             appendWorldObjects(playerObjPointer);
-            //    reduceWorldObjects();
+            reduceWorldObjects(playerObjPointer);
             //    evaluateInput();
             calculateMovement();
             detectCollision(&worldObjects);
@@ -347,10 +348,9 @@ void Game::makeLevel1() {
  * @author Simon
  */
 void Game::appendWorldObjects(Player *playerPointer) {
-    int playerPosX = playerPointer->getPosX();
     for (std::list<GameObject*>::iterator it = levelSpawn.begin(); it != levelSpawn.end(); ++it) {
         GameObject *currentObj = *it;
-        if ( (currentObj->getPosX() - playerPosX) < spawnDistance ) {
+        if ( (currentObj->getPosX() - playerPointer->getPosX()) < spawnDistance ) {
             worldObjects.push_back(currentObj);
             levelSpawn.pop_front();
         } else {
@@ -360,8 +360,15 @@ void Game::appendWorldObjects(Player *playerPointer) {
 }
 
 
-void Game::reduceWorldObjects() {
-
+void Game::reduceWorldObjects(Player *playerPointer) {
+    while (!(worldObjects.empty())) {
+        GameObject *currentObj = *worldObjects.begin();
+        if ((playerPointer->getPosX() - currentObj->getPosX()) > spawnDistance) {
+            worldObjects.pop_front();
+        } else {
+            break;
+        }
+    }
 }
 
 

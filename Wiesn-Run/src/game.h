@@ -63,7 +63,7 @@ protected:
 private:
     int getStepSize();
     void appendWorldObjects(Player *playerPointer);
-    void reduceWorldObjects();
+    void reduceWorldObjects(Player *playerPointer);
     void evaluateInput();
     void calculateMovement();
     void detectCollision(std::list<GameObject*> *objToCalculate);
