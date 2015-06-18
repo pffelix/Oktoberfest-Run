@@ -324,6 +324,7 @@ void Game::reduceWorldObjects(Player *playerPointer) {
         GameObject *currentObj = *worldObjects.begin();
         if ((playerPointer->getPosX() - currentObj->getPosX()) > spawnDistance) {
             worldObjects.pop_front();
+            delete currentObj;
         } else {
             break;
         }
