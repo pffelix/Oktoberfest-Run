@@ -78,7 +78,7 @@ int Game::start() {
     QGraphicsView * window = new QGraphicsView();
     window->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     window->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    window->setFixedSize(800,600);
+    window->setFixedSize(1024,768);
     window->setWindowTitle(QApplication::translate("Game Widget", "Game Widget (Input Test)"));
     window->show();
     qDebug("initialize window");
