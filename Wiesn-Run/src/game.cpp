@@ -309,7 +309,7 @@ void Game::makeTestWorld() {
  * @author Simon
  */
 void Game::makeLevel1() {
-    // Skalierungsfaktor Objekte im Spiel
+    /// Skalierungsfaktor für Objekte im Spiel
     int obs = 10;
 
     // Erstelle statische Objekte
@@ -409,12 +409,45 @@ void Game::calculateMovement() {
 }
 
 
-void Game::renderGraphics() {
+void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPointer) {
+    // Lege leere Liste an um Zeiger auf Objekte in der Szene zu speichern.
+    std::list<GameObject*> objToDisplay;
 
+    // Durchlaufe die objectList (worldObjects) von Anfang bis Ende. Ist ein Objekt näher als die Szenenbreite
+    // am Spieler dran, so könnte es in der Szene sein und wird in die Liste aufgenommen.
+    for (std::list<GameObject*>::iterator it = objectList->begin(); it != objectList->end(); ++it) {
+        if ( std::abs( (*it)->getPosX() - playerPointer->getPosX()) < sceneWidth ) {
+            objToDisplay.push_back(*it);
+        }
+    }
+
+    // Durchlaufe objToDisplay, bis die Liste leer ist.
+    while (!(objToDisplay.empty())) {
+        // Setze Zeiger currentObj auf das erste Objekt in der Liste.
+        GameObject *currentObj = *objToDisplay.begin();
+        // Lösche den Zeiger auf das erste Objekt aus der Liste.
+        objToDisplay.pop_front();
+
+        /// @todo Hier müssen die darzustellenden Objekte abgearbeitet werden.
+
+    } // Ende der while-Schleife
 }
 
 
-void Game::playSound() {
+void Game::playSound(std::list<struct soundStruct> *soundEvents) {
+
+    /// @todo Sound-Overhead hierher
+
+    while (!(soundEvents->empty())) {
+        // Kopiere erstes Objekt in der Liste nach currentSound
+        soundStruct currentSound = *soundEvents->begin();
+        // Entferne Element aus Liste.
+        soundEvents->pop_front();
+
+        /// @todo Verarbeite Sound.
+    }
+
+    /// @todo Sound-Aufräumarbeiten
 
 }
 

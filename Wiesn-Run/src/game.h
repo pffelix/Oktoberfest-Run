@@ -69,8 +69,8 @@ private:
     void detectCollision(std::list<GameObject*> *objToCalculate);
     void handleEvents();
     void handleCollisions();
-    void renderGraphics();
-    void playSound();
+    void renderGraphics(std::list<GameObject *> *objectList, Player *playerPointer);
+    void playSound(std::list<soundStruct> *soundEvents);
     void endGame();
     bool hurtPlayer(int damage);
 
@@ -89,8 +89,9 @@ private:
     /// SoundEvents
     std::list<struct soundStruct> soundList;
 
-
-
+    /// Breite der Szene
+    int sceneWidth;
+    /// Distanz in der Gegner gespawnt werden
     int spawnDistance;
     struct scoreStruct score;
     int stepSize;
