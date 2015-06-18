@@ -77,14 +77,18 @@ private:
     void makeTestWorld();
     void makeLevel1();
 
-    // Enthält alle in der Welt befindlichen Objekte
+    /// In der Welt befindliche Objekte
     std::list<GameObject*> worldObjects;
-    // Enthält alle statischen Objekte, die zu Anfang gespawnt werden
+    /// Statische Objekte, die zu Anfang gespawnt werden
     std::list<GameObject*> levelInitial;
-    // Enthält alle Objekte, die während des Spiels gespawnt werden
+    /// Objekte die zur Laufzeit dynamisch gespawnt werden
     std::list<GameObject*> levelSpawn;
-    // Schüsse, die gelöscht werden müssen
+    /// Zu löschende Schüsse
     std::list<Shoot*> shotsToDelete;
+
+    /// SoundEvents
+    std::list<struct soundStruct> soundList;
+
 
 
     int spawnDistance;

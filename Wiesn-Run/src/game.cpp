@@ -360,6 +360,14 @@ void Game::appendWorldObjects(Player *playerPointer) {
 }
 
 
+/**
+ * @brief Game::reduceWorldObjects
+ * @param playerPointer
+ * Die Funktion reduceWorldObjects löscht die Zeiger auf die GameObjects aus dem Spiel, von denen der Spieler bereits
+ * weiter rechts als die spawnDistance entfernt ist.
+ * @todo Objekte löschen anstatt nur die Zeiger aus der Liste entfernen
+ * @author Simon
+ */
 void Game::reduceWorldObjects(Player *playerPointer) {
     while (!(worldObjects.empty())) {
         GameObject *currentObj = *worldObjects.begin();
