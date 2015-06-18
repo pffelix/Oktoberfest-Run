@@ -62,7 +62,7 @@ protected:
 
 private:
     int getStepSize();
-    void appendWorldObjects();
+    void appendWorldObjects(Player *playerPointer);
     void reduceWorldObjects();
     void evaluateInput();
     void calculateMovement();
@@ -88,6 +88,7 @@ private:
     std::list<Shoot*> shotsToDelete;
 
 
+    int spawnDistance;
     struct scoreStruct score;
     int stepSize;
     Player *playerObjPointer;

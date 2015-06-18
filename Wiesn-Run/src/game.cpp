@@ -75,8 +75,11 @@ int Game::start() {
     // worldObjects = levelInitial
     //makeTestWorld();
 
-
+    // Level1 erstellen bedeutet levelInitial und levelSpawn füllen
     makeLevel1();
+    // Spieler hinzufügen
+    worldObjects.push_back(playerObjPointer);
+    // Zeiger auf Objekte aus levelInitial in worldObjects verlegen
     while (!(levelInitial.empty())) {
         GameObject *currentObject = *levelInitial.begin();
         worldObjects.push_back(currentObject);
@@ -135,7 +138,7 @@ int Game::step() {
 
     worldObjects.sort(compareGameObjects());
 
-//    appendWorldObjects();
+    appendWorldObjects(playerObjPointer);
 //    reduceWorldObjects();
 //    evaluateInput();
     calculateMovement();
@@ -158,7 +161,7 @@ int Game::step() {
  * @todo Objekt-Definitionen mit eventHandling abstimmen, Koordinatendefinition, Overlap-Problem, <= Fälle
  * @author Simon
  */
-void Game::detectCollision(std::list<GameObject *> *objToCalculate) {
+void Game::detectCollision(std::list<GameObject*> *objToCalculate) {
 
     for (std::list<GameObject*>::iterator it=objToCalculate->begin(); it != objToCalculate->end(); ++it) {
 
@@ -285,14 +288,25 @@ void Game::makeLevel1() {
     levelInitial.push_back(obstackle4);
     levelInitial.push_back(obstackle5);
     levelInitial.push_back(obstackle6);
+    levelInitial.sort(compareGameObjects());
 
     // GameObject *enemy1 = new Enemy(30*obs, 0*obs, 2*obs, 8*obs, enemy, contacting, -1*obs, 0*obs);
     GameObject *playerObject = new Player(2*obs, 0*obs, 2*obs, 6*obs, player, stopping, 1*obs, 0*obs);
+    playerObjPointer = dynamic_cast<Player*>(playerObject);
     levelSpawn.push_back(playerObject);
 }
 
-void Game::appendWorldObjects() {
-
+void Game::appendWorldObjects(Player *playerPointer) {
+    int playerPosX = playerPointer->getPosX();
+    for (std::list<GameObject*>::iterator it = levelSpawn.begin(); it != levelSpawn.end(); ++it) {
+        GameObject *currentObj = *it;
+        if ( (currentObj->getPosX() - playerPosX) < spawnDistance ) {
+            worldObjects.push_back(currentObj);
+            levelSpawn.pop_front();
+        } else {
+            break;
+        }
+    }
 }
 
 void Game::reduceWorldObjects() {
