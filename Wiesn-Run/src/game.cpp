@@ -56,6 +56,7 @@ void Game::timerEvent(QTimerEvent *event)
     ///@TODO return von step...
 }
 
+
 /**
  * @brief Erstelle QApplication app mit QGraphicsView Widget window (Eventfilter installiert) und Zeiger input auf Input Objekt.
  * Um Funktionen der Tastatur Eingabe entwickeln zu können ist ein Qt Widget Fenster nötig.
@@ -68,20 +69,24 @@ void Game::timerEvent(QTimerEvent *event)
  * Hier müssen auch die Sachen rein, die einmahlig beim Starten ausgeführt werden sollen
  * - alles laden, Fenster anzeigen
  * @return Rückgabewert von app.exec()
- * @author Felix, Rupert, Flo
+ * @author Felix, Rupert, Flo, Simon
  */
 int Game::start() {
-    // levelInitial laden
-    // worldObjects = levelInitial
-    // makeTestWorld();
 
+    // Level erstellen bedeutet levelInitial und levelSpawn füllen
+    //makeTestWorld();
+    //loadLevel1();
+    loadLevel2();
 
-    // Level1 erstellen bedeutet levelInitial und levelSpawn füllen
-    makeLevel1();
+    // Fundamentale stepSize setzen
+    stepSize = 200;
+
     // Spieler hinzufügen
     worldObjects.push_back(playerObjPointer);
     // Spawn-Distanz setzen
     spawnDistance = 300;
+    // Szenen-Breite setzen
+    sceneWidth = 300;
     // Zeiger auf Objekte aus levelInitial in worldObjects verlegen
     while (!(levelInitial.empty())) {
         GameObject *currentObject = *levelInitial.begin();
@@ -89,8 +94,6 @@ int Game::start() {
         levelInitial.pop_front();
     }
 
-
-    // Player erstellen und in worldObjects einfügen
 
     // QGraphicsView Widget (Anzeigefenster) erstellen und einstellen
     QGraphicsView * window = new QGraphicsView();
@@ -108,10 +111,11 @@ int Game::start() {
     window->installEventFilter(keyInputs);
 
     qDebug("Starte Timer mit 500msec-Intervall");
-    Game::startTimer(500);
+    Game::startTimer(stepSize);
 
     return appPointer->exec();
 }
+
 
 /**
  * @brief Game-Loop
@@ -155,9 +159,10 @@ int Game::step() {
             break;
         case running:
             worldObjects.sort(compareGameObjects());
+            qDebug("---Nächster Zeitschritt---");
 
             appendWorldObjects(playerObjPointer);
-            //    reduceWorldObjects();
+            reduceWorldObjects(playerObjPointer);
             //    evaluateInput();
             calculateMovement();
             detectCollision(&worldObjects);
@@ -194,6 +199,7 @@ void Game::detectCollision(std::list<GameObject*> *objToCalculate) {
             // Vorheriges Element hinzufügen, falls currentObject nicht das erste Element ist.
             if (it != objToCalculate->begin()) {
                 possibleCollision.push_back(*std::prev(it));
+                // Da das vorherige Element erfolgreich hinzugefügt wurde, prüfe, ob noch ein Element hinzugefügt werden kann
                 if (std::prev(it) != objToCalculate->begin()) {
                     possibleCollision.push_back(*std::prev(it, 2));
                 }
@@ -201,29 +207,34 @@ void Game::detectCollision(std::list<GameObject*> *objToCalculate) {
             // Nächstes Element hinzufügen, falls currentObject nicht das letze Element ist.
             if (it != objToCalculate->end()) {
                 possibleCollision.push_back(*std::next(it));
+                // Da nächstes Element erfolgreich hinzugefügt wurde, prüfe, ob noch ein Element hinzugefügt werden kann
                 if (std::next(it) != objToCalculate->end()) {
                     possibleCollision.push_back(*std::next(it, 2));
                 }
             }
 
+            // Durchlaufe die Liste der möglichen Kollisionen, bis sie leer ist
             while (!(possibleCollision.empty())) {
 
                 int overlapX;
                 int overlapY;
 
+                // Setze das erste Objekt in der Liste als ObjektB (das getroffene Objekt) und lösche es aus der Liste
                 GameObject *objB = *possibleCollision.begin();
                 possibleCollision.pop_front();
 
+                // Pürfen und Setzen, ob sich A links/rechts bzw. über/unter B befindet
                 bool ALeftFromB = objA->getPosX() < objB->getPosX();
                 bool AAboveB = (objA->getPosY() + objA->getHeight()) >= (objB->getPosY() + objB->getHeight());
 
+                // Berechne die Überschneidung in X-Richtung abhänging von der relativen Position von A zu B
                 if (ALeftFromB) {
                     overlapX = objA->getPosX() + (objA->getLength() / 2) - (objB->getPosX() - (objB->getLength() / 2));
                 } else {
                     overlapX = (objB->getPosX() + (objB->getLength() / 2)) - (objA->getPosX() - (objA->getLength() / 2));
                 }
 
-                // OverlapY hängt stark mit der Koordinatendefinition zusammen
+                // Berechne die Überschneidung in Y-Richtung abhängig von der relativen Position von A zu B
                 if (AAboveB) {
                     overlapY = (objB->getPosY() + (objB->getHeight() / 1)) - (objA->getPosY());
                 } else {
@@ -232,6 +243,12 @@ void Game::detectCollision(std::list<GameObject*> *objToCalculate) {
 
                 collisionDirection colDir;
 
+                // Prüfe, aus welcher Richtung die Kollision stattgefunden hat.
+                // Für eine Kollision muss gelten...
+                // ...von Links: (overlapX < overlapY) && (overlapX > 0) && ALeftFromB
+                // ...von Rechts: (overlapX < overlapY) && (overlapx > 0) && !ALeftFromB
+                //...von Oben: (overlapY < overlapX) && (overlapY > 0) && AAboveB
+                //...von Unten: (overlapY < overlapX) && (overlapY > 0) && !AAboveB
                 if ((overlapX < overlapY) && (overlapX > 0)) {
                     if (ALeftFromB) {
                         colDir = fromLeft;
@@ -267,59 +284,24 @@ void Game::detectCollision(std::list<GameObject*> *objToCalculate) {
     } // for
 } // function
 
-/**
- * @brief Erstellt ein paar Test-Objekte in worldObjects
- * Was wird erstellt:
- * - Objekt1 mit v=0 an x=100,y=0
- * - Objekt2 mit v=0 an x=180,y=0
- * - ObjektPlayer mit v=8 an x=20,y=0
- * Die Objekte sind 60 breit und 80 hoch. Dimensionen müssen immer durch zwei teilbar sein.
- * @author Rupert, Simon
- */
-void Game::makeTestWorld() {
-    GameObject *object1 = new GameObject(100,0,60,80,obstacle,stopping);
-    GameObject *object2 = new GameObject(180,0,60,80,obstacle,stopping);
-    Player *objectPlayer = new Player(20,0,20,60,player,stopping,8,0);
-    worldObjects.push_back(object1);
-    worldObjects.push_back(object2);
-    worldObjects.push_back(objectPlayer);
 
-}
+
 
 
 /**
- * @brief Game::makeLevel1
- * Erstellt die Listen levelInitial und levelSpawn für den ersten Level. Diese müssen dann ausgelesen werden.
- * Kann zu Testzwecken verwendet werden.
+ * @brief Game::appendWorldObjects
+ * @param playerPointer
+ * Diese Funktion fügt der Spielwelt dynamisch Gegner hinzu. In jedem Zeitschritt wird die sortierte Liste
+ * levelSpawn vom Anfang her durchlaufen. Ist die Distanz des Spielers zum Gegner kleiner als die Distanz levelSpawn,
+ * so wird das Objekt den worldObjects hinzugefügt und aus levelSpawn gelöscht. Die for-Schleife läuft solange, bis
+ * das erste Mal ein Objekt weiter als levelSpawn vom Spieler entfernt ist. Dann wird abgebrochen, da alle folgenden
+ * Objekte auf Grund der Sortierung noch weiter entfernt sein werden.
  * @author Simon
  */
-void Game::makeLevel1() {
-    int obs = 10; // objectScale
-    GameObject *obstackle1 = new GameObject(10*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle2 = new GameObject(20*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle3 = new GameObject(28*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle4 = new GameObject(35*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle5 = new GameObject(46*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle6 = new GameObject(60*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    levelInitial.push_back(obstackle1);
-    levelInitial.push_back(obstackle2);
-    levelInitial.push_back(obstackle3);
-    levelInitial.push_back(obstackle4);
-    levelInitial.push_back(obstackle5);
-    levelInitial.push_back(obstackle6);
-    levelInitial.sort(compareGameObjects());
-
-    // GameObject *enemy1 = new Enemy(30*obs, 0*obs, 2*obs, 8*obs, enemy, contacting, -1*obs, 0*obs);
-    GameObject *playerObject = new Player(2*obs, 0*obs, 2*obs, 6*obs, player, stopping, 1*obs, 0*obs);
-    playerObjPointer = dynamic_cast<Player*>(playerObject);
-
-}
-
 void Game::appendWorldObjects(Player *playerPointer) {
-    int playerPosX = playerPointer->getPosX();
-    for (std::list<GameObject*>::iterator it = levelSpawn.begin(); it != levelSpawn.end(); ++it) {
-        GameObject *currentObj = *it;
-        if ( (currentObj->getPosX() - playerPosX) < spawnDistance ) {
+    while (!(levelSpawn.empty())) {
+        GameObject *currentObj = *levelSpawn.begin();
+        if ( (currentObj->getPosX() - playerPointer->getPosX()) < spawnDistance ) {
             worldObjects.push_back(currentObj);
             levelSpawn.pop_front();
         } else {
@@ -328,13 +310,31 @@ void Game::appendWorldObjects(Player *playerPointer) {
     }
 }
 
-void Game::reduceWorldObjects() {
 
+/**
+ * @brief Game::reduceWorldObjects
+ * @param playerPointer
+ * Die Funktion reduceWorldObjects löscht die Zeiger auf die GameObjects aus dem Spiel, von denen der Spieler bereits
+ * weiter rechts als die spawnDistance entfernt ist.
+ * @todo Objekte löschen anstatt nur die Zeiger aus der Liste entfernen
+ * @author Simon
+ */
+void Game::reduceWorldObjects(Player *playerPointer) {
+    while (!(worldObjects.empty())) {
+        GameObject *currentObj = *worldObjects.begin();
+        if ((playerPointer->getPosX() - currentObj->getPosX()) > spawnDistance) {
+            worldObjects.pop_front();
+        } else {
+            break;
+        }
+    }
 }
+
 
 void Game::evaluateInput() {
 
 }
+
 
 /**
  * @brief Geht die worldObjects durch und aktualisiert bei jedem die Position
@@ -349,7 +349,7 @@ void Game::calculateMovement() {
         GameObject *aktObject = *it;
 
         string msg = "OBJECT Position: XPos=" + to_string(aktObject->getPosX());
-        qDebug("OBJECT Position: XPos=%d",aktObject->getPosX());
+        qDebug("Object Position: XPos=%d",aktObject->getPosX());
         MovingObject *aktMovingObject = dynamic_cast<MovingObject*> (aktObject);    // Versuche GameObject in Moving Object umzuwandeln
         if(aktMovingObject != 0) {
             aktMovingObject->update();          // Wenn der cast klappt, rufe update() auf.
@@ -359,35 +359,67 @@ void Game::calculateMovement() {
     }
 }
 
-void Game::correctMovement() {
+
+void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPointer) {
+    // Lege leere Liste an um Zeiger auf Objekte in der Szene zu speichern.
+    std::list<GameObject*> objToDisplay;
+
+    // Durchlaufe die objectList (worldObjects) von Anfang bis Ende. Ist ein Objekt näher als die Szenenbreite
+    // am Spieler dran, so könnte es in der Szene sein und wird in die Liste aufgenommen.
+    for (std::list<GameObject*>::iterator it = objectList->begin(); it != objectList->end(); ++it) {
+        if ( std::abs( (*it)->getPosX() - playerPointer->getPosX()) < sceneWidth ) {
+            objToDisplay.push_back(*it);
+        }
+    }
+
+    // Durchlaufe objToDisplay, bis die Liste leer ist.
+    while (!(objToDisplay.empty())) {
+        // Setze Zeiger currentObj auf das erste Objekt in der Liste.
+        GameObject *currentObj = *objToDisplay.begin();
+        // Lösche den Zeiger auf das erste Objekt aus der Liste.
+        objToDisplay.pop_front();
+
+        /// @todo Hier müssen die darzustellenden Objekte abgearbeitet werden.
+
+    } // Ende der while-Schleife
+}
+
+
+void Game::playSound(std::list<struct soundStruct> *soundEvents) {
+
+    /// @todo Sound-Overhead hierher
+
+    while (!(soundEvents->empty())) {
+        // Kopiere erstes Objekt in der Liste nach currentSound
+        soundStruct currentSound = *soundEvents->begin();
+        // Entferne Element aus Liste.
+        soundEvents->pop_front();
+
+        /// @todo Verarbeite Sound.
+    }
+
+    /// @todo Sound-Aufräumarbeiten
 
 }
 
-void Game::renderGraphics() {
-
-}
-
-void Game::playSound() {
-
-}
 
 void Game::endGame() {
 
 }
+
 
 void Game::handleEvents() {
 
 }
 
 /**
- * @brief Kollisionen in der Liste eventsToHandle werden der Reihe nach aus Sicht des affectedOnjects bearbeitet.
+ * @brief Kollisionen in der Liste eventsToHandle werden der Reihe nach aus Sicht des affectedObjects bearbeitet.
  * In einer Schleife wird das jeweils erst CollisionEvent bearbeitet. Dabei werden nur an dem Objekt affectedObject Änderungen vorgenommen.
  * Mögliche Objekte: Spieler(player), Gegner(enemy), Bierkrug(shot)
  * mögliche Kollision mit Spieler(player), Spielumfeld(obstacle), Gegner(enemy), Bierkrug(shot), Power-Up(powerUp)
  *
  * @author Johann (15.6.15)
  */
-
 void Game::handleCollisions() {
 
     collisionStruct handleEvent;
@@ -593,6 +625,7 @@ void Game::handleCollisions() {
     }
 }
 
+
 /**
  * @brief Fügt dem Spieler Schaden zu
  * @param Schaden
@@ -604,3 +637,95 @@ bool Game::hurtPlayer(int damage) {
 
 }
 
+
+/**
+ * @brief Erstellt ein paar Test-Objekte in worldObjects
+ * Was wird erstellt:
+ * - Objekt1 mit v=0 an x=100,y=0
+ * - Objekt2 mit v=0 an x=180,y=0
+ * - ObjektPlayer mit v=8 an x=20,y=0
+ * Die Objekte sind 60 breit und 80 hoch. Dimensionen müssen immer durch zwei teilbar sein.
+ * @author Rupert, Simon
+ */
+void Game::makeTestWorld() {
+    GameObject *object1 = new GameObject(100,0,60,80,obstacle,stopping);
+    GameObject *object2 = new GameObject(180,0,60,80,obstacle,stopping);
+    Player *objectPlayer = new Player(20,0,20,60,player,stopping,8,0);
+    worldObjects.push_back(object1);
+    worldObjects.push_back(object2);
+    worldObjects.push_back(objectPlayer);
+
+}
+
+
+/**
+ * @brief Game::makeLevel1
+ * Erstellt die Listen levelInitial und levelSpawn für den ersten Level. Diese müssen dann ausgelesen werden.
+ * Der Spieler wird auch als GameObject erstellt. Um den Zeiger auf das Spielerobjekt playerObjPointer setzen
+ * zu können, wird ein dynamic_cast auf das Spieler-Objekt ausgeführt.
+ * @author Simon
+ */
+void Game::loadLevel1() {
+    /// Skalierungsfaktor für Objekte im Spiel
+    int obs = 10;
+
+    // Erstelle statische Objekte
+    GameObject *obstackle1 = new GameObject(10*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle2 = new GameObject(20*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle3 = new GameObject(28*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle4 = new GameObject(35*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle5 = new GameObject(46*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle6 = new GameObject(60*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    // Füge statische Objekte der Liste levelInitial hinzu
+    levelInitial.push_back(obstackle1);
+    levelInitial.push_back(obstackle2);
+    levelInitial.push_back(obstackle3);
+    levelInitial.push_back(obstackle4);
+    levelInitial.push_back(obstackle5);
+    levelInitial.push_back(obstackle6);
+    // Sortiere die Liste levelInitial
+    levelInitial.sort(compareGameObjects());
+
+    // Erstelle das Spieler-Objekt und setze den playerObjPointer
+    GameObject *playerObject = new Player(2*obs, 0*obs, 2*obs, 6*obs, player, stopping, 1*obs, 0*obs);
+    playerObjPointer = dynamic_cast<Player*>(playerObject);
+}
+
+
+void Game::loadLevel2() {
+    /// Skalierungsfaktor für Objekte im Spiel
+    int obs = 10;
+
+    // Erstelle statische Objekte
+    GameObject *obstackle1 = new GameObject(10*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle2 = new GameObject(20*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle3 = new GameObject(28*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle4 = new GameObject(35*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle5 = new GameObject(46*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle6 = new GameObject(60*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    // Füge statische Objekte der Liste levelInitial hinzu
+    levelInitial.push_back(obstackle1);
+    levelInitial.push_back(obstackle2);
+    levelInitial.push_back(obstackle3);
+    levelInitial.push_back(obstackle4);
+    levelInitial.push_back(obstackle5);
+    levelInitial.push_back(obstackle6);
+    // Sortiere die Liste levelInitial
+    levelInitial.sort(compareGameObjects());
+
+    // Erstelle Gegner
+    GameObject *enemy1 = new Enemy(30*obs, 0*obs, 2*obs, 8*obs, enemy, contacting, -1*obs, 0*obs);
+    GameObject *enemy2 = new Enemy(35*obs, 0*obs, 2*obs, 8*obs, enemy, contacting, -1*obs, 0*obs);
+    GameObject *enemy3 = new Enemy(40*obs, 0*obs, 2*obs, 8*obs, enemy, contacting, -1*obs, 0*obs);
+    GameObject *speedEnemy1 = new Enemy(29*obs, 0*obs, 2*obs, 8*obs, enemy, contacting, -2*obs, 0*obs);
+    levelSpawn.push_back(enemy1);
+    levelSpawn.push_back(enemy2);
+    levelSpawn.push_back(enemy3);
+    levelSpawn.push_back(speedEnemy1);
+    // Sortiere die Liste levelSpawn
+    levelSpawn.sort(compareGameObjects());
+
+    // Erstelle das Spieler-Objekt und setze den playerObjPointer
+    GameObject *playerObject = new Player(2*obs, 0*obs, 2*obs, 6*obs, player, stopping, 1*obs, 0*obs);
+    playerObjPointer = dynamic_cast<Player*>(playerObject);
+}

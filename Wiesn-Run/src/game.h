@@ -63,31 +63,36 @@ protected:
 private:
     int getStepSize();
     void appendWorldObjects(Player *playerPointer);
-    void reduceWorldObjects();
+    void reduceWorldObjects(Player *playerPointer);
     void evaluateInput();
     void calculateMovement();
     void detectCollision(std::list<GameObject*> *objToCalculate);
-    void correctMovement();
     void handleEvents();
     void handleCollisions();
-    void renderGraphics();
-    void playSound();
+    void renderGraphics(std::list<GameObject *> *objectList, Player *playerPointer);
+    void playSound(std::list<soundStruct> *soundEvents);
     void endGame();
     bool hurtPlayer(int damage);
 
     void makeTestWorld();
-    void makeLevel1();
+    void loadLevel1();
+    void loadLevel2();
 
-    // Enthält alle in der Welt befindlichen Objekte
+    /// In der Welt befindliche Objekte
     std::list<GameObject*> worldObjects;
-    // Enthält alle statischen Objekte, die zu Anfang gespawnt werden
+    /// Statische Objekte, die zu Anfang gespawnt werden
     std::list<GameObject*> levelInitial;
-    // Enthält alle Objekte, die während des Spiels gespawnt werden
+    /// Objekte die zur Laufzeit dynamisch gespawnt werden
     std::list<GameObject*> levelSpawn;
-    // Schüsse, die gelöscht werden müssen
+    /// Zu löschende Schüsse
     std::list<Shoot*> shotsToDelete;
 
+    /// SoundEvents
+    std::list<struct soundStruct> soundList;
 
+    /// Breite der Szene
+    int sceneWidth;
+    /// Distanz in der Gegner gespawnt werden
     int spawnDistance;
     struct scoreStruct score;
     int stepSize;
