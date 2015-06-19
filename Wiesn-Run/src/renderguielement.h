@@ -1,7 +1,9 @@
 #ifndef RENDERGUIELEMENT_H
 #define RENDERGUIELEMENT_H
 
-class RenderGuiElement {
+#include <QGraphicsPixmapItem>
+
+class RenderGuiElement: public QGraphicsPixmapItem{
 public:
 
     //Konstruktor und Destruktor

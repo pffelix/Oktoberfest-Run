@@ -1,7 +1,9 @@
 #ifndef RENDERBACKGROUND_H
 #define RENDERBACKGROUND_H
 
-class RenderBackground {
+#include <QGraphicsPixmapItem>
+
+class RenderBackground: public QGraphicsPixmapItem{
 public:
 
     //Konstruktor und Destruktor

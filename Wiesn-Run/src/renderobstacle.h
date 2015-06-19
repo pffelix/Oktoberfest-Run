@@ -1,7 +1,9 @@
 #ifndef RENDEROBSTACLE_H
 #define RENDEROBSTACLE_H
 
-class RenderObstacle {
+#include <QGraphicsPixmapItem>
+
+class RenderObstacle: public QGraphicsPixmapItem{
 public:
 
     //Konstruktor und Destruktor

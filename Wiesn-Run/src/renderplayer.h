@@ -1,7 +1,9 @@
 #ifndef RENDERPLAYER_H
 #define RENDERPLAYER_H
 
-class RenderPlayer {
+#include <QGraphicsPixmapItem>
+
+class RenderPlayer: public QGraphicsPixmapItem{
 public:
 
     //Konstruktor und Destruktor

@@ -1,7 +1,9 @@
 #ifndef RENDERATTACK_H
 #define RENDERATTACK_H
 
-class RenderAttack {
+#include <QGraphicsPixmapItem>
+
+class RenderAttack: public QGraphicsPixmapItem{
 public:
     //Konstruktor und Destruktor
     RenderAttack();

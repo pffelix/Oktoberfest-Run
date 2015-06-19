@@ -1,7 +1,9 @@
 #ifndef RENDERENEMY_H
 #define RENDERENEMY_H
 
-class RenderEnemy {
+#include <QGraphicsPixmapItem>
+
+class RenderEnemy: public QGraphicsPixmapItem{
 public:
 
     //Konstruktor und Destruktor
