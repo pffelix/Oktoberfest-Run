@@ -1,8 +1,20 @@
 #include "menu.h"
+#include <QDebug>
 
 Menu::Menu()
 {
 
+}
+
+/**
+ * @brief stellt das Menü dar
+ * ruft Grafikfunktionen auf
+ * @return 0 bei Erfolg
+ * @author Rupert
+ */
+int Menu::display() {
+    qDebug("Menü - Eintrag %s aktiv, wähle mit Pfeiltasten",getSelection()->name.c_str());
+    return 0;
 }
 
 
@@ -48,7 +60,7 @@ int Menu::changeSelection(enum menuSelectionChange changeType) {
 /**
  * @brief gibt den gewählten Eintrag zurück
  * sollte nach Enter aufgerufen werden
- * @return Zeiger auf menuEntry des aktuellen Eintrags
+ * @return Zeiger auf menuEntry des aktuellen Eintrags, NULL bei Fehler
  * @author Rupert
  */
 struct menuEntry *Menu::getSelection() {
@@ -61,5 +73,5 @@ struct menuEntry *Menu::getSelection() {
             return aktEntry;
         }
     }
-
+    return NULL;
 }

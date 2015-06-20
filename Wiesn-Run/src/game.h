@@ -111,6 +111,10 @@ private:
     /// Menüs
     Menu *menuStart;
     //Menu *menuEnd;
+    /// zur Unterscheidung und Identifizierung der Menü-Einträge
+    enum menuIds {
+        menuId_StartGame, menuId_EndGame
+    };
 };
 
 #endif // GAME_H

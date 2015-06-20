@@ -95,6 +95,9 @@ int Game::start() {
     }
 
     // Menüs erstellen
+    menuStart = new Menu();
+    menuStart->addEntry("Spiel starten",menuId_StartGame);
+    menuStart->addEntry("Spiel beenden", menuId_EndGame);
 
 
 
@@ -154,13 +157,36 @@ int Game::step() {
         //case menuStart:
         case gameMenuStart:
             // Menü-Anzeige
-            qDebug("Menü -- Enter für Spielstart");
+            menuStart->display();
+
+            // Enter?
             if(keyInputs->getKeyactions().contains(Input::Keyaction::Enter)) {
-                // Leertaste gedrückt
-                state = gameIsRunning;
+                // Menüpunkt ausgewählt
+                switch(menuStart->getSelection()->id) {
+                    case menuId_StartGame:
+                        state = gameIsRunning;
+                        break;
+                    case menuId_EndGame:
+                        exit(0);
+                        break;
+                }
             }
+
+            // Up || Down?
+            if(keyInputs->getKeyactions().contains(Input::Keyaction::Up)) {
+                menuStart->changeSelection(menuSelectionChange::up);
+            }
+            if(keyInputs->getKeyactions().contains(Input::Keyaction::Down)) {
+                menuStart->changeSelection(menuSelectionChange::down);
+            }
+
             break;
         case gameIsRunning:
+            // Menü bei ESC
+            if(keyInputs->getKeyactions().contains(Input::Keyaction::Exit)) {
+                state = gameMenuStart;
+            }
+
             worldObjects.sort(compareGameObjects());
             qDebug("---Nächster Zeitschritt---");
 
