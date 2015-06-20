@@ -659,7 +659,7 @@ bool Game::hurtPlayer(int damage) {
 void Game::makeTestWorld() {
     GameObject *object1 = new GameObject(100,0,60,80,obstacle,stopping);
     GameObject *object2 = new GameObject(180,0,60,80,obstacle,stopping);
-    Player *objectPlayer = new Player(20,0,20,60,player,stopping,8,0);
+    Player *objectPlayer = new Player(20,0,20,60,player,stopping,8);
     worldObjects.push_back(object1);
     worldObjects.push_back(object2);
     worldObjects.push_back(objectPlayer);
@@ -696,7 +696,7 @@ void Game::loadLevel1() {
     levelInitial.sort(compareGameObjects());
 
     // Erstelle das Spieler-Objekt und setze den playerObjPointer
-    GameObject *playerObject = new Player(2*obs, 0*obs, 2*obs, 6*obs, player, stopping, 1*obs, 0*obs);
+    GameObject *playerObject = new Player(2*obs, 0*obs, 2*obs, 6*obs, player, stopping, 1*obs);
     playerObjPointer = dynamic_cast<Player*>(playerObject);
 }
 
@@ -723,10 +723,10 @@ void Game::loadLevel2() {
     levelInitial.sort(compareGameObjects());
 
     // Erstelle Gegner
-    GameObject *enemy1 = new Enemy(30*obs, 0*obs, 2*obs, 8*obs, enemy, contacting, -1*obs, 0*obs);
-    GameObject *enemy2 = new Enemy(35*obs, 0*obs, 2*obs, 8*obs, enemy, contacting, -1*obs, 0*obs);
-    GameObject *enemy3 = new Enemy(40*obs, 0*obs, 2*obs, 8*obs, enemy, contacting, -1*obs, 0*obs);
-    GameObject *speedEnemy1 = new Enemy(29*obs, 0*obs, 2*obs, 8*obs, enemy, contacting, -2*obs, 0*obs);
+    GameObject *enemy1 = new Enemy(30*obs, 0*obs, 2*obs, 8*obs, enemy, contacting, -1*obs);
+    GameObject *enemy2 = new Enemy(35*obs, 0*obs, 2*obs, 8*obs, enemy, contacting, -1*obs);
+    GameObject *enemy3 = new Enemy(40*obs, 0*obs, 2*obs, 8*obs, enemy, contacting, -1*obs);
+    GameObject *speedEnemy1 = new Enemy(29*obs, 0*obs, 2*obs, 8*obs, enemy, contacting, -2*obs);
     levelSpawn.push_back(enemy1);
     levelSpawn.push_back(enemy2);
     levelSpawn.push_back(enemy3);
@@ -735,6 +735,6 @@ void Game::loadLevel2() {
     levelSpawn.sort(compareGameObjects());
 
     // Erstelle das Spieler-Objekt und setze den playerObjPointer
-    GameObject *playerObject = new Player(2*obs, 0*obs, 2*obs, 6*obs, player, stopping, 1*obs, 0*obs);
+    GameObject *playerObject = new Player(2*obs, 0*obs, 2*obs, 6*obs, player, stopping, 1*obs);
     playerObjPointer = dynamic_cast<Player*>(playerObject);
 }

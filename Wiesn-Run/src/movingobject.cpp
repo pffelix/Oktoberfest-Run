@@ -44,5 +44,9 @@ void MovingObject::setSpeedY(int speedY) {
  */
 void MovingObject::updatePosition() {
     setPosX(getPosX() + getSpeedX());
-    setPosY(getPosY() + getSpeedY());
+    if ((posY < 5) && (speedY < 0)) {
+        posY = 0;
+    } else {
+        setPosY(getPosY() + getSpeedY());
+    }
 }

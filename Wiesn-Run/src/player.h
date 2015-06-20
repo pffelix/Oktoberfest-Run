@@ -7,7 +7,7 @@ class Player : public MovingObject {
 
 public:
     //Konstruktoren und Destruktoren
-    Player(int posX, int posY, int length, int height, objectType type, collisionType colType, int speedX, int speedY);
+    Player(int posX, int posY, int length, int height, objectType type, collisionType colType, int speedX);
     ~Player();
 
     //Leben()

@@ -3,7 +3,7 @@
 /// Class Player
 /// lastUpdate: update() 10.6 Johann
 
-Player::Player(int posX, int posY, int length, int height, objectType type, collisionType colType, int speedX, int speedY) : MovingObject(posX, posY, length, height, type, colType, speedX, speedY) {
+Player::Player(int posX, int posY, int length, int height, objectType type, collisionType colType, int speedX) : MovingObject(posX, posY, length, height, type, colType, speedX, -5) {
     health = 100;
     alcoholLevel = 10;
     jumpActive = false;
@@ -153,6 +153,7 @@ void Player::setFall() {
 void Player::resetJump() {
     jumpActive = false;
     jumpTableIndex = 0;
+    setSpeedY(-5);
 }
 
 /**
