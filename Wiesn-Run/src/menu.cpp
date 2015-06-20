@@ -44,12 +44,12 @@ int Menu::addEntry(std::string name, int id) {
 int Menu::changeSelection(enum menuSelectionChange changeType) {
     switch(changeType) {
         case menuSelectionChange::up:
-            if(currentPosition != 0) {
+            if(currentPosition > 1) {
                 currentPosition--;
             }
             break;
         case menuSelectionChange::down:
-            if(currentPosition != numberOfEntrys) {
+            if(currentPosition <= numberOfEntrys) {
                 currentPosition++;
             }
             break;

@@ -167,6 +167,7 @@ int Game::step() {
                         state = gameIsRunning;
                         break;
                     case menuId_EndGame:
+                        qDebug("Spiel wurde über menuStart beendet");
                         exit(0);
                         break;
                 }
