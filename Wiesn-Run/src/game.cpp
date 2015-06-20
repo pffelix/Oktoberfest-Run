@@ -166,6 +166,7 @@ int Game::step() {
             //    evaluateInput();
             calculateMovement();
             detectCollision(&worldObjects);
+            handleCollisions();
             //    correctMovement();
             //    handleEvents();
             //    renderGraphics();
@@ -252,12 +253,12 @@ void Game::detectCollision(std::list<GameObject*> *objToCalculate) {
                 if ((overlapX < overlapY) && (overlapX > 0)) {
                     if (ALeftFromB) {
                         colDir = fromLeft;
-                        collisionStruct newCollision = {objB, objA, objB->getCollisionType(), colDir};
+                        collisionStruct newCollision = {objA, objB, objA->getCollisionType(), colDir};
                         eventsToHandle.push_back(newCollision);
                         qDebug("->Kollision von Links hat stattgefunden");
                     } else {
                         colDir = fromRight;
-                        collisionStruct newCollision = {objB, objA, objB->getCollisionType(), colDir};
+                        collisionStruct newCollision = {objA, objB, objA->getCollisionType(), colDir};
                         eventsToHandle.push_back(newCollision);
                         qDebug("->Kollision von Rechts hat stattgefunden");
                     }
@@ -355,6 +356,7 @@ void Game::calculateMovement() {
         if(aktMovingObject != 0) {
             aktMovingObject->update();          // Wenn der cast klappt, rufe update() auf.
             // qDebug("update() für letztes Objekt wird aufgerufen");
+            qDebug("Object Speed: XSpeed=%d",aktMovingObject->getSpeedX());
         }
 
     }
@@ -492,6 +494,9 @@ void Game::handleCollisions() {
                  *      Spieler läuft in Gegner oder Gegner fällt auf Spieler (sonst siehe affectedObject==enemy)
                  *      Dem Spieler wird Schaden zugefügt und er erhält einen kurzen immunitätsbonus, falls nicht schon vorhanden
                  */
+
+                qDebug("Spieler - Gegner:----wir berühren uns");
+
                 if (!(handleEvent.direction == fromAbove)) {
                     //Überprüfen ob dem Spieler Schaden zugefügt werden kann
                     if (!(playerObjPointer->getImmunityCooldown() > 0)) {
@@ -537,6 +542,7 @@ void Game::handleCollisions() {
              * default: Gegner, PowerUps
              *      werden durchlaufen ohne Effekt
              */
+
             handleEnemy = dynamic_cast<Enemy*>(handleEvent.affectedObject);
 
             switch (handleEvent.causingObject->getType()) {
@@ -545,6 +551,7 @@ void Game::handleCollisions() {
                  *      Spieler springt auf Gegner (sonst siehe affectedObject==player)
                  * Der Gegner wird getötet
                  */
+                qDebug("Der Spieler tötet mich");
                 handleEnemy->setDeath(true);
                 break;
             }
@@ -570,6 +577,7 @@ void Game::handleCollisions() {
                         overlay = (handleEvent.causingObject->getPosX() + handleEvent.causingObject->getLength()) - handleEnemy->getPosX();
                         handleEnemy->setPosX(handleEnemy->getPosX() + overlay);
                     }
+                    qDebug("I changed my direction");
                 }
                 break;
             }
