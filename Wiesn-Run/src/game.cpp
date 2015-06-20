@@ -151,8 +151,8 @@ int Game::step() {
         case menuStart:
         case menuEnd:
             // Menü-Anzeige
-            qDebug("Menü -- Leertaste für Spielstart");
-            if(keyInputs->getKeyactions().contains(Input::Keyaction::Shoot)) {
+            qDebug("Menü -- Enter für Spielstart");
+            if(keyInputs->getKeyactions().contains(Input::Keyaction::Enter)) {
                 // Leertaste gedrückt
                 state = running;
             }

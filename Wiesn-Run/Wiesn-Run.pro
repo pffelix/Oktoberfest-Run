@@ -23,7 +23,8 @@ SOURCES += src/main.cpp \
     src/renderobstacle.cpp \
     src/renderguielement.cpp \
     src/renderenemy.cpp \
-    src/renderattack.cpp
+    src/renderattack.cpp \
+    src/menu.cpp
 
 HEADERS += \
     src/game.h \
@@ -41,4 +42,5 @@ HEADERS += \
     src/renderguielement.h \
     src/renderenemy.h \
     src/renderattack.h \
-    src/definitions.h
+    src/definitions.h \
+    src/menu.h

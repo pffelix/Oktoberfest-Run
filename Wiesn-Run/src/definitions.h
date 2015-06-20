@@ -13,6 +13,16 @@
 
 #include <iostream>
 
+enum menuSelectionChange {
+    up, down, /*enter*/
+};
+/// Struct zur Beschreibung eines Menü-Eintrags
+struct menuEntry {
+    std::string name;
+    int id;
+    int position;
+};
+
 /**
  * @brief Enumerator für den aktuellen Spielstatus
  * ähnlich zu einer StateMachine
