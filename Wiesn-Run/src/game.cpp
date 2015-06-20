@@ -10,7 +10,7 @@
 #include "gameobject.h"
 #include "enemy.h"
 #include "shoot.h"
-
+#include "menu.h"
 
 
 /**
@@ -94,6 +94,9 @@ int Game::start() {
         levelInitial.pop_front();
     }
 
+    // Menüs erstellen
+
+
 
     // QGraphicsView Widget (Anzeigefenster) erstellen und einstellen
     QGraphicsView * window = new QGraphicsView();
@@ -148,16 +151,16 @@ int Game::step() {
     //qDebug("Game::step() | Vergangene Zeit seit letztem step(): %d ms", static_cast<int>(duration_cast<milliseconds>(letzterAufruf-akt).count()));
 
     switch(state) {
-        case menuStart:
-        case menuEnd:
+        //case menuStart:
+        case gameMenuStart:
             // Menü-Anzeige
             qDebug("Menü -- Enter für Spielstart");
             if(keyInputs->getKeyactions().contains(Input::Keyaction::Enter)) {
                 // Leertaste gedrückt
-                state = running;
+                state = gameIsRunning;
             }
             break;
-        case running:
+        case gameIsRunning:
             worldObjects.sort(compareGameObjects());
             qDebug("---Nächster Zeitschritt---");
 

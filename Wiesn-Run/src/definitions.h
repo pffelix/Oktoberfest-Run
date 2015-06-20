@@ -13,10 +13,19 @@
 
 #include <iostream>
 
+
+/**
+ * @brief wird von der Menu-Klasse zur Auswahl-Änderung benötigt
+ * @author Rupert
+ */
 enum menuSelectionChange {
     up, down, /*enter*/
 };
-/// Struct zur Beschreibung eines Menü-Eintrags
+
+/**
+ * @brief Struct zur Beschreibung eines Menü-Eintrags
+ * @author Rupert
+ */
 struct menuEntry {
     std::string name;
     int id;
@@ -30,7 +39,7 @@ struct menuEntry {
  * @author Rupert
  */
 enum gameState {
-    running, menuStart, menuEnd
+    gameIsRunning, gameMenuStart
 };
 
 
