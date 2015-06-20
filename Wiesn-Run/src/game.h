@@ -13,7 +13,7 @@
 #include <QApplication>
 #include <QGraphicsView>
 #include <chrono>
-
+#include "menu.h"
 
 /**
  * @brief Struktur für die Events
@@ -99,7 +99,7 @@ private:
     Player *playerObjPointer;
 
     /// aktueller Spielzustand (running, menuStart, menuEnd)
-    gameState state = menuStart;
+    gameState state = gameMenuStart;
 
     /// Zeiger auf QApplication
     QApplication *appPointer;
@@ -107,6 +107,14 @@ private:
     std::chrono::high_resolution_clock::time_point letzterAufruf;
     /// für Inputs
     Input *keyInputs = new Input();
+
+    /// Menüs
+    Menu *menuStart;
+    //Menu *menuEnd;
+    /// zur Unterscheidung und Identifizierung der Menü-Einträge
+    enum menuIds {
+        menuId_StartGame, menuId_EndGame
+    };
 };
 
 #endif // GAME_H

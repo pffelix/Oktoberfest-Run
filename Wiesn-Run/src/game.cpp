@@ -10,7 +10,7 @@
 #include "gameobject.h"
 #include "enemy.h"
 #include "shoot.h"
-
+#include "menu.h"
 
 
 /**
@@ -94,6 +94,12 @@ int Game::start() {
         levelInitial.pop_front();
     }
 
+    // Menüs erstellen
+    menuStart = new Menu();
+    menuStart->addEntry("Spiel starten",menuId_StartGame);
+    menuStart->addEntry("Spiel beenden", menuId_EndGame);
+
+
 
     // QGraphicsView Widget (Anzeigefenster) erstellen und einstellen
     QGraphicsView * window = new QGraphicsView();
@@ -148,16 +154,39 @@ int Game::step() {
     //qDebug("Game::step() | Vergangene Zeit seit letztem step(): %d ms", static_cast<int>(duration_cast<milliseconds>(letzterAufruf-akt).count()));
 
     switch(state) {
-        case menuStart:
-        case menuEnd:
+        //case menuStart:
+        case gameMenuStart:
             // Menü-Anzeige
-            qDebug("Menü -- Leertaste für Spielstart");
-            if(keyInputs->getKeyactions().contains(Input::Keyaction::Shoot)) {
-                // Leertaste gedrückt
-                state = running;
+            menuStart->display();
+
+            // Enter?
+            if(keyInputs->getKeyactions().contains(Input::Keyaction::Enter)) {
+                // Menüpunkt ausgewählt
+                switch(menuStart->getSelection()->id) {
+                    case menuId_StartGame:
+                        state = gameIsRunning;
+                        break;
+                    case menuId_EndGame:
+                        exit(0);
+                        break;
+                }
             }
+
+            // Up || Down?
+            if(keyInputs->getKeyactions().contains(Input::Keyaction::Up)) {
+                menuStart->changeSelection(menuSelectionChange::up);
+            }
+            if(keyInputs->getKeyactions().contains(Input::Keyaction::Down)) {
+                menuStart->changeSelection(menuSelectionChange::down);
+            }
+
             break;
-        case running:
+        case gameIsRunning:
+            // Menü bei ESC
+            if(keyInputs->getKeyactions().contains(Input::Keyaction::Exit)) {
+                state = gameMenuStart;
+            }
+
             worldObjects.sort(compareGameObjects());
             qDebug("---Nächster Zeitschritt---");
 
