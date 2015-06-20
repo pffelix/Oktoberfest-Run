@@ -167,6 +167,7 @@ int Game::step() {
             calculateMovement();
             detectCollision(&worldObjects);
             handleCollisions();
+
             //    correctMovement();
             //    handleEvents();
             //    renderGraphics();
@@ -317,8 +318,9 @@ void Game::appendWorldObjects(Player *playerPointer) {
  * @param playerPointer
  * Die Funktion reduceWorldObjects löscht die Zeiger auf die GameObjects aus dem Spiel, von denen der Spieler bereits
  * weiter rechts als die spawnDistance entfernt ist.
+ * Entfernt Bierkrüge, die im letzten Durchlauf mit Gegenständen kollidiert sind
  * @todo Objekte löschen anstatt nur die Zeiger aus der Liste entfernen
- * @author Simon
+ * @author Simon, Johann
  */
 void Game::reduceWorldObjects(Player *playerPointer) {
     while (!(worldObjects.empty())) {
@@ -328,6 +330,22 @@ void Game::reduceWorldObjects(Player *playerPointer) {
             delete currentObj;
         } else {
             break;
+        }
+    }
+
+    //Entferne die Bierkrüge die an Wände oder Gegner, etc. gestoßen sind.
+    shotsToDelete.sort(compareGameObjects());
+    while (!(shotsToDelete.empty())) {
+        Shoot *currentShoot = *shotsToDelete.begin();
+        //use worldObjects.erase(position)
+        std::list<GameObject*>::iterator it = worldObjects.begin();
+        while((*it != currentShoot) && (it != worldObjects.end())) {
+            it++;
+        }
+        if (*it == currentShoot) {
+            worldObjects.erase(it);
+            shotsToDelete.pop_front();
+            delete currentShoot;
         }
     }
 }
@@ -341,7 +359,7 @@ void Game::evaluateInput() {
 /**
  * @brief Geht die worldObjects durch und aktualisiert bei jedem die Position
  * wird momentan auch über Debug ausgegeben
- * @author Rupert
+ * @author Rupert, Johann
  */
 void Game::calculateMovement() {
     using namespace std;               // für std::list
@@ -351,11 +369,19 @@ void Game::calculateMovement() {
         GameObject *aktObject = *it;
 
         string msg = "OBJECT Position: XPos=" + to_string(aktObject->getPosX());
-        qDebug("Object Position: XPos=%d",aktObject->getPosX());
+        qDebug("%d Object Position: XPos=%d",aktObject->getType(), aktObject->getPosX());
+        qDebug("%d Object Position: YPos=%d",aktObject->getType(), aktObject->getPosY());
         MovingObject *aktMovingObject = dynamic_cast<MovingObject*> (aktObject);    // Versuche GameObject in Moving Object umzuwandeln
         if(aktMovingObject != 0) {
             aktMovingObject->update();          // Wenn der cast klappt, rufe update() auf.
-            // qDebug("update() für letztes Objekt wird aufgerufen");
+            //falls es sich um einen Gegner handelt feuern
+            if (aktMovingObject->getType() == enemy){
+                if (dynamic_cast<Enemy*> (aktMovingObject)->getFireCooldown() == 0) {
+                    Shoot* enemyFire = new Shoot(aktMovingObject->getPosX(), aktMovingObject->getPosY(), (aktMovingObject->getSpeedX() * 2), enemy);
+                    worldObjects.push_back(enemyFire);
+                    enemyFire = 0;
+                }
+            }
             qDebug("Object Speed: XSpeed=%d",aktMovingObject->getSpeedX());
         }
 
@@ -617,6 +643,7 @@ void Game::handleCollisions() {
              *      wird jeweils in der Situation Spieler/Gegner bearbeitet, bei PowerUps keinen effekt
              */
 
+            qDebug("It is going to hurt");
             //Bierkrug löschen, bei Kollision mit Spielumfeld
             if (handleEvent.causingObject->getType() == obstacle) {
                 shotsToDelete.push_back(dynamic_cast<Shoot*>(handleEvent.affectedObject));
@@ -735,6 +762,6 @@ void Game::loadLevel2() {
     levelSpawn.sort(compareGameObjects());
 
     // Erstelle das Spieler-Objekt und setze den playerObjPointer
-    GameObject *playerObject = new Player(2*obs, 0*obs, 2*obs, 6*obs, player, stopping, 1*obs);
+    GameObject *playerObject = new Player(2*obs, 2*obs, 2*obs, 6*obs, player, stopping, 1*obs);
     playerObjPointer = dynamic_cast<Player*>(playerObject);
 }

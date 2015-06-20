@@ -6,7 +6,7 @@
 
 Enemy::Enemy(int posX, int posY, int length, int height, objectType type, collisionType colType, int speedX) : MovingObject(posX, posY, length, height, type, colType, speedX, -5) {
     health = 50;
-    fireCooldown = 0;
+    fireCooldown = 2;
     inflictedDamage = 10;
     death = false;
     DeathCooldown = 20;
@@ -46,6 +46,10 @@ int Enemy::getInflictedDamage() const {
     return inflictedDamage;
 }
 
+int Enemy::getFireCooldown() const{
+    return fireCooldown;
+}
+
 /**
  * @brief Enemy::getDeath
  * Gibt an ob der Gegner Tot ist
@@ -78,15 +82,10 @@ void Enemy::setDeath(bool death) {
 void Enemy::update() {
     if (death) {
         DeathCooldown = DeathCooldown - 1;
-        if (DeathCooldown == 0) {
-// Event: delete Enemy
-        }
     } else {
         //Bewegung durchführen
         updatePosition();
-        //Feuern
         if (fireCooldown == 0) {
-//Event: create Shoot
             fireCooldown = fireRate;
         } else {
             fireCooldown = fireCooldown - 1;

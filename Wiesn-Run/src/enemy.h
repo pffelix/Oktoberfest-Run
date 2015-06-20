@@ -17,6 +17,7 @@ public:
 
     //Damage()
     int getInflictedDamage() const;
+    int getFireCooldown() const;
 
     //Tod()
     bool getDeath() const;
