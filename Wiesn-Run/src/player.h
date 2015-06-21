@@ -21,7 +21,7 @@ public:
 
     //Munnition()
     int getAmmunatiuon() const;
-    void increaseAmmunation();
+    void increaseAmmunation(int ammunationBonus);
     void decreaseAmmunation();
 
     //Schadensimunität()

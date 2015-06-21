@@ -95,8 +95,8 @@ int Player::getAmmunatiuon() const {
  * @brief Player::increaseAmmunation
  * erhöht die verbleibende Munition des Spielers um 1
  */
-void Player::increaseAmmunation() {
-    ammunation = ammunation + 1;
+void Player::increaseAmmunation(int ammunationBonus) {
+    ammunation = ammunation + ammunationBonus;
 }
 
 /**

@@ -11,6 +11,7 @@
 #include "shoot.h"
 #include "input.h"
 #include "audiocontrol.h"
+#include "powerup.h"
 #include "renderattack.h"
 #include "renderbackground.h"
 #include "renderenemy.h"

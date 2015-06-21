@@ -609,7 +609,14 @@ void Game::handleCollisions() {
                 break;
             }
             case powerUp: {
-                    // Spieler erhält Zusatzfähigkeit mit zeitlicher Beschränkung
+                /* Zusammenstöße mit PowerUps
+                 *      Der Spieler erhält zusatzfähigkeiten
+                 */
+                PowerUp *handlePowerUp = dynamic_cast<PowerUp*> (handleEvent.causingObject);
+                playerObjPointer->setHealth(playerObjPointer->getHealth() + handlePowerUp->getHealthBonus());
+                playerObjPointer->increaseAmmunation(handlePowerUp->getAmmunationBonus());
+                playerObjPointer->setImmunityCooldown(handlePowerUp->getImmunityCooldownBonus());
+                playerObjPointer->increaseAlcoholLevel(handlePowerUp->getAlcoholLevelBonus());
                 break;
             }
             default: {
