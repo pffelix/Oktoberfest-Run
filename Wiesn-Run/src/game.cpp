@@ -112,12 +112,10 @@ int Game::start() {
     window->show();
     qDebug("initialize window");
 
-    //Timer installieren
-    //Input *keyInputs = new Input();
-    // -> das ist jetzt in game.h
+    // Event Filter installieren
+    window->installEventFilter(keyInput);
 
-    window->installEventFilter(keyInputs);
-
+    // Timer installieren
     qDebug("Starte Timer mit 500msec-Intervall");
     Game::startTimer(stepSize);
 
@@ -162,7 +160,7 @@ int Game::step() {
             menuStart->display();
 
             // Enter?
-            if(keyInputs->getKeyactions().contains(Input::Keyaction::Enter)) {
+            if(keyInput->getKeyactions().contains(Input::Keyaction::Enter)) {
                 // Menüpunkt ausgewählt
                 switch(menuStart->getSelection()->id) {
                     case menuId_StartGame:
@@ -176,17 +174,17 @@ int Game::step() {
             }
 
             // Up || Down?
-            if(keyInputs->getKeyactions().contains(Input::Keyaction::Up)) {
+            if(keyInput->getKeyactions().contains(Input::Keyaction::Up)) {
                 menuStart->changeSelection(menuSelectionChange::up);
             }
-            if(keyInputs->getKeyactions().contains(Input::Keyaction::Down)) {
+            if(keyInput->getKeyactions().contains(Input::Keyaction::Down)) {
                 menuStart->changeSelection(menuSelectionChange::down);
             }
 
             break;
         case gameIsRunning:
             // Menü bei ESC
-            if(keyInputs->getKeyactions().contains(Input::Keyaction::Exit)) {
+            if(keyInput->getKeyactions().contains(Input::Keyaction::Exit)) {
                 state = gameMenuStart;
             }
 

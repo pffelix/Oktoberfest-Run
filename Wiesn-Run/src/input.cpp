@@ -2,8 +2,7 @@
 
 /**
  * @brief  Input::Input
- *         Konstruktor instanziert ein Objekt der Klasse Input und installiert den Eventfilter
- * @param  installEventFilter(this)
+ *         Konstruktor instanziert ein Objekt der Klasse Input.
  * @author  Felix Pfreundtner
  */
 Input::Input() {
