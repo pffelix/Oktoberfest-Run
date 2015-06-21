@@ -38,7 +38,7 @@ private:
     std::vector<int> samples;
 
     readSamples();
-    normalizeSamples();
+    to16bitnormSamples();
 
 protected:
 };
