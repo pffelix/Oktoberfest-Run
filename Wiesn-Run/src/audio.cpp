@@ -56,59 +56,65 @@ QString Audio::getSource() {
  * @author Felix Pfreundtner
  */
 void Audio::readSamples() {
-    QString sourcepath;
-    sourcepath = ":/audios/audios/" + source + ".wav";
-    QFile file(sourcepath);
-    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-        qDebug() << "unable to open audio " << source;
-    }
-    else {
-        qDebug() << "open audio " << source;
-    }
 
-
-    int channels; //number of channels
-    int bitdepth; // number of bits per sample
-    int samplenr; // number of samples of audio file
-    int bytedepth; // number of bytes per sample
-    char* tempbytes; // variable to save unused bytes
-    int offset; // variable to save current offset position in file
+    QString sourcepath; /// Pfad zur Wave Datei in den Ressourcendateien
+    int channels; /// Anzahl an Kanälen
+    int bitdepth; /// Anzahl an Bits pro Sample
+    int bytedepth; /// Anzahl an Bytes pro Sample
+    int samplenr; /// Anzahl an Samples in der gesamten Audio Datei
+    char* tempbytes; /// variable to save unused bytes
+    int offset; /// variable to save current offset position in file
     QVector<int> sampledata;
 
-    // read relevant info from fmt chunk
+    /// Öffne zum Audio Objekt gehörige Wave Datei
+    sourcepath = ":/audios/audios/" + source + ".wav";
+    QFile file(sourcepath);
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+
+    /// Lese relevante Informationen aus dem fmt chunk
+
+    /// lese Anzahl an Kanälen ein (Offset 22 Byte)
     file.seek(22);
-    file.read(tempbytes, 2);// read number of channels (offset 22 byte)
+    file.read(tempbytes, 2);
     channels = qFromLittleEndian<quint16>((uchar*)tempbytes);
-
+    /// lese die Anzahl an Bits pro Sample ein (Offset 34 Byte)
     file.seek(34);
-    file.read(tempbytes, 2);// read number of bits per sample (offset 34 byte)
+    file.read(tempbytes, 2);
     bitdepth = qFromLittleEndian<quint16>((uchar*)tempbytes);
+     /// Berechne die Anzahl an Bytes pro Sample
+    bytedepth = bitdepth / 8;
 
-    // end of fmt header - searching for data header
-    offset = 36; // set current offset
-    file.read(tempbytes, 4); // read header of subchunk at offset 36 byte
+    /// Bei Offset 36 Ende des ftm chunks erreicht
+    /// Suche nun nach dem data Header
 
-    // check whether data header doesn't follow directly to fmt header
+    offset = 36; /// aktueller Offset
+     /// Lese den Header des chunks am Offset 36 Byte
+    file.read(tempbytes, 4);
+    /// Prüfer ob der header des aktuellen chunks bereits dem header des data chunks entspricht
     while (tempbytes[0]!='d' && tempbytes[1]!='a' && tempbytes[2]!='t' && tempbytes[3]!='a') {
-        // read size of subchunk
+        /// falls nicht:
+        /// lese die Größe in Bytes des Chunks
         file.read(tempbytes, 4);
-        // skip to next subchunk
+        /// springe zum nächsten Chunk
         offset += qFromLittleEndian<quint32>((uchar*)tempbytes)+8;
         file.seek(offset);
-        qDebug() << QString::number(offset);
-        // read name of subchunk
+        //qDebug() << QString::number(offset);
+        //// lese den Namen des Headers des nächsten Chunks aus
         file.read(tempbytes, 4);
     }
-    qDebug() << QString::fromStdString(std::string(tempbytes));
-    // read samples from data chunk
-    file.read(tempbytes, 4); // read size of data chunk
-    samplenr = (qFromLittleEndian<quint32>((uchar*)tempbytes)) * 8 / bitdepth / channels; // calculate number of samples
-    bytedepth = bitdepth / 8; // calculate number of bytes per sample
+
+    /// Data chunk erreicht
+
+    //qDebug() << QString::fromStdString(std::string(tempbytes));
+     /// lese die Größe des data chunks in Bytes aus
+    file.read(tempbytes, 4);
+    /// berechene die Gesamtanzahl an Samples in der Datei
+    samplenr = (qFromLittleEndian<quint32>((uchar*)tempbytes)) * 8 / bitdepth / channels;
+    /// lese die Samples aus dem data chunk aus
     while(file.atEnd() != true){
         file.read(tempbytes, bytedepth);
         sampledata << (qFromLittleEndian<qint16>((uchar*)tempbytes));
     }
-    qDebug ("stop");
 }
 
 /**
