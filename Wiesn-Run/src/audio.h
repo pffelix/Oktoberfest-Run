@@ -6,9 +6,9 @@
 
 /**
  * @brief  Audio-Klasse
- *         Die Audio-Klasse erzeugt Soundobjekte und stellt Abspielfunktionen
- *         zur Verfügung.
- *         Alle Soundobjekte werden von der Klasse Audiocontrol gesteuert.
+ *         Die Audio-Klasse erzeugt Soundobjekte, liest die zugehörigen
+ *         Audiosamples ein und übergibt diese an die Kontrollklasse
+ *         Audiocontrol, welche die Samples aller Objekte mischt und abspielt.
  *         Die einzelnen Methoden werden in der audio.cpp erklärt.
  * @author  Felix Pfreundtner
  */
@@ -18,7 +18,7 @@ public:
     Audio(std::string state_name);
     ~Audio();
 
-    getSource();
+    std::string getSource();
     std::vector<int> getSamples();
 
 private:
@@ -37,8 +37,8 @@ private:
      */
     std::vector<int> samples;
 
-    readSamples();
-    to16bitnormSamples();
+    void readSamples();
+    void to16bitnormSamples();
 
 protected:
 };

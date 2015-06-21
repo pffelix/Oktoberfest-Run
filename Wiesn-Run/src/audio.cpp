@@ -11,10 +11,22 @@ Audio::~Audio() {
  *         "getSamples" gibt bei Aufruf alle Samples der zu Audioobjekt
  *         gehörigen Wave Datei mit Bittiefe 16 bit und 44100 Hz Samplerate
  *         zurück.
- * @return std::vector<int> Samples
+ * @return std::vector<int> samples
  * @author Felix Pfreundtner
  */
-std::vector<int> getSamples(){
+std::vector<int> Audio::getSamples() {
+    return samples;
+}
+
+/**
+ * @brief  Audio::getSource
+ *         "getSource" gibt bei Aufruf den Namen des Objektes zurück welcher
+ *         welcher dem Pfad in der Ressourcendatenbank entspricht.
+ * @return std::string source
+ * @author Felix Pfreundtner
+ */
+std::string Audio::getSource() {
+    return source;
 }
 
 /**
@@ -22,14 +34,16 @@ std::vector<int> getSamples(){
  *         "readSamples" liest bei Aufruf alle Samples der zu Audioobjekt
  *         gehörigen Wave Datei in die Variable "samples" ein.
  *         Eingelesen werden Mono Wave Dateien mit 44100Hz Samplerate.
- *         Es greift hierfür auf die zum Objekt gehörige, in Ressources
- *         gespeicherte Wave Datei mit Pfadnamen "source" zurück.
+ *         Es greift hierfür auf die zum Objekt gehörige, in der
+ *         Ressourcendatenbank gespeicherte Wave Datei mit Pfadnamen
+ *         "source" zurück.
  *         Die Funktion wertet den Format Header des Wave File aus und liest im
  *         Anschluss den Data Chunk ein.
  *         Bittiefe und Dynamik entsprechen der orginalen Wave Datei.
  * @author Felix Pfreundtner
  */
-readSamples(){
+void Audio::readSamples() {
+
 }
 
 /**
@@ -40,6 +54,6 @@ readSamples(){
  *         Audiocontrol vornehmen zu können.
  * @author Felix Pfreundtner
  */
-to16bitnormSamples(){
+void Audio::to16bitnormSamples() {
 
 }
