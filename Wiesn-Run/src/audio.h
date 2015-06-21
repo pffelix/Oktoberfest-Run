@@ -4,6 +4,9 @@
 #include <string>
 #include <vector>
 #include <QObject>
+#include <QString>
+#include <QDebug>
+#include <QFile>
 
 /**
  * @brief  Audio-Klasse
@@ -17,10 +20,10 @@
 class Audio{
 
 public:
-    Audio(std::string state_name);
+    Audio(QString state_name);
     ~Audio();
 
-    std::string getSource();
+    QString getSource();
     std::vector<int> getSamples();
 
 private:
@@ -30,7 +33,7 @@ private:
      *         welcher dem namen im ressourcenpfad entspricht.
      * @author  Felix Pfreundtner
      */
-    std::string source;
+    QString source;
     /**
      * @brief  samples
      *         samples speichert die normalisierten samples des audio

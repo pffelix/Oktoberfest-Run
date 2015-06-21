@@ -5,8 +5,10 @@
  *         Konstruktor instanziert ein Objekt der Klasse Audio.
  * @author  Felix Pfreundtner
  */
-Audio::Audio(std::string state_name) {
-    qDebug("succesfull created audio object");
+Audio::Audio(QString state_name) {
+    source = state_name;
+    readSamples();
+
 }
 
 /**
@@ -36,7 +38,7 @@ std::vector<int> Audio::getSamples() {
  * @return std::string source
  * @author Felix Pfreundtner
  */
-std::string Audio::getSource() {
+QString Audio::getSource() {
     return source;
 }
 
@@ -54,13 +56,21 @@ std::string Audio::getSource() {
  * @author Felix Pfreundtner
  */
 void Audio::readSamples() {
-
+    QString sourcepath;
+    sourcepath = ":/audios/audios/" + source + ".wav";
+    QFile data(sourcepath);
+    if(!data.open(QIODevice::ReadOnly | QIODevice::Text)){
+        qDebug() << "unable to open audio " << source;
+    }
+    else {
+        qDebug() << "open audio " << source;
+    }
 }
 
 /**
  * @brief  Audio::readSamples
  *         "readSamples" konvertiert die eingelesen Samples auf das Audioformat
- *         Kanäle 1, Samplerate 44100 Hz, Bittiefe 16 bit um eine gemeinsame
+ *         Kanäle: 1, Samplerate: 44100 Hz, Bittiefe: 16 bit um eine gemeinsame
  *         Bearbeitung der Samples verschiedener Audioobjekte in der Klasse
  *         Audiocontrol vornehmen zu können.
  * @author Felix Pfreundtner
