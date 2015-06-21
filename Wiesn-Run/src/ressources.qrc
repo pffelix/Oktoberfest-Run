@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/images">
         <file>images/obstacle.png</file>
+        <file>images/player.png</file>
     </qresource>
 </RCC>
