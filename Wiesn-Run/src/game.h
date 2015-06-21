@@ -10,6 +10,7 @@
 #include "enemy.h"
 #include "shoot.h"
 #include "input.h"
+#include "audiocontrol.h"
 #include "renderattack.h"
 #include "renderbackground.h"
 #include "renderenemy.h"
@@ -121,9 +122,10 @@ private:
     QApplication *appPointer;
     /// für Zeitmessung
     std::chrono::high_resolution_clock::time_point letzterAufruf;
-    /// für Inputs
-    Input *keyInputs = new Input();
-
+    /// Erstelle Input Objekt zum Aufzeichnen der Keyboard Inputs
+    Input *keyInput = new Input();
+    /// Erstelle Audiocontrol Objekt zum Erzeugen der Soundausgabe
+    AudioControl *audioOutput = new AudioControl();
     /// Menüs
     Menu *menuStart;
     //Menu *menuEnd;

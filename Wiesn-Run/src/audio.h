@@ -6,9 +6,10 @@
 
 /**
  * @brief  Audio-Klasse
- *         Die Audio-Klasse erzeugt Soundobjekte, liest die zugehörigen
- *         Audiosamples ein und übergibt diese an die Kontrollklasse
- *         Audiocontrol, welche die Samples aller Objekte mischt und abspielt.
+ *         Die Audio-Klasse erzeugt Audioobjekte.
+ *         Mehrere Instanzen dieser Klasse werden in der Klasse AudioControl erstellt.
+ *         Jedes Audioobjekt liest die zum Ojekt gehörigen Audiosamples ein und übergibt diese an die Kontrollklasse
+ *         Audiocontrol, welche im Anschluss die Samples aller Objekte mischt und abspielt.
  *         Die einzelnen Methoden werden in der audio.cpp erklärt.
  * @author  Felix Pfreundtner
  */
