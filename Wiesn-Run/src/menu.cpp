@@ -1,9 +1,23 @@
 #include "menu.h"
 #include <QDebug>
 
-Menu::Menu()
+/**
+ * @brief Menu-Konstruktor
+ * @param Zeiger auf String mit Menu-Titel
+ * @author Rupert
+ */
+Menu::Menu(std::string *menuTitle)
 {
+    title = menuTitle;
+}
 
+/**
+ * @brief gibt den Menü-Titel zurück
+ * @return Zeiger auf String
+ * @author Rupert
+ */
+std::string *Menu::getTitle() {
+    return title;
 }
 
 /**
@@ -13,7 +27,7 @@ Menu::Menu()
  * @author Rupert
  */
 int Menu::display() {
-    qDebug("Menü - Eintrag %s aktiv, wähle mit Pfeiltasten",getSelection()->name.c_str());
+    qDebug("%s - %s",getTitle()->c_str(),getSelection()->name.c_str());
     return 0;
 }
 
@@ -44,13 +58,19 @@ int Menu::addEntry(std::string name, int id) {
 int Menu::changeSelection(enum menuSelectionChange changeType) {
     switch(changeType) {
         case menuSelectionChange::up:
-            if(currentPosition > 1) {
+
+        //qDebug("menuUpTry");
+            if(currentPosition > 0) {
                 currentPosition--;
+                //qDebug("menuUp");
             }
             break;
         case menuSelectionChange::down:
-            if(currentPosition <= numberOfEntrys) {
+
+        //qDebug("menuDownTry");
+            if(currentPosition < numberOfEntrys - 1) {
                 currentPosition++;
+                //qDebug("menuDown");
             }
             break;
     }
@@ -73,5 +93,6 @@ struct menuEntry *Menu::getSelection() {
             return aktEntry;
         }
     }
+    qDebug("ERROR | Menu::getSelection(): menuEntry not found");
     return NULL;
 }

@@ -39,7 +39,7 @@ struct menuEntry {
  * @author Rupert
  */
 enum gameState {
-    gameIsRunning, gameMenuStart
+    gameIsRunning, gameMenuStart, gameMenuEnd
 };
 
 

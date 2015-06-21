@@ -20,7 +20,10 @@ public:
 
 
 
-    Menu();
+    Menu(std::string *menuTitle);
+
+    /// gibt den Titel zurück
+    std::string *getTitle();
 
     /// Zeigt das Menü an
     int display();
@@ -45,6 +48,8 @@ private:
     /// Anzahl der Einträge
     int numberOfEntrys = 0;
 
+    /// Zeiger auf String, in dem der Titel des Menüs steht
+    std::string *title;
 
 };
 

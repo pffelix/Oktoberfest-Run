@@ -95,11 +95,14 @@ int Game::start() {
     }
 
     // Menüs erstellen
-    menuStart = new Menu();
+    menuStart = new Menu(new std::string("Wiesn-Run"));
     menuStart->addEntry("Spiel starten",menuId_StartGame);
     menuStart->addEntry("Spiel beenden", menuId_EndGame);
 
-
+    menuEnd = new Menu(new std::string("Game Over"));
+    menuEnd->addEntry("Highscore anzeigen",menuId_Highscore);
+    menuEnd->addEntry("Credits anzeigen",menuId_Credits);
+    menuEnd->addEntry("zurück zum Anfang",menuId_GotoStartMenu);
 
     // QGraphicsView Widget (Anzeigefenster) erstellen und einstellen
     scene = new QGraphicsScene;
@@ -154,9 +157,36 @@ int Game::step() {
     //qDebug("Game::step() | Vergangene Zeit seit letztem step(): %d ms", static_cast<int>(duration_cast<milliseconds>(letzterAufruf-akt).count()));
 
     switch(state) {
-        //case menuStart:
+        case gameMenuEnd:
+            menuEnd->display();
+            // Enter?
+            if(keyInput->getKeyactions().contains(Input::Keyaction::Enter)) {
+                // Menüpunkt ausgewählt
+                switch(menuEnd->getSelection()->id) {
+                    case menuId_Highscore:
+                        // Highscore Fenster anzeigen
+                        break;
+                    case menuId_Credits:
+                        // Credit Fenster anzeigen
+                        break;
+                    case menuId_GotoStartMenu:
+                        // Startmenü anzeigen
+                        state = gameMenuStart;
+                        break;
+                }
+            }
+
+            // Up || Down?
+            if(keyInput->getKeyactions().contains(Input::Keyaction::Up)) {
+                menuEnd->changeSelection(menuSelectionChange::up);
+            }
+            if(keyInput->getKeyactions().contains(Input::Keyaction::Down)) {
+                menuEnd->changeSelection(menuSelectionChange::down);
+            }
+
+            break;
+
         case gameMenuStart:
-            // Menü-Anzeige
             menuStart->display();
 
             // Enter?
@@ -185,7 +215,7 @@ int Game::step() {
         case gameIsRunning:
             // Menü bei ESC
             if(keyInput->getKeyactions().contains(Input::Keyaction::Exit)) {
-                state = gameMenuStart;
+                state = gameMenuEnd;
             }
 
             worldObjects.sort(compareGameObjects());
@@ -422,6 +452,8 @@ void Game::calculateMovement() {
 void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPointer) {
 
     scene->clear();
+    window->viewport()->update();
+
     int obstacleCount=0, enemyCount=0, attackPowerUpCount=0;
 
     // Lege leere Liste an um Zeiger auf Objekte in der Szene zu speichern.
