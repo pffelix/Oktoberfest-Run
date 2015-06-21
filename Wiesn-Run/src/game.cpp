@@ -75,8 +75,8 @@ int Game::start() {
 
     // Level erstellen bedeutet levelInitial und levelSpawn füllen
     //makeTestWorld();
-    //loadLevel2();
-    loadLevel1();
+    loadLevel2();
+    //loadLevel1();
 
     // Fundamentale stepSize setzen
     stepSize = 500;
@@ -200,7 +200,7 @@ int Game::step() {
 
             //    correctMovement();
             //    handleEvents();
-                renderGraphics(&worldObjects, playerObjPointer);
+            renderGraphics(&worldObjects, playerObjPointer);
             //    playSound();
             break;
     }
@@ -422,6 +422,7 @@ void Game::calculateMovement() {
 void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPointer) {
 
     scene->clear();
+    int obstacleCount=0, enemyCount=0, attackPowerUpCount=0;
 
     // Lege leere Liste an um Zeiger auf Objekte in der Szene zu speichern.
     std::list<GameObject*> objToDisplay;
@@ -435,10 +436,21 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
 
         if ( insideSceneLeft && insideSceneRight && ( (*it) != playerPointer) ) {
             objToDisplay.push_back(*it);
+            if((*it)->getType() == obstacle) {
+                obstacleCount ++;
+            }
+            else if ((*it)->getType() == enemy) {
+                enemyCount ++;
+            }
+            else if (( (*it)->getType() == shot) || ( (*it)->getType() == powerUp) ) {
+                attackPowerUpCount ++;
+            }
         }
     }
 
-    RenderObstacle *renderobstacles = new RenderObstacle[objToDisplay.size()];
+    RenderObstacle *renderobstacles = new RenderObstacle[obstacleCount];
+    RenderEnemy *renderenemys = new RenderEnemy[enemyCount];
+    //RenderAttack *renderattacks = new RenderAttack[attackPowerUpCount];
 
     // Durchlaufe objToDisplay, bis die Liste leer ist.
     while (!(objToDisplay.empty())) {
@@ -447,12 +459,24 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
         // Lösche den Zeiger auf das erste Objekt aus der Liste.
         objToDisplay.pop_front();
 
-        //qDebug("objectX...PlayerY...%d...%d", currentObj->getPosX(), playerPointer->getPosX());
-
         int PosX = currentObj->getPosX() - playerPointer->getPosX() - (currentObj->getLength()/2);
-        renderobstacles[objToDisplay.size()].render(PosX);
-        scene->addItem(renderobstacles+objToDisplay.size());
 
+        if( currentObj->getType() == obstacle) {
+            obstacleCount --;
+            renderobstacles[obstacleCount].render(PosX);
+            scene->addItem(renderobstacles+obstacleCount);
+        }
+        else if( currentObj->getType() == enemy) {
+            enemyCount --;
+            renderenemys[enemyCount].render(PosX);
+            scene->addItem(renderenemys+enemyCount);
+        }
+        else if( currentObj->getType() == shot) {
+
+        }
+        else if( currentObj->getType() == powerUp) {
+
+        }
     } // Ende der while-Schleife
 
     RenderPlayer * renderPlayer = new RenderPlayer;
@@ -460,13 +484,11 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
 
     QImage * img = new QImage(1024,768,QImage::Format_ARGB32_Premultiplied);
     QPainter * painter = new QPainter(img);
-
     scene->render(painter);
 
     QGraphicsPixmapItem * item;
     item = new QGraphicsPixmapItem;
     item->setPixmap(QPixmap::fromImage(*img));
-
     scene->addItem(item);
 
     delete [] renderobstacles;
@@ -806,12 +828,12 @@ void Game::loadLevel2() {
     int obs = 10;
 
     // Erstelle statische Objekte
-    GameObject *obstackle1 = new GameObject(10*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle2 = new GameObject(20*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle3 = new GameObject(28*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle4 = new GameObject(35*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle5 = new GameObject(46*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle6 = new GameObject(60*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle1 = new GameObject(40*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle2 = new GameObject(60*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle3 = new GameObject(78*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle4 = new GameObject(95*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle5 = new GameObject(126*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle6 = new GameObject(160*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
     // Füge statische Objekte der Liste levelInitial hinzu
     levelInitial.push_back(obstackle1);
     levelInitial.push_back(obstackle2);
@@ -830,10 +852,10 @@ void Game::loadLevel2() {
     levelInitial.sort(compareGameObjects());
 
     // Erstelle Gegner
-    GameObject *enemy1 = new Enemy(30*obs, 0*obs, 2*obs, 8*obs, enemy, contacting, -1*obs);
-    GameObject *enemy2 = new Enemy(35*obs, 0*obs, 2*obs, 8*obs, enemy, contacting, -1*obs);
-    GameObject *enemy3 = new Enemy(40*obs, 0*obs, 2*obs, 8*obs, enemy, contacting, -1*obs);
-    GameObject *speedEnemy1 = new Enemy(29*obs, 0*obs, 2*obs, 8*obs, enemy, contacting, -2*obs);
+    GameObject *enemy1 = new Enemy(50*obs, 0*obs, 2*obs, 6*obs, enemy, contacting, -1*obs);
+    GameObject *enemy2 = new Enemy(85*obs, 0*obs, 2*obs, 6*obs, enemy, contacting, -1*obs);
+    GameObject *enemy3 = new Enemy(140*obs, 0*obs, 2*obs, 6*obs, enemy, contacting, -1*obs);
+    GameObject *speedEnemy1 = new Enemy(135*obs, 0*obs, 2*obs, 8*obs, enemy, contacting, -2*obs);
     levelSpawn.push_back(enemy1);
     levelSpawn.push_back(enemy2);
     levelSpawn.push_back(enemy3);
