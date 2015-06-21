@@ -95,11 +95,11 @@ int Game::start() {
     }
 
     // Menüs erstellen
-    menuStart = new Menu();
+    menuStart = new Menu(new std::string("Wiesn-Run"));
     menuStart->addEntry("Spiel starten",menuId_StartGame);
     menuStart->addEntry("Spiel beenden", menuId_EndGame);
 
-    menuEnd = new Menu();
+    menuEnd = new Menu(new std::string("Game Over"));
     menuEnd->addEntry("Highscore anzeigen",menuId_Highscore);
     menuEnd->addEntry("Credits anzeigen",menuId_Credits);
     menuEnd->addEntry("zurück zum Anfang",menuId_GotoStartMenu);
