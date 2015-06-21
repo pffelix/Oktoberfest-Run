@@ -2,6 +2,8 @@
 #define AUDIOCONTROL_H
 
 #include "audio.h"
+#include <QString>
+#include <QDebug>
 
 /**
  * @brief  AudioControl-Klasse

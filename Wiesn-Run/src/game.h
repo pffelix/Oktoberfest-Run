@@ -129,10 +129,10 @@ private:
     AudioControl *audioOutput = new AudioControl();
     /// Menüs
     Menu *menuStart;
-    //Menu *menuEnd;
+    Menu *menuEnd;
     /// zur Unterscheidung und Identifizierung der Menü-Einträge
     enum menuIds {
-        menuId_StartGame, menuId_EndGame
+        menuId_StartGame, menuId_EndGame, menuId_Highscore, menuId_Credits, menuId_GotoStartMenu
     };
 };
 
