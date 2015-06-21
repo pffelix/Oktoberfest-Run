@@ -44,13 +44,19 @@ int Menu::addEntry(std::string name, int id) {
 int Menu::changeSelection(enum menuSelectionChange changeType) {
     switch(changeType) {
         case menuSelectionChange::up:
-            if(currentPosition > 1) {
+
+        qDebug("menuUpTry");
+            if(currentPosition > 0) {
                 currentPosition--;
+                qDebug("menuUp");
             }
             break;
         case menuSelectionChange::down:
-            if(currentPosition <= numberOfEntrys) {
+
+        qDebug("menuDownTry");
+            if(currentPosition < numberOfEntrys - 1) {
                 currentPosition++;
+                qDebug("menuDown");
             }
             break;
     }
@@ -73,5 +79,6 @@ struct menuEntry *Menu::getSelection() {
             return aktEntry;
         }
     }
+    qDebug("menuEntry not found");
     return NULL;
 }
