@@ -10,9 +10,12 @@ public:
     RenderObstacle();
     ~RenderObstacle();
 
+    //Rendermethode
+    void render(int x);
+
 private:
     //Attribute Grafikelement "Obstacle"
-    struct position;
+    int posX;
     int obstacleType;
 
 };

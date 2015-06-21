@@ -10,8 +10,18 @@
 #include "enemy.h"
 #include "shoot.h"
 #include "input.h"
+#include "renderattack.h"
+#include "renderbackground.h"
+#include "renderenemy.h"
+#include "renderguielement.h"
+#include "renderobstacle.h"
+#include "renderplayer.h"
 #include <QApplication>
 #include <QGraphicsView>
+#include <QGraphicsScene>
+#include <QGraphicsPixmapItem>
+#include <QPainter>
+#include <QImage>
 #include <chrono>
 #include "menu.h"
 
@@ -50,6 +60,8 @@ public:
     int step();
     /// Startet die Mockup QApplication app
     int run(QApplication& app);
+
+
 
     struct stateStruct gameStats;
     //Liste von Kollisionen
@@ -97,6 +109,10 @@ private:
     struct scoreStruct score;
     int stepSize;
     Player *playerObjPointer;
+
+    /// für das Ausgabefenster QGraphicsView
+    QGraphicsScene * scene;
+    QGraphicsView * window;
 
     /// aktueller Spielzustand (running, menuStart, menuEnd)
     gameState state = gameMenuStart;

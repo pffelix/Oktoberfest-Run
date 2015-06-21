@@ -44,3 +44,6 @@ HEADERS += \
     src/renderattack.h \
     src/definitions.h \
     src/menu.h
+
+RESOURCES += \
+    src/ressources.qrc

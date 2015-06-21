@@ -75,11 +75,11 @@ int Game::start() {
 
     // Level erstellen bedeutet levelInitial und levelSpawn füllen
     //makeTestWorld();
-    //loadLevel1();
-    loadLevel2();
+    //loadLevel2();
+    loadLevel1();
 
     // Fundamentale stepSize setzen
-    stepSize = 200;
+    stepSize = 500;
 
     // Spieler hinzufügen
     worldObjects.push_back(playerObjPointer);
@@ -102,7 +102,9 @@ int Game::start() {
 
 
     // QGraphicsView Widget (Anzeigefenster) erstellen und einstellen
-    QGraphicsView * window = new QGraphicsView();
+    scene = new QGraphicsScene;
+    scene->setSceneRect(0,0,1024,768);
+    window = new QGraphicsView(scene);
     window->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     window->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     window->setFixedSize(1024,768);
@@ -200,7 +202,7 @@ int Game::step() {
 
             //    correctMovement();
             //    handleEvents();
-            //    renderGraphics();
+                renderGraphics(&worldObjects, playerObjPointer);
             //    playSound();
             break;
     }
@@ -420,16 +422,25 @@ void Game::calculateMovement() {
 
 
 void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPointer) {
+
+    scene->clear();
+
     // Lege leere Liste an um Zeiger auf Objekte in der Szene zu speichern.
     std::list<GameObject*> objToDisplay;
 
     // Durchlaufe die objectList (worldObjects) von Anfang bis Ende. Ist ein Objekt näher als die Szenenbreite
     // am Spieler dran, so könnte es in der Szene sein und wird in die Liste aufgenommen.
     for (std::list<GameObject*>::iterator it = objectList->begin(); it != objectList->end(); ++it) {
-        if ( std::abs( (*it)->getPosX() - playerPointer->getPosX()) < sceneWidth ) {
+
+        bool insideSceneRight = ( (*it)->getPosX() - playerPointer->getPosX() - ((*it)->getLength()/2) ) <= sceneWidth;
+        bool insideSceneLeft = ( (*it)->getPosX() - playerPointer->getPosX() + ((*it)->getLength()/2) ) >= 0;
+
+        if ( insideSceneLeft && insideSceneRight && ( (*it) != playerPointer) ) {
             objToDisplay.push_back(*it);
         }
     }
+
+    RenderObstacle *renderobstacles = new RenderObstacle[objToDisplay.size()];
 
     // Durchlaufe objToDisplay, bis die Liste leer ist.
     while (!(objToDisplay.empty())) {
@@ -438,9 +449,30 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
         // Lösche den Zeiger auf das erste Objekt aus der Liste.
         objToDisplay.pop_front();
 
-        /// @todo Hier müssen die darzustellenden Objekte abgearbeitet werden.
+        //qDebug("objectX...PlayerY...%d...%d", currentObj->getPosX(), playerPointer->getPosX());
+
+        int PosX = currentObj->getPosX() - playerPointer->getPosX() - (currentObj->getLength()/2);
+        renderobstacles[objToDisplay.size()].render(PosX);
+        scene->addItem(renderobstacles+objToDisplay.size());
 
     } // Ende der while-Schleife
+
+    RenderPlayer * renderPlayer = new RenderPlayer;
+    scene->addItem(renderPlayer);
+
+    QImage * img = new QImage(1024,768,QImage::Format_ARGB32_Premultiplied);
+    QPainter * painter = new QPainter(img);
+
+    scene->render(painter);
+
+    QGraphicsPixmapItem * item;
+    item = new QGraphicsPixmapItem;
+    item->setPixmap(QPixmap::fromImage(*img));
+
+    scene->addItem(item);
+
+    delete [] renderobstacles;
+    delete renderPlayer;
 }
 
 
@@ -736,12 +768,12 @@ void Game::loadLevel1() {
     int obs = 10;
 
     // Erstelle statische Objekte
-    GameObject *obstackle1 = new GameObject(10*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle2 = new GameObject(20*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle3 = new GameObject(28*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle4 = new GameObject(35*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle5 = new GameObject(46*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle6 = new GameObject(60*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle1 = new GameObject(30*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle2 = new GameObject(40*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle3 = new GameObject(48*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle4 = new GameObject(55*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle5 = new GameObject(76*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle6 = new GameObject(90*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
     // Füge statische Objekte der Liste levelInitial hinzu
     levelInitial.push_back(obstackle1);
     levelInitial.push_back(obstackle2);
