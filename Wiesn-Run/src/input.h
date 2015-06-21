@@ -3,18 +3,16 @@
 
 
 #include <QSet>
-#include <QString>
 #include <QObject>
 #include <QEvent>
 #include <QKeyEvent>
-#include <iostream>
 
 /**
  * @brief  Input-Klasse
- *         Die Input-Klasse aktulisiert die für das Spiel releventanten Tastatureingaben.
+ *         Die Input-Klasse aktulisiert die für das Spiel relevanten Tastatureingaben.
  *         Eine Instanz dieser Klasse wir innerhalb der game.h angelegt.
  *         Die einzelnen Methoden werden in der input.cpp erklärt.
- * @author  Felix
+ * @author  Felix Pfreundtner
  */
 class Input : public QObject {
     Q_OBJECT
@@ -40,17 +38,16 @@ private:
     /**
      * @brief  keyevents
      *         keyevents speichert die id aller im Momment gepressten Tasten.
-     * @author  Felix
+     * @author  Felix Pfreundtner
      */
     QSet<int> keyevents;
     /**
      * @brief  keyactions
      *         Die Variable keyactions speichert die id aller im Moment
      *         gepressten Tastenkombinationen, welche für das Spiel relevant sind.
-     * @author  Felix
+     * @author  Felix Pfreundtner
      */
     QSet<int> keyactions;
-
 
     void updateKeyactions();
 
