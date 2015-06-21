@@ -422,6 +422,8 @@ void Game::calculateMovement() {
 void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPointer) {
 
     scene->clear();
+    window->viewport()->update();
+
     int obstacleCount=0, enemyCount=0, attackPowerUpCount=0;
 
     // Lege leere Liste an um Zeiger auf Objekte in der Szene zu speichern.
