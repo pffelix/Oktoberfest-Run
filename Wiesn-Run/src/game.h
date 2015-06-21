@@ -98,7 +98,7 @@ private:
     /// Objekte die zur Laufzeit dynamisch gespawnt werden
     std::list<GameObject*> levelSpawn;
     /// Zu löschende Schüsse
-    std::list<Shoot*> shotsToDelete;
+    std::list<GameObject*> objectsToDelete;
 
     /// SoundEvents
     std::list<struct soundStruct> soundList;
