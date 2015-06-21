@@ -3,7 +3,7 @@
 
 #include "gameobject.h"
 
-class MovingObject : public GameObject{
+class MovingObject : public GameObject {
 
 public:
     //Konstruktor und Destruktor

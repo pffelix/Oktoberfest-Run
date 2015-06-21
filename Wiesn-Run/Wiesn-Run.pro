@@ -24,7 +24,8 @@ SOURCES += src/main.cpp \
     src/renderguielement.cpp \
     src/renderenemy.cpp \
     src/renderattack.cpp \
-    src/menu.cpp
+    src/menu.cpp \
+    src/powerup.cpp
 
 HEADERS += \
     src/game.h \
@@ -43,7 +44,8 @@ HEADERS += \
     src/renderenemy.h \
     src/renderattack.h \
     src/definitions.h \
-    src/menu.h
+    src/menu.h \
+    src/powerup.h
 
 RESOURCES += \
     src/ressources.qrc
