@@ -1,5 +1,8 @@
 #ifndef AUDIOCONTROL_H
 #define AUDIOCONTROL_H
+
+#include "audio.h"
+
 /**
  * @brief  AudioControl-Klasse
  *         Die AudioControl-Klasse synchronisiert alle Audioausgabeanweisungen und spielt passende Audioobjekte ab.
@@ -14,7 +17,7 @@ public:
     ~AudioControl();
 
 private:
-
+    Audio *audio_object;
 
 protected:
 };

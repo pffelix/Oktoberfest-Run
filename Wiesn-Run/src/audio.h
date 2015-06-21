@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <QObject>
 
 /**
  * @brief  Audio-Klasse
