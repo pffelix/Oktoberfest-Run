@@ -7,6 +7,12 @@
 #include <QString>
 #include <QDebug>
 #include <QFile>
+#include <QtEndian>
+#include<stdio.h>
+#include<stdlib.h>
+#include <iostream>
+#include <string>
+#include <QVector>
 
 /**
  * @brief  Audio-Klasse
@@ -24,7 +30,7 @@ public:
     ~Audio();
 
     QString getSource();
-    std::vector<int> getSamples();
+    QVector<int> getSamples();
 
 private:
     /**
@@ -37,10 +43,10 @@ private:
     /**
      * @brief  samples
      *         samples speichert die normalisierten samples des audio
-     *         objekts als std vector.
+     *         objekts als QVektor.
      * @author  Felix Pfreundtner
      */
-    std::vector<int> samples;
+    QVector<int> samples;
 
     void readSamples();
     void to16bitnormSamples();
