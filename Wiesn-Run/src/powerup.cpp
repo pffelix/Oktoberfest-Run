@@ -31,7 +31,7 @@ PowerUp::~PowerUp() {
  * @brief Gibt den Bonus auf Alcohollevel zurück
  * @author Johann
  */
-PowerUp::getAlcoholLevelBonus() {
+int PowerUp::getAlcoholLevelBonus() const {
     return alcoholLevelBonus;
 }
 
@@ -39,7 +39,7 @@ PowerUp::getAlcoholLevelBonus() {
  * @brief Gibt den Bonus auf Munnition zurück
  * @author Johann
  */
-PowerUp::getAmmunationBonus() {
+int PowerUp::getAmmunationBonus() const {
     return ammunationBonus;
 }
 
@@ -47,7 +47,7 @@ PowerUp::getAmmunationBonus() {
  * @brief Gibt den Bonus auf Leben zurück
  * @author Johann
  */
-PowerUp::getHealthBonus() {
+int PowerUp::getHealthBonus() const {
     return healthBonus;
 }
 
@@ -55,7 +55,7 @@ PowerUp::getHealthBonus() {
  * @brief Gibt den Bonus auf Immunität zurück
  * @author Johann
  */
-PowerUp::getImmunityCooldownBonus() {
+int PowerUp::getImmunityCooldownBonus() const {
     return immunityCooldownBonus;
 }
 

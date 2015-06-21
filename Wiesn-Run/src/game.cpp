@@ -364,18 +364,18 @@ void Game::reduceWorldObjects(Player *playerPointer) {
     }
 
     //Entferne die Bierkrüge die an Wände oder Gegner, etc. gestoßen sind.
-    shotsToDelete.sort(compareGameObjects());
-    while (!(shotsToDelete.empty())) {
-        Shoot *currentShoot = *shotsToDelete.begin();
+    objectsToDelete.sort(compareGameObjects());
+    while (!(objectsToDelete.empty())) {
+        GameObject *currentObject= *objectsToDelete.begin();
         //use worldObjects.erase(position)
         std::list<GameObject*>::iterator it = worldObjects.begin();
-        while((*it != currentShoot) && (it != worldObjects.end())) {
+        while((*it != currentObject) && (it != worldObjects.end())) {
             it++;
         }
-        if (*it == currentShoot) {
+        if (*it == currentObject) {
             worldObjects.erase(it);
-            shotsToDelete.pop_front();
-            delete currentShoot;
+            objectsToDelete.pop_front();
+            delete currentObject;
         }
     }
 }
@@ -604,7 +604,7 @@ void Game::handleCollisions() {
                 if (hurtPlayer(handleShoot->getInflictedDamage())) {
                     gameStats.gameOver = true;
                 }
-                shotsToDelete.push_back(handleShoot);
+                objectsToDelete.push_back(handleShoot);
                 handleShoot = 0;
                 break;
             }
@@ -617,6 +617,8 @@ void Game::handleCollisions() {
                 playerObjPointer->increaseAmmunation(handlePowerUp->getAmmunationBonus());
                 playerObjPointer->setImmunityCooldown(handlePowerUp->getImmunityCooldownBonus());
                 playerObjPointer->increaseAlcoholLevel(handlePowerUp->getAlcoholLevelBonus());
+                objectsToDelete.push_back(handlePowerUp);
+                handlePowerUp = 0;
                 break;
             }
             default: {
@@ -684,7 +686,7 @@ void Game::handleCollisions() {
                     //Schaden zufügen
                     handleEnemy->setHealth(handleEnemy->getHealth() - handleShoot->getInflictedDamage());
                     //Bierkrug zum löschen vormerken
-                    shotsToDelete.push_back(handleShoot);
+                    objectsToDelete.push_back(handleShoot);
                     //Im Falle des Todes
                     if (handleEnemy->getHealth() < 0) {
                         handleEnemy->setDeath(true);
@@ -713,7 +715,7 @@ void Game::handleCollisions() {
             qDebug("It is going to hurt");
             //Bierkrug löschen, bei Kollision mit Spielumfeld
             if (handleEvent.causingObject->getType() == obstacle) {
-                shotsToDelete.push_back(dynamic_cast<Shoot*>(handleEvent.affectedObject));
+                objectsToDelete.push_back(dynamic_cast<Shoot*>(handleEvent.affectedObject));
             }
             break;
         }//end (case shot)
@@ -779,6 +781,8 @@ void Game::loadLevel1() {
     GameObject *obstackle4 = new GameObject(55*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
     GameObject *obstackle5 = new GameObject(76*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
     GameObject *obstackle6 = new GameObject(90*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *powerUp1 = new PowerUp(10*obs, 0*obs, 2*obs, 2*obs, 2, -1, 0, 0);
+    GameObject *powerUp2 = new PowerUp(20*obs, 0*obs, 2*obs, 2*obs, 0, 2, 1, 0);
     // Füge statische Objekte der Liste levelInitial hinzu
     levelInitial.push_back(obstackle1);
     levelInitial.push_back(obstackle2);
@@ -786,11 +790,13 @@ void Game::loadLevel1() {
     levelInitial.push_back(obstackle4);
     levelInitial.push_back(obstackle5);
     levelInitial.push_back(obstackle6);
+    levelInitial.push_back(powerUp1);
+    levelInitial.push_back(powerUp2);
     // Sortiere die Liste levelInitial
     levelInitial.sort(compareGameObjects());
 
     // Erstelle das Spieler-Objekt und setze den playerObjPointer
-    GameObject *playerObject = new Player(2*obs, 0*obs, 2*obs, 6*obs, player, stopping, 1*obs);
+    GameObject *playerObject = new Player(1*obs, 0*obs, 3*obs, 6*obs, player, stopping, 1*obs);
     playerObjPointer = dynamic_cast<Player*>(playerObject);
 }
 
@@ -813,6 +819,13 @@ void Game::loadLevel2() {
     levelInitial.push_back(obstackle4);
     levelInitial.push_back(obstackle5);
     levelInitial.push_back(obstackle6);
+    // Erstelle und Füge PowerUps hinzu
+    GameObject *powerUps;
+    for (int i = 0; i < 3; i++) {
+        powerUps = new PowerUp((2+i)*obs, 0*obs, 2*obs, 2*obs, -1, 2, 1, 0);
+        levelInitial.push_back(powerUps);
+        powerUps = 0;
+    }
     // Sortiere die Liste levelInitial
     levelInitial.sort(compareGameObjects());
 
