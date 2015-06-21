@@ -1,8 +1,18 @@
 #include "audio.h"
 
+/**
+ * @brief  Audio::Audio
+ *         Konstruktor instanziert ein Objekt der Klasse Audio.
+ * @author  Felix Pfreundtner
+ */
 Audio::Audio(std::string state_name) {
 }
 
+/**
+ * @brief  Audio::~Audio
+ *         Destruktor löscht ein Objekt der Klasse Audio
+ * @author  Felix Pfreundtner
+ */
 Audio::~Audio() {
 }
 
