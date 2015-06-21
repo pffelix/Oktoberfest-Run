@@ -178,10 +178,10 @@ int Game::step() {
 
             // Up || Down?
             if(keyInput->getKeyactions().contains(Input::Keyaction::Up)) {
-                menuEnd->changeSelection(menuSelectionChange::up);
+                menuEnd->changeSelection(Menu::menuSelectionChange::up);
             }
             if(keyInput->getKeyactions().contains(Input::Keyaction::Down)) {
-                menuEnd->changeSelection(menuSelectionChange::down);
+                menuEnd->changeSelection(Menu::menuSelectionChange::down);
             }
 
             break;
@@ -205,10 +205,10 @@ int Game::step() {
 
             // Up || Down?
             if(keyInput->getKeyactions().contains(Input::Keyaction::Up)) {
-                menuStart->changeSelection(menuSelectionChange::up);
+                menuStart->changeSelection(Menu::menuSelectionChange::up);
             }
             if(keyInput->getKeyactions().contains(Input::Keyaction::Down)) {
-                menuStart->changeSelection(menuSelectionChange::down);
+                menuStart->changeSelection(Menu::menuSelectionChange::down);
             }
 
             break;

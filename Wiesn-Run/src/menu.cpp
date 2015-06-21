@@ -83,7 +83,7 @@ int Menu::changeSelection(enum menuSelectionChange changeType) {
  * @return Zeiger auf menuEntry des aktuellen Eintrags, NULL bei Fehler
  * @author Rupert
  */
-struct menuEntry *Menu::getSelection() {
+struct Menu::menuEntry *Menu::getSelection() {
     using namespace std;               // für std::list
     list<menuEntry*>::iterator it;     // Iterator erstellen
     /// Schleife startet beim ersten Element und geht bis zum letzen Element durch

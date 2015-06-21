@@ -19,6 +19,17 @@ class Menu
 public:
 
 
+    /// Struct zur Beschreibung eines Menü-Eintrags
+    struct menuEntry {
+        std::string name;
+        int id;
+        int position;
+    };
+    /// wird von der Menu-Klasse zur Auswahl-Änderung benötigt
+    enum menuSelectionChange {
+        up, down, /*enter*/
+    };
+
 
     Menu(std::string *menuTitle);
 
@@ -35,7 +46,7 @@ public:
     int changeSelection(menuSelectionChange changeType);
 
     /// Zeiger auf aktuelle gewählten Menüeintrag, sollte nach Enter aufgerufen werden
-    menuEntry *getSelection();
+    Menu::menuEntry *getSelection();
 
 private:
     /// Liste, die die Menü-Einträge enthalt
