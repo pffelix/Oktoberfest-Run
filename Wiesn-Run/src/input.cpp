@@ -4,7 +4,7 @@
  * @brief  Input::Input
  *         Konstruktor instanziert ein Objekt der Klasse Input und installiert den Eventfilter
  * @param  installEventFilter(this)
- * @author  Felix
+ * @author  Felix Pfreundtner
  */
 Input::Input() {
 }
@@ -13,7 +13,7 @@ Input::Input() {
 /**
  * @brief  Input::~Input
  *         Destruktor löscht ein Objekt der Klasse Input
- * @author  Felix
+ * @author  Felix Pfreundtner
  */
 Input::~Input() {
 }
@@ -25,8 +25,8 @@ Input::~Input() {
  *         wird eine Taste nicht mehr gedrück wird die id in keyevents gelöscht
  *         wird eine Taste neu gedrückt wird die id in keyevents hinzugefügt
  * @param  QObject *obj, QEvent *event
- * @return  Flag
- * @author  Felix
+ * @return  Boolean
+ * @author  Felix Pfreundtner
  */
 
 bool Input::eventFilter(QObject *obj, QEvent *event) {
@@ -56,7 +56,7 @@ bool Input::eventFilter(QObject *obj, QEvent *event) {
  *         so wird der QSet keyactions gelöscht und mit den aktulisierten Werten im Qset keyevents abgeglichen.
  *         Sind Tasten oder Tastenkombinationen gedrück worden, welche für das Spiel relevant sind so wird die zur Aktion
  *         gehörige integer ID im QSet keyactions hinzugefügt.
- * @author  Felix
+ * @author  Felix Pfreundtner
  */
 void Input::updateKeyactions() {
     keyactions.clear();
@@ -106,7 +106,7 @@ void Input::updateKeyactions() {
  *         Möchte man nun bespielsweise abfragen ob der Spieler im Moment schießt so überprüft man:
  *         input->getKeyactions().contains(Input::Keyaction::Shoot) == True.
  * @return Instanzvariable keyactions
- * @author Felix
+ * @author Felix Pfreundtner
  */
 QSet<int> Input::getKeyactions() {
     return keyactions;
