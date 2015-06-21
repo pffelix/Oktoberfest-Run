@@ -10,9 +10,12 @@ public:
     RenderEnemy();
     ~RenderEnemy();
 
+    //Rendermethode
+    void render(int x);
+
 private:
     //Attribute Grafikelement "Enemy"
-    struct postion;
+    int posX;
     bool attacks;
     bool isDead;
     bool getsDamage;
