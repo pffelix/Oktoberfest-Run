@@ -6,6 +6,7 @@
  * @author  Felix Pfreundtner
  */
 AudioControl::AudioControl() {
+    Audio* audio_object = new Audio ("electrical_guitar_(44.1,1,16)");
 }
 
 /**

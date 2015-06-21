@@ -6,6 +6,7 @@
  * @author  Felix Pfreundtner
  */
 Audio::Audio(std::string state_name) {
+    qDebug("succesfull created audio object");
 }
 
 /**
