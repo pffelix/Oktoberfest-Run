@@ -31,7 +31,9 @@ public:
 
     QString getSource();
     QVector<float> getSamples();
-    int getSamplenr();
+    int getSamplenbr();
+    short getVolume();
+    void setVolume();
 
 private:
     /**
@@ -41,21 +43,27 @@ private:
      * @author  Felix Pfreundtner
      */
     QString source;
+
     /**
      * @brief  samples
      *         samples speichert die normalisierten samples des Audio
      *         Objekts als QVektor.
      * @author  Felix Pfreundtner
      */
-
     QVector<float> samples;
     /**
-     * @brief  samplenr
-     *         samplenr speichert die Anazahl an Samples in der gesamten Audio Datei
+     * @brief  samplenbr
+     *         samplenbr speichert die Anzahl an Samples in der gesamten Audio Datei
      *         des Audio Objekts als Integer.
      * @author  Felix Pfreundtner
+     */    
+    int samplenbr;
+    /**
+     * @brief  volume
+     *         volume speichert die Lautstärkeinformation des Audioobjektes (Bereich 0...1).
+     * @author  Felix Pfreundtner
      */
-    int samplenr;
+    short volume;
 
     void readSamples();
     qint16 to16bitSample(quint8 sample8bit);

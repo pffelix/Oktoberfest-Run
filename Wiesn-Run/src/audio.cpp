@@ -21,6 +21,17 @@ Audio::~Audio() {
 }
 
 /**
+ * @brief  Audio::getSource
+ *         "getSource" gibt bei Aufruf den Namen des Objektes zurück welcher
+ *         welcher dem Pfad in der Ressourcendatenbank entspricht.
+ * @return QString source
+ * @author Felix Pfreundtner
+ */
+QString Audio::getSource() {
+    return source;
+}
+
+/**
  * @brief  Audio::getSamples
  *         "getSamples" gibt bei Aufruf alle Samples der zu Audioobjekt
  *         gehörigen Wave Datei mit Bittiefe 16 bit und 44100 Hz Samplerate
@@ -33,26 +44,32 @@ QVector<float> Audio::getSamples() {
 }
 
 /**
- * @brief  Audio::getSamplenr
- *         "getSamplenr" gibt bei Aufruf die Anzahl an Samples der zu Audioobjekt
+ * @brief  Audio::getSamplenbr
+ *         "getSamplenbr" gibt bei Aufruf die Anzahl an Samples der zu Audioobjekt
  *         gehörigen Wave Datei zurück.
- * @return int samplenr
+ * @return int samplenbr
  * @author Felix Pfreundtner
  */
-int Audio::getSamplenr() {
-    return samplenr;
+int Audio::getSamplenbr() {
+    return samplenbr;
 }
 
 /**
- * @brief  Audio::getSource
- *         "getSource" gibt bei Aufruf den Namen des Objektes zurück welcher
- *         welcher dem Pfad in der Ressourcendatenbank entspricht.
- * @return QString source
+ * @brief  Audio::getVolume
+ *         "getVolume" gibt bei Aufruf zurück mit welcher Lautstärke die Samples im QVektor samples im Momment gespeichert sind.
+ *         Hierfür wird die aktuelle maximale Betrags-Amplitude (Bereich 0...32767) der Audio Objekt Samples ausgelesen und in eine short
+ *         Lautstärkeinformation volume (Bereich 0...1) umgerechnet.
+ * @return short volume
  * @author Felix Pfreundtner
  */
-QString Audio::getSource() {
-    return source;
+short Audio::getVolume() {
+    return volume;
 }
+
+void Audio::setVolume(){
+
+}
+
 
 /**
  * @brief  Audio::readSamples
@@ -119,7 +136,7 @@ void Audio::readSamples() {
      /// lese die Größe des data chunks in Bytes aus
     file.read(tempbytes, 4);
     /// berechene die Gesamtanzahl an Samples in der Datei
-    samplenr = (qFromLittleEndian<quint32>((uchar*)tempbytes)) * 8 / bitdepth / channels;
+    samplenbr = (qFromLittleEndian<quint32>((uchar*)tempbytes)) * 8 / bitdepth / channels;
     /// lese Sample für Sample aus dem data chunk aus
     while(!file.atEnd()){
         file.read(tempbytes, bytedepth);
@@ -135,7 +152,6 @@ void Audio::readSamples() {
     // normalisiere QVector samples auf die maximalen 16 bit signed integer Grenzen (hier: -32767...32767)
     normalize();
 }
-
 
 /**
  * @brief  Audio::readSamples
