@@ -49,4 +49,5 @@ void MovingObject::updatePosition() {
     } else {
         setPosY(getPosY() + getSpeedY());
     }
+
 }

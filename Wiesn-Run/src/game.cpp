@@ -80,20 +80,7 @@ int Game::start() {
     colTestLevel();
 
     // Fundamentale stepSize setzen
-    stepSize = 500;
-
-    // Spieler hinzufügen
-    worldObjects.push_back(playerObjPointer);
-    // Spawn-Distanz setzen
-    spawnDistance = 1024;
-    // Szenen-Breite setzen
-    sceneWidth = 1024;
-    // Zeiger auf Objekte aus levelInitial in worldObjects verlegen
-    while (!(levelInitial.empty())) {
-        GameObject *currentObject = *levelInitial.begin();
-        worldObjects.push_back(currentObject);
-        levelInitial.pop_front();
-    }
+    stepSize = 50;
 
     // Menüs erstellen
     menuStart = new Menu(new std::string("Wiesn-Run"));
@@ -115,6 +102,22 @@ int Game::start() {
     window->setWindowTitle(QApplication::translate("Game Widget", "Game Widget (Input Test)"));
     window->show();
     qDebug("initialize window");
+
+    // Spieler hinzufügen
+    worldObjects.push_back(playerObjPointer);
+    //Grafik - Spieler der Scene hinzufügen
+    scene->addItem(playerObjPointer);
+    window->centerOn(playerObjPointer->getPosX() + 512 - 60 - 0.5*playerObjPointer->getLength(), 384);
+    // Spawn-Distanz setzen
+    spawnDistance = 1024;
+    // Szenen-Breite setzen
+    sceneWidth = 1024;
+    // Zeiger auf Objekte aus levelInitial in worldObjects verlegen
+    while (!(levelInitial.empty())) {
+        GameObject *currentObject = *levelInitial.begin();
+        worldObjects.push_back(currentObject);
+        levelInitial.pop_front();
+    }
 
     // Event Filter installieren
     window->installEventFilter(keyInput);
@@ -341,6 +344,8 @@ void Game::calculateMovement() {
         }
 
     }
+    //Grafik - sorgt dafür dass "window" auf den Spieler zentriert bleibt
+    window->centerOn(playerObjPointer->getPosX() + 512 - 100 - 0.5*playerObjPointer->getLength(), 384);
 }
 
 /**
@@ -906,7 +911,7 @@ void Game::colTestLevel() {
     /// Skalierungsfaktor für Objekte im Spiel
     int obs = 10;
 
-    // Erstelle statische Objekte
+    /*// Erstelle statische Objekte
     GameObject *obstackle1 = new GameObject(15*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
     GameObject *obstackle2 = new GameObject(21*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
     GameObject *obstackle3 = new GameObject(40*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
@@ -925,7 +930,7 @@ void Game::colTestLevel() {
     GameObject *enemy1 = new Enemy(30*obs, 0*obs, 2*obs, 6*obs, enemy, contacting, -1*obs);
 
     // Füge bewegliche Pbjekte in zugehörige liste
-    levelSpawn.push_back(enemy1);
+    levelSpawn.push_back(enemy1);*/
 
     // Erstelle das Spieler-Objekt und setze den playerObjPointer
     GameObject *playerObject = new Player(2*obs, 2*obs, 2*obs, 6*obs, player, stopping, 1*obs);

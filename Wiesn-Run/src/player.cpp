@@ -12,6 +12,10 @@ Player::Player(int posX, int posY, int length, int height, objectType type, coll
     immunityCooldown = 0;
     fireRate = 20;
     fireCooldown = 0;
+
+    //Grafik - Player wird initialisiert
+    setPixmap(QPixmap(":/images/images/player.png"));
+    setPos(getPosX() - 0.5*getLength(), -getPosY() + 548);
 }
 
 Player::~Player() {
@@ -168,6 +172,10 @@ void Player::update() {
     }
     //Bewegung ausführen
     updatePosition();
+
+    //Grafik - Bewegung anzeigen
+    setPos(getPosX() - 0.5*getLength(), -getPosY() + 548);
+
     //Alkoholpegel Zeitabbau
     if (alcoholLevel > 0) {
         alcoholLevel = alcoholLevel - 1;

@@ -30,11 +30,11 @@ protected:
     collisionType colType;
 
 private:
+    //Objecttyp
+    objectType type;
     //Größe
     int length;
     int height;
-    //Objecttyp
-    objectType type;
 
 };
 
