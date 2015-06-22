@@ -328,13 +328,13 @@ void Game::detectCollision(std::list<GameObject*> *objToCalculate) {
                         if (AAboveB) {
                             colDir = fromAbove;
                             colDir = fromRight;
-                            collisionStruct newCollision = {objB, objA, objB->getCollisionType(), colDir};
+                            collisionStruct newCollision = {objA, objB, objA->getCollisionType(), colDir};
                             eventsToHandle.push_back(newCollision);
                             qDebug("->Kollision von Oben hat stattgefunden");
                         } else {
                             colDir = fromBelow;
                             colDir = fromRight;
-                            collisionStruct newCollision = {objB, objA, objB->getCollisionType(), colDir};
+                            collisionStruct newCollision = {objA, objB, objA->getCollisionType(), colDir};
                             eventsToHandle.push_back(newCollision);
                             qDebug("->Kollision von Unten hat stattgefunden");
                         }
