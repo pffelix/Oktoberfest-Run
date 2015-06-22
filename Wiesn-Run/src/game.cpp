@@ -909,7 +909,7 @@ void Game::colTestLevel() {
     // Erstelle statische Objekte
     GameObject *obstackle1 = new GameObject(15*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
     GameObject *obstackle2 = new GameObject(21*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle3 = new GameObject(31*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle3 = new GameObject(40*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
 
     // Erstelle PowerUp
     GameObject *powerUp1 = new PowerUp(10*obs, 0*obs, 2*obs, 2*obs, 1,1,1,1);
