@@ -304,7 +304,7 @@ void Game::detectCollision(std::list<GameObject*> *objToCalculate) {
                     overlapY = (objA->getPosY() + (objA->getHeight() / 1)) - (objB->getPosY());
                 }
 
-                collisionDirection colDir;
+                collisionDirection colDira;
 
                 // Prüfe, aus welcher Richtung die Kollision stattgefunden hat.
                 // Für eine Kollision muss gelten...
