@@ -1,0 +1,14 @@
+breite:höhe
+
+Bildschirm:
+	4:3	1024:768
+
+Spieler/Gegner:
+	1:2	60:120
+
+Obstacles:
+	1:2	60:120
+	5:1	100:20
+
+PowerUps:
+	1:1	40:40
