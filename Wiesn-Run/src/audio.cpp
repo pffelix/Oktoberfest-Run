@@ -24,11 +24,22 @@ Audio::~Audio() {
  *         "getSamples" gibt bei Aufruf alle Samples der zu Audioobjekt
  *         gehörigen Wave Datei mit Bittiefe 16 bit und 44100 Hz Samplerate
  *         zurück.
- * @return QVector<int> samples
+ * @return QVector<float> samples
  * @author Felix Pfreundtner
  */
-QVector<int> Audio::getSamples() {
+QVector<float> Audio::getSamples() {
     return samples;
+}
+
+/**
+ * @brief  Audio::getSamplenr
+ *         "getSamplenr" gibt bei Aufruf die Anzahl an Samples der zu Audioobjekt
+ *         gehörigen Wave Datei zurück.
+ * @return int samplenr
+ * @author Felix Pfreundtner
+ */
+int Audio::getSamplenr() {
+    return samplenr;
 }
 
 /**
@@ -61,10 +72,9 @@ void Audio::readSamples() {
     int channels; /// Anzahl an Kanälen
     int bitdepth; /// Anzahl an Bits pro Sample
     int bytedepth; /// Anzahl an Bytes pro Sample
-    int samplenr; /// Anzahl an Samples in der gesamten Audio Datei
     char* tempbytes; /// variable to save unused bytes
     int offset; /// variable to save current offset position in file
-    QVector<int> sampledata;
+    QVector<float> sampledata;
 
     /// Öffne zum Audio Objekt gehörige Wave Datei
     sourcepath = ":/audios/audios/" + source + ".wav";
@@ -110,11 +120,19 @@ void Audio::readSamples() {
     file.read(tempbytes, 4);
     /// berechene die Gesamtanzahl an Samples in der Datei
     samplenr = (qFromLittleEndian<quint32>((uchar*)tempbytes)) * 8 / bitdepth / channels;
-    /// lese die Samples aus dem data chunk aus
+    /// lese Sample für Sample aus dem data chunk aus
     while(file.atEnd() != true){
         file.read(tempbytes, bytedepth);
-        sampledata << (qFromLittleEndian<qint16>((uchar*)tempbytes));
+        /// lese 16 bit Samples in float QVector ein
+        if (bytedepth == 2) {
+            sampledata << (qFromLittleEndian<qint16>((uchar*)tempbytes));
+        }
+        /// lese 8 bit Samples in float QVector ein
+        else {
+            sampledata << (qFromLittleEndian<quint8>((uchar*)tempbytes));
+        }
     }
+    qDebug("stop");
 }
 
 /**
