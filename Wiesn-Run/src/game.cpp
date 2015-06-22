@@ -238,7 +238,7 @@ int Game::step() {
 
             //    correctMovement();
             //    handleEvents();
-            renderGraphics(&worldObjects, playerObjPointer);
+            //    renderGraphics(&worldObjects, playerObjPointer);   <- Wird wohl bald gelöscht
             //    playSound();
             break;
     }
@@ -696,6 +696,7 @@ bool Game::hurtPlayer(int damage) {
 
 /**
  * @brief Game::renderGraphics
+ * wird wohl bald gelöscht
  * @param objectList
  * @param playerPointer
  */
