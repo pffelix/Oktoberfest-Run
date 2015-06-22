@@ -144,8 +144,7 @@ void Audio::readSamples() {
  */
 qint16 Audio::to16bitSample(quint8 sample8bit) {
     qint16 sample16bit;
-    sample16bit = (sample8bit - 128) << 15;
+    // rechne unsigend integer 8 bit in signed integer 16 bit um und skaliere in an die 16bit signed integer grenzen
+    sample16bit = (sample8bit - 128) * 256;
     return sample16bit;
-    qDebug("stop");
-
 }
