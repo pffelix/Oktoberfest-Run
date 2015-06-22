@@ -58,7 +58,7 @@ private:
     int samplenr;
 
     void readSamples();
-    void to16bitnormSamples();
+    qint16 to16bitSample(quint8 sample8bit);
 
 protected:
 };

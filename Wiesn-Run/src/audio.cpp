@@ -58,12 +58,13 @@ QString Audio::getSource() {
  *         "readSamples" liest bei Aufruf alle Samples der zu Audioobjekt
  *         gehörigen Wave Datei in die Variable "samples" ein.
  *         Eingelesen werden sollen RIFF Mono Wave Dateien mit 44100Hz Samplerate.
+ *         Die Bittiefe ist hierbei variabel 8 oder 16bit.
  *         Es greift hierfür auf die zum Objekt gehörige, in der
  *         Ressourcendatenbank gespeicherte Wave Datei mit Pfadnamen
  *         "source" zurück.
- *         Die Funktion wertet den Format Header des Wave File aus und liest im
- *         Anschluss den file Chunk ein.
- *         Bittiefe und Dynamik entsprechen der orginalen Wave Datei.
+ *         Die Funktion wertet den fmt Header des Wave File aus und liest im
+ *         Anschluss den data Chunk ein.
+ *         Die Bittiefe wird in float konvertiert um eine Weiterbearbeitung der Samples ohne Dynamikverlust durchführen zu können.
  * @author Felix Pfreundtner
  */
 void Audio::readSamples() {
@@ -123,13 +124,13 @@ void Audio::readSamples() {
     /// lese Sample für Sample aus dem data chunk aus
     while(file.atEnd() != true){
         file.read(tempbytes, bytedepth);
-        /// lese 16 bit Samples in float QVector ein
+        /// lese 16 bit integer Samples in float QVector ein
         if (bytedepth == 2) {
             sampledata << (qFromLittleEndian<qint16>((uchar*)tempbytes));
         }
-        /// lese 8 bit Samples in float QVector ein
+        /// lese 8 bit integer Samples in float QVector ein
         else {
-            sampledata << (qFromLittleEndian<quint8>((uchar*)tempbytes));
+            sampledata << to16bitSample(qFromLittleEndian<quint8>((uchar*)tempbytes));
         }
     }
     qDebug("stop");
@@ -137,12 +138,14 @@ void Audio::readSamples() {
 
 /**
  * @brief  Audio::readSamples
- *         "readSamples" konvertiert die eingelesen Samples auf das Audioformat
- *         Kanäle: 1, Samplerate: 44100 Hz, Bittiefe: 16 bit um eine gemeinsame
- *         Bearbeitung der Samples verschiedener Audioobjekte in der Klasse
- *         Audiocontrol vornehmen zu können.
+ *         "readSamples" konvertiert einen 8 bit integer Sample in einen 16 bit Integer Sample.
+ *         Ziel ist eine einheitlich Bearbeitung der Samples verschiedener Audioobjekte vornehmen zu können.
  * @author Felix Pfreundtner
  */
-void Audio::to16bitnormSamples() {
+qint16 Audio::to16bitSample(quint8 sample8bit) {
+    qint16 sample16bit;
+    sample16bit = (sample8bit - 128) << 15;
+    return sample16bit;
+    qDebug("stop");
 
 }
