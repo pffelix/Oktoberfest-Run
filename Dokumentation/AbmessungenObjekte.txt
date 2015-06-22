@@ -5,6 +5,7 @@ Bildschirm:
 
 Spieler/Gegner:
 	1:2	60:120
+	Position im Spielfeld:	ca. 200
 
 Obstacles:
 	1:2	60:120
@@ -12,3 +13,11 @@ Obstacles:
 
 PowerUps:
 	1:1	40:40
+
+Krug:
+	1:2
+
+
+
+Spawn-Position:		1100		->	Vorlauf = 176 (letztes Ende 276: posX+length)
+Delete-Position:	-150		->	alles aus Bild verschwunden

@@ -362,6 +362,10 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
 
             // Liste möglicher Kollisionen anlegen
             std::list<GameObject*> possibleCollisions;
+            /* Möglich Anzahl an Kollisionen WORST CASE:
+             *  von links:  4 (bei drei Ebenen)
+             *  von rechts: 5 (bei drei Ebenen)
+             */
 
             // Vorheriges Element hinzufügen, falls currentObject nicht das erste Element ist.
             if (it != objectsToCalculate->begin()) {
