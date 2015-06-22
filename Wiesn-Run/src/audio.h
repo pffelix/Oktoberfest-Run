@@ -30,7 +30,8 @@ public:
     ~Audio();
 
     QString getSource();
-    QVector<int> getSamples();
+    QVector<float> getSamples();
+    int getSamplenr();
 
 private:
     /**
@@ -42,11 +43,19 @@ private:
     QString source;
     /**
      * @brief  samples
-     *         samples speichert die normalisierten samples des audio
-     *         objekts als QVektor.
+     *         samples speichert die normalisierten samples des Audio
+     *         Objekts als QVektor.
      * @author  Felix Pfreundtner
      */
-    QVector<int> samples;
+
+    QVector<float> samples;
+    /**
+     * @brief  samplenr
+     *         samplenr speichert die Anazahl an Samples in der gesamten Audio Datei
+     *         des Audio Objekts als Integer.
+     * @author  Felix Pfreundtner
+     */
+    int samplenr;
 
     void readSamples();
     void to16bitnormSamples();
