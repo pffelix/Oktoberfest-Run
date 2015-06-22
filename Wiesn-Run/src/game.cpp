@@ -351,30 +351,31 @@ void Game::calculateMovement() {
  * @todo Objekt-Definitionen mit eventHandling abstimmen, Koordinatendefinition, Overlap-Problem, <= Fälle
  * @author Simon, johann
  */
-void Game::detectCollision(std::list<GameObject*> *objToCalculate) {
+void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
 
-    for (std::list<GameObject*>::iterator it=objToCalculate->begin(); it != objToCalculate->end(); ++it) {
+    for (std::list<GameObject*>::iterator it=objectsToCalculate->begin(); it != objectsToCalculate->end(); ++it) {
 
-        MovingObject *objA = dynamic_cast<MovingObject*>(*it);
+        //aktuelles Gameobjekt herausnehmen
+        MovingObject *handleMovingObject = dynamic_cast<MovingObject*>(*it);
         // Prüfen, ob das aktuelle Objekt überhaupt vom Typ MovingObject ist
-        if (objA != 0) {
+        if (handleMovingObject != 0) {
 
             // Liste möglicher Kollisionen anlegen
-            std::list<GameObject*> possibleCollision;
+            std::list<GameObject*> possibleCollisions;
 
             // Vorheriges Element hinzufügen, falls currentObject nicht das erste Element ist.
-            if (it != objToCalculate->begin()) {
-                possibleCollision.push_back(*std::prev(it));
+            if (it != objectsToCalculate->begin()) {
+                possibleCollisions.push_back(*std::prev(it));
                 // Da das vorherige Element erfolgreich hinzugefügt wurde, prüfe, ob noch ein Element hinzugefügt werden kann
-                if (std::prev(it) != objToCalculate->begin()) {
+                if (std::prev(it) != objectsToCalculate->begin()) {
                     possibleCollision.push_back(*std::prev(it, 2));
                 }
             }
             // Nächstes Element hinzufügen, falls currentObject nicht das letze Element ist.
-            if (it != objToCalculate->end()) {
+            if (it != objectsToCalculate->end()) {
                 possibleCollision.push_back(*std::next(it));
                 // Da nächstes Element erfolgreich hinzugefügt wurde, prüfe, ob noch ein Element hinzugefügt werden kann
-                if (std::next(it) != objToCalculate->end()) {
+                if (std::next(it) != objectsToCalculate->end()) {
                     possibleCollision.push_back(*std::next(it, 2));
                 }
             }
@@ -461,7 +462,7 @@ void Game::detectCollision(std::list<GameObject*> *objToCalculate) {
 void Game::handleCollisions() {
 
     collisionStruct handleEvent;
-    int overlay;
+    int overlap;
     Enemy *handleEnemy;
     Shoot *handleShoot;
 
@@ -491,15 +492,15 @@ void Game::handleCollisions() {
                     //Bewegung  in X-Richtungstoppen
                     playerObjPointer->setSpeedX(0);
                     //Überlappung berechnen und Spieler nach links versetzen
-                    overlay = (playerObjPointer->getPosX() + playerObjPointer->getLength()) - handleEvent.causingObject->getPosX();
-                    playerObjPointer->setPosX(playerObjPointer->getPosX() - overlay);
+                    overlap = (playerObjPointer->getPosX() + playerObjPointer->getLength()) - handleEvent.causingObject->getPosX();
+                    playerObjPointer->setPosX(playerObjPointer->getPosX() - overlap);
                     break;
                 }
                 case fromRight: {
                     //Bewegung in X-Richtung stoppen
                     playerObjPointer->setSpeedX(0);
                     //Überlappung berechnen und Spieler nach rechts versetzen
-                    overlay = (handleEvent.causingObject->getPosX() + handleEvent.causingObject->getLength()) - playerObjPointer->getPosX();
+                    overlap = (handleEvent.causingObject->getPosX() + handleEvent.causingObject->getLength()) - playerObjPointer->getPosX();
                     playerObjPointer->setPosX(handleEvent.causingObject->getPosX() + handleEvent.causingObject->getLength());
                     break;
                 }
@@ -508,16 +509,16 @@ void Game::handleCollisions() {
                     playerObjPointer->setSpeedY(0);
                     playerObjPointer->resetJump();
                     //Überlappung berechnen und Spieler nach obern versetzen
-                    overlay = (handleEvent.causingObject->getPosY() + handleEvent.causingObject->getHeight()) - playerObjPointer->getPosY();
-                    playerObjPointer->setPosY(playerObjPointer->getPosY() + overlay);
+                    overlap = (handleEvent.causingObject->getPosY() + handleEvent.causingObject->getHeight()) - playerObjPointer->getPosY();
+                    playerObjPointer->setPosY(playerObjPointer->getPosY() + overlap);
                     break;
                 }
                 case fromBelow: {
                     //Wegen Zusammenstoß wird ein Fall initiiert
                     playerObjPointer->setFall();
                     //Überlappung berechnen und Spieler nach obern versetzen
-                    overlay = (playerObjPointer->getPosY() + playerObjPointer->getHeight()) - handleEvent.causingObject->getPosY();
-                    playerObjPointer->setPosY(playerObjPointer->getPosY() + overlay);
+                    overlap = (playerObjPointer->getPosY() + playerObjPointer->getHeight()) - handleEvent.causingObject->getPosY();
+                    playerObjPointer->setPosY(playerObjPointer->getPosY() + overlap);
                     break;
                 }
                 }
@@ -607,21 +608,21 @@ void Game::handleCollisions() {
                 if (handleEvent.direction == fromAbove) {
                     //Fall wird beendet, X-Bewegung uneingeschränkt
                     handleEnemy->setSpeedY(0);
-                    overlay = (handleEvent.causingObject->getPosY() + handleEvent.causingObject->getHeight()) - handleEnemy->getPosY();
-                    handleEnemy->setPosY(handleEnemy->getPosY() + overlay);
+                    overlap = (handleEvent.causingObject->getPosY() + handleEvent.causingObject->getHeight()) - handleEnemy->getPosY();
+                    handleEnemy->setPosY(handleEnemy->getPosY() + overlap);
                 } else {
                     // Bewegungsabbruch, neue Bewegungsrichtung
                     handleEnemy->setSpeedX(-handleEnemy->getSpeedX());
                     //PositionsKorrektur
                     if (handleEvent.direction == fromLeft) {
                         //Gegner kommt von links
-                        overlay = (handleEnemy->getPosX() + handleEnemy->getLength()) - handleEvent.causingObject->getPosX();
-                        handleEnemy->setPosX(handleEnemy->getPosX() - overlay);
+                        overlap = (handleEnemy->getPosX() + handleEnemy->getLength()) - handleEvent.causingObject->getPosX();
+                        handleEnemy->setPosX(handleEnemy->getPosX() - overlap);
                         qDebug("dreh nach rechts");
                     } else {
                         //Gegner kommt von rechts
-                        overlay = (handleEvent.causingObject->getPosX() + handleEvent.causingObject->getLength()) - handleEnemy->getPosX();
-                        handleEnemy->setPosX(handleEnemy->getPosX() + overlay);
+                        overlap = (handleEvent.causingObject->getPosX() + handleEvent.causingObject->getLength()) - handleEnemy->getPosX();
+                        handleEnemy->setPosX(handleEnemy->getPosX() + overlap);
                         qDebug("dreh nach links");
                     }
                 }

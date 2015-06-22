@@ -80,7 +80,7 @@ private:
     void reduceWorldObjects(Player *playerPointer);
     void evaluateInput();
     void calculateMovement();
-    void detectCollision(std::list<GameObject*> *objToCalculate);
+    void detectCollision(std::list<GameObject*> *objectsToCalculate);
     void handleCollisions();
     void renderGraphics(std::list<GameObject *> *objectList, Player *playerPointer);
     void playSound(std::list<soundStruct> *soundEvents);
