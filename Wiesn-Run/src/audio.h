@@ -59,6 +59,7 @@ private:
 
     void readSamples();
     qint16 to16bitSample(quint8 sample8bit);
+    void normalize();
 
 protected:
 };

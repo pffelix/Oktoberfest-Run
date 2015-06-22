@@ -8,6 +8,7 @@
 Audio::Audio(QString state_name) {
     source = state_name;
     readSamples();
+    qDebug("Audio object created");
 
 }
 
@@ -75,7 +76,6 @@ void Audio::readSamples() {
     int bytedepth; /// Anzahl an Bytes pro Sample
     char* tempbytes; /// variable to save unused bytes
     int offset; /// variable to save current offset position in file
-    QVector<float> sampledata;
 
     /// Öffne zum Audio Objekt gehörige Wave Datei
     sourcepath = ":/audios/audios/" + source + ".wav";
@@ -109,7 +109,6 @@ void Audio::readSamples() {
         /// springe zum nächsten Chunk
         offset += qFromLittleEndian<quint32>((uchar*)tempbytes)+8;
         file.seek(offset);
-        //qDebug() << QString::number(offset);
         //// lese den Namen des Headers des nächsten Chunks aus
         file.read(tempbytes, 4);
     }
@@ -122,19 +121,21 @@ void Audio::readSamples() {
     /// berechene die Gesamtanzahl an Samples in der Datei
     samplenr = (qFromLittleEndian<quint32>((uchar*)tempbytes)) * 8 / bitdepth / channels;
     /// lese Sample für Sample aus dem data chunk aus
-    while(file.atEnd() != true){
+    while(!file.atEnd()){
         file.read(tempbytes, bytedepth);
         /// lese 16 bit integer Samples in float QVector ein
         if (bytedepth == 2) {
-            sampledata << (qFromLittleEndian<qint16>((uchar*)tempbytes));
+            samples << qFromLittleEndian<qint16>((uchar*)tempbytes);
         }
         /// lese 8 bit integer Samples in float QVector ein
         else {
-            sampledata << to16bitSample(qFromLittleEndian<quint8>((uchar*)tempbytes));
+            samples << to16bitSample(qFromLittleEndian<quint8>((uchar*)tempbytes));
         }
     }
-    qDebug("stop");
+    // normalisiere QVector samples auf die maximalen 16 bit signed integer Grenzen (hier: -32767...32767)
+    normalize();
 }
+
 
 /**
  * @brief  Audio::readSamples
@@ -147,4 +148,34 @@ qint16 Audio::to16bitSample(quint8 sample8bit) {
     // rechne unsigend integer 8 bit in signed integer 16 bit um und skaliere in an die 16bit signed integer grenzen
     sample16bit = (sample8bit - 128) * 256;
     return sample16bit;
+}
+
+/**
+ * @brief  Audio::normalize
+ *         "normalize" normalisiert den 16 bit Integer QVector samples.
+ *         Es wird hierfür die größte Betrag-Amplitude eines Sample in samples bestimmt.
+ *         Diese Amplitude wird auf den maximalen signed Integer 16 Bit Wert gesetzt (hier: -32767 oder 32767).
+ *         Alle anderen Samples werden entsprechend ihres Verhältnises zur größten Betrag-Amplitude skaliert.
+ * @author Felix Pfreundtner
+ */
+void Audio::normalize() {
+    // maxabs speichert die großte Betrag-Amplitude eines Samples aus sample
+    int maxabs;
+    // maxabs speichert die Betrag-Amplitude des aktuell iterierten Samples aus sample
+    int maxabspos;
+
+    maxabs = 0;
+    // iteriere über alle Samples in samples
+    for (int pos = 0; pos < samples.size(); pos++) {
+        maxabspos = abs(samples[pos]);
+        // ween die Betrag-Amplitude an pos größer ist als die voherigen Betrag-Amplituden speichere sie in maxabs
+        if (maxabspos > maxabs) {
+            maxabs = maxabspos;
+        }
+    }
+    // normalisiere den QVector samples auf maximale signed Integer 16bit Grenzen
+    // iteriere über alle Samples in samples
+    for (int pos = 0; pos < samples.size(); pos++) {
+        samples[pos] = samples[pos] / maxabs * 32767;
+    }
 }
