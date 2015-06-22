@@ -81,7 +81,6 @@ private:
     void evaluateInput();
     void calculateMovement();
     void detectCollision(std::list<GameObject*> *objToCalculate);
-    void handleEvents();
     void handleCollisions();
     void renderGraphics(std::list<GameObject *> *objectList, Player *playerPointer);
     void playSound(std::list<soundStruct> *soundEvents);
