@@ -239,6 +239,71 @@ int Game::step() {
     return 0;
 }
 
+/**
+ * @brief Game::appendWorldObjects
+ * @param playerPointer
+ * Diese Funktion fügt der Spielwelt dynamisch Gegner hinzu. In jedem Zeitschritt wird die sortierte Liste
+ * levelSpawn vom Anfang her durchlaufen. Ist die Distanz des Spielers zum Gegner kleiner als die Distanz levelSpawn,
+ * so wird das Objekt den worldObjects hinzugefügt und aus levelSpawn gelöscht. Die for-Schleife läuft solange, bis
+ * das erste Mal ein Objekt weiter als levelSpawn vom Spieler entfernt ist. Dann wird abgebrochen, da alle folgenden
+ * Objekte auf Grund der Sortierung noch weiter entfernt sein werden.
+ * @author Simon
+ */
+void Game::appendWorldObjects(Player *playerPointer) {
+    while (!(levelSpawn.empty())) {
+        GameObject *currentObj = *levelSpawn.begin();
+        if ( (currentObj->getPosX() - playerPointer->getPosX()) < spawnDistance ) {
+            worldObjects.push_back(currentObj);
+            levelSpawn.pop_front();
+        } else {
+            break;
+        }
+    }
+}
+
+
+/**
+ * @brief Game::reduceWorldObjects
+ * @param playerPointer
+ * Die Funktion reduceWorldObjects löscht die Zeiger auf die GameObjects aus dem Spiel, von denen der Spieler bereits
+ * weiter rechts als die spawnDistance entfernt ist.
+ * Entfernt Bierkrüge, die im letzten Durchlauf mit Gegenständen kollidiert sind
+ * @todo Objekte löschen anstatt nur die Zeiger aus der Liste entfernen
+ * @author Simon, Johann
+ */
+void Game::reduceWorldObjects(Player *playerPointer) {
+
+    while (!(worldObjects.empty())) {
+        GameObject *currentObj = *worldObjects.begin();
+        if ((playerPointer->getPosX() - currentObj->getPosX()) > spawnDistance) {
+            worldObjects.pop_front();
+            delete currentObj;
+        } else {
+            break;
+        }
+    }
+
+    //Entferne die Bierkrüge die an Wände oder Gegner, etc. gestoßen sind.
+    objectsToDelete.sort(compareGameObjects());
+    while (!(objectsToDelete.empty())) {
+        GameObject *currentObject= *objectsToDelete.begin();
+        //use worldObjects.erase(position)
+        std::list<GameObject*>::iterator it = worldObjects.begin();
+        while((*it != currentObject) && (it != worldObjects.end())) {
+            it++;
+        }
+        if (*it == currentObject) {
+            worldObjects.erase(it);
+            objectsToDelete.pop_front();
+            delete currentObject;
+        }
+    }
+}
+
+
+void Game::evaluateInput() {
+
+}
 
 /**
  * @brief Game::detectCollision
@@ -346,76 +411,6 @@ void Game::detectCollision(std::list<GameObject*> *objToCalculate) {
         } // if
     } // for
 } // function
-
-
-
-
-
-/**
- * @brief Game::appendWorldObjects
- * @param playerPointer
- * Diese Funktion fügt der Spielwelt dynamisch Gegner hinzu. In jedem Zeitschritt wird die sortierte Liste
- * levelSpawn vom Anfang her durchlaufen. Ist die Distanz des Spielers zum Gegner kleiner als die Distanz levelSpawn,
- * so wird das Objekt den worldObjects hinzugefügt und aus levelSpawn gelöscht. Die for-Schleife läuft solange, bis
- * das erste Mal ein Objekt weiter als levelSpawn vom Spieler entfernt ist. Dann wird abgebrochen, da alle folgenden
- * Objekte auf Grund der Sortierung noch weiter entfernt sein werden.
- * @author Simon
- */
-void Game::appendWorldObjects(Player *playerPointer) {
-    while (!(levelSpawn.empty())) {
-        GameObject *currentObj = *levelSpawn.begin();
-        if ( (currentObj->getPosX() - playerPointer->getPosX()) < spawnDistance ) {
-            worldObjects.push_back(currentObj);
-            levelSpawn.pop_front();
-        } else {
-            break;
-        }
-    }
-}
-
-
-/**
- * @brief Game::reduceWorldObjects
- * @param playerPointer
- * Die Funktion reduceWorldObjects löscht die Zeiger auf die GameObjects aus dem Spiel, von denen der Spieler bereits
- * weiter rechts als die spawnDistance entfernt ist.
- * Entfernt Bierkrüge, die im letzten Durchlauf mit Gegenständen kollidiert sind
- * @todo Objekte löschen anstatt nur die Zeiger aus der Liste entfernen
- * @author Simon, Johann
- */
-void Game::reduceWorldObjects(Player *playerPointer) {
-
-    while (!(worldObjects.empty())) {
-        GameObject *currentObj = *worldObjects.begin();
-        if ((playerPointer->getPosX() - currentObj->getPosX()) > spawnDistance) {
-            worldObjects.pop_front();
-            delete currentObj;
-        } else {
-            break;
-        }
-    }
-
-    //Entferne die Bierkrüge die an Wände oder Gegner, etc. gestoßen sind.
-    objectsToDelete.sort(compareGameObjects());
-    while (!(objectsToDelete.empty())) {
-        GameObject *currentObject= *objectsToDelete.begin();
-        //use worldObjects.erase(position)
-        std::list<GameObject*>::iterator it = worldObjects.begin();
-        while((*it != currentObject) && (it != worldObjects.end())) {
-            it++;
-        }
-        if (*it == currentObject) {
-            worldObjects.erase(it);
-            objectsToDelete.pop_front();
-            delete currentObject;
-        }
-    }
-}
-
-
-void Game::evaluateInput() {
-
-}
 
 
 /**
