@@ -91,6 +91,7 @@ private:
     void makeTestWorld();
     void loadLevel1();
     void loadLevel2();
+    void colTestLevel();
 
     /// In der Welt befindliche Objekte
     std::list<GameObject*> worldObjects;

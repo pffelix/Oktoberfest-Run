@@ -75,8 +75,9 @@ int Game::start() {
 
     // Level erstellen bedeutet levelInitial und levelSpawn füllen
     //makeTestWorld();
-    loadLevel2();
     //loadLevel1();
+    //loadLevel2();
+    colTestLevel();
 
     // Fundamentale stepSize setzen
     stepSize = 500;
@@ -245,7 +246,7 @@ int Game::step() {
  * Die Kollision wird dabei immer aus Sicht von ObjektA berechnet. D.h. Variablen wie movingRight
  * bedeuten, dass ObjektA sich nach rechts bewegt hat und dabei ObejektB von Links getroffen hat.
  * @todo Objekt-Definitionen mit eventHandling abstimmen, Koordinatendefinition, Overlap-Problem, <= Fälle
- * @author Simon
+ * @author Simon, johann
  */
 void Game::detectCollision(std::list<GameObject*> *objToCalculate) {
 
@@ -383,6 +384,7 @@ void Game::appendWorldObjects(Player *playerPointer) {
  * @author Simon, Johann
  */
 void Game::reduceWorldObjects(Player *playerPointer) {
+
     while (!(worldObjects.empty())) {
         GameObject *currentObj = *worldObjects.begin();
         if ((playerPointer->getPosX() - currentObj->getPosX()) > spawnDistance) {
@@ -894,6 +896,36 @@ void Game::loadLevel2() {
     levelSpawn.push_back(speedEnemy1);
     // Sortiere die Liste levelSpawn
     levelSpawn.sort(compareGameObjects());
+
+    // Erstelle das Spieler-Objekt und setze den playerObjPointer
+    GameObject *playerObject = new Player(2*obs, 2*obs, 2*obs, 6*obs, player, stopping, 1*obs);
+    playerObjPointer = dynamic_cast<Player*>(playerObject);
+}
+
+void Game::colTestLevel() {
+    /// Skalierungsfaktor für Objekte im Spiel
+    int obs = 10;
+
+    // Erstelle statische Objekte
+    GameObject *obstackle1 = new GameObject(15*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle2 = new GameObject(21*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle3 = new GameObject(31*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+
+    // Erstelle PowerUp
+    GameObject *powerUp1 = new PowerUp(10*obs, 0*obs, 2*obs, 2*obs, 1,1,1,1);
+
+
+    // Füge statische Objekte der Liste levelInitial hinzu
+    levelInitial.push_back(powerUp1);
+    levelInitial.push_back(obstackle1);
+    levelInitial.push_back(obstackle2);
+    levelInitial.push_back(obstackle3);
+
+    // Erstelle Gegner
+    GameObject *enemy1 = new Enemy(30*obs, 0*obs, 2*obs, 6*obs, enemy, contacting, -1*obs);
+
+    // Füge bewegliche Pbjekte in zugehörige liste
+    levelSpawn.push_back(enemy1);
 
     // Erstelle das Spieler-Objekt und setze den playerObjPointer
     GameObject *playerObject = new Player(2*obs, 2*obs, 2*obs, 6*obs, player, stopping, 1*obs);
