@@ -85,9 +85,9 @@ int Game::start() {
     // Spieler hinzufügen
     worldObjects.push_back(playerObjPointer);
     // Spawn-Distanz setzen
-    spawnDistance = 300;
+    spawnDistance = 1024;
     // Szenen-Breite setzen
-    sceneWidth = 300;
+    sceneWidth = 1024;
     // Zeiger auf Objekte aus levelInitial in worldObjects verlegen
     while (!(levelInitial.empty())) {
         GameObject *currentObject = *levelInitial.begin();
@@ -107,7 +107,7 @@ int Game::start() {
 
     // QGraphicsView Widget (Anzeigefenster) erstellen und einstellen
     scene = new QGraphicsScene;
-    scene->setSceneRect(0,0,1024,768);
+    scene->setSceneRect(0,0,100000,768);
     window = new QGraphicsView(scene);
     window->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     window->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
