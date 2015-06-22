@@ -37,7 +37,6 @@
 struct collisionStruct {
     GameObject *affectedObject;
     GameObject *causingObject;
-    enum collisionType collision;
     enum collisionDirection direction;
 };
 
@@ -67,7 +66,7 @@ public:
 
     struct stateStruct gameStats;
     //Liste von Kollisionen
-    std::list<struct collisionStruct> eventsToHandle;
+    std::list<struct collisionStruct> collisionsToHandle;
     struct stateStruct states;
     int start();
 

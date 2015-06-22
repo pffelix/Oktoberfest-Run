@@ -345,28 +345,106 @@ void Game::calculateMovement() {
 
 /**
  * @brief Game::detectCollision
- * Diese Funktion berechnet die Kollisionen, welche zwischen ObjektA und ObjektB auftreten.
- * Die Kollision wird dabei immer aus Sicht von ObjektA berechnet. D.h. Variablen wie movingRight
- * bedeuten, dass ObjektA sich nach rechts bewegt hat und dabei ObejektB von Links getroffen hat.
- * @todo Objekt-Definitionen mit eventHandling abstimmen, Koordinatendefinition, Overlap-Problem, <= Fälle
+ * Diese Funktion berechnet die Kollisionen, welche zwischen zwei Onjekten, affectedObject und causingObject auftreten. Außerdem wird
+ *      die Richtung aus der die Bewegung verursacht wird berechnet
+ * Die Kollision wird dabei immer aus Sicht von affectedObject berechnet. So als wäre der Rest des Levels als statisch zu betrachten...
+ *
  * @author Simon, johann
  */
 void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
 
+    int numerator;
+
     for (std::list<GameObject*>::iterator it=objectsToCalculate->begin(); it != objectsToCalculate->end(); ++it) {
 
         //aktuelles Gameobjekt herausnehmen
-        MovingObject *handleMovingObject = dynamic_cast<MovingObject*>(*it);
+        MovingObject *affectedObject = dynamic_cast<MovingObject*>(*it);
         // Prüfen, ob das aktuelle Objekt überhaupt vom Typ MovingObject ist
-        if (handleMovingObject != 0) {
+        if (affectedObject != 0) {
+            // affectedObject ist ein sich bewegendes Objekt
 
             // Liste möglicher Kollisionen anlegen
             std::list<GameObject*> possibleCollisions;
             /* Möglich Anzahl an Kollisionen WORST CASE:
-             *  von links:  4 (bei drei Ebenen)
-             *  von rechts: 5 (bei drei Ebenen)
+             *  von links:  4 (bei drei Ebenen) (evtl.5(6) Gegner in mehreren Ebenen 2(3))
+             *  von rechts: 5 (bei drei Ebenen) (evtl.6(7) Gegner in mehreren Ebenen 2(3))
              */
 
+            // vorherige 5 Objekte aus der Liste überprüfen, falls noch so viele in Liste enthalten
+            numerator = 0;
+            while ((numerator < 5) && (std::prev(it, numerator) != objectsToCalculate->begin())) {
+                // fügt den (numerator+1)ten Vorgänger vorne zur Liste der möglichen Kollisionen hinzu
+                                                        // dadurch bleibt Reihenfolge erhalten
+                possibleCollisions.push_front(*std::prev(it,numerator + 1));
+                numerator = numerator + 1;
+            }
+
+            /* durchlaufe Liste der möglichen Kollisionen mit posX kleiner/gleich als der des sich bewegenden Objekts
+             *      möglichen Kollisinen sind also: vonRechts, vonOben, vonUnten
+             */
+            while (!(possibleCollisions.empty())) {
+                // nehme erstes Objekt aus der Menge (mögliches getroffenes Objekt)
+                    // wird als statisches Objekt betrachtet
+                GameObject *causingObject = possibleCollisions.front();
+                possibleCollisions.pop_front();
+
+                // Kollision feststellen: Dazu ist Überschneidung in X- und Y-Richtung nötig
+
+                // Überschneidung in X-Richtung
+                int overlapX = (causingObject->getPosX() + causingObject->getLength()) - affectedObject->getPosX();
+                if (overlapX > 0) {
+                    /* Objekte überschneiden sich (statisches links von beweglichem)
+                     * Lage bezüglich Y-Richtung überprüfen
+                     *      3 Möglichkeiten: bewegendes Objekt unter, auf selber Höhe, drüber
+                     */
+                    if (affectedObject->getPosY() < causingObject->getPosY()) {
+                        // bewegendes Objekt unter statischem Objekt    -> vonRechts, vonUnten
+                        // overlapY: Überschneidung in Y-Richtung
+                        int overlapY = (affectedObject->getPosY() + affectedObject->getHeight()) - causingObject->getPosY();
+                        if (overlapX < overlapY) {
+                            // Überschneidung in X-Richtung ist größer als in Y-Richtung
+                                // Kollision vonUnten
+                            collisionStruct collision = {affectedObject, causingObject, fromBelow};
+                            collisionsToHandle.push_back(collision);
+                        } else if (overlapX == overlapY) {
+                            // Überschneidungen gleichgroß
+                                // Zwei Möglichkeiten: vonUnten, vonRechts
+                            if (!(affectedObject->getSpeedX() < 0)) {
+                                // wenn sich bewegendes Objekt nicht nach links bewegt, Kollision vonUnten
+                                collisionStruct collision = {affectedObject, causingObject, fromBelow};
+                                collisionsToHandle.push_back(collision);
+                            } else if ((affectedObject->getSpeedX() < 0) && (affectedObject->getSpeedY() > 0)) {
+                                //wenn sich das bewegende Objekt sowohl nach links alsauch nach oben bewegt erzeuge zwei Kollisionen
+                                collisionStruct collision = {affectedObject, causingObject, fromBelow};
+                                collisionsToHandle.push_back(collision);
+                                collision = {affectedObject, causingObject, fromRight};
+                                collisionsToHandle.push_back(collision);
+                            }
+                        } else {
+                            // Überschneidung in X-Richtung kleiner als in Y-Richtung
+                                // Kollision vonRechts
+                            collisionStruct collision = {affectedObject, causingObject, fromRight};
+                            collisionsToHandle.push_back(collision);
+                        }
+                    } else if (affectedObject->getPosY() == causingObject->getPosY()) {
+                        // beide Objekte auf selber Höhe                -> vonRechts
+                        collisionStruct collision = {affectedObject, causingObject, fromRight};
+                        collisionsToHandle.push_back(collision);
+                    } else {
+                        // bewegendes Objekt über statischem Objekt     -> von links, vonOben
+                    }
+                }
+            }//while(possibleCollisions)
+
+            // nachfolgende 6 Objekte aus der Liste überprüfen, falls noch so viele in Liste enthalten
+            numerator = 0;
+            while ((numerator < 6) && (std::next(it, numerator) != objectsToCalculate->end())) {
+                // fügt den (numerator+1)ten Nachfolger hinten zur Liste der möglichen Kollisionen hinzu
+                                                        // dadurch bleibt Reihenfolge erhalten
+                possibleCollisions.push_back(*std::next(it, numerator + 1));
+                numerator = numerator + 1;
+            }
+ /*
             // Vorheriges Element hinzufügen, falls currentObject nicht das erste Element ist.
             if (it != objectsToCalculate->begin()) {
                 possibleCollisions.push_back(*std::prev(it));
@@ -382,8 +460,9 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
                 if (std::next(it) != objectsToCalculate->end()) {
                     possibleCollision.push_back(*std::next(it, 2));
                 }
-            }
+            }*/
 
+/*
             // Durchlaufe die Liste der möglichen Kollisionen, bis sie leer ist
             while (!(possibleCollision.empty())) {
 
@@ -424,12 +503,12 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
                     if (ALeftFromB) {
                         colDir = fromLeft;
                         collisionStruct newCollision = {objA, objB, objA->getCollisionType(), colDir};
-                        eventsToHandle.push_back(newCollision);
+                        collisionsToHandle.push_back(newCollision);
                         qDebug("->Kollision von Links hat stattgefunden");
                     } else {
                         colDir = fromRight;
                         collisionStruct newCollision = {objA, objB, objA->getCollisionType(), colDir};
-                        eventsToHandle.push_back(newCollision);
+                        collisionsToHandle.push_back(newCollision);
                         qDebug("->Kollision von Rechts hat stattgefunden");
                     }
                 } else {
@@ -438,25 +517,25 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
                             colDir = fromAbove;
                             colDir = fromRight;
                             collisionStruct newCollision = {objA, objB, objA->getCollisionType(), colDir};
-                            eventsToHandle.push_back(newCollision);
+                            collisionsToHandle.push_back(newCollision);
                             qDebug("->Kollision von Oben hat stattgefunden");
                         } else {
                             colDir = fromBelow;
                             colDir = fromRight;
                             collisionStruct newCollision = {objA, objB, objA->getCollisionType(), colDir};
-                            eventsToHandle.push_back(newCollision);
+                            collisionsToHandle.push_back(newCollision);
                             qDebug("->Kollision von Unten hat stattgefunden");
                         }
                     }
                 }
 
-            } // while
-        } // if
-    } // for
+            } // while*/
+        } // if (cast)
+    } // for (gameObject)
 } // function
 
 /**
- * @brief Kollisionen in der Liste eventsToHandle werden der Reihe nach aus Sicht des affectedObjects bearbeitet.
+ * @brief Kollisionen in der Liste collisionsToHandle werden der Reihe nach aus Sicht des affectedObjects bearbeitet.
  * In einer Schleife wird das jeweils erst CollisionEvent bearbeitet. Dabei werden nur an dem Objekt affectedObject Änderungen vorgenommen.
  * Mögliche Objekte: Spieler(player), Gegner(enemy), Bierkrug(shot)
  * mögliche Kollision mit Spieler(player), Spielumfeld(obstacle), Gegner(enemy), Bierkrug(shot), Power-Up(powerUp)
@@ -471,9 +550,9 @@ void Game::handleCollisions() {
     Shoot *handleShoot;
 
     //Liste mit den Events abarbeiten
-    while (!eventsToHandle.empty()) {
-        handleEvent = eventsToHandle.front();
-        eventsToHandle.pop_front();
+    while (!collisionsToHandle.empty()) {
+        handleEvent = collisionsToHandle.front();
+        collisionsToHandle.pop_front();
 
         switch (handleEvent.affectedObject->getType()) {
 
