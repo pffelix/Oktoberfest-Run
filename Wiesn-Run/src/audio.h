@@ -33,7 +33,7 @@ public:
     QVector<float> getSamples();
     int getSamplenbr();
     short getVolume();
-    void setVolume();
+    void setVolume(short volume_audio_obj);
 
 private:
     /**

@@ -56,9 +56,8 @@ int Audio::getSamplenbr() {
 
 /**
  * @brief  Audio::getVolume
- *         "getVolume" gibt bei Aufruf zurück mit welcher Lautstärke die Samples im QVektor samples im Momment gespeichert sind.
- *         Hierfür wird die aktuelle maximale Betrags-Amplitude (Bereich 0...32767) der Audio Objekt Samples ausgelesen und in eine short
- *         Lautstärkeinformation volume (Bereich 0...1) umgerechnet.
+ *         "getVolume" gibt bei Aufruf zurück wie laut die Samples im Moment eingestellt sind.
+ *         Der Rückgabewert "volume" ist ein short Datentyp im Bereich (still) 0...1 (maximal laut)
  * @return short volume
  * @author Felix Pfreundtner
  */
@@ -66,8 +65,14 @@ short Audio::getVolume() {
     return volume;
 }
 
-void Audio::setVolume(){
-
+/**
+ * @brief  Audio::setVolume
+ *         "setVolume" setzt bei Aufruf für das Audio Objekt einen Lautstärkinformations Wert "volume".
+ *         "volume" ist ein short Datentyp im Bereich (still) 0...1 (maximal laut).
+ * @author Felix Pfreundtner
+ */
+void Audio::setVolume(short volume_audio_obj){
+    volume = volume_audio_obj;
 }
 
 
