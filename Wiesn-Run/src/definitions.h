@@ -53,19 +53,6 @@ enum objectType {
 };
 
 /**
- * @brief Enumerator für den Kollisions-Typ
- * Für die Kollisionsberechnung ist es wichtig, ob eine Kollision das bewegliche Objekt stoppt (stopping),
- * eventuell stoppt (contacting) oder das bewegliche Objekt einfach hindurchgeht (traversing).
- * obstacle:        stopping
- * enemy:           contacting (das Stoppen hängt davon ab, ob der Player immun ist)
- * beer/Power-Ups:  traversing
- * @author Johann, Simon
- */
-enum collisionType {
-    stopping, contacting, travesing
-};
-
-/**
  * @brief Enumerator für die Kollisions-Richtung
  * Zur Bewegungskorrektur muss klar sein, ob der Spieler ein anderes Objekt von der Seite oder von Oben/Unten berührt hat.
  * Da auch aus Gegner-Sicht die Kollision berechnet wird, gibt es auch Kollisionen von rechts.

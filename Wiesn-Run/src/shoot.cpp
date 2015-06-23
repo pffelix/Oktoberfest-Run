@@ -12,7 +12,7 @@
  * @author Johann
  */
 //Da Länge und Breite konstante Werte beim Bierkrug sind, zur Zeit nur Optinal
-Shoot::Shoot(int posX, int posY, int speedX, objectType origin) : MovingObject(posX, posY, 3, 5, shot, travesing, speedX, 0) {
+Shoot::Shoot(int posX, int posY, int speedX, objectType origin) : MovingObject(posX, posY, 3, 5, shot, speedX, 0) {
     inflictedDamage = 10;
     this->origin = origin;
 }

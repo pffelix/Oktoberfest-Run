@@ -316,6 +316,7 @@ void Game::evaluateInput() {
 /**
  * @brief Geht die worldObjects durch und aktualisiert bei jedem die Position
  * wird momentan auch über Debug ausgegeben
+ * @TODO Lösche Gegner, die schon langgenug tot sind;
  * @author Rupert, Johann
  */
 void Game::calculateMovement() {
@@ -918,9 +919,9 @@ void Game::playSound(std::list<struct soundStruct> *soundEvents) {
  * @author Rupert, Simon
  */
 void Game::makeTestWorld() {
-    GameObject *object1 = new GameObject(100,0,60,80,obstacle,stopping);
-    GameObject *object2 = new GameObject(180,0,60,80,obstacle,stopping);
-    Player *objectPlayer = new Player(20,0,20,60,player,stopping,8);
+    GameObject *object1 = new GameObject(100,0,60,80,obstacle);
+    GameObject *object2 = new GameObject(180,0,60,80,obstacle);
+    Player *objectPlayer = new Player(20,0,20,60,player,8);
     worldObjects.push_back(object1);
     worldObjects.push_back(object2);
     worldObjects.push_back(objectPlayer);
@@ -940,12 +941,12 @@ void Game::loadLevel1() {
     int obs = 10;
 
     // Erstelle statische Objekte
-    GameObject *obstackle1 = new GameObject(30*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle2 = new GameObject(40*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle3 = new GameObject(48*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle4 = new GameObject(55*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle5 = new GameObject(76*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle6 = new GameObject(90*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle1 = new GameObject(30*obs, 0*obs, 8*obs, 6*obs, obstacle);
+    GameObject *obstackle2 = new GameObject(40*obs, 0*obs, 8*obs, 6*obs, obstacle);
+    GameObject *obstackle3 = new GameObject(48*obs, 0*obs, 8*obs, 6*obs, obstacle);
+    GameObject *obstackle4 = new GameObject(55*obs, 0*obs, 8*obs, 6*obs, obstacle);
+    GameObject *obstackle5 = new GameObject(76*obs, 0*obs, 8*obs, 6*obs, obstacle);
+    GameObject *obstackle6 = new GameObject(90*obs, 0*obs, 8*obs, 6*obs, obstacle);
     GameObject *powerUp1 = new PowerUp(10*obs, 0*obs, 2*obs, 2*obs, 2, -1, 0, 0);
     GameObject *powerUp2 = new PowerUp(20*obs, 0*obs, 2*obs, 2*obs, 0, 2, 1, 0);
     // Füge statische Objekte der Liste levelInitial hinzu
@@ -961,7 +962,7 @@ void Game::loadLevel1() {
     levelInitial.sort(compareGameObjects());
 
     // Erstelle das Spieler-Objekt und setze den playerObjPointer
-    GameObject *playerObject = new Player(1*obs, 0*obs, 3*obs, 6*obs, player, stopping, 1*obs);
+    GameObject *playerObject = new Player(1*obs, 0*obs, 3*obs, 6*obs, player, 1*obs);
     playerObjPointer = dynamic_cast<Player*>(playerObject);
 }
 
@@ -971,12 +972,12 @@ void Game::loadLevel2() {
     int obs = 10;
 
     // Erstelle statische Objekte
-    GameObject *obstackle1 = new GameObject(40*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle2 = new GameObject(60*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle3 = new GameObject(78*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle4 = new GameObject(95*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle5 = new GameObject(126*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle6 = new GameObject(160*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle1 = new GameObject(40*obs, 0*obs, 8*obs, 6*obs, obstacle);
+    GameObject *obstackle2 = new GameObject(60*obs, 0*obs, 8*obs, 6*obs, obstacle);
+    GameObject *obstackle3 = new GameObject(78*obs, 0*obs, 8*obs, 6*obs, obstacle);
+    GameObject *obstackle4 = new GameObject(95*obs, 0*obs, 8*obs, 6*obs, obstacle);
+    GameObject *obstackle5 = new GameObject(126*obs, 0*obs, 8*obs, 6*obs, obstacle);
+    GameObject *obstackle6 = new GameObject(160*obs, 0*obs, 8*obs, 6*obs, obstacle);
     // Füge statische Objekte der Liste levelInitial hinzu
     levelInitial.push_back(obstackle1);
     levelInitial.push_back(obstackle2);
@@ -995,10 +996,10 @@ void Game::loadLevel2() {
     levelInitial.sort(compareGameObjects());
 
     // Erstelle Gegner
-    GameObject *enemy1 = new Enemy(50*obs, 0*obs, 2*obs, 6*obs, enemy, contacting, -1*obs);
-    GameObject *enemy2 = new Enemy(85*obs, 0*obs, 2*obs, 6*obs, enemy, contacting, -1*obs);
-    GameObject *enemy3 = new Enemy(140*obs, 0*obs, 2*obs, 6*obs, enemy, contacting, -1*obs);
-    GameObject *speedEnemy1 = new Enemy(135*obs, 0*obs, 2*obs, 8*obs, enemy, contacting, -2*obs);
+    GameObject *enemy1 = new Enemy(50*obs, 0*obs, 2*obs, 6*obs, enemy, -1*obs);
+    GameObject *enemy2 = new Enemy(85*obs, 0*obs, 2*obs, 6*obs, enemy, -1*obs);
+    GameObject *enemy3 = new Enemy(140*obs, 0*obs, 2*obs, 6*obs, enemy, -1*obs);
+    GameObject *speedEnemy1 = new Enemy(135*obs, 0*obs, 2*obs, 8*obs, enemy, -2*obs);
     levelSpawn.push_back(enemy1);
     levelSpawn.push_back(enemy2);
     levelSpawn.push_back(enemy3);
@@ -1007,7 +1008,7 @@ void Game::loadLevel2() {
     levelSpawn.sort(compareGameObjects());
 
     // Erstelle das Spieler-Objekt und setze den playerObjPointer
-    GameObject *playerObject = new Player(2*obs, 2*obs, 2*obs, 6*obs, player, stopping, 1*obs);
+    GameObject *playerObject = new Player(2*obs, 2*obs, 2*obs, 6*obs, player, 1*obs);
     playerObjPointer = dynamic_cast<Player*>(playerObject);
 }
 
@@ -1016,27 +1017,27 @@ void Game::colTestLevel() {
     int obs = 10;
 
     // Erstelle statische Objekte
-    GameObject *obstackle1 = new GameObject(10*obs, 0*obs, 6*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle2 = new GameObject(25*obs, 0*obs, 6*obs, 6*obs, obstacle, stopping);
-    //GameObject *obstackle3 = new GameObject(40*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle1 = new GameObject(0*obs, 0*obs, 6*obs, 3*obs, obstacle);
+    GameObject *obstackle2 = new GameObject(25*obs, 0*obs, 6*obs, 6*obs, obstacle);
+    //GameObject *obstackle3 = new GameObject(40*obs, 0*obs, 8*obs, 6*obs, obstacle);
 
     // Erstelle PowerUp
-    //GameObject *powerUp1 = new PowerUp(10*obs, 0*obs, 2*obs, 2*obs, 1,1,1,1);
+    GameObject *powerUp1 = new PowerUp(30*obs, 0*obs, 2*obs, 2*obs, 1,1,1,1);
 
 
     // Füge statische Objekte der Liste levelInitial hinzu
-    //levelInitial.push_back(powerUp1);
+    levelInitial.push_back(powerUp1);
     levelInitial.push_back(obstackle1);
     levelInitial.push_back(obstackle2);
     //levelInitial.push_back(obstackle3);
 
     // Erstelle Gegner
-    GameObject *enemy1 = new Enemy(20*obs, 0*obs, 2*obs, 2*obs, enemy, contacting, -1*obs);
+    GameObject *enemy1 = new Enemy(20*obs, 0*obs, 2*obs, 2*obs, enemy, -1*obs);
 
     // Füge bewegliche Pbjekte in zugehörige liste
     levelSpawn.push_back(enemy1);
 
     // Erstelle das Spieler-Objekt und setze den playerObjPointer
-    GameObject *playerObject = new Player(2*obs, 2*obs, 2*obs, 6*obs, player, stopping, 0);
+    GameObject *playerObject = new Player(0*obs, 2*obs, 2*obs, 6*obs, player, 1*obs);
     playerObjPointer = dynamic_cast<Player*>(playerObject);
 }
