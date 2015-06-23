@@ -372,6 +372,8 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
              *  von rechts: 5 (bei drei Ebenen) (evtl.6(7) Gegner in mehreren Ebenen 2(3))
              */
 
+
+//Kollisionen von Rechts
             // vorherige 5 Objekte aus der Liste überprüfen, falls noch so viele in Liste enthalten
             numerator = 0;
             while ((numerator < 5) && (std::prev(it, numerator) != objectsToCalculate->begin())) {
@@ -453,16 +455,17 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
                                 // Kollision vonOben
                         } else {
                             //sonst Kollision vonOben
-                                //Ist um eventuelle Fehler beim auftreten des "DauerFallens zu verhindern
+                                //Ist um eventuelle Fehler beim auftreten des "Dauer-Fallens" zu verhindern
                             collisionStruct collision = {affectedObject, causingObject, fromAbove};
                             collisionsToHandle.push_back(collision);
                         }
                         // bewegendes Objekt über statischem
-
                     }
                 }
             }//while(possibleCollisions)
 
+
+//Kollisionen von Links
             // nachfolgende 6 Objekte aus der Liste überprüfen, falls noch so viele in Liste enthalten
             numerator = 0;
             while ((numerator < 6) && (std::next(it, numerator) != objectsToCalculate->end())) {
@@ -471,92 +474,88 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
                 possibleCollisions.push_back(*std::next(it, numerator + 1));
                 numerator = numerator + 1;
             }
- /*
-            // Vorheriges Element hinzufügen, falls currentObject nicht das erste Element ist.
-            if (it != objectsToCalculate->begin()) {
-                possibleCollisions.push_back(*std::prev(it));
-                // Da das vorherige Element erfolgreich hinzugefügt wurde, prüfe, ob noch ein Element hinzugefügt werden kann
-                if (std::prev(it) != objectsToCalculate->begin()) {
-                    possibleCollision.push_back(*std::prev(it, 2));
-                }
-            }
-            // Nächstes Element hinzufügen, falls currentObject nicht das letze Element ist.
-            if (it != objectsToCalculate->end()) {
-                possibleCollision.push_back(*std::next(it));
-                // Da nächstes Element erfolgreich hinzugefügt wurde, prüfe, ob noch ein Element hinzugefügt werden kann
-                if (std::next(it) != objectsToCalculate->end()) {
-                    possibleCollision.push_back(*std::next(it, 2));
-                }
-            }*/
 
-/*
-            // Durchlaufe die Liste der möglichen Kollisionen, bis sie leer ist
-            while (!(possibleCollision.empty())) {
+            /* durchlaufe Liste der möglichen Kollisionen mit posX kleiner/gleich als der des sich bewegenden Objekts
+             *      möglichen Kollisinen sind also: vonRechts, vonOben, vonUnten
+             */
+            while (!(possibleCollisions.empty())) {
+                // nehme erstes Objekt aus der Menge (mögliches getroffenes Objekt)
+                    // wird als statisches Objekt betrachtet
+                GameObject *causingObject = possibleCollisions.front();
+                possibleCollisions.pop_front();
 
-                int overlapX;
-                int overlapY;
+                // Kollision feststellen: Dazu ist Überschneidung in X- und Y-Richtung nötig
 
-                // Setze das erste Objekt in der Liste als ObjektB (das getroffene Objekt) und lösche es aus der Liste
-                GameObject *objB = *possibleCollision.begin();
-                possibleCollision.pop_front();
-
-                // Pürfen und Setzen, ob sich A links/rechts bzw. über/unter B befindet
-                bool ALeftFromB = objA->getPosX() < objB->getPosX();
-                bool AAboveB = (objA->getPosY() + objA->getHeight()) >= (objB->getPosY() + objB->getHeight());
-
-                // Berechne die Überschneidung in X-Richtung abhänging von der relativen Position von A zu B
-                if (ALeftFromB) {
-                    overlapX = objA->getPosX() + (objA->getLength() / 2) - (objB->getPosX() - (objB->getLength() / 2));
-                } else {
-                    overlapX = (objB->getPosX() + (objB->getLength() / 2)) - (objA->getPosX() - (objA->getLength() / 2));
-                }
-
-                // Berechne die Überschneidung in Y-Richtung abhängig von der relativen Position von A zu B
-                if (AAboveB) {
-                    overlapY = (objB->getPosY() + (objB->getHeight() / 1)) - (objA->getPosY());
-                } else {
-                    overlapY = (objA->getPosY() + (objA->getHeight() / 1)) - (objB->getPosY());
-                }
-
-                collisionDirection colDir;
-
-                // Prüfe, aus welcher Richtung die Kollision stattgefunden hat.
-                // Für eine Kollision muss gelten...
-                // ...von Links: (overlapX < overlapY) && (overlapX > 0) && ALeftFromB
-                // ...von Rechts: (overlapX < overlapY) && (overlapx > 0) && !ALeftFromB
-                //...von Oben: (overlapY < overlapX) && (overlapY > 0) && AAboveB
-                //...von Unten: (overlapY < overlapX) && (overlapY > 0) && !AAboveB
-                if ((overlapX < overlapY) && (overlapX > 0)) {
-                    if (ALeftFromB) {
-                        colDir = fromLeft;
-                        collisionStruct newCollision = {objA, objB, objA->getCollisionType(), colDir};
-                        collisionsToHandle.push_back(newCollision);
-                        qDebug("->Kollision von Links hat stattgefunden");
-                    } else {
-                        colDir = fromRight;
-                        collisionStruct newCollision = {objA, objB, objA->getCollisionType(), colDir};
-                        collisionsToHandle.push_back(newCollision);
-                        qDebug("->Kollision von Rechts hat stattgefunden");
-                    }
-                } else {
-                    if ((overlapY <= overlapX) && (overlapY > 0)) {
-                        if (AAboveB) {
-                            colDir = fromAbove;
-                            colDir = fromRight;
-                            collisionStruct newCollision = {objA, objB, objA->getCollisionType(), colDir};
-                            collisionsToHandle.push_back(newCollision);
-                            qDebug("->Kollision von Oben hat stattgefunden");
+                // Überschneidung in X-Richtung
+                int overlapX = (affectedObject->getPosX() + affectedObject->getLength()) - causingObject->getPosX();
+                if (overlapX > 0) {
+                    /* Objekte überschneiden sich (statisches rechts von beweglichem)
+                     * Lage bezüglich Y-Richtung überprüfen
+                     *      3 Möglichkeiten: bewegendes Objekt unter, auf selber Höhe, drüber
+                     */
+                    if (affectedObject->getPosY() < causingObject->getPosY()) {
+                        // bewegendes Objekt unter statischem Objekt    -> vonLinks, vonUnten
+                        // overlapY: Überschneidung in Y-Richtung
+                        int overlapY = (affectedObject->getPosY() + affectedObject->getHeight()) - causingObject->getPosY();
+                        if (overlapX < overlapY) {
+                            // Überschneidung in X-Richtung ist größer als in Y-Richtung
+                                // Kollision vonUnten
+                            collisionStruct collision = {affectedObject, causingObject, fromBelow};
+                            collisionsToHandle.push_back(collision);
+                        } else if (overlapX == overlapY) {
+                            // Überschneidungen gleichgroß
+                                // Zwei Möglichkeiten: vonUnten, vonLinks
+                            if (!(affectedObject->getSpeedX() > 0)) {
+                                // wenn sich bewegendes Objekt nicht nach rechts bewegt, Kollision vonUnten
+                                collisionStruct collision = {affectedObject, causingObject, fromBelow};
+                                collisionsToHandle.push_back(collision);
+                            } else if ((affectedObject->getSpeedX() > 0) && (affectedObject->getSpeedY() > 0)) {
+                                //wenn sich das bewegende Objekt sowohl nach rechts alsauch nach oben bewegt, erzeuge zwei Kollisionen
+                                collisionStruct collision = {affectedObject, causingObject, fromBelow};
+                                collisionsToHandle.push_back(collision);
+                                collision = {affectedObject, causingObject, fromLeft};
+                                collisionsToHandle.push_back(collision);
+                            } else {
+                                //wenn sich bewegendes Objekt nicht nach oben bewegt
+                                collisionStruct collision = {affectedObject, causingObject, fromLeft};
+                                collisionsToHandle.push_back(collision);
+                            }
                         } else {
-                            colDir = fromBelow;
-                            colDir = fromRight;
-                            collisionStruct newCollision = {objA, objB, objA->getCollisionType(), colDir};
-                            collisionsToHandle.push_back(newCollision);
-                            qDebug("->Kollision von Unten hat stattgefunden");
+                            // Überschneidung in X-Richtung kleiner als in Y-Richtung
+                                // Kollision vonLinks
+                            collisionStruct collision = {affectedObject, causingObject, fromLeft};
+                            collisionsToHandle.push_back(collision);
                         }
+                        // bewegendes Objekt unter statischem
+
+                    } else if (affectedObject->getPosY() == causingObject->getPosY()) {
+                        // beide Objekte auf selber Höhe            -> vonLinks
+                        collisionStruct collision = {affectedObject, causingObject, fromLeft};
+                        collisionsToHandle.push_back(collision);
+                    } else {
+                        // bewegendes Objekt über statischem        ->vonOben, vonLinks
+                        // overlapY: Überschneidung in Y-Richtung
+                        int overlapY = (causingObject->getPosY() + causingObject->getHeight()) - affectedObject->getPosY();
+                        if (overlapX < overlapY) {
+                            // Überschneidung in X-Richtung kleiner als in Y-Richtung
+                                // Kollision vonLinks
+                            collisionStruct collision = {affectedObject, causingObject, fromLeft};
+                            collisionsToHandle.push_back(collision);
+                            // Überschneidung in X-Richtung ist größer als in Y-Richtung
+                                // Kollision vonOben
+                        } else {
+                            //sonst Kollision vonOben
+                                //Ist um eventuelle Fehler beim auftreten des "Dauer-Fallens" zu verhindern
+                            collisionStruct collision = {affectedObject, causingObject, fromAbove};
+                            collisionsToHandle.push_back(collision);
+                        }
+                        // bewegendes Objekt über statischem
                     }
+
                 }
 
-            } // while*/
+            }//while(possibleCollisions)
+
         } // if (cast)
     } // for (gameObject)
 } // function
