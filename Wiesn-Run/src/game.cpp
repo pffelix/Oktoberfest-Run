@@ -80,7 +80,7 @@ int Game::start() {
     colTestLevel();
 
     // Fundamentale stepSize setzen
-    stepSize = 500;
+    stepSize = 1000;
 
     // Spieler hinzufügen
     worldObjects.push_back(playerObjPointer);
@@ -232,7 +232,9 @@ int Game::step() {
             appendWorldObjects(playerObjPointer);
             reduceWorldObjects(playerObjPointer);
             //    evaluateInput();
+            worldObjects.sort(compareGameObjects());
             calculateMovement();
+            worldObjects.sort(compareGameObjects());
             detectCollision(&worldObjects);
             handleCollisions();
 
@@ -419,6 +421,10 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
                                 collisionsToHandle.push_back(collision);
                                 collision = {affectedObject, causingObject, fromRight};
                                 collisionsToHandle.push_back(collision);
+                            } else {
+                                //wenn sich bewegendes Objekt nicht nach oben bewegt
+                                collisionStruct collision = {affectedObject, causingObject, fromRight};
+                                collisionsToHandle.push_back(collision);
                             }
                         } else {
                             // Überschneidung in X-Richtung kleiner als in Y-Richtung
@@ -426,12 +432,33 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
                             collisionStruct collision = {affectedObject, causingObject, fromRight};
                             collisionsToHandle.push_back(collision);
                         }
+                        // bewegendes Objekt unter statischem
+
                     } else if (affectedObject->getPosY() == causingObject->getPosY()) {
                         // beide Objekte auf selber Höhe                -> vonRechts
                         collisionStruct collision = {affectedObject, causingObject, fromRight};
                         collisionsToHandle.push_back(collision);
+                        // Objekte auf selber Höhe
+
                     } else {
-                        // bewegendes Objekt über statischem Objekt     -> von links, vonOben
+                        // bewegendes Objekt über statischem Objekt     -> vonRechts, vonOben
+                        // overlapY: Überschneidung in Y-Richtung
+                        int overlapY = (causingObject->getPosY() + causingObject->getHeight()) - affectedObject->getPosY();
+                        if (overlapX < overlapY) {
+                            // Überschneidung in X-Richtung kleiner als in Y-Richtung
+                                // Kollision vonRechts
+                            collisionStruct collision = {affectedObject, causingObject, fromRight};
+                            collisionsToHandle.push_back(collision);
+                            // Überschneidung in X-Richtung ist größer als in Y-Richtung
+                                // Kollision vonOben
+                        } else {
+                            //sonst Kollision vonOben
+                                //Ist um eventuelle Fehler beim auftreten des "DauerFallens zu verhindern
+                            collisionStruct collision = {affectedObject, causingObject, fromAbove};
+                            collisionsToHandle.push_back(collision);
+                        }
+                        // bewegendes Objekt über statischem
+
                     }
                 }
             }//while(possibleCollisions)
@@ -990,27 +1017,27 @@ void Game::colTestLevel() {
     int obs = 10;
 
     // Erstelle statische Objekte
-    GameObject *obstackle1 = new GameObject(15*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle2 = new GameObject(21*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle3 = new GameObject(40*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle1 = new GameObject(10*obs, 0*obs, 6*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle2 = new GameObject(25*obs, 0*obs, 6*obs, 6*obs, obstacle, stopping);
+    //GameObject *obstackle3 = new GameObject(40*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
 
     // Erstelle PowerUp
-    GameObject *powerUp1 = new PowerUp(10*obs, 0*obs, 2*obs, 2*obs, 1,1,1,1);
+    //GameObject *powerUp1 = new PowerUp(10*obs, 0*obs, 2*obs, 2*obs, 1,1,1,1);
 
 
     // Füge statische Objekte der Liste levelInitial hinzu
-    levelInitial.push_back(powerUp1);
+    //levelInitial.push_back(powerUp1);
     levelInitial.push_back(obstackle1);
     levelInitial.push_back(obstackle2);
-    levelInitial.push_back(obstackle3);
+    //levelInitial.push_back(obstackle3);
 
     // Erstelle Gegner
-    GameObject *enemy1 = new Enemy(30*obs, 0*obs, 2*obs, 6*obs, enemy, contacting, -1*obs);
+    GameObject *enemy1 = new Enemy(20*obs, 0*obs, 2*obs, 2*obs, enemy, contacting, -1*obs);
 
     // Füge bewegliche Pbjekte in zugehörige liste
     levelSpawn.push_back(enemy1);
 
     // Erstelle das Spieler-Objekt und setze den playerObjPointer
-    GameObject *playerObject = new Player(2*obs, 2*obs, 2*obs, 6*obs, player, stopping, 1*obs);
+    GameObject *playerObject = new Player(2*obs, 2*obs, 2*obs, 6*obs, player, stopping, 0);
     playerObjPointer = dynamic_cast<Player*>(playerObject);
 }
