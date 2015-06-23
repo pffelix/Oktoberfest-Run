@@ -80,7 +80,7 @@ int Game::start() {
     colTestLevel();
 
     // Fundamentale stepSize setzen
-    stepSize = 50;
+    stepSize = 100;
 
     // Menüs erstellen
     menuStart = new Menu(new std::string("Wiesn-Run"));
@@ -105,9 +105,9 @@ int Game::start() {
 
     // Spieler hinzufügen
     worldObjects.push_back(playerObjPointer);
-    //Grafik - Spieler der Scene hinzufügen
+    //Grafik - Spieler der Scene hinzufügen und window auf ihn zentrieren
     scene->addItem(playerObjPointer);
-    window->centerOn(playerObjPointer->getPosX() + 512 - 60 - 0.5*playerObjPointer->getLength(), 384);
+    window->centerOn(playerObjPointer->getPosX(), 384);
     // Spawn-Distanz setzen
     spawnDistance = 1024;
     // Szenen-Breite setzen
@@ -117,6 +117,8 @@ int Game::start() {
         GameObject *currentObject = *levelInitial.begin();
         worldObjects.push_back(currentObject);
         levelInitial.pop_front();
+        //Grafik
+        scene->addItem(currentObject);
     }
 
     // Event Filter installieren
@@ -287,6 +289,9 @@ void Game::reduceWorldObjects(Player *playerPointer) {
         GameObject *currentObj = *worldObjects.begin();
         if ((playerPointer->getPosX() - currentObj->getPosX()) > spawnDistance) {
             worldObjects.pop_front();
+            //Grafik - Objekte aus der Scene löschen
+            scene->removeItem(currentObj);
+
             delete currentObj;
         } else {
             break;
@@ -305,6 +310,10 @@ void Game::reduceWorldObjects(Player *playerPointer) {
         if (*it == currentObject) {
             worldObjects.erase(it);
             objectsToDelete.pop_front();
+
+            //Grafik - Bierkrüge löschen
+            scene->removeItem(currentObject);
+
             delete currentObject;
         }
     }
@@ -911,13 +920,13 @@ void Game::colTestLevel() {
     /// Skalierungsfaktor für Objekte im Spiel
     int obs = 10;
 
-    /*// Erstelle statische Objekte
-    GameObject *obstackle1 = new GameObject(15*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle2 = new GameObject(21*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle3 = new GameObject(40*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    // Erstelle statische Objekte
+    GameObject *obstackle1 = new GameObject(60*obs, 0*obs, 6*obs, 12*obs, obstacle, stopping);
+    GameObject *obstackle2 = new GameObject(90*obs, 0*obs, 6*obs, 12*obs, obstacle, stopping);
+    GameObject *obstackle3 = new GameObject(160*obs, 0*obs, 6*obs, 12*obs, obstacle, stopping);
 
     // Erstelle PowerUp
-    GameObject *powerUp1 = new PowerUp(10*obs, 0*obs, 2*obs, 2*obs, 1,1,1,1);
+    GameObject *powerUp1 = new PowerUp(40*obs, 0*obs, 2*obs, 2*obs, 1,1,1,1);
 
 
     // Füge statische Objekte der Liste levelInitial hinzu
@@ -925,7 +934,7 @@ void Game::colTestLevel() {
     levelInitial.push_back(obstackle1);
     levelInitial.push_back(obstackle2);
     levelInitial.push_back(obstackle3);
-
+/*
     // Erstelle Gegner
     GameObject *enemy1 = new Enemy(30*obs, 0*obs, 2*obs, 6*obs, enemy, contacting, -1*obs);
 
@@ -933,6 +942,6 @@ void Game::colTestLevel() {
     levelSpawn.push_back(enemy1);*/
 
     // Erstelle das Spieler-Objekt und setze den playerObjPointer
-    GameObject *playerObject = new Player(2*obs, 2*obs, 2*obs, 6*obs, player, stopping, 1*obs);
+    GameObject *playerObject = new Player(13*obs, 0*obs, 6*obs, 12*obs, player, stopping, 1*obs);
     playerObjPointer = dynamic_cast<Player*>(playerObject);
 }
