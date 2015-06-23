@@ -22,6 +22,7 @@ public:
     //Tod()
     bool getDeath() const;
     void setDeath(bool death);
+    int getDeathCooldown() const;
 
     //update()
     virtual void update();

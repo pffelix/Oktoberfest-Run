@@ -83,6 +83,14 @@ void Enemy::setDeath(bool death) {
 }
 
 /**
+ * @brief Enemy::getDeathCooldown
+ * @return deathCooldown
+ */
+int Enemy::getDeathCooldown() const {
+    return DeathCooldown;
+}
+
+/**
  * @brief Enemy::update
  * führt Bewegungen des Gegners aus und lässt ihn schießen
  *      , falls er lebt!
