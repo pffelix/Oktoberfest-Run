@@ -591,6 +591,7 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
  * Mögliche Objekte: Spieler(player), Gegner(enemy), Bierkrug(shot)
  * mögliche Kollision mit Spieler(player), Hindernis(obstacle), Gegner(enemy), Bierkrug(shot), Power-Up(powerUp)
  *
+ * @todo Gamestats sktualisieren/Highscore!!
  * @author Johann (15.6.15)
  */
 void Game::handleCollisions() {

@@ -4,8 +4,8 @@
 /// lastUpdate: update() 10.6 Johann
 
 Player::Player(int posX, int posY, int speedX) : MovingObject(posX, posY, player, speedX, -5) {
-    health = 100;
-    alcoholLevel = 10;
+    health = 3;
+    alcoholLevel = 5;
     jumpActive = false;
     jumpTableIndex = 0;
     ammunation = 0;

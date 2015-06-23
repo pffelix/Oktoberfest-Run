@@ -29,6 +29,11 @@ const int playerScale = 60;
  */
 const int maxSpeed = 10;
 
+/**
+ * @brief Anzahl gameloop-Durchläufe pro Sekunde
+ * wird in allen Klassen für die CooldownParameter benutzt
+ */
+const int frameRate = 20;
 
 /**
  * @brief wird von der Menu-Klasse zur Auswahl-Änderung benötigt
