@@ -5,12 +5,13 @@
 
 Player::Player(int posX, int posY, int speedX) : MovingObject(posX, posY, player, speedX, -5) {
     health = 3;
-    alcoholLevel = 5;
+    //Startpegel 5 alle 5 Sekunden wird eins abgebaut
+    alcoholLevel = 5 * (5 * frameRate);
     jumpActive = false;
     jumpTableIndex = 0;
     ammunation = 0;
     immunityCooldown = 0;
-    fireRate = 20;
+    fireRate = 1 * frameRate;
     fireCooldown = 0;
 }
 
@@ -58,7 +59,7 @@ int Player::getAlcoholLevel() const {
  */
 void Player::increaseAlcoholLevel(int additionalAlcohol) {
     //MaximalWerte
-    alcoholLevel = alcoholLevel + additionalAlcohol;
+    alcoholLevel = alcoholLevel + (additionalAlcohol * frameRate);
 }
 
 /**
@@ -72,7 +73,7 @@ void Player::increaseAlcoholLevel(int additionalAlcohol) {
  * Gibt an Ob der Alkoholpegel  auf Null fällt
  */
 bool Player::decreaseAlcoholLevel(int decreaseLevel) {
-    alcoholLevel = alcoholLevel - decreaseLevel;
+    alcoholLevel = alcoholLevel - (decreaseLevel * frameRate);
     if (alcoholLevel > 0) {
         return false;
     } else {
@@ -123,7 +124,7 @@ int Player::getImmunityCooldown() const {
  * Zahl der Frames
  */
 void Player::setImmunityCooldown(int immunityCooldown) {
-    this->immunityCooldown = immunityCooldown;
+    this->immunityCooldown = (immunityCooldown * frameRate);
 }
 
 /**
