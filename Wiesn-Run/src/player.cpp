@@ -41,6 +41,17 @@ void Player::setHealth(int health) {
 }
 
 /**
+ * @brief Player::setDamage
+ * @return Lebenszustand des Spielers: true = tot
+ */
+bool Player::receiveDamage(int damage) {
+    if (!(immunityCooldown > 0)) {
+        health = health - damage;
+    }
+    return !(health > 0);
+}
+
+/**
  * @brief Player::getAlcoholLevel
  * Gibt den Pegel des Spielers zurück
  *
@@ -123,8 +134,10 @@ int Player::getImmunityCooldown() const {
  * @param immunityCooldown
  * Zahl der Frames
  */
-void Player::setImmunityCooldown(int immunityCooldown) {
-    this->immunityCooldown = (immunityCooldown * frameRate);
+void Player::setImmunityCooldown(int remainingTime) {
+    if (immunityCooldown < remainingTime) {
+        immunityCooldown = (remainingTime * frameRate);
+    }
 }
 
 /**

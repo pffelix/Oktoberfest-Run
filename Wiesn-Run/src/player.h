@@ -12,23 +12,25 @@ public:
 
     //Leben()
     int getHealth() const;
-    void setHealth(int health); //zugefügter Schaden muss über eine Funktion geregelt werden
+    void setHealth(int health); /// Nur PowerUp
+    bool receiveDamage(int damage);
 
     //Alcoholpegel()
-    int getAlcoholLevel() const;
-    void increaseAlcoholLevel(int additionalAlcohol);
-    bool decreaseAlcoholLevel(int decreaseLevel);
+    int getAlcoholLevel() const;    /// Wird nicht benutzt 23.6
+    void increaseAlcoholLevel(int additionalAlcohol);   /// Schlechte Bezeichnung
+    bool decreaseAlcoholLevel(int decreaseLevel);       /// Schlechte Bezeichnung
 
     //Munnition()
-    int getAmmunatiuon() const;
-    void increaseAmmunation(int ammunationBonus);
-    void decreaseAmmunation();
+    int getAmmunatiuon() const;     /// Wird nicht benutzt 23.6
+    void increaseAmmunation(int ammunationBonus);   /// Schlechte Bezeichnung
+    void decreaseAmmunation();      /// Schlechte Bezeichnung
 
     //Schadensimunität()
-    int getImmunityCooldown() const;
-    void setImmunityCooldown(int immunityCooldown);
+    int getImmunityCooldown() const;    /// Wird nicht benutzt 23.6
+    void setImmunityCooldown(int remainingTime);
 
     //Sprung()
+    ///@todo Überarbeiten 24.6
     void setJump(bool jump);
     void setFall();
     void resetJump();
