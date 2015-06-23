@@ -24,6 +24,11 @@
  */
 const int playerScale = 60;
 
+/**
+ * @brief Geschwindigkeit mit der sich die beweglichen Objekte durch die Welt bewegen
+ */
+const int maxSpeed = 10;
+
 
 /**
  * @brief wird von der Menu-Klasse zur Auswahl-Änderung benötigt

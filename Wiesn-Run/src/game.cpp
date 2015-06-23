@@ -316,7 +316,7 @@ void Game::evaluateInput() {
 /**
  * @brief Geht die worldObjects durch und aktualisiert bei jedem die Position
  * wird momentan auch über Debug ausgegeben
- * @TODO Lösche Gegner, die schon langgenug tot sind;
+ * @todo Lösche Gegner, die schon langgenug tot sind;
  * @author Rupert, Johann
  */
 void Game::calculateMovement() {
@@ -326,7 +326,6 @@ void Game::calculateMovement() {
     for(it = worldObjects.begin(); it != worldObjects.end(); ++it) {
         GameObject *aktObject = *it;
 
-        string msg = "OBJECT Position: XPos=" + to_string(aktObject->getPosX());
         qDebug("%d Object Position: XPos=%d",aktObject->getType(), aktObject->getPosX());
         qDebug("%d Object Position: YPos=%d",aktObject->getType(), aktObject->getPosY());
         MovingObject *aktMovingObject = dynamic_cast<MovingObject*> (aktObject);    // Versuche GameObject in Moving Object umzuwandeln
@@ -335,14 +334,26 @@ void Game::calculateMovement() {
             //falls es sich um einen Gegner handelt feuern
             if (aktMovingObject->getType() == enemy){
                 if (dynamic_cast<Enemy*> (aktMovingObject)->getFireCooldown() == 0) {
-                    Shoot* enemyFire = new Shoot(aktMovingObject->getPosX(), (aktMovingObject->getPosY() + (aktMovingObject->getHeight() / 2)), (aktMovingObject->getSpeedX() * 2), enemy);
+                    Shoot *enemyFire;
+                    int direction;
+                    /* Bewegungrichtung für den Krug ermitteln
+                     * bei bewegendem Gegner in Richtung der Bewegung
+                     * bei stillstehenden in Richtung des Spielers
+                     */
+                    if (aktMovingObject->getSpeedX() == 0) {
+                        direction = playerObjPointer->getPosX() - aktMovingObject->getPosX();
+                    } else {
+                        direction = playerObjPointer->getSpeedX();
+                    }
+                    direction = direction / abs(direction);
+                    enemyFire = new Shoot(aktMovingObject->getPosX(), aktMovingObject->getPosY(), direction, enemy);
                     worldObjects.push_back(enemyFire);
                     enemyFire = 0;
                 }
             }
             qDebug("Object Speed: XSpeed=%d",aktMovingObject->getSpeedX());
         }
-
+        aktMovingObject = 0;
     }
 }
 
