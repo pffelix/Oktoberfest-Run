@@ -267,6 +267,8 @@ void Game::appendWorldObjects(Player *playerPointer) {
         if ( (currentObj->getPosX() - playerPointer->getPosX()) < spawnDistance ) {
             worldObjects.push_back(currentObj);
             levelSpawn.pop_front();
+            //Grafik - Gegner de Scene hinzufügen
+            scene->addItem(currentObj);
         } else {
             break;
         }
@@ -934,12 +936,12 @@ void Game::colTestLevel() {
     levelInitial.push_back(obstackle1);
     levelInitial.push_back(obstackle2);
     levelInitial.push_back(obstackle3);
-/*
-    // Erstelle Gegner
-    GameObject *enemy1 = new Enemy(30*obs, 0*obs, 2*obs, 6*obs, enemy, contacting, -1*obs);
 
-    // Füge bewegliche Pbjekte in zugehörige liste
-    levelSpawn.push_back(enemy1);*/
+    // Erstelle Gegner
+    GameObject *enemy1 = new Enemy(75*obs, 0*obs, 2*obs, 6*obs, enemy, contacting, -1*obs);
+
+    // Füge bewegliche Objekte in zugehörige liste
+    levelSpawn.push_back(enemy1);
 
     // Erstelle das Spieler-Objekt und setze den playerObjPointer
     GameObject *playerObject = new Player(13*obs, 0*obs, 6*obs, 12*obs, player, stopping, 1*obs);

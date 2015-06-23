@@ -10,6 +10,10 @@ Enemy::Enemy(int posX, int posY, int length, int height, objectType type, collis
     inflictedDamage = 10;
     death = false;
     DeathCooldown = 20;
+
+    //Grafik - Enemygrafik initialisieren
+    setPixmap(QPixmap(":/images/images/enemy.png"));
+    setPos(getPosX() - getLength()*0.5, 548);
 }
 
 Enemy::~Enemy() {
@@ -85,6 +89,10 @@ void Enemy::update() {
     } else {
         //Bewegung durchführen
         updatePosition();
+
+        //Grafik - Bewegung anzeigen
+        setPos(getPosX() - 0.5*getLength(), -getPosY() + 548);
+
         if (fireCooldown == 0) {
             fireCooldown = fireRate;
         } else {
