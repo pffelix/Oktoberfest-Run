@@ -3,11 +3,19 @@
 /// Class Enemy
 /// lastUpdate:  update() 10.6 Johann
 
-
-Enemy::Enemy(int posX, int posY, objectType type, int speedX) : MovingObject(posX, posY, type, speedX, -5) {
-    health = 50;
+/**
+ * @brief Konstruktor für ein Enemy-Objekt
+ * @param posX      : X-Position
+ * @param posY      : Y-Position
+ * @param speedX    : Geschwindigkeit in X-Richtung
+ *
+ * @todo Skalieren der Werte und fireCooldown erhöhen
+ */
+Enemy::Enemy(int posX, int posY, int speedX) : MovingObject(posX, posY, enemy, speedX, -5) {
+    health = 1;
+    ///Fire Cooldown für debug zwecke niedrig
     fireCooldown = 2;
-    inflictedDamage = 10;
+    inflictedDamage = 1;
     death = false;
     DeathCooldown = 20;
 }
@@ -46,6 +54,10 @@ int Enemy::getInflictedDamage() const {
     return inflictedDamage;
 }
 
+/**
+ * @brief Enemy::getFireCooldown
+ * @return fireCooldown
+ */
 int Enemy::getFireCooldown() const{
     return fireCooldown;
 }

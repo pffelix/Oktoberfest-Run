@@ -85,9 +85,9 @@ int Game::start() {
     // Spieler hinzufügen
     worldObjects.push_back(playerObjPointer);
     // Spawn-Distanz setzen
-    spawnDistance = 300;
+    spawnDistance = 1000;
     // Szenen-Breite setzen
-    sceneWidth = 300;
+    sceneWidth = 1000;
     // Zeiger auf Objekte aus levelInitial in worldObjects verlegen
     while (!(levelInitial.empty())) {
         GameObject *currentObject = *levelInitial.begin();
@@ -406,6 +406,8 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
                         // bewegendes Objekt unter statischem Objekt    -> vonRechts, vonUnten
                         // overlapY: Überschneidung in Y-Richtung
                         int overlapY = (affectedObject->getPosY() + affectedObject->getHeight()) - causingObject->getPosY();
+                        if (overlapY > 0) {
+                            // Kollision in Y-Richtung
                         if (overlapX < overlapY) {
                             // Überschneidung in X-Richtung ist größer als in Y-Richtung
                                 // Kollision vonUnten
@@ -436,6 +438,7 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
                             collisionsToHandle.push_back(collision);
                         }
                         // bewegendes Objekt unter statischem
+                        }
 
                     } else if (affectedObject->getPosY() == causingObject->getPosY()) {
                         // beide Objekte auf selber Höhe                -> vonRechts
@@ -447,6 +450,8 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
                         // bewegendes Objekt über statischem Objekt     -> vonRechts, vonOben
                         // overlapY: Überschneidung in Y-Richtung
                         int overlapY = (causingObject->getPosY() + causingObject->getHeight()) - affectedObject->getPosY();
+                        if (overlapY > 0) {
+                            // Kollision in Y-Richtung
                         if (overlapX < overlapY) {
                             // Überschneidung in X-Richtung kleiner als in Y-Richtung
                                 // Kollision vonRechts
@@ -459,6 +464,7 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
                                 //Ist um eventuelle Fehler beim auftreten des "Dauer-Fallens" zu verhindern
                             collisionStruct collision = {affectedObject, causingObject, fromAbove};
                             collisionsToHandle.push_back(collision);
+                        }
                         }
                     }// Lage y-Positionen
                 }
@@ -475,7 +481,7 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
                 numerator = numerator + 1;
             }
 
-            /* durchlaufe Liste der möglichen Kollisionen mit posX kleiner/gleich als der des sich bewegenden Objekts
+            /* durchlaufe Liste der möglichen Kollisionen mit posX größer/gleich als der des sich bewegenden Objekts
              *      möglichen Kollisinen sind also: vonRechts, vonOben, vonUnten
              */
             while (!(possibleCollisions.empty())) {
@@ -497,6 +503,8 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
                         // bewegendes Objekt unter statischem Objekt    -> vonLinks, vonUnten
                         // overlapY: Überschneidung in Y-Richtung
                         int overlapY = (affectedObject->getPosY() + affectedObject->getHeight()) - causingObject->getPosY();
+                        if (overlapY > 0) {
+                            // Kollision in Y-Richtung
                         if (overlapX < overlapY) {
                             // Überschneidung in X-Richtung ist größer als in Y-Richtung
                                 // Kollision vonUnten
@@ -527,6 +535,7 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
                             collisionsToHandle.push_back(collision);
                         }
                         // bewegendes Objekt unter statischem
+                        }
 
                     } else if (affectedObject->getPosY() == causingObject->getPosY()) {
                         // beide Objekte auf selber Höhe            -> vonLinks
@@ -536,6 +545,8 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
                         // bewegendes Objekt über statischem        ->vonOben, vonLinks
                         // overlapY: Überschneidung in Y-Richtung
                         int overlapY = (causingObject->getPosY() + causingObject->getHeight()) - affectedObject->getPosY();
+                        if (overlapY > 0) {
+                            // Kollision in Y-Richtung
                         if (overlapX < overlapY) {
                             // Überschneidung in X-Richtung kleiner als in Y-Richtung
                                 // Kollision vonLinks
@@ -548,6 +559,7 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
                                 //Ist um eventuelle Fehler beim auftreten des "Dauer-Fallens" zu verhindern
                             collisionStruct collision = {affectedObject, causingObject, fromAbove};
                             collisionsToHandle.push_back(collision);
+                        }
                         }
                     }// Lage Y-Positionen
                 }
@@ -1013,9 +1025,9 @@ void Game::colTestLevel() {
     int obs = 10;
 
     // Erstelle statische Objekte
-    GameObject *obstackle1 = new GameObject(0*obs, 0*obs, 6*obs, 3*obs, obstacle);
-    GameObject *obstackle2 = new GameObject(25*obs, 0*obs, 6*obs, 6*obs, obstacle);
-    //GameObject *obstackle3 = new GameObject(40*obs, 0*obs, 8*obs, 6*obs, obstacle);
+    GameObject *obstackle1 = new GameObject(0*obs, 0*obs, 6*obs, 6*obs, obstacle);
+    GameObject *obstackle2 = new GameObject(50*obs, 0*obs, 6*obs, 6*obs, obstacle);
+    GameObject *obstackle3 = new GameObject(63*obs, 0*obs, 8*obs, 6*obs, obstacle);
 
     // Erstelle PowerUp
     GameObject *powerUp1 = new PowerUp(30*obs, 0*obs, 1,1,1,1);
@@ -1025,15 +1037,17 @@ void Game::colTestLevel() {
     levelInitial.push_back(powerUp1);
     levelInitial.push_back(obstackle1);
     levelInitial.push_back(obstackle2);
-    //levelInitial.push_back(obstackle3);
+    levelInitial.push_back(obstackle3);
 
     // Erstelle Gegner
-    GameObject *enemy1 = new Enemy(20*obs, 0*obs, enemy, -1*obs);
+    GameObject *enemy1 = new Enemy(20*obs, 1*obs, enemy, 1*obs);
+    GameObject *enemy2 = new Enemy(44*obs, 0*obs, enemy, -1*obs);
 
     // Füge bewegliche Pbjekte in zugehörige liste
     levelSpawn.push_back(enemy1);
+    levelSpawn.push_back(enemy2);
 
     // Erstelle das Spieler-Objekt und setze den playerObjPointer
-    GameObject *playerObject = new Player(0*obs, 2*obs, player, 1*obs);
+    GameObject *playerObject = new Player(57*obs, 2*obs, player, 0*obs);
     playerObjPointer = dynamic_cast<Player*>(playerObject);
 }

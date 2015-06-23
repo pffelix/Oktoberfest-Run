@@ -3,7 +3,7 @@
 /// Class Player
 /// lastUpdate: update() 10.6 Johann
 
-Player::Player(int posX, int posY, objectType type, int speedX) : MovingObject(posX, posY, type, speedX, -5) {
+Player::Player(int posX, int posY, int speedX) : MovingObject(posX, posY, player, speedX, -5) {
     health = 100;
     alcoholLevel = 10;
     jumpActive = false;
