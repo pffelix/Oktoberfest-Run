@@ -335,7 +335,7 @@ void Game::calculateMovement() {
             //falls es sich um einen Gegner handelt feuern
             if (aktMovingObject->getType() == enemy){
                 if (dynamic_cast<Enemy*> (aktMovingObject)->getFireCooldown() == 0) {
-                    Shoot* enemyFire = new Shoot(aktMovingObject->getPosX(), aktMovingObject->getPosY(), (aktMovingObject->getSpeedX() * 2), enemy);
+                    Shoot* enemyFire = new Shoot(aktMovingObject->getPosX(), (aktMovingObject->getPosY() + (aktMovingObject->getHeight() / 2)), (aktMovingObject->getSpeedX() * 2), enemy);
                     worldObjects.push_back(enemyFire);
                     enemyFire = 0;
                 }
@@ -929,7 +929,7 @@ void Game::playSound(std::list<struct soundStruct> *soundEvents) {
 void Game::makeTestWorld() {
     GameObject *object1 = new GameObject(100,0,60,80,obstacle);
     GameObject *object2 = new GameObject(180,0,60,80,obstacle);
-    Player *objectPlayer = new Player(20,0,player,8);
+    Player *objectPlayer = new Player(20,0,8);
     worldObjects.push_back(object1);
     worldObjects.push_back(object2);
     worldObjects.push_back(objectPlayer);
@@ -970,7 +970,7 @@ void Game::loadLevel1() {
     levelInitial.sort(compareGameObjects());
 
     // Erstelle das Spieler-Objekt und setze den playerObjPointer
-    GameObject *playerObject = new Player(1*obs, 0*obs, player, 1*obs);
+    GameObject *playerObject = new Player(1*obs, 0*obs, 1*obs);
     playerObjPointer = dynamic_cast<Player*>(playerObject);
 }
 
@@ -1004,10 +1004,10 @@ void Game::loadLevel2() {
     levelInitial.sort(compareGameObjects());
 
     // Erstelle Gegner
-    GameObject *enemy1 = new Enemy(50*obs, 0*obs, enemy, -1*obs);
-    GameObject *enemy2 = new Enemy(85*obs, 0*obs, enemy, -1*obs);
-    GameObject *enemy3 = new Enemy(140*obs, 0*obs, enemy, -1*obs);
-    GameObject *speedEnemy1 = new Enemy(135*obs, 0*obs, enemy, -2*obs);
+    GameObject *enemy1 = new Enemy(50*obs, 0*obs, -1*obs);
+    GameObject *enemy2 = new Enemy(85*obs, 0*obs, -1*obs);
+    GameObject *enemy3 = new Enemy(140*obs, 0*obs, -1*obs);
+    GameObject *speedEnemy1 = new Enemy(135*obs, 0*obs, -2*obs);
     levelSpawn.push_back(enemy1);
     levelSpawn.push_back(enemy2);
     levelSpawn.push_back(enemy3);
@@ -1016,7 +1016,7 @@ void Game::loadLevel2() {
     levelSpawn.sort(compareGameObjects());
 
     // Erstelle das Spieler-Objekt und setze den playerObjPointer
-    GameObject *playerObject = new Player(2*obs, 2*obs, player, 1*obs);
+    GameObject *playerObject = new Player(2*obs, 2*obs, 1*obs);
     playerObjPointer = dynamic_cast<Player*>(playerObject);
 }
 
@@ -1040,14 +1040,14 @@ void Game::colTestLevel() {
     levelInitial.push_back(obstackle3);
 
     // Erstelle Gegner
-    GameObject *enemy1 = new Enemy(20*obs, 1*obs, enemy, 1*obs);
-    GameObject *enemy2 = new Enemy(44*obs, 0*obs, enemy, -1*obs);
+    GameObject *enemy1 = new Enemy(20*obs, 1*obs, 1*obs);
+    GameObject *enemy2 = new Enemy(44*obs, 0*obs, -1*obs);
 
     // Füge bewegliche Pbjekte in zugehörige liste
     levelSpawn.push_back(enemy1);
     levelSpawn.push_back(enemy2);
 
     // Erstelle das Spieler-Objekt und setze den playerObjPointer
-    GameObject *playerObject = new Player(57*obs, 2*obs, player, 0*obs);
+    GameObject *playerObject = new Player(57*obs, 2*obs, 0*obs);
     playerObjPointer = dynamic_cast<Player*>(playerObject);
 }
