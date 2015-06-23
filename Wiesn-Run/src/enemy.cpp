@@ -13,7 +13,7 @@ Enemy::Enemy(int posX, int posY, int length, int height, objectType type, collis
 
     //Grafik - Enemygrafik initialisieren
     setPixmap(QPixmap(":/images/images/enemy.png"));
-    setPos(getPosX() - getLength()*0.5, 548);
+    setPos(getPosX() - getLength()*0.5, -getPosY() + 548);
 }
 
 Enemy::~Enemy() {

@@ -348,6 +348,7 @@ void Game::calculateMovement() {
                 if (dynamic_cast<Enemy*> (aktMovingObject)->getFireCooldown() == 0) {
                     Shoot* enemyFire = new Shoot(aktMovingObject->getPosX(), aktMovingObject->getPosY(), (aktMovingObject->getSpeedX() * 2), enemy);
                     worldObjects.push_back(enemyFire);
+                    scene->addItem(enemyFire);
                     enemyFire = 0;
                 }
             }
