@@ -460,8 +460,7 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
                             collisionStruct collision = {affectedObject, causingObject, fromAbove};
                             collisionsToHandle.push_back(collision);
                         }
-                        // bewegendes Objekt über statischem
-                    }
+                    }// Lage y-Positionen
                 }
             }//while(possibleCollisions)
 
@@ -550,12 +549,9 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
                             collisionStruct collision = {affectedObject, causingObject, fromAbove};
                             collisionsToHandle.push_back(collision);
                         }
-                        // bewegendes Objekt über statischem
-                    }
-
+                    }// Lage Y-Positionen
                 }
-
-            }//while(possibleCollisions)
+            }// while(possibleCollisions)
 
         } // if (cast)
     } // for (gameObject)
@@ -565,7 +561,7 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
  * @brief Kollisionen in der Liste collisionsToHandle werden der Reihe nach aus Sicht des affectedObjects bearbeitet.
  * In einer Schleife wird das jeweils erst CollisionEvent bearbeitet. Dabei werden nur an dem Objekt affectedObject Änderungen vorgenommen.
  * Mögliche Objekte: Spieler(player), Gegner(enemy), Bierkrug(shot)
- * mögliche Kollision mit Spieler(player), Spielumfeld(obstacle), Gegner(enemy), Bierkrug(shot), Power-Up(powerUp)
+ * mögliche Kollision mit Spieler(player), Hindernis(obstacle), Gegner(enemy), Bierkrug(shot), Power-Up(powerUp)
  *
  * @author Johann (15.6.15)
  */
@@ -585,7 +581,7 @@ void Game::handleCollisions() {
 
         case player: {
             /*Zusammenstöße des Spielers
-             *  mit Umfeld, Gegner, Schüssen, PowerUps
+             *  mit Hindernis, Gegner, Schüssen, PowerUps
              *
              * default: Spieler
              *
@@ -593,7 +589,7 @@ void Game::handleCollisions() {
              */
             switch (handleEvent.causingObject->getType()) {
             case obstacle: {
-                /* Zusammenstoß mit Umfeld
+                /* Zusammenstoß mit Hindernis
                  * Bewegungsabbruch, Positionskorrektur
                  *      4 Möglichkeiten: von oben, unten, links, rechts
                  */
@@ -692,7 +688,7 @@ void Game::handleCollisions() {
 
         case enemy: {
             /*Zusammenstöße des Gegners
-             *  mit Spieler, Umfeld, Schüssen
+             *  mit Spieler, Hindernis, Schüssen
              *
              * default: Gegner, PowerUps
              *      werden durchlaufen ohne Effekt
@@ -711,7 +707,7 @@ void Game::handleCollisions() {
                 break;
             }
             case obstacle: {
-                /* Zusammenstoß mit Umfeld
+                /* Zusammenstoß mit Hindernis
                  *  Bewegungsabbruch, Positionskorrektur, neue Bewegungsrichtung
                  */
                 qDebug("I change my direction");
@@ -768,21 +764,21 @@ void Game::handleCollisions() {
 
         case shot: {
             /*Zusammenstöße des Bierkrugs
-             * mit Umfeld
+             * mit Hindernis
              *
              * default: Spieler, Gegner, PowerUps
              *      wird jeweils in der Situation Spieler/Gegner bearbeitet, bei PowerUps keinen effekt
              */
 
             qDebug("It is going to hurt");
-            //Bierkrug löschen, bei Kollision mit Spielumfeld
+            //Bierkrug löschen, bei Kollision mit Hindernis
             if (handleEvent.causingObject->getType() == obstacle) {
                 objectsToDelete.push_back(dynamic_cast<Shoot*>(handleEvent.affectedObject));
             }
             break;
         }//end (case shot)
         default: {
-            /*Zusammenstöße von Umfeld und PowerUps
+            /*Zusammenstöße von Hindernis und PowerUps
              *      NICHT MÖGLICH!!!   da keine MovingObjects
              *
              * default nur um Fehlermeldungen zu vermeiden
@@ -921,7 +917,7 @@ void Game::playSound(std::list<struct soundStruct> *soundEvents) {
 void Game::makeTestWorld() {
     GameObject *object1 = new GameObject(100,0,60,80,obstacle);
     GameObject *object2 = new GameObject(180,0,60,80,obstacle);
-    Player *objectPlayer = new Player(20,0,20,60,player,8);
+    Player *objectPlayer = new Player(20,0,player,8);
     worldObjects.push_back(object1);
     worldObjects.push_back(object2);
     worldObjects.push_back(objectPlayer);
@@ -947,8 +943,8 @@ void Game::loadLevel1() {
     GameObject *obstackle4 = new GameObject(55*obs, 0*obs, 8*obs, 6*obs, obstacle);
     GameObject *obstackle5 = new GameObject(76*obs, 0*obs, 8*obs, 6*obs, obstacle);
     GameObject *obstackle6 = new GameObject(90*obs, 0*obs, 8*obs, 6*obs, obstacle);
-    GameObject *powerUp1 = new PowerUp(10*obs, 0*obs, 2*obs, 2*obs, 2, -1, 0, 0);
-    GameObject *powerUp2 = new PowerUp(20*obs, 0*obs, 2*obs, 2*obs, 0, 2, 1, 0);
+    GameObject *powerUp1 = new PowerUp(10*obs, 0*obs, 1,1,1,1);
+    GameObject *powerUp2 = new PowerUp(20*obs, 0*obs, 1,1,1,1);
     // Füge statische Objekte der Liste levelInitial hinzu
     levelInitial.push_back(obstackle1);
     levelInitial.push_back(obstackle2);
@@ -962,7 +958,7 @@ void Game::loadLevel1() {
     levelInitial.sort(compareGameObjects());
 
     // Erstelle das Spieler-Objekt und setze den playerObjPointer
-    GameObject *playerObject = new Player(1*obs, 0*obs, 3*obs, 6*obs, player, 1*obs);
+    GameObject *playerObject = new Player(1*obs, 0*obs, player, 1*obs);
     playerObjPointer = dynamic_cast<Player*>(playerObject);
 }
 
@@ -988,7 +984,7 @@ void Game::loadLevel2() {
     // Erstelle und Füge PowerUps hinzu
     GameObject *powerUps;
     for (int i = 0; i < 3; i++) {
-        powerUps = new PowerUp((2+i)*obs, 0*obs, 2*obs, 2*obs, -1, 2, 1, 0);
+        powerUps = new PowerUp((2+i)*obs, 0*obs, -1, 2, 1, 0);
         levelInitial.push_back(powerUps);
         powerUps = 0;
     }
@@ -996,10 +992,10 @@ void Game::loadLevel2() {
     levelInitial.sort(compareGameObjects());
 
     // Erstelle Gegner
-    GameObject *enemy1 = new Enemy(50*obs, 0*obs, 2*obs, 6*obs, enemy, -1*obs);
-    GameObject *enemy2 = new Enemy(85*obs, 0*obs, 2*obs, 6*obs, enemy, -1*obs);
-    GameObject *enemy3 = new Enemy(140*obs, 0*obs, 2*obs, 6*obs, enemy, -1*obs);
-    GameObject *speedEnemy1 = new Enemy(135*obs, 0*obs, 2*obs, 8*obs, enemy, -2*obs);
+    GameObject *enemy1 = new Enemy(50*obs, 0*obs, enemy, -1*obs);
+    GameObject *enemy2 = new Enemy(85*obs, 0*obs, enemy, -1*obs);
+    GameObject *enemy3 = new Enemy(140*obs, 0*obs, enemy, -1*obs);
+    GameObject *speedEnemy1 = new Enemy(135*obs, 0*obs, enemy, -2*obs);
     levelSpawn.push_back(enemy1);
     levelSpawn.push_back(enemy2);
     levelSpawn.push_back(enemy3);
@@ -1008,7 +1004,7 @@ void Game::loadLevel2() {
     levelSpawn.sort(compareGameObjects());
 
     // Erstelle das Spieler-Objekt und setze den playerObjPointer
-    GameObject *playerObject = new Player(2*obs, 2*obs, 2*obs, 6*obs, player, 1*obs);
+    GameObject *playerObject = new Player(2*obs, 2*obs, player, 1*obs);
     playerObjPointer = dynamic_cast<Player*>(playerObject);
 }
 
@@ -1022,7 +1018,7 @@ void Game::colTestLevel() {
     //GameObject *obstackle3 = new GameObject(40*obs, 0*obs, 8*obs, 6*obs, obstacle);
 
     // Erstelle PowerUp
-    GameObject *powerUp1 = new PowerUp(30*obs, 0*obs, 2*obs, 2*obs, 1,1,1,1);
+    GameObject *powerUp1 = new PowerUp(30*obs, 0*obs, 1,1,1,1);
 
 
     // Füge statische Objekte der Liste levelInitial hinzu
@@ -1032,12 +1028,12 @@ void Game::colTestLevel() {
     //levelInitial.push_back(obstackle3);
 
     // Erstelle Gegner
-    GameObject *enemy1 = new Enemy(20*obs, 0*obs, 2*obs, 2*obs, enemy, -1*obs);
+    GameObject *enemy1 = new Enemy(20*obs, 0*obs, enemy, -1*obs);
 
     // Füge bewegliche Pbjekte in zugehörige liste
     levelSpawn.push_back(enemy1);
 
     // Erstelle das Spieler-Objekt und setze den playerObjPointer
-    GameObject *playerObject = new Player(0*obs, 2*obs, 2*obs, 6*obs, player, 1*obs);
+    GameObject *playerObject = new Player(0*obs, 2*obs, player, 1*obs);
     playerObjPointer = dynamic_cast<Player*>(playerObject);
 }

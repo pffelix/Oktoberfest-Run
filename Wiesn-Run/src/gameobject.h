@@ -1,5 +1,6 @@
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
+
 #include "definitions.h"
 
 class GameObject {
@@ -7,6 +8,7 @@ class GameObject {
 public:
     //Konstruktor und Destruktor
     GameObject(int posX, int posY, int length, int height, objectType type);
+    GameObject(int posX, int posY, objectType type);
     virtual ~GameObject();
 
     //Position()

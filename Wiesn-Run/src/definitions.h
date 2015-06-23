@@ -15,6 +15,17 @@
 
 
 /**
+ * @brief Skalierungsfaktor für die Breite des Spielerobjekts bei 1024 Bildschirmbreite:
+ *                 Breite:Höhe
+ * Spieler, Gegner:     1:2
+ * Hindernisse:         1:2     ,     2:(1/3)           dabei ist das erste das Standardhindernis
+ * Power-Up:        (2/3):(2/3) ,
+ * Krug:            (1/3):(2/3)
+ */
+const int playerScale = 60;
+
+
+/**
  * @brief wird von der Menu-Klasse zur Auswahl-Änderung benötigt
  * @author Rupert
  */
@@ -45,7 +56,7 @@ enum gameState {
 
 /**
  * @brief Enumerator für den Objekt-Typ
- * Hier ist der Objekt-Typ gespeichert.
+ * um welche Art von Objekt handelt es sich
  * @author Johann
  */
 enum objectType {

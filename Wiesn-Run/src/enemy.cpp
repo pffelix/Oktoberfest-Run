@@ -4,7 +4,7 @@
 /// lastUpdate:  update() 10.6 Johann
 
 
-Enemy::Enemy(int posX, int posY, int length, int height, objectType type, int speedX) : MovingObject(posX, posY, length, height, type, speedX, -5) {
+Enemy::Enemy(int posX, int posY, objectType type, int speedX) : MovingObject(posX, posY, type, speedX, -5) {
     health = 50;
     fireCooldown = 2;
     inflictedDamage = 10;

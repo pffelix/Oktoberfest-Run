@@ -19,6 +19,30 @@ GameObject::GameObject(int posX, int posY, int length, int height, objectType ty
     this->height = height;
     this->type = type;
 }
+
+GameObject::GameObject(int posX, int posY, objectType type) {
+    this->posX = posX;
+    this->posY = posY;
+    this->type = type;
+
+    switch (type) {
+    case player: {
+        // Verhältnis 1:2 (b:h)
+    }
+    case enemy: {
+        // Verhältnis 1:2 (b:h)
+        this->length = playerScale;
+        this->height = playerScale * 2;
+        break;
+    }
+    case powerUp: {
+        // Verhältnis (2/3):(2/3)
+        this->length = playerScale * (2 / 3);
+        this->height = this->length;
+    }
+    };
+}
+
 GameObject::~GameObject() {
 
 }

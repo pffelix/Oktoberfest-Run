@@ -9,13 +9,14 @@ Spieler/Gegner:
 
 Obstacles:
 	1:2	60:120
-	5:1	100:20
+	5:1	120:20
 
 PowerUps:
 	1:1	40:40
 
 Krug:
-	1:2
+	1:2	20:40	(aufrecht)
+	2:1	40:20	(liegend)
 
 
 
