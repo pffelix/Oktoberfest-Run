@@ -22,6 +22,7 @@ public:
     struct playStruct {
         std::string name;
         std::list<float> volume;
+        bool play;
 
     };
 
