@@ -1100,6 +1100,17 @@ void Game::colTestLevel() {
 }
 
 
+/**
+ * @brief Game::loadFromFile
+ * @param fileSpecifier
+ * Funktion um Level-Dateien einzulesen. Als einziger Parameter wird ein QString mit dem Pfad zum levelFile übergeben.
+ * Es wird getestet, ob die Datei geöffnet werden kann. Ist dies möglich, so werden die Listen levelInitial und levelSpawn
+ * geleert und mit Objekten aus der Level-Datei gefüllt.
+ * Die Level-Datei wird zeilenweise ausgelesen. Beginnt eine Zeile mit den Schlüsselwörtern, z.B. "Player", "Enemy", "Obstacle" etc.,
+ * so wird das entsprechende Objekt angelegt und der zugehörigen Liste hinzugefügt. Alle Zeilen, die nicht mit Schlüsselwörtern beginnen
+ * werden übersprungen.
+ * @author Simon
+ */
 void Game::loadFromFile(QString fileSpecifier) {
 
     // Spezifizierte Datei öffnen
@@ -1119,6 +1130,9 @@ void Game::loadFromFile(QString fileSpecifier) {
 
             if (strlist.at(0) == "Player") {
                 qDebug() << "  Player-Eintrag gefunden.";
+                // Erstelle das Spieler-Objekt und setze den playerObjPointer
+                GameObject *playerObject = new Player(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt());
+                playerObjPointer = dynamic_cast<Player*>(playerObject);
             }
 
             if (strlist.at(0) == "Enemy") {
@@ -1129,10 +1143,14 @@ void Game::loadFromFile(QString fileSpecifier) {
 
             if (strlist.at(0) == "Obstacle") {
                 qDebug() << "  Obstacle-Eintrag gefunden.";
+                GameObject *obstacleToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), strlist.at(4).toInt(), strlist.at(5).toInt());
+                levelInitial.push_back(obstacleToAppend);
             }
 
             if (strlist.at(0) == "PowerUp") {
                 qDebug() << "  PowerUp-Eintrag gefunden.";
+                GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), strlist.at(4).toInt(), strlist.at(5).toInt(), strlist.at(6).toInt());
+                levelInitial.push_back(powerUpToAppend);
             }
 
             if (strlist.at(0) == "Boss") {
