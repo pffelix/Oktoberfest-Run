@@ -1123,6 +1123,7 @@ void Game::loadFromFile(QString fileSpecifier) {
         levelInitial.clear();
         levelSpawn.clear();
 
+        qDebug() << "Lese levelFile aus:";
 
         QTextStream fileStream(&levelFile);
         while (!fileStream.atEnd()) {
@@ -1130,8 +1131,6 @@ void Game::loadFromFile(QString fileSpecifier) {
             //qDebug() << line;
             // Trenne die aktuelle Zeile nach Komma getrennt auf
             QStringList strlist = line.split(",");
-
-            qDebug() << "Lese levelFile aus:";
 
             if (strlist.at(0) == "Player") {
                 qDebug() << "  Player-Eintrag gefunden.";
@@ -1166,5 +1165,7 @@ void Game::loadFromFile(QString fileSpecifier) {
 
         levelInitial.sort(compareGameObjects());
         levelSpawn.sort(compareGameObjects());
+
+        qDebug() << "Auslesen des levelFile beendet.";
     }
 }
