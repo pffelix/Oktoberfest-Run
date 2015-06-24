@@ -76,12 +76,11 @@ void Game::timerEvent(QTimerEvent *event)
 int Game::start() {
     qDebug("Game::start()");
     // Level erstellen bedeutet levelInitial und levelSpawn füllen
-/*
+
     //makeTestWorld();
     //loadLevel1();
     //loadLevel2();
-    colTestLevel();
-*/
+    //colTestLevel();
 
     // Level festlegen, der geladen werden soll
     QString fileSpecifier = ":/levelFiles/levelFiles/testLevel.txt";
@@ -713,6 +712,7 @@ void Game::handleCollisions() {
                      */
                     overlap = (handleEvent.causingObject->getPosY() + handleEvent.causingObject->getHeight()) - playerObjPointer->getPosY();
                     playerObjPointer->setPosY(playerObjPointer->getPosY() + overlap);
+                    playerObjPointer->resetJumpState();
                     break;
                 }
                 case fromBelow: {
@@ -1039,7 +1039,7 @@ void Game::loadLevel2() {
 void Game::colTestLevel() {
     /// Skalierungsfaktor für Objekte im Spiel
     int obs = 10;
-
+/*
     // Erstelle statische Objekte
     GameObject *obstackle1 = new GameObject(40*obs, 0*obs, 6*obs, 12*obs, obstacle);
     GameObject *obstackle2 = new GameObject(60*obs, 0*obs, 6*obs, 12*obs, obstacle);
@@ -1062,11 +1062,12 @@ void Game::colTestLevel() {
     // Füge bewegliche Objekte in zugehörige liste
     levelSpawn.push_back(enemy1);
     levelSpawn.push_back(enemy2);
-
+*/
     // Erstelle das Spieler-Objekt und setze den playerObjPointer
     GameObject *playerObject = new Player(13*obs, 0*obs, 1*obs);
 
     playerObjPointer = dynamic_cast<Player*>(playerObject);
+    playerObjPointer->startJump();
 }
 
 

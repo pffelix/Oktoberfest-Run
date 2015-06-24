@@ -187,13 +187,16 @@ void Player::update() {
     updatePosition();
 
     if (jumpState) {
-        if (jumpCooldown > 0) {
+        if (jumpCooldown > 1) {
             jumpCooldown = jumpCooldown - 1;
         } else {
             setSpeedY(-maxSpeedY);
         }
-    } else if (getPosY() > 0) {
+    }
+    if (getPosY() > 0) {
         jumpState = true;
+    } else {
+        jumpState = false;
     }
 
     //Grafik - Bewegung anzeigen
