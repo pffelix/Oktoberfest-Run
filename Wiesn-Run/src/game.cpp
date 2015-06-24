@@ -1122,6 +1122,8 @@ void Game::updateHighScore() {
         i++;
 
     }
+    // Datei schließen, damit Änderungen gespeichert werden
+    ofs.close();
     qDebug("Highscore geschrieben.");
 }
 
