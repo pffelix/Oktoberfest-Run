@@ -82,19 +82,6 @@ int Game::start() {
     // Fundamentale stepSize setzen
     stepIntervall = 1000/frameRate;
 
-    // Spieler hinzufügen
-    worldObjects.push_back(playerObjPointer);
-    // Spawn-Distanz setzen
-    spawnDistance = 1000;
-    // Szenen-Breite setzen
-    sceneWidth = 1000;
-    // Zeiger auf Objekte aus levelInitial in worldObjects verlegen
-    while (!(levelInitial.empty())) {
-        GameObject *currentObject = *levelInitial.begin();
-        worldObjects.push_back(currentObject);
-        levelInitial.pop_front();
-    }
-
     // Menüs erstellen
     menuStart = new Menu(new std::string("Wiesn-Run"));
     menuStart->addEntry("Spiel starten",menuId_StartGame);
