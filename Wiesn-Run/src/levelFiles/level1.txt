@@ -34,9 +34,9 @@ Obstacle,300
 Enemy,400,0,-10
 Obstacle,500
 
-Plane,800,100
+Plane,800,120
 
-Powerup,200,40,10,0,0,0
+PowerUp,200,40,10,0,0,0
 
 
 

@@ -17,7 +17,7 @@
  * @brief Anzahl gameloop-Durchläufe pro Sekunde
  * wird in allen Klassen für die CooldownParameter benutzt
  */
-const int frameRate = 20;
+const int frameRate = 1;
 
 /**
  * @brief Skalierungsfaktor für die Breite des Spielerobjekts bei 1024 Bildschirmbreite:
@@ -32,9 +32,10 @@ const int playerScale = 60;
 /**
  * @brief Offsets Spieler <-> linker Fensterrand und Spielebene <-> oberer Fensterrand
  * yOffset: Distanz zwischen obererm Rand (QT Koordinatensystem läuft von oben nach unten) und unterster Spielebene
+ *          => Fensterhöhe(768px) - yOffset = 100px
  * playerOffset: Distanz zwischen linkem Rand und Spieler
  */
-const int yOffset = 548;
+const int yOffset = 668;
 const int playerOffset = 100 + (playerScale/2);
 
 /**

@@ -20,7 +20,7 @@ PowerUp::PowerUp(int posX, int posY, int healthBonus, int alcoholLevelBonus, int
 
     //Grafik - powerup Grafik initialisieren
     setPixmap(QPixmap(":/images/images/powerup.png"));
-    setPos(getPosX() - getLength()*0.5, -getPosY() + 568);
+    setPos(getPosX() - getLength()*0.5, yOffset - getPosY() - getHeight());
 }
 
 /**

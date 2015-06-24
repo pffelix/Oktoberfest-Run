@@ -18,7 +18,7 @@ Shoot::Shoot(int posX, int posY, int direction, objectType origin) : MovingObjec
 
     //Grafik - Attackgrafik initialisieren
     setPixmap(QPixmap(":/images/images/attack.png"));
-    setPos(getPosX() - 20, -getPosY() + 628);
+    setPos(getPosX() - getLength()*0.5, yOffset - getPosY() - getHeight());
 }
 
 Shoot::~Shoot() {

@@ -928,7 +928,7 @@ bool Game::hurtPlayer(int damage) {
 void Game::renderGraphics(std::list<GameObject*> *objectList) {
     for (std::list<GameObject*>::iterator it = objectList->begin(); it != objectList->end(); ++it) {
         if(dynamic_cast<MovingObject*> (*it) != 0) {
-            (*it)->setPos((*it)->getPosX() - 0.5*(*it)->getLength(), -(*it)->getPosY() + 548);
+            (*it)->setPos((*it)->getPosX() - 0.5*(*it)->getLength(), yOffset -(*it)->getPosY() - (*it)->getHeight());
         }
     }
 }

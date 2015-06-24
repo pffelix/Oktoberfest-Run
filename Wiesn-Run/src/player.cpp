@@ -16,7 +16,7 @@ Player::Player(int posX, int posY, int speedX) : MovingObject(posX, posY, player
 
     //Grafik - Player wird initialisiert
     setPixmap(QPixmap(":/images/images/player.png"));
-    setPos(getPosX() - 0.5*getLength(), -getPosY() + 548);
+    setPos(playerOffset - 0.5*getLength(), yOffset - getPosY() - getHeight());
 }
 
 Player::~Player() {
