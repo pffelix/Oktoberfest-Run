@@ -899,93 +899,15 @@ bool Game::hurtPlayer(int damage) {
 
 /**
  * @brief Game::renderGraphics
- * wird wohl bald gelöscht
+ * Positionssaktualisierungen der Grafiken aller Beewglichen Objekte
  * @param objectList
- * @param playerPointer
  */
 void Game::renderGraphics(std::list<GameObject*> *objectList) {
-
     for (std::list<GameObject*>::iterator it = objectList->begin(); it != objectList->end(); ++it) {
         if(dynamic_cast<MovingObject*> (*it) != 0) {
             (*it)->setPos((*it)->getPosX() - 0.5*(*it)->getLength(), -(*it)->getPosY() + 548);
         }
-
     }
-
-    /*scene->clear();
-    window->viewport()->update();
-
-    int obstacleCount=0, enemyCount=0, attackPowerUpCount=0;
-
-    // Lege leere Liste an um Zeiger auf Objekte in der Szene zu speichern.
-    std::list<GameObject*> objToDisplay;
-
-    // Durchlaufe die objectList (worldObjects) von Anfang bis Ende. Ist ein Objekt näher als die Szenenbreite
-    // am Spieler dran, so könnte es in der Szene sein und wird in die Liste aufgenommen.
-    for (std::list<GameObject*>::iterator it = objectList->begin(); it != objectList->end(); ++it) {
-
-        bool insideSceneRight = ( (*it)->getPosX() - playerPointer->getPosX() - ((*it)->getLength()/2) ) <= sceneWidth;
-        bool insideSceneLeft = ( (*it)->getPosX() - playerPointer->getPosX() + ((*it)->getLength()/2) ) >= 0;
-
-        if ( insideSceneLeft && insideSceneRight && ( (*it) != playerPointer) ) {
-            objToDisplay.push_back(*it);
-            if((*it)->getType() == obstacle) {
-                obstacleCount ++;
-            }
-            else if ((*it)->getType() == enemy) {
-                enemyCount ++;
-            }
-            else if (( (*it)->getType() == shot) || ( (*it)->getType() == powerUp) ) {
-                attackPowerUpCount ++;
-            }
-        }
-    }
-
-    RenderObstacle *renderobstacles = new RenderObstacle[obstacleCount];
-    RenderEnemy *renderenemys = new RenderEnemy[enemyCount];
-    //RenderAttack *renderattacks = new RenderAttack[attackPowerUpCount];
-
-    // Durchlaufe objToDisplay, bis die Liste leer ist.
-    while (!(objToDisplay.empty())) {
-        // Setze Zeiger currentObj auf das erste Objekt in der Liste.
-        GameObject *currentObj = *objToDisplay.begin();
-        // Lösche den Zeiger auf das erste Objekt aus der Liste.
-        objToDisplay.pop_front();
-
-        int PosX = currentObj->getPosX() - playerPointer->getPosX() - (currentObj->getLength()/2);
-
-        if( currentObj->getType() == obstacle) {
-            obstacleCount --;
-            renderobstacles[obstacleCount].render(PosX);
-            scene->addItem(renderobstacles+obstacleCount);
-        }
-        else if( currentObj->getType() == enemy) {
-            enemyCount --;
-            renderenemys[enemyCount].render(PosX);
-            scene->addItem(renderenemys+enemyCount);
-        }
-        else if( currentObj->getType() == shot) {
-
-        }
-        else if( currentObj->getType() == powerUp) {
-
-        }
-    } // Ende der while-Schleife
-
-    RenderPlayer * renderPlayer = new RenderPlayer;
-    scene->addItem(renderPlayer);
-
-    QImage * img = new QImage(1024,768,QImage::Format_ARGB32_Premultiplied);
-    QPainter * painter = new QPainter(img);
-    scene->render(painter);
-
-    QGraphicsPixmapItem * item;
-    item = new QGraphicsPixmapItem;
-    item->setPixmap(QPixmap::fromImage(*img));
-    scene->addItem(item);
-
-    delete [] renderobstacles;
-    delete renderPlayer;*/
 }
 
 /**

@@ -18,12 +18,6 @@ SOURCES += src/main.cpp \
     src/input.cpp \
     src/audio.cpp \
     src/audiocontrol.cpp \
-    src/renderbackground.cpp \
-    src/renderplayer.cpp \
-    src/renderobstacle.cpp \
-    src/renderguielement.cpp \
-    src/renderenemy.cpp \
-    src/renderattack.cpp \
     src/menu.cpp \
     src/powerup.cpp
 
@@ -37,12 +31,6 @@ HEADERS += \
     src/input.h \
     src/audio.h \
     src/audiocontrol.h \
-    src/renderbackground.h \
-    src/renderplayer.h \
-    src/renderobstacle.h \
-    src/renderguielement.h \
-    src/renderenemy.h \
-    src/renderattack.h \
     src/definitions.h \
     src/menu.h \
     src/powerup.h
