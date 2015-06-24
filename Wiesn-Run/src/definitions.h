@@ -155,7 +155,7 @@ struct scoreStruct {
  */
 struct audioStruct {
     std::string name;
-    int distance;
+    float distance;
 };
 
 /**

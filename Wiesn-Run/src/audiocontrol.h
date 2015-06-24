@@ -19,6 +19,12 @@
 class AudioControl{
 
 public:
+    struct playStruct {
+        std::string name;
+        float volume;
+
+    };
+
     AudioControl();
     ~AudioControl();
 
@@ -30,7 +36,7 @@ private:
      *         played beinhaltet eine Liste mit allen im Moment abgespielten audioStruct Informationen.
      * @author  Felix Pfreundtner
      */
-    std::list<struct audioStruct> played;
+    std::list<struct audioStruct> playevents;
 
 protected:
 };
