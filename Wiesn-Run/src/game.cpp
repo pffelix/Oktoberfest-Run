@@ -1162,7 +1162,9 @@ void Game::loadFromFile(QString fileSpecifier) {
                 qDebug() << "  Boss-Eintrag gefunden.";
             }
 
+        } // end of while
 
-        }
+        levelInitial.sort(compareGameObjects());
+        levelSpawn.sort(compareGameObjects());
     }
 }

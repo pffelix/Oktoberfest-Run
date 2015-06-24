@@ -1,6 +1,28 @@
-Erste Zeile
-Zweite Teile
-Umlaute: Ä ö $ § @ µ
-Vierte Zeile \n
-Enemy
-Fünfte Zeile und vorher kam newline-Command
+Leveldatei
+
+In dieser Datei werden die Objekte für den Level angelegt.
+Die Datei wird zeilenweise und über Keywords ausgelesen. Das bedeutet,
+jede Zeile, die nicht mit einem Keyword anfängt, wird ignoriert.
+
+Anlegen des Spielers (ohne "#     " davor):
+#     Player,posX,posY,speedX
+z.B.  Player,10,0,10
+
+Anlegen eines Hindernisses (ohne "#     " davor):
+#     Obstacle,posX,posY,length,heigth,objectType
+z.B.  Obstacle,90,0,60,120,2
+
+Anlegen eines Gegners (ohne "#     " davor):
+#     Enemy,posX,posY,speedX
+z.B.  Enemy,100,0,-10
+
+Anlegen eines PowerUps (ohne "#     " davor):
+#     PowerUp,posX,posY,healthBonus,alcoholLevelBonus,ammunitionBonus,immunityCooldownBonus
+z.B.  PowerUp,130,0,10,20,1,20
+
+
+Beispiellevel:
+-----------------
+
+
+
