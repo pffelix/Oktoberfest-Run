@@ -25,7 +25,9 @@ AudioControl::~AudioControl() {
  * @author  Felix Pfreundtner
  */
 void AudioControl::update(std::list<struct audioStruct> *audioevents){
-//        while (!(soundEvents->empty())) {
+    while (!(audioevents->empty())) {
+
+    }
 //            // Kopiere erstes Objekt in der Liste nach currentSound
 //            soundStruct currentSound = *audioevents->begin();
 //            // Entferne Element aus Liste.
