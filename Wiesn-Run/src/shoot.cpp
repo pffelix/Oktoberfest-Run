@@ -48,6 +48,4 @@ int Shoot::getInflictedDamage() const {
 void Shoot::update() {
     //posX = posX + this->getSpeedX();
     updatePosition();
-    //Grafik - Bewegung anzeigen
-    setPos(getPosX() - 0.5*getLength(), -getPosY() + 628);
 }

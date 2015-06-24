@@ -27,7 +27,7 @@ std::string *Menu::getTitle() {
  * @author Rupert
  */
 int Menu::display() {
-    qDebug("%s - %s",getTitle()->c_str(),getSelection()->name.c_str());
+    //qDebug("%s - %s",getTitle()->c_str(),getSelection()->name.c_str());
     return 0;
 }
 

@@ -34,6 +34,9 @@ const int playerScale = 60;
  */
 const int maxSpeed = 2 * playerScale / frameRate;
 
+/// normale Player-Speed
+const int playerSpeed = maxSpeed / 2;
+
 /**
  * @brief Enumerator für den aktuellen Spielstatus
  * ähnlich zu einer StateMachine

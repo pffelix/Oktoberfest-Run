@@ -12,12 +12,12 @@
 #include "input.h"
 #include "audiocontrol.h"
 #include "powerup.h"
-#include "renderattack.h"
-#include "renderbackground.h"
-#include "renderenemy.h"
-#include "renderguielement.h"
-#include "renderobstacle.h"
-#include "renderplayer.h"
+//#include "renderattack.h"
+//#include "renderbackground.h"
+//#include "renderenemy.h"
+//#include "renderguielement.h"
+//#include "renderobstacle.h"
+//#include "renderplayer.h"
 #include <QApplication>
 #include <QGraphicsView>
 #include <QGraphicsScene>
@@ -72,15 +72,14 @@ protected:
     void timerEvent(QTimerEvent *event);
 
 private:
-    int getStepSize();
+    int getStepIntervall();
     void appendWorldObjects(Player *playerPointer);
     void reduceWorldObjects(Player *playerPointer);
     void evaluateInput();
     void calculateMovement();
     void detectCollision(std::list<GameObject*> *objectsToCalculate);
     void handleCollisions();
-    void renderGraphics(std::list<GameObject *> *objectList, Player *playerPointer);
-    void playSound(std::list<audioStruct> *soundEvents);
+    void renderGraphics(std::list<GameObject *> *objectList);
     void endGame();
     bool hurtPlayer(int damage);
 
@@ -88,6 +87,7 @@ private:
     void loadLevel1();
     void loadLevel2();
     void colTestLevel();
+    void loadFromFile(QString fileSpecifier);
 
     /// In der Welt befindliche Objekte
     std::list<GameObject*> worldObjects;
@@ -106,7 +106,9 @@ private:
     /// Distanz in der Gegner gespawnt werden
     int spawnDistance;
     struct scoreStruct score;
-    int stepSize;
+
+
+    int stepIntervall;
     Player *playerObjPointer;
 
     /// für das Ausgabefenster QGraphicsView
@@ -114,7 +116,8 @@ private:
     QGraphicsView * window;
 
     /// aktueller Spielzustand (running, menuStart, menuEnd)
-    gameState state = gameMenuStart;
+    //gameState state = gameMenuStart;
+    gameState state = gameIsRunning;
 
     /// Zeiger auf QApplication
     QApplication *appPointer;
@@ -131,6 +134,10 @@ private:
     enum menuIds {
         menuId_StartGame, menuId_EndGame, menuId_Highscore, menuId_Credits, menuId_GotoStartMenu
     };
+
+    /// stepCount wird mit jedem Step um ein erhöht
+    /// Auslesen der vergangenen Zeit: stepCount * getStepIntervall()
+    int stepCount = 0;
 };
 
 #endif // GAME_H
