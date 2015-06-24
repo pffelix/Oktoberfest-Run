@@ -1114,17 +1114,31 @@ void Game::loadFromFile(QString fileSpecifier) {
             // Trenne die aktuelle Zeile nach Komma getrennt auf
             QStringList strlist = line.split(",");
 
+            qDebug() << "Lese levelFile aus:";
+
             if (strlist.at(0) == "Player") {
-                qDebug() << "Player-Eintrag gefunden.";
+                qDebug() << "  Player-Eintrag gefunden.";
             }
 
             if (strlist.at(0) == "Enemy") {
-                qDebug() << "Enemy-Eintrag gefunden.";
+                qDebug() << "  Enemy-Eintrag gefunden.";
+                GameObject *enemyToAppend = new Enemy(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt());
+                levelSpawn.push_back(enemyToAppend);
             }
 
             if (strlist.at(0) == "Obstacle") {
-                qDebug() << "Obstacle-Eintrag gefunden.";
+                qDebug() << "  Obstacle-Eintrag gefunden.";
             }
+
+            if (strlist.at(0) == "PowerUp") {
+                qDebug() << "  PowerUp-Eintrag gefunden.";
+            }
+
+            if (strlist.at(0) == "Boss") {
+                qDebug() << "  Boss-Eintrag gefunden.";
+            }
+
+
         }
     }
 }
