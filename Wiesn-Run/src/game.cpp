@@ -93,6 +93,7 @@ int Game::start() {
 
     // QGraphicsScene der Level erstellen
     levelScene = new QGraphicsScene;
+
     // QGraphicsView Widget (Anzeigefenster) erstellen und einstellen
     window = new QGraphicsView();
     window->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -195,6 +196,9 @@ int Game::step() {
     switch(state) {
         case gameMenuEnd:
             menuEnd->display();
+            //MenüScene wird vom Anzeigewidget aufgerufen
+            window->setScene(menuEnd->menuScene);
+
             // Enter?
             if(keyInput->getKeyactions().contains(Input::Keyaction::Enter)) {
                 // Menüpunkt ausgewählt
@@ -232,7 +236,10 @@ int Game::step() {
             break;
 
         case gameMenuStart:
+
             menuStart->display();
+            //MenüScene wird vom Anzeigewidget aufgerufen
+            window->setScene(menuStart->menuScene);
 
             // Enter?
             if(keyInput->getKeyactions().contains(Input::Keyaction::Enter)) {

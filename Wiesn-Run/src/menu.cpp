@@ -9,6 +9,7 @@
 Menu::Menu(std::string *menuTitle)
 {
     title = menuTitle;
+
 }
 
 /**
@@ -28,6 +29,21 @@ std::string *Menu::getTitle() {
  */
 int Menu::display() {
     //qDebug("%s - %s",getTitle()->c_str(),getSelection()->name.c_str());
+
+    //Menü-Scene und Menü-Hintergrundbild werde initialisiert
+    menuScene = new QGraphicsScene;
+    background = new QGraphicsPixmapItem(QPixmap(":/images/images/menubackground.png"));
+    menuScene->addItem(background);
+
+    //für jeden Menüeintrag wird ein QGraphicsTexItem angelegt, eingestellt und angezeigt
+    for(std::list<menuEntry*>::iterator it = menuEntrys.begin(); it != menuEntrys.end(); ++it) {
+         QGraphicsTextItem  * showEntry = new QGraphicsTextItem;
+         showEntry->setPlainText(QString::fromStdString((*it)->name));
+         showEntry->setDefaultTextColor(Qt::blue);
+         showEntry->setFont(QFont("Times",50));
+         showEntry->setPos(320,300 + 80*(*it)->position );
+         menuScene->addItem(showEntry);
+    }
     return 0;
 }
 
@@ -46,6 +62,7 @@ int Menu::addEntry(std::string name, int id) {
     entry->position = numberOfEntrys;
     numberOfEntrys++;
     menuEntrys.push_back(entry);
+
     return 0;
 }
 

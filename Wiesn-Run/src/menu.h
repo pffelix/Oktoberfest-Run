@@ -4,6 +4,11 @@
 #include <list>
 #include <string>
 #include "definitions.h"
+#include <QGraphicsPathItem>
+#include <QGraphicsScene>
+#include <QGraphicsTextItem>
+#include <QFont>
+#include <QString>
 
 /**
  * @brief Menü-Klasse
@@ -47,6 +52,10 @@ public:
 
     /// Zeiger auf aktuelle gewählten Menüeintrag, sollte nach Enter aufgerufen werden
     Menu::menuEntry *getSelection();
+
+    /// Zeiger auf die Menü-Scene und das Menü-Hintergrundbild
+    QGraphicsPixmapItem * background;
+    QGraphicsScene * menuScene;
 
 private:
     /// Liste, die die Menü-Einträge enthalt
