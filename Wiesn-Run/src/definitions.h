@@ -35,6 +35,11 @@ const int playerScale = 60;
 const int maxSpeed = 2 * playerScale / frameRate;
 
 /**
+ * @brief Fall- / Sprunggeschwindigkeit
+ */
+const int maxSpeedY = 3 * (playerScale / frameRate);
+
+/**
  * @brief Enumerator für den aktuellen Spielstatus
  * ähnlich zu einer StateMachine
  * wird in step() über switch abgefragt

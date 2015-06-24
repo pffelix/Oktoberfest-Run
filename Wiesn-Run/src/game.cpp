@@ -661,20 +661,20 @@ void Game::handleCollisions() {
                     break;
                 }
                 case fromAbove: {
-                    //Bewegung in Y-Richtung stoppen, Sprung beenden!!
-                    playerObjPointer->setSpeedY(0);
-                    playerObjPointer->resetJump();
-                    //Überlappung berechnen und Spieler nach obern versetzen
+                    /* Überlappung berechnen und Spieler nach obern versetzen
+                     *      Sprungzustand zurücksetzten
+                     */
                     overlap = (handleEvent.causingObject->getPosY() + handleEvent.causingObject->getHeight()) - playerObjPointer->getPosY();
                     playerObjPointer->setPosY(playerObjPointer->getPosY() + overlap);
                     break;
                 }
                 case fromBelow: {
                     //Wegen Zusammenstoß wird ein Fall initiiert
-                    playerObjPointer->setFall();
+                    playerObjPointer->abortJump();
                     //Überlappung berechnen und Spieler nach obern versetzen
                     overlap = (playerObjPointer->getPosY() + playerObjPointer->getHeight()) - handleEvent.causingObject->getPosY();
                     playerObjPointer->setPosY(playerObjPointer->getPosY() + overlap);
+                    playerObjPointer->resetJumpState();
                     break;
                 }
                 }

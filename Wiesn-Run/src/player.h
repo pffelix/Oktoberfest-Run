@@ -30,10 +30,10 @@ public:
     void setImmunityCooldown(int remainingTime);
 
     //Sprung()
-    ///@todo Überarbeiten 24.6
-    void setJump(bool jump);
-    void setFall();
-    void resetJump();
+    void startJump();
+    bool inJump() const;
+    void resetJumpState();
+    void abortJump();
 
     //update()
     virtual void update();
@@ -52,13 +52,9 @@ private:
     //Feuergeschwindigkeit
     int fireRate;
     //In-der-Luft-Zustand
-    bool jumpActive;
+    bool jumpState;
     //In-der-Luft-'Ort'
-    int jumpTableIndex;
-    //In-der-Luft-Geschwindigkeiten
-    int jumpTable[100];
-
-    const int fallIndex = 20;
+    int jumpCooldown;
 
 };
 
