@@ -349,7 +349,11 @@ void Game::calculateMovement() {
                     } else {
                         direction = playerObjPointer->getSpeedX();
                     }
-                    direction = direction / abs(direction);
+                    if (direction < 0) {
+                        direction = -1;
+                    } else {
+                        direction = 1;
+                    }
                     enemyFire = new Shoot(aktEnemy->getPosX(), aktEnemy->getPosY(), direction, enemy);
                     worldObjects.push_back(enemyFire);
                     enemyFire = 0;

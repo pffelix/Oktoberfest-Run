@@ -21,7 +21,7 @@ public:
     bool decreaseAlcoholLevel(int decreaseLevel);       /// Schlechte Bezeichnung
 
     //Munnition()
-    int getAmmunatiuon() const;     /// Wird nicht benutzt 23.6
+    int getAmmunatiuon() const;     /// Wird nicht benutzt 23.6 bei implementierung Input(schießen)
     void increaseAmmunation(int ammunationBonus);   /// Schlechte Bezeichnung
     void decreaseAmmunation();      /// Schlechte Bezeichnung
 

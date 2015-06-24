@@ -14,6 +14,7 @@ public:
     //Leben()
     int getHealth() const;
     void setHealth(int health);
+    bool receiveDamage(int damage);
 
     //Damage()
     int getInflictedDamage() const;
@@ -31,7 +32,7 @@ private:
     //Lebensstand
     int health;
     //Feuergeschwindigkeit
-    const int fireRate = 20;
+    const int fireRate = frameRate;
     //verbleibende Nachladezeit
     int fireCooldown;
     //Schaden, den Gegner verursacht

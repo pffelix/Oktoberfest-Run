@@ -15,6 +15,12 @@
 
 
 /**
+ * @brief Anzahl gameloop-Durchläufe pro Sekunde
+ * wird in allen Klassen für die CooldownParameter benutzt
+ */
+const int frameRate = 20;
+
+/**
  * @brief Skalierungsfaktor für die Breite des Spielerobjekts bei 1024 Bildschirmbreite:
  *                 Breite:Höhe
  * Spieler, Gegner:     1:2
@@ -27,13 +33,7 @@ const int playerScale = 60;
 /**
  * @brief Geschwindigkeit mit der sich die beweglichen Objekte durch die Welt bewegen
  */
-const int maxSpeed = 10;
-
-/**
- * @brief Anzahl gameloop-Durchläufe pro Sekunde
- * wird in allen Klassen für die CooldownParameter benutzt
- */
-const int frameRate = 20;
+const int maxSpeed = 2 * playerScale / frameRate;
 
 /**
  * @brief wird von der Menu-Klasse zur Auswahl-Änderung benötigt

@@ -17,7 +17,7 @@ Enemy::Enemy(int posX, int posY, int speedX) : MovingObject(posX, posY, enemy, s
     fireCooldown = 2;
     inflictedDamage = 1;
     death = false;
-    DeathCooldown = 20;
+    DeathCooldown = frameRate;
 }
 
 Enemy::~Enemy() {
@@ -42,6 +42,11 @@ int Enemy::getHealth() const {
  */
 void Enemy::setHealth(int health) {
     this->health = health;
+}
+
+bool Enemy::receiveDamage(int damage) {
+    health = health - damage;
+    return (!(health > 0));
 }
 
 /**
@@ -92,12 +97,7 @@ int Enemy::getDeathCooldown() const {
 
 /**
  * @brief Enemy::update
- * führt Bewegungen des Gegners aus und lässt ihn schießen
- *      , falls er lebt!
- *
- * Hier werden zwei Events erzeugt:
- *  1) DeleteEnemy : wenn gegner Tot ist und seine erscheinungszeit abgelaufen ist
- *  2) CreateShot : wenn Gegner bereit zum Schießen ist
+ * führt Bewegungen des Gegners aus
  */
 void Enemy::update() {
     if (death) {
