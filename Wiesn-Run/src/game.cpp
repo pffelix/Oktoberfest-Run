@@ -364,13 +364,15 @@ void Game::evaluateInput() {
  */
 void Game::calculateMovement() {
     using namespace std;               // für std::list
+
+    /// für qDebug (Rupert)
+    std::string objecttypes[] = {"Player", "Enemy ", "Obstac", "Shot  ", "PwrUp ", "BOSS  "};
+    int speedX=0,speedY=0;
+
     list<GameObject*>::iterator it;     // Iterator erstellen
     /// Schleife startet beim ersten Element und geht bis zum letzen Element durch
     for(it = worldObjects.begin(); it != worldObjects.end(); ++it) {
         GameObject *aktObject = *it;
-
-        qDebug("%d Object Position: XPos=%d",aktObject->getType(), aktObject->getPosX());
-        qDebug("%d Object Position: YPos=%d",aktObject->getType(), aktObject->getPosY());
         MovingObject *aktMovingObject = dynamic_cast<MovingObject*> (aktObject);    // Versuche GameObject in Moving Object umzuwandeln
         if(aktMovingObject != 0) {
             aktMovingObject->update();          // Wenn der cast klappt, rufe update() auf.
@@ -403,10 +405,16 @@ void Game::calculateMovement() {
                 }
                 aktEnemy = 0;
             }
-            qDebug("Object Speed: XSpeed=%d",aktMovingObject->getSpeedX());
+            speedX = aktMovingObject->getSpeedX();
+            speedY = aktMovingObject->getSpeedY();
         }
+
         aktMovingObject = 0;
+
+        qDebug("%s: x=%4d y=%4d\tvx=%3d vy=%3d",objecttypes[static_cast<int>(aktObject->getType())].c_str(), aktObject->getPosX(),aktObject->getPosY(),speedX,speedY);
+
     }
+
     //Grafik - sorgt dafür dass "window" auf den Spieler zentriert bleibt
     window->centerOn(playerObjPointer->getPosX() + 512 - 100 - 0.5*playerObjPointer->getLength(), 384);
 }
