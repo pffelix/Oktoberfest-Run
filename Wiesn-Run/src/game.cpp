@@ -140,7 +140,7 @@ void Game::startNewGame() {
     scene->clear();
     worldObjects.clear();
 
-    // Test: Highscores
+    // Highscore aktualisieren
     updateHighScore();
 
     // Level festlegen, der geladen werden soll
@@ -1075,6 +1075,16 @@ void Game::loadLevelFile(QString fileSpecifier) {
 }
 
 
+/**
+ * @brief Game::updateHighScore
+ * Diese Funktion liest und aktualisiert die Highscore des Spiels.
+ * Dazu wird versucht, die Datei "wiesnHighscore.txt" auszulesen. Ist dies nicht möglich,
+ * so wurde das Spiel in dem aktuellen Verzeichnis noch nie gestartet.
+ * Falls die Datei gefunden und gelesen werden kann, so wird jeder Highscore-Eintrag in die scoreList aufgenommen.
+ * Anschließend wird die Liste nach der Summe der Punkte absteigend sortiert, und nur die 10 besten Elemente werden gespeichert.
+ * Wird für das aktuelle Spiel eine Score angelegt und in der scoreList gespeichert, so wird dieser Eintrag eingeordnet
+ * und gegebenenfalls auch abgespeichert.
+ */
 void Game::updateHighScore() {
     // Alte Highscore einlesen
     std::ifstream input("wiesnHighscore.txt");
