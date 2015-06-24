@@ -85,7 +85,8 @@ int Game::start() {
 
     // Level festlegen, der geladen werden soll
     QString fileSpecifier = ":/levelFiles/levelFiles/testLevel.txt";
-    loadFromFile(fileSpecifier);
+    //loadFromFile(fileSpecifier);
+    loadLevelFile(fileSpecifier);
 
 
     // Fundamentale stepSize setzen
@@ -1249,13 +1250,13 @@ void Game::loadLevelFile(QString fileSpecifier) {
 
             if (strlist.at(0) == "Obstacle") {
                 qDebug() << "  Obstacle-Eintrag gefunden.";
-                GameObject *obstacleToAppend = new GameObject(strlist.at(1).toInt(), 0, 2);
+                GameObject *obstacleToAppend = new GameObject(strlist.at(1).toInt(), 0, obstacle);
                 levelInitial.push_back(obstacleToAppend);
             }
 
             if (strlist.at(0) == "Plane") {
                 qDebug() << "  Eintrag für eine Zwischenebene gefunden.";
-                GameObject *planeToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), 2*playerScale, (playerScale / 3), 2);
+                GameObject *planeToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), 2*playerScale, (playerScale / 3), obstacle);
                 levelInitial.push_back(planeToAppend);
             }
 
