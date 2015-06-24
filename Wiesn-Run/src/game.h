@@ -116,7 +116,8 @@ private:
     QGraphicsView * window;
 
     /// aktueller Spielzustand (running, menuStart, menuEnd)
-    gameState state = gameMenuStart;
+    //gameState state = gameMenuStart;
+    gameState state = gameIsRunning;
 
     /// Zeiger auf QApplication
     QApplication *appPointer;
