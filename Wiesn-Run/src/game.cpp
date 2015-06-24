@@ -80,7 +80,7 @@ int Game::start() {
     colTestLevel();
 
     // Fundamentale stepSize setzen
-    stepSize = 1000;
+    stepSize = 100;
 
     // Spieler hinzufügen
     worldObjects.push_back(playerObjPointer);
@@ -221,17 +221,14 @@ int Game::step() {
 
             break;
         case gameIsRunning:
-            // Menü bei ESC
-            if(keyInput->getKeyactions().contains(Input::Keyaction::Exit)) {
-                state = gameMenuEnd;
-            }
+
 
             worldObjects.sort(compareGameObjects());
             qDebug("---Nächster Zeitschritt---");
 
             appendWorldObjects(playerObjPointer);
             reduceWorldObjects(playerObjPointer);
-            //    evaluateInput();
+            evaluateInput();
             worldObjects.sort(compareGameObjects());
             calculateMovement();
             worldObjects.sort(compareGameObjects());
@@ -309,8 +306,38 @@ void Game::reduceWorldObjects(Player *playerPointer) {
     }
 }
 
+/**
+ * @brief Checkt welche Tasten für die Spielkontrolle gedrückt sind
+ * mögliche Tasten:
+ *  - Pfeil rechts zum laufen
+ *  - Pfeil hoch zum springen
+ *  - Leertaste zum schießen
+ *  - ESC für Menü
+ * @author Rupert
+ */
 void Game::evaluateInput() {
+    // Pfeil rechts?
+    if(keyInput->getKeyactions().contains(Input::Keyaction::Right)) {
+        playerObjPointer->setSpeedX(playerSpeed);
+    } else {
+        playerObjPointer->setSpeedX(0);
+    }
 
+    // Pfeil oben?
+    if(keyInput->getKeyactions().contains(Input::Keyaction::Up)) {
+        playerObjPointer->setJump(true);
+    }
+
+    // Leertaste?
+    if(keyInput->getKeyactions().contains(Input::Keyaction::Shoot)) {
+        Shoot *playerFire = new Shoot(playerObjPointer->getPosX(),playerObjPointer->getPosY(),1,objectType::player);
+        worldObjects.push_back(playerFire);
+    }
+
+    // Menü bei ESC
+    if(keyInput->getKeyactions().contains(Input::Keyaction::Exit)) {
+        state = gameMenuEnd;
+    }
 }
 
 /**
