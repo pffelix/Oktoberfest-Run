@@ -72,7 +72,7 @@ protected:
     void timerEvent(QTimerEvent *event);
 
 private:
-    int getStepSize();
+    int getStepIntervall();
     void appendWorldObjects(Player *playerPointer);
     void reduceWorldObjects(Player *playerPointer);
     void evaluateInput();
@@ -107,7 +107,9 @@ private:
     /// Distanz in der Gegner gespawnt werden
     int spawnDistance;
     struct scoreStruct score;
-    int stepSize;
+
+
+    int stepIntervall;
     Player *playerObjPointer;
 
     /// für das Ausgabefenster QGraphicsView
@@ -132,6 +134,10 @@ private:
     enum menuIds {
         menuId_StartGame, menuId_EndGame, menuId_Highscore, menuId_Credits, menuId_GotoStartMenu
     };
+
+    /// stepCount wird mit jedem Step um ein erhöht
+    /// Auslesen der vergangenen Zeit: stepCount * getStepIntervall()
+    int stepCount = 0;
 };
 
 #endif // GAME_H
