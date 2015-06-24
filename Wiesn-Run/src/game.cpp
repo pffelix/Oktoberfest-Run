@@ -349,12 +349,12 @@ void Game::evaluateInput() {
 
     // Pfeil oben?
     if(keyInput->getKeyactions().contains(Input::Keyaction::Up)) {
-        playerObjPointer->setJump(true);
+        playerObjPointer->startJump();
     }
 
     // Leertaste?
     if(keyInput->getKeyactions().contains(Input::Keyaction::Shoot)) {
-        Shoot *playerFire = new Shoot(playerObjPointer->getPosX(),playerObjPointer->getPosY(),1,objectType::player);
+        Shoot *playerFire = new Shoot(playerObjPointer->getPosX(),playerObjPointer->getPosY(),1,player);
         worldObjects.push_back(playerFire);
     }
 
