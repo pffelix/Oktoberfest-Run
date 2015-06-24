@@ -1,0 +1,28 @@
+LevelDatei für den ersten Level
+
+Diese Datei kann nur von der Methode "loadLevelFile" ausgelesen werden.
+Zeilen, die mit einem Keyword beginnen, werden interpretiert. Alle anderen Zeilen werden ignoriert.
+
+Erläuterung
+------------
+# Spieler anlegen:
+# Player,posX,posY
+# Player,130,0
+
+# Gegner anlegen:
+# Enemy,posX,posY,speedX
+# Enemy,300,0,-10
+
+# Obstacle anlegen:
+# Obstacle,posX
+# Obstacle,200
+
+# Zwischen-Ebenen-Element anlegen:
+# Plane,posX,posY
+# Plane,400,100
+
+# PowerUp anlegen:
+# PowerUp,posX,posY,healthBonus,alcoholLevelBonus,ammunitionBonus,immunityCooldownBonus
+# PowerUp,500,40,10,0,0,0
+
+
