@@ -14,5 +14,6 @@
     </qresource>
     <qresource prefix="/levelFiles">
         <file>levelFiles/testLevel.txt</file>
+        <file>levelFiles/level1.txt</file>
     </qresource>
 </RCC>
