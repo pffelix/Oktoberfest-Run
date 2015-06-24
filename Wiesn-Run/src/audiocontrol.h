@@ -4,6 +4,10 @@
 #include "audio.h"
 #include <QString>
 #include <QDebug>
+#include <iostream>
+#include <QList>
+#include "definitions.h"
+
 
 /**
  * @brief  AudioControl-Klasse
@@ -18,6 +22,7 @@ public:
     AudioControl();
     ~AudioControl();
 
+    void update(std::list<struct audioStruct> *audiostructs);
 private:
     Audio *audio_object;
 
