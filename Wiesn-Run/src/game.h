@@ -54,8 +54,6 @@ public:
     /// Startet die Mockup QApplication app
     int run(QApplication& app);
 
-
-
     struct stateStruct gameStats;
     //Liste von Kollisionen
     std::list<struct collisionStruct> collisionsToHandle;
@@ -107,7 +105,7 @@ private:
     Player *playerObjPointer;
 
     /// für das Ausgabefenster QGraphicsView
-    QGraphicsScene * scene;
+    QGraphicsScene * levelScene;
     QGraphicsView * window;
 
     /// aktueller Spielzustand (running, menuStart, menuEnd)

@@ -97,17 +97,20 @@ int Game::start() {
     menuStart = new Menu(new std::string("Wiesn-Run"));
     menuStart->addEntry("Spiel neustarten",menuId_StartGame);
     menuStart->addEntry("Spiel beenden", menuId_EndGame);
+    menuStart->displayInit();
 
     menuEnd = new Menu(new std::string("Game Over"));
     menuEnd->addEntry("Weiterspielen",menuId_Resume);
     menuEnd->addEntry("Highscore anzeigen",menuId_Highscore);
     menuEnd->addEntry("Credits anzeigen",menuId_Credits);
     menuEnd->addEntry("zurück zum Anfang",menuId_GotoStartMenu);
+    menuEnd->displayInit();
+
+    // QGraphicsScene der Level erstellen
+    levelScene = new QGraphicsScene;
 
     // QGraphicsView Widget (Anzeigefenster) erstellen und einstellen
-    scene = new QGraphicsScene;
-    scene->setSceneRect(0,0,100000,768);
-    window = new QGraphicsView(scene);
+    window = new QGraphicsView();
     window->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     window->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     window->setFixedSize(1024,768);
@@ -137,11 +140,15 @@ int Game::start() {
  */
 void Game::startNewGame() {
     // alles alte leeren
-    scene->clear();
+    levelScene->clear();
     worldObjects.clear();
 
     // Highscore aktualisieren
     updateHighScore();
+
+    //Levelscene einstellen
+    levelScene->setSceneRect(0,0,100000,768);
+    window->setScene(levelScene);
 
     // Level festlegen, der geladen werden soll
     QString fileSpecifier = ":/levelFiles/levelFiles/level1.txt";
@@ -150,7 +157,7 @@ void Game::startNewGame() {
     // Spieler hinzufügen
     worldObjects.push_back(playerObjPointer);
     //Grafik - Spieler der Scene hinzufügen und window auf ihn zentrieren
-    scene->addItem(playerObjPointer);
+    levelScene->addItem(playerObjPointer);
     window->centerOn(playerObjPointer->getPosX(), 384);
     // Spawn-Distanz setzen
     spawnDistance = 1000;
@@ -163,7 +170,7 @@ void Game::startNewGame() {
         worldObjects.push_back(currentObject);
         levelInitial.pop_front();
         //Grafik
-        scene->addItem(currentObject);
+        levelScene->addItem(currentObject);
     }
 }
 
@@ -207,7 +214,10 @@ int Game::step() {
 
     switch(state) {
         case gameMenuEnd:
-            menuEnd->display();
+            menuEnd->displayUpdate();
+            //MenüScene wird vom Anzeigewidget aufgerufen
+            window->setScene(menuEnd->menuScene);
+
             // Enter?
             if(keyInput->getKeyactions().contains(Input::Keyaction::Enter)) {
                 // Menüpunkt ausgewählt
@@ -245,7 +255,10 @@ int Game::step() {
             break;
 
         case gameMenuStart:
-            menuStart->display();
+
+            menuStart->displayUpdate();
+            //MenüScene wird vom Anzeigewidget aufgerufen
+            window->setScene(menuStart->menuScene);
 
             // Enter?
             if(keyInput->getKeyactions().contains(Input::Keyaction::Enter)) {
@@ -326,7 +339,7 @@ void Game::appendWorldObjects(Player *playerPointer) {
             worldObjects.push_back(currentObj);
             levelSpawn.pop_front();
             //Grafik - Gegner de Scene hinzufügen
-            scene->addItem(currentObj);
+            levelScene->addItem(currentObj);
         } else {
             break;
         }
@@ -350,7 +363,7 @@ void Game::reduceWorldObjects(Player *playerPointer) {
         if ((playerPointer->getPosX() - currentObj->getPosX()) > spawnDistance) {
             worldObjects.pop_front();
             //Grafik - Objekte aus der Scene löschen
-            scene->removeItem(currentObj);
+            levelScene->removeItem(currentObj);
 
             delete currentObj;
         } else {
@@ -372,7 +385,7 @@ void Game::reduceWorldObjects(Player *playerPointer) {
             objectsToDelete.pop_front();
 
             //Grafik - Bierkrüge löschen
-            scene->removeItem(currentObject);
+            levelScene->removeItem(currentObject);
 
             delete currentObject;
         }
@@ -406,7 +419,7 @@ void Game::evaluateInput() {
         //Shoot *playerFire = new Shoot(playerObjPointer->getPosX(),playerObjPointer->getPosY(),1,player);
         Shoot *playerFire = new Shoot(playerObjPointer->getPosX()+playerObjPointer->getLength()/2,playerObjPointer->getPosY(),1,player);
         worldObjects.push_back(playerFire);
-        scene->addItem(playerFire);
+        levelScene->addItem(playerFire);
     }
 
     // Menü bei ESC
@@ -460,7 +473,7 @@ void Game::calculateMovement() {
                     }
                     enemyFire = new Shoot(aktEnemy->getPosX(), aktEnemy->getPosY(), direction, enemy);
                     worldObjects.push_back(enemyFire);
-                    scene->addItem(enemyFire);
+                    levelScene->addItem(enemyFire);
                     enemyFire = 0;
                 }
                 aktEnemy = 0;
