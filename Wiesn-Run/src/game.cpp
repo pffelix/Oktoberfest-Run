@@ -6,6 +6,8 @@
 #include <iomanip>
 #include <cmath>
 
+#include <fstream>
+
 #include "player.h"
 #include "gameobject.h"
 #include "enemy.h"
@@ -74,13 +76,20 @@ void Game::timerEvent(QTimerEvent *event)
 int Game::start() {
     qDebug("Game::start()");
     // Level erstellen bedeutet levelInitial und levelSpawn füllen
+/*
     //makeTestWorld();
     //loadLevel1();
     //loadLevel2();
     colTestLevel();
+*/
+
+    // Level festlegen, der geladen werden soll
+    QString fileSpecifier = ":/levelFiles/levelFiles/testLevel.txt";
+    loadFromFile(fileSpecifier);
+
 
     // Fundamentale stepSize setzen
-    stepSize = 1000/frameRate;
+    stepIntervall = 1000/frameRate;
 
     // Menüs erstellen
     menuStart = new Menu(new std::string("Wiesn-Run"));
@@ -126,7 +135,7 @@ int Game::start() {
 
     // Timer installieren
     qDebug("Starte Timer mit 500msec-Intervall");
-    Game::startTimer(stepSize);
+    Game::startTimer(stepIntervall);
 
     return appPointer->exec();
 }
@@ -226,17 +235,14 @@ int Game::step() {
 
             break;
         case gameIsRunning:
-            // Menü bei ESC
-            if(keyInput->getKeyactions().contains(Input::Keyaction::Exit)) {
-                state = gameMenuEnd;
-            }
+
 
             worldObjects.sort(compareGameObjects());
             qDebug("---Nächster Zeitschritt---");
 
             appendWorldObjects(playerObjPointer);
             reduceWorldObjects(playerObjPointer);
-            //    evaluateInput();
+            evaluateInput();
             worldObjects.sort(compareGameObjects());
             calculateMovement();
             worldObjects.sort(compareGameObjects());
@@ -250,6 +256,7 @@ int Game::step() {
             break;
     }
 
+    stepCount++;
     return 0;
 }
 
@@ -323,8 +330,38 @@ void Game::reduceWorldObjects(Player *playerPointer) {
     }
 }
 
+/**
+ * @brief Checkt welche Tasten für die Spielkontrolle gedrückt sind
+ * mögliche Tasten:
+ *  - Pfeil rechts zum laufen
+ *  - Pfeil hoch zum springen
+ *  - Leertaste zum schießen
+ *  - ESC für Menü
+ * @author Rupert
+ */
 void Game::evaluateInput() {
+    // Pfeil rechts?
+    if(keyInput->getKeyactions().contains(Input::Keyaction::Right)) {
+        playerObjPointer->setSpeedX(playerSpeed);
+    } else {
+        playerObjPointer->setSpeedX(0);
+    }
 
+    // Pfeil oben?
+    if(keyInput->getKeyactions().contains(Input::Keyaction::Up)) {
+        playerObjPointer->setJump(true);
+    }
+
+    // Leertaste?
+    if(keyInput->getKeyactions().contains(Input::Keyaction::Shoot)) {
+        Shoot *playerFire = new Shoot(playerObjPointer->getPosX(),playerObjPointer->getPosY(),1,objectType::player);
+        worldObjects.push_back(playerFire);
+    }
+
+    // Menü bei ESC
+    if(keyInput->getKeyactions().contains(Input::Keyaction::Exit)) {
+        state = gameMenuEnd;
+    }
 }
 
 /**
@@ -1059,6 +1096,7 @@ void Game::loadLevel2() {
     playerObjPointer = dynamic_cast<Player*>(playerObject);
 }
 
+
 void Game::colTestLevel() {
     /// Skalierungsfaktor für Objekte im Spiel
     int obs = 10;
@@ -1091,3 +1129,81 @@ void Game::colTestLevel() {
 
     playerObjPointer = dynamic_cast<Player*>(playerObject);
 }
+
+
+/**
+ * @brief Game::loadFromFile
+ * @param fileSpecifier
+ * Funktion um Level-Dateien einzulesen. Als einziger Parameter wird ein QString mit dem Pfad zum levelFile übergeben.
+ * Es wird getestet, ob die Datei geöffnet werden kann. Ist dies möglich, so werden die Listen levelInitial und levelSpawn
+ * geleert und mit Objekten aus der Level-Datei gefüllt.
+ * Die Level-Datei wird zeilenweise ausgelesen. Beginnt eine Zeile mit den Schlüsselwörtern, z.B. "Player", "Enemy", "Obstacle" etc.,
+ * so wird das entsprechende Objekt angelegt und der zugehörigen Liste hinzugefügt. Alle Zeilen, die nicht mit Schlüsselwörtern beginnen
+ * werden übersprungen.
+ * @author Simon
+ */
+void Game::loadFromFile(QString fileSpecifier) {
+
+    // Spezifizierte Datei öffnen
+    QFile levelFile(fileSpecifier);
+    if (!levelFile.open(QFile::ReadOnly | QFile::Text)) {
+        qDebug() << "Datei konnte nicht geöffnet werden!";
+    } else {
+        // Die Datei wurde erfolgreich geöffnet
+        // Die Listen werden geleert
+        levelInitial.clear();
+        levelSpawn.clear();
+
+        qDebug() << "Lese levelFile aus:";
+
+        QTextStream fileStream(&levelFile);
+        while (!fileStream.atEnd()) {
+            QString line = fileStream.readLine();
+            //qDebug() << line;
+            // Trenne die aktuelle Zeile nach Komma getrennt auf
+            QStringList strlist = line.split(",");
+
+            if (strlist.at(0) == "Player") {
+                qDebug() << "  Player-Eintrag gefunden.";
+                // Erstelle das Spieler-Objekt und setze den playerObjPointer
+                GameObject *playerObject = new Player(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt());
+                playerObjPointer = dynamic_cast<Player*>(playerObject);
+            }
+
+            if (strlist.at(0) == "Enemy") {
+                qDebug() << "  Enemy-Eintrag gefunden.";
+                GameObject *enemyToAppend = new Enemy(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt());
+                levelSpawn.push_back(enemyToAppend);
+            }
+
+            if (strlist.at(0) == "Obstacle") {
+                qDebug() << "  Obstacle-Eintrag gefunden.";
+                GameObject *obstacleToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), strlist.at(4).toInt(), static_cast<objectType>(strlist.at(5).toInt()));
+                levelInitial.push_back(obstacleToAppend);
+            }
+
+            if (strlist.at(0) == "PowerUp") {
+                qDebug() << "  PowerUp-Eintrag gefunden.";
+                GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), strlist.at(4).toInt(), strlist.at(5).toInt(), strlist.at(6).toInt());
+                levelInitial.push_back(powerUpToAppend);
+            }
+
+            if (strlist.at(0) == "Boss") {
+                qDebug() << "  Boss-Eintrag gefunden.";
+            }
+
+        } // end of while
+
+        levelInitial.sort(compareGameObjects());
+        levelSpawn.sort(compareGameObjects());
+
+        qDebug() << "Auslesen des levelFile beendet.";
+    }
+}
+
+
+int Game::getStepIntervall() {
+    return stepIntervall;
+
+}
+
