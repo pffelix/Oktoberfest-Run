@@ -30,13 +30,13 @@ Level1
 ------------
 Player,130,0
 
-Obstacle,250
-Enemy,350,0,-10
-Obstacle,450
+Obstacle,300
+Enemy,400,0,-10
+Obstacle,500
 
-Plane,500,100
+Plane,800,100
 
-Powerup,600,40,10,0,0,0
+Powerup,200,40,10,0,0,0
 
 
 
