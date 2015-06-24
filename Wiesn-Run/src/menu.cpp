@@ -22,12 +22,11 @@ std::string *Menu::getTitle() {
 }
 
 /**
- * @brief stellt das Menü dar
- * ruft Grafikfunktionen auf
+ * @brief Initialisiert das sichtbare Menü , muss immer nach anlegen der Menü Entrys aufgerufen werden
  * @return 0 bei Erfolg
- * @author Rupert
+ * @author Flo
  */
-int Menu::display() {
+int Menu::displayInit() {
     //qDebug("%s - %s",getTitle()->c_str(),getSelection()->name.c_str());
 
     //Menü-Scene und Menü-Hintergrundbild werde initialisiert
@@ -37,16 +36,34 @@ int Menu::display() {
 
     //für jeden Menüeintrag wird ein QGraphicsTexItem angelegt, eingestellt und angezeigt
     for(std::list<menuEntry*>::iterator it = menuEntrys.begin(); it != menuEntrys.end(); ++it) {
-         QGraphicsTextItem  * showEntry = new QGraphicsTextItem;
-         showEntry->setPlainText(QString::fromStdString((*it)->name));
-         showEntry->setDefaultTextColor(Qt::blue);
-         showEntry->setFont(QFont("Times",50));
-         showEntry->setPos(320,300 + 80*(*it)->position );
-         menuScene->addItem(showEntry);
+        //QGraphicsTextItem  * showEntry = new QGraphicsTextItem;
+        (*it)->showEntry.setPlainText(QString::fromStdString((*it)->name));
+        (*it)->showEntry.setPos(320,300 + 80*(*it)->position );
+        (*it)->showEntry.setDefaultTextColor(Qt::blue);
+        (*it)->showEntry.setFont(QFont("Times",50));
+        menuScene->addItem(&(*it)->showEntry);
     }
     return 0;
 }
 
+/**
+ * @brief aktualisiert das sichtbare Menü
+ * @return 0 bei Erfolg
+ * @author Flo
+ */
+int Menu::displayUpdate() {
+
+    //setzt alle Menüeinträge auf das Defaultaussehen
+    for(std::list<menuEntry*>::iterator it = menuEntrys.begin(); it != menuEntrys.end(); ++it) {
+        (*it)->showEntry.setDefaultTextColor(Qt::blue);
+        (*it)->showEntry.setFont(QFont("Times",50));
+    }
+
+    //färbt die aktuelle Selektion Rot ein
+    getSelection()->showEntry.setDefaultTextColor(Qt::red);
+    getSelection()->showEntry.setFont(QFont("Times",60));
+    return 0;
+}
 
 /**
  * @brief Neuen Eintrag hinzufügen

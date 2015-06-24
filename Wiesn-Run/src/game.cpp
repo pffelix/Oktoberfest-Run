@@ -84,12 +84,14 @@ int Game::start() {
     menuStart = new Menu(new std::string("Wiesn-Run"));
     menuStart->addEntry("Spiel neustarten",menuId_StartGame);
     menuStart->addEntry("Spiel beenden", menuId_EndGame);
+    menuStart->displayInit();
 
     menuEnd = new Menu(new std::string("Game Over"));
     menuEnd->addEntry("Weiterspielen",menuId_Resume);
     menuEnd->addEntry("Highscore anzeigen",menuId_Highscore);
     menuEnd->addEntry("Credits anzeigen",menuId_Credits);
     menuEnd->addEntry("zurück zum Anfang",menuId_GotoStartMenu);
+    menuEnd->displayInit();
 
     // QGraphicsScene der Level erstellen
     levelScene = new QGraphicsScene;
@@ -195,7 +197,7 @@ int Game::step() {
 
     switch(state) {
         case gameMenuEnd:
-            menuEnd->display();
+            menuEnd->displayUpdate();
             //MenüScene wird vom Anzeigewidget aufgerufen
             window->setScene(menuEnd->menuScene);
 
@@ -237,7 +239,7 @@ int Game::step() {
 
         case gameMenuStart:
 
-            menuStart->display();
+            menuStart->displayUpdate();
             //MenüScene wird vom Anzeigewidget aufgerufen
             window->setScene(menuStart->menuScene);
 
