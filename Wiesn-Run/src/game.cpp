@@ -354,8 +354,9 @@ void Game::evaluateInput() {
 
     // Leertaste?
     if(keyInput->getKeyactions().contains(Input::Keyaction::Shoot)) {
+
         Shoot *playerFire = new Shoot(playerObjPointer->getPosX()+playerObjPointer->getLength()/2,playerObjPointer->getPosY(),1,player);
-        worldObjects.push_back(playerFire);
+       worldObjects.push_back(playerFire);
         scene->addItem(playerFire);
     }
 
