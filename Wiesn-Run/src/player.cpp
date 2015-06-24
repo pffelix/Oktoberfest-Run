@@ -3,12 +3,11 @@
 /// Class Player
 /// lastUpdate: update() 10.6 Johann
 
-Player::Player(int posX, int posY, int speedX) : MovingObject(posX, posY, player, speedX, -5) {
+Player::Player(int posX, int posY, int speedX) : MovingObject(posX, posY, player, speedX, -maxSpeedY) {
     health = 3;
     //Startpegel 5 alle 5 Sekunden wird eins abgebaut
     alcoholLevel = 5 * (5 * frameRate);
-    jumpActive = false;
-    jumpTableIndex = 0;
+    jumpState = false;
     ammunation = 0;
     immunityCooldown = 0;
     fireRate = 1 * frameRate;
@@ -16,7 +15,7 @@ Player::Player(int posX, int posY, int speedX) : MovingObject(posX, posY, player
 
     //Grafik - Player wird initialisiert
     setPixmap(QPixmap(":/images/images/player.png"));
-    setPos(getPosX() - 0.5*getLength(), -getPosY() + 548);
+    setPos(playerOffset - 0.5*getLength(), yOffset - getPosY() - getHeight());
 }
 
 Player::~Player() {
@@ -45,7 +44,7 @@ void Player::setHealth(int health) {
 }
 
 /**
- * @brief Player::setDamage
+ * @brief Player::receiveDamage
  * @return Lebenszustand des Spielers: true = tot
  */
 bool Player::receiveDamage(int damage) {
@@ -145,33 +144,37 @@ void Player::setImmunityCooldown(int remainingTime) {
 }
 
 /**
- * @brief Player::setJump
- * wechselt den Sprung-Zustand des Spielers
- *
- * @param jump : neuer Sprung-Zustand
+ * @brief beginnt einen Sprung
+ * Nur wenn der Spieler sich nicht in der Luft befindet
  */
-void Player::setJump(bool jump) {
-    jumpActive = jump;
+void Player::startJump() {
+    //
+    if (!(jumpState)) {
+        jumpState = true;
+        jumpCooldown = frameRate;
+        setSpeedY(maxSpeedY);
+    }
 }
 
 /**
- * @brief Player::setFall
- * wechselt den Sprung-Zustand des Spielers
- * initialisiert einen Fall
+ * @brief gibt den Sprung-Zustande des Spielers zurück
+ * @return
  */
-void Player::setFall() {
-    jumpActive = true;
-    jumpTableIndex = fallIndex;
+bool Player::inJump() const{
+    return jumpState;
 }
 
 /**
- * @brief Player::resetJump
- * setzt den Sprung-Zustand auf anfangfwerte zurück
+ * @brief Gibt an dass der Spieler nicht in einem Sprung ist
  */
-void Player::resetJump() {
-    jumpActive = false;
-    jumpTableIndex = 0;
-    setSpeedY(-5);
+void Player::resetJumpState() {
+    jumpState = false;
+}
+/**
+ * @brief Methode wird aufgerufen, wenn der Spieler bei einem Sprung mit einem Hinderniss zusammengestoßen ist
+ */
+void Player::abortJump() {
+    setSpeedY(-maxSpeedY);
 }
 
 /**
@@ -180,18 +183,30 @@ void Player::resetJump() {
  * @author Johann
  */
 void Player::update() {
-    if (jumpActive) {
-        setSpeedY(jumpTable[jumpTableIndex]);
-        jumpTableIndex++;
-    }
     //Bewegung ausführen
     updatePosition();
+
+    if (jumpState) {
+        if (jumpCooldown > 1) {
+            jumpCooldown = jumpCooldown - 1;
+        } else {
+            setSpeedY(-maxSpeedY);
+        }
+    }
+    if (getPosY() > 0) {
+        jumpState = true;
+    } else {
+        jumpState = false;
+    }
+
+    //Grafik - Bewegung anzeigen
+    setPos(getPosX() - 0.5*getLength(), -getPosY() + 548);
 
     //Alkoholpegel Zeitabbau
     if (alcoholLevel > 0) {
         alcoholLevel = alcoholLevel - 1;
     }
-    /* Cooldown weiterzählen
+    /* Cooldowns weiterzählen
      * aktueller Stand: Werte nur interessant wenn > 0
      * darum keine if-Abfragen
      */

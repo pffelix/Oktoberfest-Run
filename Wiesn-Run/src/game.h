@@ -91,8 +91,8 @@ private:
     /// Zu löschende Schüsse
     std::list<GameObject*> objectsToDelete;
 
-    /// AudioEvents
-    std::list<struct audioStruct> audiostructs;
+    /// Liste audioevents mit allen im Step stattfindenden AudioStructs
+    std::list<struct audioStruct> audioevents;
 
     /// Breite der Szene
     int sceneWidth;

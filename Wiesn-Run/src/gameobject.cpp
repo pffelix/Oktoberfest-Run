@@ -19,11 +19,11 @@ GameObject::GameObject(int posX, int posY, int length, int height, objectType ty
     this->height = height;
     this->type = type;
 
-    //Grafik - Obstacle Image initialisieren
-    if(getType() == obstacle) {
-        setPixmap(QPixmap(":/images/images/obstacle.png"));
-        setPos(getPosX() - getLength()*0.5, 548);
-    }
+    //Grafik - Plane Image initialisieren
+     if(getType() == obstacle && getLength() == 2*playerScale) {
+        setPixmap(QPixmap(":/images/images/plane.png"));
+        setPos(getPosX() - getLength()*0.5, yOffset - getPosY() - getHeight());
+     }
 }
 
 GameObject::GameObject(int posX, int posY, objectType type) {
@@ -36,6 +36,11 @@ GameObject::GameObject(int posX, int posY, objectType type) {
         // Verhältnis 1:2 (b:h)
         this->length = playerScale * (3.0 / 2.0);
         this->height = playerScale * 2;
+
+        //Grafik - Obstacle Images initialisieren
+        setPixmap(QPixmap(":/images/images/obstacle.png"));
+        setPos(getPosX() - 0.5*getLength(), yOffset - getPosY() - getHeight());
+
     }
     case player: {
         // Verhältnis 1:2 (b:h)
@@ -48,14 +53,14 @@ GameObject::GameObject(int posX, int posY, objectType type) {
     }
     case powerUp: {
         // Verhältnis (2/3):(2/3)
-        this->length = playerScale * (2 / 3);
+        this->length = playerScale * (2.0 / 3.0);
         this->height = this->length;
         break;
     }
     case shot: {
         // Verhältnis (1/3):(2/3) (b:h)
-        this->length = playerScale * (1/3);
-        this->height = playerScale * (2/3);
+        this->length = playerScale * (1.0 / 3.0);
+        this->height = playerScale * (2.0 / 3.0);
         break;
     }
     case BOSS:{

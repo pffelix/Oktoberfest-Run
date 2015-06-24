@@ -12,6 +12,7 @@
 #define DEFINITIONS_H
 
 #include <iostream>
+#include <list>
 
 /**
  * @brief Anzahl gameloop-Durchläufe pro Sekunde
@@ -32,9 +33,10 @@ const int playerScale = 60;
 /**
  * @brief Offsets Spieler <-> linker Fensterrand und Spielebene <-> oberer Fensterrand
  * yOffset: Distanz zwischen obererm Rand (QT Koordinatensystem läuft von oben nach unten) und unterster Spielebene
+ *          => Fensterhöhe(768px) - yOffset = 100px
  * playerOffset: Distanz zwischen linkem Rand und Spieler
  */
-const int yOffset = 548;
+const int yOffset = 668;
 const int playerOffset = 100 + (playerScale/2);
 
 /**
@@ -44,6 +46,11 @@ const int maxSpeed = 2 * playerScale / frameRate;
 
 /// normale Player-Speed
 const int playerSpeed = maxSpeed / 2;
+
+/**
+ * @brief Fall- / Sprunggeschwindigkeit
+ */
+const int maxSpeedY = 3 * (playerScale / frameRate);
 
 /**
  * @brief Enumerator für den aktuellen Spielstatus
@@ -90,11 +97,13 @@ struct scoreStruct {
 
 
 /**
- * @brief Audio-Struktur
+ * @brief Struktur für einzelne Audio Events
  * AudioControl arbeitet Events von dieser Struktur ab.
- * Jedes audioStruct hat einen Namen und eine Distanz und ordnet einem Objekt einen Sound zu.
- * Die Distanz beträgt dabei minimal 0 und maximal 1 (größte Entfernung im Gamefenster).
- * Alle in einem Step auftretetenden audioStruct's werden in einer std::list audiostructs
+ * Jedes audioStruct hat einen "namen" und eine Liste mit Distanzinformationen
+ * (eine Distanz für jedes im Moment sichtbare Objekt der Objektgruppe "name" )
+ * und ordnet einer Objektgruppe einen Sound zu.
+ * Ein Distanzwert beträgt dabei minimal 0 und maximal 1 (größte Entfernung im Gamefenster).
+ * Alle in einem Step auftretetenden audioStruct's werden in einer std::list audioevents
  * gesammelt (game.h) und über die Methode update() in jedem Step der Klasse Audiocontrol übergeben.
  * Audiocontrol steuert den richtigen Abspieltyp jedes audioStruct.
  * Nach jedem Step wird die Liste gelöscht und wieder neu mit audioStructs gefüllt.
@@ -102,25 +111,27 @@ struct scoreStruct {
  * Ist ein Event mit zu erfolgender Audioausgabe vorhanden wird
  * ein audioStruct mit Eventname und aktueller Distanz des Audio-Events vom
  * Spieler zum Event erstellt.
- * Dieses Audiostruct wird an die Liste audiostructs mit allen im Step
- * stattfinden audiostructs angehängt.
+ * Dieses Audiostruct wird an die Liste audioevents mit allen im Step
+ * stattfinden audioStructs angehängt.
  * Ist ein Objekt / Event nachwievor aktiv in der Szene wird das
- * Struct wieder an die Liste audiostructs angehängt.
+ * Struct im nächsten Step wieder an die Liste audioevents angehängt.
  * Ist ein Objekt nicht mehr in der Szene zu sehen, so muss kein audioStruct übergeben werden.
  *
  * Befindet sich z.B. ein Bier in der Szene, so ist der audioStruct "name = scene_beer".
  * In jedem Step muss in der Audio-Struktur die Distanz des Biers zum Spieler
- * aktualisiert werden und an die Liste audiostructs angehängt werden.
+ * aktualisiert werden und an die Liste audioevents angehängt werden.
  * Verschwindet des Bierobjekt so wird das audioStruct nicht mehr übergeben.
- * Gibt es mehrer Bierobjekte so wird das Struct scene_beer mehrmals an die Liste (mit anderer Distanz) angehängt.
+ * Gibt es mehrere Bierobjekte so wird das Struct scene_beer mehrmals an die Liste (mit anderer Distanz) angehängt.
  *
  * Läuft der Spieler im aktuellen Step so wird das audioStruct "player_walk" erstellt("distance" stets 0).
- * Läuft er im nächsten Step nachwievor (hat also seine Position geändert) wird das Audiostruct wieder an die Liste angehängt.
- * Läuft er nicht mehr wird es nicht mehr an die audiostructs liste angehängt.
+ * Läuft er im nächsten Step nachwievor (hat also seine Position geändert) wird das Audiostruct wieder an die audioevents Liste angehängt.
+ * Läuft er nicht mehr wird es nicht mehr an die audioevents liste angehängt.
  *
  * Ist gerade das Level 1 aktiv so wird in jedem Step das audioStruct "background_level1" an die Liste angehängt.
  * Bei Background Musik ist "distance=0.5". Dies bewirkt dass sie leiser als Playersounds (distance = 0) abgespielt wird.
  *
+ * Befinden sich mehrer Gegner im Spiel "name= scene_enemy" wird in der Distance Liste für jeden Gegner eine
+ * Distance eingetragen.
  * Status_ audioStruct's werden in jedem Zeitschritt in dem das Spiel aktiv ist neu an die Liste angehängt.
  * powerup_ audioStruct's werden einmal angehängt wenn gerade das Powerup aufgenommen wird.
  *
@@ -150,7 +161,7 @@ struct scoreStruct {
  */
 struct audioStruct {
     std::string name;
-    int distance;
+    std::list<float> distance;
 };
 
 /**

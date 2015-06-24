@@ -11,7 +11,7 @@
  *
  * @todo Skalieren der Werte und fireCooldown erhöhen
  */
-Enemy::Enemy(int posX, int posY, int speedX) : MovingObject(posX, posY, enemy, speedX, -5) {
+Enemy::Enemy(int posX, int posY, int speedX) : MovingObject(posX, posY, enemy, speedX, -maxSpeedY) {
     health = 1;
     ///Fire Cooldown für debug zwecke niedrig
     fireCooldown = 2;
@@ -20,9 +20,9 @@ Enemy::Enemy(int posX, int posY, int speedX) : MovingObject(posX, posY, enemy, s
 
     DeathCooldown = frameRate;
 
-    //Grafik - Enemygrafik initialisieren
+    //Grafik - Enemy wird initialisiert
     setPixmap(QPixmap(":/images/images/enemy.png"));
-    setPos(getPosX() - getLength()*0.5, -getPosY() + 548);
+    setPos(getPosX() - 0.5*getLength(), yOffset - getPosY() - getHeight());
 }
 
 Enemy::~Enemy() {
@@ -51,7 +51,11 @@ void Enemy::setHealth(int health) {
 
 bool Enemy::receiveDamage(int damage) {
     health = health - damage;
-    return (!(health > 0));
+    death = !(health > 0);
+    if (death) {
+        setSpeedX(0);
+    }
+    return death;
 }
 
 /**
@@ -117,4 +121,12 @@ void Enemy::update() {
             fireCooldown = fireCooldown - 1;
         }
     }
+
+    /* Bewegung durchführen
+     *      ist außerhalb dem IF-statement weil der Gegner noch fallen soll, wenn er in der Luft stirbt.
+     */
+    updatePosition();
+
+    //Grafik - Bewegung anzeigen
+    setPos(getPosX() - 0.5*getLength(), -getPosY() + 548);
 }
