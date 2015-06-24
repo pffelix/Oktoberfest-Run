@@ -279,7 +279,7 @@ int Game::step() {
             audioevents.push_back(player_jump);
             distance.push_front(0.3);
             distance.push_front(0.2);
-            audioStruct scene_enemy{"scene_enemy", distance};
+            audioStruct scene_enemy{"powerup_beer", distance};
             audioevents.push_back(scene_enemy);
             /// send filled audioevents list to AudioControl Object, which updates current Output Sounds
             audioOutput->update(&audioevents);

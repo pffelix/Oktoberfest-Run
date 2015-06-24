@@ -5,7 +5,7 @@
  *         Konstruktor instanziert ein Objekt der Klasse Audio.
  * @author  Felix Pfreundtner
  */
-Audio::Audio(QString state_name) {
+Audio::Audio(std::string state_name) {
     source = state_name;
     readSamples();
     qDebug("Audio object created");
@@ -24,10 +24,10 @@ Audio::~Audio() {
  * @brief  Audio::getSource
  *         "getSource" gibt bei Aufruf den Namen des Objektes zurück welcher
  *         welcher dem Pfad in der Ressourcendatenbank entspricht.
- * @return QString source
+ * @return std::string source
  * @author Felix Pfreundtner
  */
-QString Audio::getSource() {
+std::string Audio::getSource() {
     return source;
 }
 
@@ -91,7 +91,7 @@ void Audio::setVolume(short volume_audio_obj){
  * @author Felix Pfreundtner
  */
 void Audio::readSamples() {
-    QString sourcepath; /// Pfad zur Wave Datei in den Ressourcendateien
+    std::string sourcepath; /// Pfad zur Wave Datei in den Ressourcendateien
     int channels; /// Anzahl an Kanälen
     int bitdepth; /// Anzahl an Bits pro Sample
     int bytedepth; /// Anzahl an Bytes pro Sample
@@ -100,7 +100,7 @@ void Audio::readSamples() {
 
     /// Öffne zum Audio Objekt gehörige Wave Datei
     sourcepath = ":/audios/audios/" + source + ".wav";
-    QFile file(sourcepath);
+    QFile file(QString::fromStdString(sourcepath));
 
     bool ok = file.open(QIODevice::ReadOnly | QIODevice::Text);
     if(ok == false) {
@@ -140,7 +140,6 @@ void Audio::readSamples() {
 
     /// Data chunk erreicht
 
-    qDebug() << QString::fromStdString(std::string(tempbytes));
      /// lese die Größe des data chunks in Bytes aus
     file.read(tempbytes, 4);
     /// berechene die Gesamtanzahl an Samples in der Datei

@@ -26,10 +26,10 @@
 class Audio{
 
 public:
-    Audio(QString state_name);
+    Audio(std::string state_name);
     ~Audio();
 
-    QString getSource();
+    std::string getSource();
     QVector<float> getSamples();
     int getSamplenbr();
     short getVolume();
@@ -42,7 +42,7 @@ private:
      *         welcher dem namen im ressourcenpfad entspricht.
      * @author  Felix Pfreundtner
      */
-    QString source;
+    std::string source;
 
     /**
      * @brief  samples

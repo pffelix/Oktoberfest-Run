@@ -6,7 +6,6 @@
  * @author  Felix Pfreundtner
  */
 AudioControl::AudioControl() {
-    Audio* audio_object = new Audio ("sine_1kHz_(44.1,1,16)");
 }
 
 /**
@@ -39,7 +38,7 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
     std::list<float>::iterator npsv;
     /// setze alle die Abspielinformation aller playstructs in playevents auf false (verhindere weiteres abspielen)
     for (std::list<playStruct>::iterator pe = playevents.begin(); pe != playevents.end(); pe++) {
-        pe->play = false;
+        pe->playnext = false;
     }
 
     /// aktualisiere die Abspielinformation und Distanzwerte aller playstructs aus playevents mit aktuellen GameLogik Werten
@@ -60,7 +59,7 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
                     *pev = 1.0 - *pev;
                 }
                 /// setzte play auf true, da das playstruct weiter abgespielt werden soll
-                pe->play = true;
+                pe->playnext = true;
                 /// setzte Variable nasnameexistinpe auf true, da newaudiostruct bisher in playevents gefunden wurde
                 nasnameexistinpe = true;    
             }
@@ -76,7 +75,8 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
                 *npsv = 1.0 - *npsv;
             }
             /// setzte play auf true, da das playstruct abgespielt werden soll
-            newplaystruct.play = true;
+            newplaystruct.playnext = true;
+            newplaystruct.object = new Audio (newplaystruct.name);
             /// füge das neue playstruct der Liste playevents hinzu
             playevents.push_back(newplaystruct);
         }
@@ -86,11 +86,12 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
     /// lösche alle playstructs aus der events Liste welche nicht mehr abgespielt werden sollen
     pe = playevents.begin();
     while(pe != playevents.end()) {
-        if(pe->play == false) {
+        if(pe->playnext == false) {
             pe = playevents.erase(pe);
         }
         else {
             pe++;
         }
     }
+    qDebug("stop");
 }
