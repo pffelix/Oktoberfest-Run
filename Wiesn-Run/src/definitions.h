@@ -23,11 +23,19 @@ const int frameRate = 20;
  * @brief Skalierungsfaktor für die Breite des Spielerobjekts bei 1024 Bildschirmbreite:
  *                 Breite:Höhe
  * Spieler, Gegner:     1:2
- * Hindernisse:         1:2     ,     2:(1/3)           dabei ist das erste das Standardhindernis
+ * Hindernisse:         (3/2):2     ,     2:(1/3)           dabei ist das erste das Standardhindernis
  * Power-Up:        (2/3):(2/3) ,
  * Krug:            (1/3):(2/3)
  */
 const int playerScale = 60;
+
+/**
+ * @brief Offsets Spieler <-> linker Fensterrand und Spielebene <-> oberer Fensterrand
+ * yOffset: Distanz zwischen obererm Rand (QT Koordinatensystem läuft von oben nach unten) und unterster Spielebene
+ * playerOffset: Distanz zwischen linkem Rand und Spieler
+ */
+const int yOffset = 548;
+const int playerOffset = 100 + (playerScale/2);
 
 /**
  * @brief Geschwindigkeit mit der sich die beweglichen Objekte durch die Welt bewegen
