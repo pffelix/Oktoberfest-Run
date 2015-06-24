@@ -17,7 +17,7 @@
  * @brief Anzahl gameloop-Durchläufe pro Sekunde
  * wird in allen Klassen für die CooldownParameter benutzt
  */
-const int frameRate = 1;
+const int frameRate = 20;
 
 /**
  * @brief Skalierungsfaktor für die Breite des Spielerobjekts bei 1024 Bildschirmbreite:
