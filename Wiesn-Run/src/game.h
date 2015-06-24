@@ -77,11 +77,7 @@ private:
     void endGame();
     bool hurtPlayer(int damage);
 
-    void makeTestWorld();
-    void loadLevel1();
-    void loadLevel2();
     void colTestLevel();
-    void loadFromFile(QString fileSpecifier);
     void loadLevelFile(QString fileSpecifier);
 
     void startNewGame();
