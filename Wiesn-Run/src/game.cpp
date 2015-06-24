@@ -80,7 +80,7 @@ int Game::start() {
     colTestLevel();
 
     // Fundamentale stepSize setzen
-    stepSize = 100;
+    stepIntervall = 100;
 
     // Spieler hinzufügen
     worldObjects.push_back(playerObjPointer);
@@ -121,7 +121,7 @@ int Game::start() {
 
     // Timer installieren
     qDebug("Starte Timer mit 500msec-Intervall");
-    Game::startTimer(stepSize);
+    Game::startTimer(stepIntervall);
 
     return appPointer->exec();
 }
@@ -242,6 +242,7 @@ int Game::step() {
             break;
     }
 
+    stepCount++;
     return 0;
 }
 
@@ -1098,4 +1099,8 @@ void Game::colTestLevel() {
     // Erstelle das Spieler-Objekt und setze den playerObjPointer
     GameObject *playerObject = new Player(57*obs, 2*obs, 0*obs);
     playerObjPointer = dynamic_cast<Player*>(playerObject);
+}
+
+int Game::getStepIntervall() {
+    return stepIntervall;
 }
