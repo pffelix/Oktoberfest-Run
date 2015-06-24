@@ -74,7 +74,6 @@ private:
     void detectCollision(std::list<GameObject*> *objectsToCalculate);
     void handleCollisions();
     void renderGraphics(std::list<GameObject *> *objectList);
-    void playSound(std::list<soundStruct> *soundEvents);
     void endGame();
     bool hurtPlayer(int damage);
 
@@ -93,8 +92,8 @@ private:
     /// Zu löschende Schüsse
     std::list<GameObject*> objectsToDelete;
 
-    /// SoundEvents
-    std::list<struct soundStruct> soundList;
+    /// AudioEvents
+    std::list<struct audioStruct> audiostructs;
 
     /// Breite der Szene
     int sceneWidth;
