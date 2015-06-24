@@ -48,14 +48,14 @@ GameObject::GameObject(int posX, int posY, objectType type) {
     }
     case powerUp: {
         // Verhältnis (2/3):(2/3)
-        this->length = playerScale * (2 / 3);
+        this->length = playerScale * (2.0 / 3.0);
         this->height = this->length;
         break;
     }
     case shot: {
         // Verhältnis (1/3):(2/3) (b:h)
-        this->length = playerScale * (1/3);
-        this->height = playerScale * (2/3);
+        this->length = playerScale * (1.0 / 3.0);
+        this->height = playerScale * (2.0 / 3.0);
         break;
     }
     case BOSS:{

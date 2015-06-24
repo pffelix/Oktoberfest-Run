@@ -4,15 +4,15 @@
  * @brief Konstruktor für einen Schuss(Bierkrug)
  * @param posX      : x-Position
  * @param posY      : y-Position
- * @param speedX    : horizontale Geschwindigkeit
  * @param origin    : Schuss Erzeuger
  *
+ * Schuss bewegt sich dreimal so schnell wie der spieler
  * @lastChanges Größe des Bierkruges festgesetzt (erste idee)
  *
  * @author Johann
  */
 //Da Länge und Breite konstante Werte beim Bierkrug sind, zur Zeit nur Optinal
-Shoot::Shoot(int posX, int posY, int direction, objectType origin) : MovingObject((posX + (playerScale / 2)), (posY + playerScale), shot, (direction * 2 * maxSpeed) , 0) {
+Shoot::Shoot(int posX, int posY, int direction, objectType origin) : MovingObject((posX + (playerScale / 2)), (posY + playerScale), shot, (direction * 3 * maxSpeed) , 0) {
     inflictedDamage = 1;
     this->origin = origin;
 

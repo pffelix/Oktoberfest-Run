@@ -76,6 +76,7 @@ void Game::timerEvent(QTimerEvent *event)
 int Game::start() {
     qDebug("Game::start()");
 
+
     // Fundamentale stepSize setzen
     stepIntervall = 1000/frameRate;
 
@@ -128,8 +129,7 @@ void Game::startNewGame() {
 
     // Level festlegen, der geladen werden soll
     QString fileSpecifier = ":/levelFiles/levelFiles/level1.txt";
-    loadFromFile(fileSpecifier);
-
+    loadLevelFile(fileSpecifier);
     // Spieler hinzufügen
     worldObjects.push_back(playerObjPointer);
     //Grafik - Spieler der Scene hinzufügen und window auf ihn zentrieren
@@ -372,14 +372,14 @@ void Game::evaluateInput() {
 
     // Pfeil oben?
     if(keyInput->getKeyactions().contains(Input::Keyaction::Up)) {
-        playerObjPointer->setJump(true);
+        playerObjPointer->startJump();
     }
 
     // Leertaste?
     if(keyInput->getKeyactions().contains(Input::Keyaction::Shoot)) {
-
+        //Shoot *playerFire = new Shoot(playerObjPointer->getPosX(),playerObjPointer->getPosY(),1,player);
         Shoot *playerFire = new Shoot(playerObjPointer->getPosX()+playerObjPointer->getLength()/2,playerObjPointer->getPosY(),1,player);
-       worldObjects.push_back(playerFire);
+        worldObjects.push_back(playerFire);
         scene->addItem(playerFire);
     }
 
@@ -731,20 +731,21 @@ void Game::handleCollisions() {
                     break;
                 }
                 case fromAbove: {
-                    //Bewegung in Y-Richtung stoppen, Sprung beenden!!
-                    playerObjPointer->setSpeedY(0);
-                    playerObjPointer->resetJump();
-                    //Überlappung berechnen und Spieler nach obern versetzen
+                    /* Überlappung berechnen und Spieler nach obern versetzen
+                     *      Sprungzustand zurücksetzten
+                     */
                     overlap = (handleEvent.causingObject->getPosY() + handleEvent.causingObject->getHeight()) - playerObjPointer->getPosY();
                     playerObjPointer->setPosY(playerObjPointer->getPosY() + overlap);
+                    playerObjPointer->resetJumpState();
                     break;
                 }
                 case fromBelow: {
                     //Wegen Zusammenstoß wird ein Fall initiiert
-                    playerObjPointer->setFall();
+                    playerObjPointer->abortJump();
                     //Überlappung berechnen und Spieler nach obern versetzen
                     overlap = (playerObjPointer->getPosY() + playerObjPointer->getHeight()) - handleEvent.causingObject->getPosY();
                     playerObjPointer->setPosY(playerObjPointer->getPosY() + overlap);
+                    playerObjPointer->resetJumpState();
                     break;
                 }
                 }
@@ -940,7 +941,7 @@ void Game::renderGraphics(std::list<GameObject*> *objectList) {
 void Game::colTestLevel() {
     /// Skalierungsfaktor für Objekte im Spiel
     int obs = 10;
-
+/*
     // Erstelle statische Objekte
     GameObject *obstackle1 = new GameObject(40*obs, 0*obs, 6*obs, 12*obs, obstacle);
     GameObject *obstackle2 = new GameObject(60*obs, 0*obs, 6*obs, 12*obs, obstacle);
@@ -963,11 +964,12 @@ void Game::colTestLevel() {
     // Füge bewegliche Objekte in zugehörige liste
     levelSpawn.push_back(enemy1);
     levelSpawn.push_back(enemy2);
-
+*/
     // Erstelle das Spieler-Objekt und setze den playerObjPointer
     GameObject *playerObject = new Player(13*obs, 0*obs, 1*obs);
 
     playerObjPointer = dynamic_cast<Player*>(playerObject);
+    playerObjPointer->startJump();
 }
 
 
