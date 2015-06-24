@@ -75,28 +75,17 @@ void Game::timerEvent(QTimerEvent *event)
  */
 int Game::start() {
     qDebug("Game::start()");
-    // Level erstellen bedeutet levelInitial und levelSpawn füllen
-/*
-    //makeTestWorld();
-    //loadLevel1();
-    //loadLevel2();
-    colTestLevel();
-*/
-
-    // Level festlegen, der geladen werden soll
-    QString fileSpecifier = ":/levelFiles/levelFiles/level1.txt";
-    loadLevelFile(fileSpecifier);
-
 
     // Fundamentale stepSize setzen
     stepIntervall = 1000/frameRate;
 
     // Menüs erstellen
     menuStart = new Menu(new std::string("Wiesn-Run"));
-    menuStart->addEntry("Spiel starten",menuId_StartGame);
+    menuStart->addEntry("Spiel neustarten",menuId_StartGame);
     menuStart->addEntry("Spiel beenden", menuId_EndGame);
 
     menuEnd = new Menu(new std::string("Game Over"));
+    menuEnd->addEntry("Weiterspielen",menuId_Resume);
     menuEnd->addEntry("Highscore anzeigen",menuId_Highscore);
     menuEnd->addEntry("Credits anzeigen",menuId_Credits);
     menuEnd->addEntry("zurück zum Anfang",menuId_GotoStartMenu);
@@ -112,6 +101,35 @@ int Game::start() {
     window->show();
     qDebug("initialize window");
 
+    // Event Filter installieren
+    window->installEventFilter(keyInput);
+
+    startNewGame();
+
+    // Timer installieren
+    qDebug("Starte Timer mit 500msec-Intervall");
+    Game::startTimer(stepIntervall);
+
+    ///@TODO hier wird das Startmenü übersprungen
+    state = gameIsRunning;
+
+    return appPointer->exec();
+}
+
+/**
+ * @brief Startet neues Spiel
+ * lädt Leveldatei
+ * füllt worldobjects
+ */
+void Game::startNewGame() {
+    // alles alte leeren
+    scene->clear();
+    worldObjects.clear();
+
+    // Level festlegen, der geladen werden soll
+    QString fileSpecifier = ":/levelFiles/levelFiles/level1.txt";
+    loadFromFile(fileSpecifier);
+
     // Spieler hinzufügen
     worldObjects.push_back(playerObjPointer);
     //Grafik - Spieler der Scene hinzufügen und window auf ihn zentrieren
@@ -121,6 +139,7 @@ int Game::start() {
     spawnDistance = 1000;
     // Szenen-Breite setzen
     sceneWidth = 1000;
+
     // Zeiger auf Objekte aus levelInitial in worldObjects verlegen
     while (!(levelInitial.empty())) {
         GameObject *currentObject = *levelInitial.begin();
@@ -129,15 +148,6 @@ int Game::start() {
         //Grafik
         scene->addItem(currentObject);
     }
-
-    // Event Filter installieren
-    window->installEventFilter(keyInput);
-
-    // Timer installieren
-    qDebug("Starte Timer mit 500msec-Intervall");
-    Game::startTimer(stepIntervall);
-
-    return appPointer->exec();
 }
 
 /**
@@ -185,6 +195,10 @@ int Game::step() {
             if(keyInput->getKeyactions().contains(Input::Keyaction::Enter)) {
                 // Menüpunkt ausgewählt
                 switch(menuEnd->getSelection()->id) {
+                    case menuId_Resume:
+                        // Weiterspielen
+                        state = gameIsRunning;
+                        break;
                     case menuId_Highscore:
                         // Highscore Fenster anzeigen
                         break;
@@ -206,6 +220,11 @@ int Game::step() {
                 menuEnd->changeSelection(Menu::menuSelectionChange::down);
             }
 
+            // ESC? -> Weiterspielen
+            if(keyInput->getKeyactions().contains(Input::Keyaction::Exit)) {
+                state = gameIsRunning;
+            }
+
             break;
 
         case gameMenuStart:
@@ -216,6 +235,7 @@ int Game::step() {
                 // Menüpunkt ausgewählt
                 switch(menuStart->getSelection()->id) {
                     case menuId_StartGame:
+                        startNewGame();
                         state = gameIsRunning;
                         break;
                     case menuId_EndGame:
