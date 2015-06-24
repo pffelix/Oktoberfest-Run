@@ -76,11 +76,14 @@ void Game::timerEvent(QTimerEvent *event)
 int Game::start() {
     qDebug("Game::start()");
     // Level erstellen bedeutet levelInitial und levelSpawn füllen
+/*
     //makeTestWorld();
     //loadLevel1();
     //loadLevel2();
     colTestLevel();
+*/
 
+    // Level festlegen, der geladen werden soll
     QString fileSpecifier = ":/levelFiles/levelFiles/testLevel.txt";
     loadFromFile(fileSpecifier);
 
