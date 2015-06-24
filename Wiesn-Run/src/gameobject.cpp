@@ -18,6 +18,12 @@ GameObject::GameObject(int posX, int posY, int length, int height, objectType ty
     this->length = length;
     this->height = height;
     this->type = type;
+
+    //Grafik - Obstacle Image initialisieren
+    if(getType() == obstacle) {
+        setPixmap(QPixmap(":/images/images/obstacle.png"));
+        setPos(getPosX() - getLength()*0.5, 548);
+    }
 }
 
 GameObject::GameObject(int posX, int posY, objectType type) {

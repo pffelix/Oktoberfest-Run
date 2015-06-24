@@ -2,8 +2,9 @@
 #define GAMEOBJECT_H
 
 #include "definitions.h"
+#include <QGraphicsPixmapItem>
 
-class GameObject {
+class GameObject : public QGraphicsPixmapItem {
 
 public:
     //Konstruktor und Destruktor
