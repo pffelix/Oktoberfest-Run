@@ -4,7 +4,6 @@
 #include <list>
 #include <string>
 #include "definitions.h"
-#include <QGraphicsPathItem>
 #include <QGraphicsScene>
 #include <QGraphicsTextItem>
 #include <QFont>

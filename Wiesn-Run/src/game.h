@@ -54,8 +54,6 @@ public:
     /// Startet die Mockup QApplication app
     int run(QApplication& app);
 
-    QGraphicsView getWindow();
-
     struct stateStruct gameStats;
     //Liste von Kollisionen
     std::list<struct collisionStruct> collisionsToHandle;
