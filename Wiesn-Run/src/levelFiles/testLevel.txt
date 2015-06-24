@@ -1,0 +1,6 @@
+Erste Zeile
+Zweite Teile
+Umlaute: Ä ö $ § @ µ
+Vierte Zeile \n
+Enemy
+Fünfte Zeile und vorher kam newline-Command
