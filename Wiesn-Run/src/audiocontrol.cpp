@@ -6,7 +6,7 @@
  * @author  Felix Pfreundtner
  */
 AudioControl::AudioControl() {
-    Audio* audio_object = new Audio ("sine_1kHz_(44.1,1,8)");
+    Audio* audio_object = new Audio ("sine_1kHz_(44.1,1,16)");
 }
 
 /**
