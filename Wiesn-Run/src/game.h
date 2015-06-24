@@ -84,7 +84,6 @@ private:
     void endGame();
     bool hurtPlayer(int damage);
 
-
     void colTestLevel();
     void loadLevelFile(QString fileSpecifier);
 
