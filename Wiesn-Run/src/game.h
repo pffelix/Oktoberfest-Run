@@ -89,6 +89,7 @@ private:
     void loadLevel2();
     void colTestLevel();
     void loadFromFile(QString fileSpecifier);
+    void loadLevelFile(QString fileSpecifier);
 
     /// In der Welt befindliche Objekte
     std::list<GameObject*> worldObjects;
