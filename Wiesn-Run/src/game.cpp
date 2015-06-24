@@ -252,10 +252,10 @@ int Game::step() {
             //    correctMovement();
             //    handleEvents();
             renderGraphics(&worldObjects);
-            /// send filled audiostructs list to AudioControl Object, which updates current Output Sounds
-            audioOutput->update(&audiostructs);
+            /// send filled audioevents list to AudioControl Object, which updates current Output Sounds
+            audioOutput->update(&audioevents);
             /// delete List audioStruct elements in list and fill it in the next step again
-            audiostructs.clear();
+            audioevents.clear();
             break;
     }
 
