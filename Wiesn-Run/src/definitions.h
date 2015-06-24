@@ -96,12 +96,11 @@ struct scoreStruct {
  * Spieler zum Event erstellt.
  * Dieses Audiostruct wird an die Liste audiostructs mit allen im Step
  * stattfinden audiostructs angehängt.
- * Ändern sich hierbei die Positionswerte eines Objektes von einem Step zu
- * einem anderen Step (was bedeteut, dass das Objekt nachwievor aktiv ist) wird das
- * Struct wieder an die Liste audiostructs angehängt
- * Ändern sich die Werte nicht, so muss kein audioStruct übergeben werden.
+ * Ist ein Objekt / Event nachwievor aktiv in der Szene wird das
+ * Struct wieder an die Liste audiostructs angehängt.
+ * Ist ein Objekt nicht mehr in der Szene zu sehen, so muss kein audioStruct übergeben werden.
  *
- * Befindet sich z.B. ein Bier in der Szene, so ist der "name = scene_beer"
+ * Befindet sich z.B. ein Bier in der Szene, so ist der audioStruct "name = scene_beer".
  * In jedem Step muss in der Audio-Struktur die Distanz des Biers zum Spieler
  * aktualisiert werden und an die Liste audiostructs angehängt werden.
  * Verschwindet des Bierobjekt so wird das audioStruct nicht mehr übergeben.
@@ -117,7 +116,8 @@ struct scoreStruct {
  * Status_ audioStruct's werden in jedem Zeitschritt in dem das Spiel aktiv ist neu an die Liste angehängt.
  * powerup_ audioStruct's werden einmal angehängt wenn gerade das Powerup aufgenommen wird.
  *
- * Übersicht über alle audioStruct's (wird regelmäßig von Felix erweitert, bei Neuigkeiten bitte audioStructs in GameLogik erstellen):
+ * Übersicht über alle audioStruct's:
+ * (wird regelmäßig von Felix erweitert, bei Neuigkeiten bitte audioStructs in GameLogik erstellen -> Neuigkeiten sind mit + markiert):
  *
  * scene_beer (distance = variabele)
  * scene_enemy (distance = variable)
