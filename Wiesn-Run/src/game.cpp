@@ -153,7 +153,7 @@ void Game::endGame() {
  *  - Bewegungen korrigieren
  *  - Events behandeln (Treffer..)
  *  - Grafik rendern und ausgeben
- *  - Sound ausgeben
+ *  - Audio ausgeben
  *  - verbleibende Zeit im Slot berechnen (Timer auslesen)
  *  - entsprechend warten
  * goto LOOP
@@ -246,7 +246,7 @@ int Game::step() {
             //    correctMovement();
             //    handleEvents();
             //    renderGraphics(&worldObjects, playerObjPointer);   <- Wird wohl bald gelöscht
-            //    playSound();
+            audioOutput->update(&audiostructs);
             break;
     }
 
@@ -935,26 +935,7 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
     delete renderPlayer;
 }
 
-/**
- * @brief Game::playSound
- * @param soundEvents
- */
-void Game::playSound(std::list<struct soundStruct> *soundEvents) {
 
-    /// @todo Sound-Overhead hierher
-
-    while (!(soundEvents->empty())) {
-        // Kopiere erstes Objekt in der Liste nach currentSound
-        soundStruct currentSound = *soundEvents->begin();
-        // Entferne Element aus Liste.
-        soundEvents->pop_front();
-
-        /// @todo Verarbeite Sound.
-    }
-
-    /// @todo Sound-Aufräumarbeiten
-
-}
 
 /**
  * @brief Erstellt ein paar Test-Objekte in worldObjects
