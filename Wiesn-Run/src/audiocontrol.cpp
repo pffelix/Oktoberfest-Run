@@ -20,22 +20,16 @@ AudioControl::~AudioControl() {
 /**
  * @brief  update
  *         update aktualisiert die intern gespeicherten audioStruct's des letzen Steps mit aktuellen audioStruct's der GameLogik.
- *         Hierfür wird die liste audiostructs ausgewertet.
- * @param  Qlist audiostructs
+ *         Hierfür wird die liste audioevents ausgewertet.
+ * @param  Qlist audioevents
  * @author  Felix Pfreundtner
  */
-void AudioControl::update(std::list<struct audioStruct> *audiostructs){
-//    /**
-//     * @brief Game::playAdudio
-//     * @param audioEvents
-//     */
-//    void Game::playSound(std::list<struct audioStruct> *soundEvents) {
+void AudioControl::update(std::list<struct audioStruct> *audioevents){
+    while (!(audioevents->empty())) {
 
-//        /// @todo Sound-Overhead hierher
-
-//        while (!(soundEvents->empty())) {
+    }
 //            // Kopiere erstes Objekt in der Liste nach currentSound
-//            soundStruct currentSound = *soundEvents->begin();
+//            soundStruct currentSound = *audioevents->begin();
 //            // Entferne Element aus Liste.
 //            soundEvents->pop_front();
 //

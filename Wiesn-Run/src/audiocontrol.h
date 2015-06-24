@@ -19,12 +19,24 @@
 class AudioControl{
 
 public:
+    struct playStruct {
+        std::string name;
+        float volume;
+
+    };
+
     AudioControl();
     ~AudioControl();
 
-    void update(std::list<struct audioStruct> *audiostructs);
+    void update(std::list<struct audioStruct> *audioevents);
 private:
     Audio *audio_object;
+    /**
+     * @brief  played
+     *         played beinhaltet eine Liste mit allen im Moment abgespielten audioStruct Informationen.
+     * @author  Felix Pfreundtner
+     */
+    std::list<struct audioStruct> playevents;
 
 protected:
 };
