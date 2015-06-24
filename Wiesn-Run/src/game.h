@@ -105,7 +105,7 @@ private:
     Player *playerObjPointer;
 
     /// für das Ausgabefenster QGraphicsView
-    QGraphicsScene * scene;
+    QGraphicsScene * levelScene;
     QGraphicsView * window;
 
     /// aktueller Spielzustand (running, menuStart, menuEnd)
