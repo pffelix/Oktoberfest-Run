@@ -25,16 +25,24 @@ AudioControl::~AudioControl() {
  * @author  Felix Pfreundtner
  */
 void AudioControl::update(std::list<struct audioStruct> *audioevents){
-    while (!(audioevents->empty())) {
-        struct audioStruct currentevent;
+    struct audioStruct currentevent;
 
-        currentevent = *audioevents->begin();
+    if (playevents.empty() == true) {
+        playevents = *audioevents;
+    }
+    else {
+        while (!(audioevents->empty())) {
+            currentevent = *audioevents->begin();
+
+            audioevents->pop_front();
+           qDebug("worked") ;
+        }
 
     }
 //            // Kopiere erstes Objekt in der Liste nach currentSound
 
 //            // Entferne Element aus Liste.
-//            soundEvents->pop_front();
+//
 //
 //            /// @todo Verarbeite Sound.
 //        }

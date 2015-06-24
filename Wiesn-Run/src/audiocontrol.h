@@ -7,7 +7,7 @@
 #include <iostream>
 #include <QList>
 #include "definitions.h"
-
+#include <algorithm>
 
 /**
  * @brief  AudioControl-Klasse
