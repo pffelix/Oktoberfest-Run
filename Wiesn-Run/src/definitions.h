@@ -89,7 +89,7 @@ struct scoreStruct {
  * Alle in einem Step auftretetenden audioStruct's werden in einer std::list audiostructs
  * gesammelt (game.h) und über die Methode update() in jedem Step der Klasse Audiocontrol übergeben.
  * Audiocontrol steuert den richtigen Abspieltyp jedes audioStruct.
- * Nach jedem Step wir die Liste gelöscht und wieder neu mit audioStructs gefüllt.
+ * Nach jedem Step wird die Liste gelöscht und wieder neu mit audioStructs gefüllt.
  *
  * Ist ein Event mit zu erfolgender Audioausgabe vorhanden wird
  * ein audioStruct mit Eventname und aktueller Distanz des Audio-Events vom
