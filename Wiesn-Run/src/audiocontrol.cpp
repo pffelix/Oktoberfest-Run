@@ -26,10 +26,13 @@ AudioControl::~AudioControl() {
  */
 void AudioControl::update(std::list<struct audioStruct> *audioevents){
     while (!(audioevents->empty())) {
+        struct audioStruct currentevent;
+
+        currentevent = *audioevents->begin();
 
     }
 //            // Kopiere erstes Objekt in der Liste nach currentSound
-//            soundStruct currentSound = *audioevents->begin();
+
 //            // Entferne Element aus Liste.
 //            soundEvents->pop_front();
 //

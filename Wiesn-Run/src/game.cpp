@@ -272,6 +272,9 @@ int Game::step() {
             //    correctMovement();
             //    handleEvents();
             renderGraphics(&worldObjects);
+            /// Mockup: add audioStruct player_jump to audioevents list
+            audioStruct player_jump{"player_jump", 0};
+            audioevents.push_front(player_jump);
             /// send filled audioevents list to AudioControl Object, which updates current Output Sounds
             audioOutput->update(&audioevents);
             /// delete List audioStruct elements in list and fill it in the next step again
