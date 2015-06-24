@@ -6,6 +6,8 @@
 #include <iomanip>
 #include <cmath>
 
+#include <fstream>
+
 #include "player.h"
 #include "gameobject.h"
 #include "enemy.h"
@@ -78,6 +80,9 @@ int Game::start() {
     //loadLevel1();
     //loadLevel2();
     colTestLevel();
+
+    QString fileSpecifier = ":/levelFiles/levelFiles/testLevel.txt";
+    loadFromFile(fileSpecifier);
 
     // Fundamentale stepSize setzen
     stepSize = 1000;
@@ -1041,6 +1046,7 @@ void Game::loadLevel2() {
     playerObjPointer = dynamic_cast<Player*>(playerObject);
 }
 
+
 void Game::colTestLevel() {
     /// Skalierungsfaktor für Objekte im Spiel
     int obs = 10;
@@ -1071,4 +1077,35 @@ void Game::colTestLevel() {
     // Erstelle das Spieler-Objekt und setze den playerObjPointer
     GameObject *playerObject = new Player(57*obs, 2*obs, 0*obs);
     playerObjPointer = dynamic_cast<Player*>(playerObject);
+}
+
+
+void Game::loadFromFile(QString fileSpecifier) {
+
+    // Spezifizierte Datei öffnen
+    QFile levelFile(fileSpecifier);
+    if (!levelFile.open(QFile::ReadOnly | QFile::Text)) {
+        qDebug() << "Datei konnte nicht geöffnet werden!";
+    } else {
+        // Die Datei wurde erfolgreich geöffnet
+        QTextStream fileStream(&levelFile);
+        while (!fileStream.atEnd()) {
+            QString line = fileStream.readLine();
+            //qDebug() << line;
+            // Trenne die aktuelle Zeile nach Komma getrennt auf
+            QStringList strlist = line.split(",");
+
+            if (strlist.at(0) == "Player") {
+                qDebug() << "Player-Eintrag gefunden.";
+            }
+
+            if (strlist.at(0) == "Enemy") {
+                qDebug() << "Enemy-Eintrag gefunden.";
+            }
+
+            if (strlist.at(0) == "Obstacle") {
+                qDebug() << "Obstacle-Eintrag gefunden.";
+            }
+        }
+    }
 }
