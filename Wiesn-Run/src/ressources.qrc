@@ -12,4 +12,7 @@
         <file>audios/sine_1kHz_(44.1,1,16).wav</file>
         <file>audios/test8bitPCM.wav</file>
     </qresource>
+    <qresource prefix="/levelFiles">
+        <file>levelFiles/testLevel.txt</file>
+    </qresource>
 </RCC>
