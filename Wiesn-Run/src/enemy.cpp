@@ -17,7 +17,12 @@ Enemy::Enemy(int posX, int posY, int speedX) : MovingObject(posX, posY, enemy, s
     fireCooldown = 2;
     inflictedDamage = 1;
     death = false;
+
     DeathCooldown = frameRate;
+
+    //Grafik - Enemygrafik initialisieren
+    setPixmap(QPixmap(":/images/images/enemy.png"));
+    setPos(getPosX() - getLength()*0.5, -getPosY() + 548);
 }
 
 Enemy::~Enemy() {
@@ -105,6 +110,10 @@ void Enemy::update() {
     } else {
         //Bewegung durchführen
         updatePosition();
+
+        //Grafik - Bewegung anzeigen
+        setPos(getPosX() - 0.5*getLength(), -getPosY() + 548);
+
         if (fireCooldown == 0) {
             fireCooldown = fireRate;
         } else {

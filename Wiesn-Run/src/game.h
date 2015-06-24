@@ -22,8 +22,6 @@
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
-#include <QPainter>
-#include <QImage>
 #include <chrono>
 #include "menu.h"
 

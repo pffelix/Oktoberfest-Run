@@ -3,6 +3,8 @@
         <file>images/obstacle.png</file>
         <file>images/player.png</file>
         <file>images/enemy.png</file>
+        <file>images/powerup.png</file>
+        <file>images/attack.png</file>
     </qresource>
     <qresource prefix="/audios">
         <file>audios/electrical_guitar_(44.1,1,16).wav</file>

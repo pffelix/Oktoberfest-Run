@@ -15,6 +15,10 @@
 Shoot::Shoot(int posX, int posY, int direction, objectType origin) : MovingObject((posX + (playerScale / 2)), (posY + playerScale), shot, (direction * 2 * maxSpeed) , 0) {
     inflictedDamage = 1;
     this->origin = origin;
+
+    //Grafik - Attackgrafik initialisieren
+    setPixmap(QPixmap(":/images/images/attack.png"));
+    setPos(getPosX() - 20, -getPosY() + 628);
 }
 
 Shoot::~Shoot() {
@@ -44,4 +48,6 @@ int Shoot::getInflictedDamage() const {
 void Shoot::update() {
     //posX = posX + this->getSpeedX();
     updatePosition();
+    //Grafik - Bewegung anzeigen
+    setPos(getPosX() - 0.5*getLength(), -getPosY() + 628);
 }
