@@ -242,7 +242,7 @@ int Game::step() {
 
             //    correctMovement();
             //    handleEvents();
-            //    renderGraphics(&worldObjects, playerObjPointer);   <- Wird wohl bald gelöscht
+            renderGraphics(&worldObjects);
             //    playSound();
             break;
     }
@@ -885,9 +885,16 @@ bool Game::hurtPlayer(int damage) {
  * @param objectList
  * @param playerPointer
  */
-void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPointer) {
+void Game::renderGraphics(std::list<GameObject*> *objectList) {
 
-    scene->clear();
+    for (std::list<GameObject*>::iterator it = objectList->begin(); it != objectList->end(); ++it) {
+        if(dynamic_cast<MovingObject*> (*it) != 0) {
+            (*it)->setPos((*it)->getPosX() - 0.5*(*it)->getLength(), -(*it)->getPosY() + 548);
+        }
+
+    }
+
+    /*scene->clear();
     window->viewport()->update();
 
     int obstacleCount=0, enemyCount=0, attackPowerUpCount=0;
@@ -960,7 +967,7 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
     scene->addItem(item);
 
     delete [] renderobstacles;
-    delete renderPlayer;
+    delete renderPlayer;*/
 }
 
 /**

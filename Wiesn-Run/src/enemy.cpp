@@ -111,9 +111,6 @@ void Enemy::update() {
         //Bewegung durchführen
         updatePosition();
 
-        //Grafik - Bewegung anzeigen
-        setPos(getPosX() - 0.5*getLength(), -getPosY() + 548);
-
         if (fireCooldown == 0) {
             fireCooldown = fireRate;
         } else {

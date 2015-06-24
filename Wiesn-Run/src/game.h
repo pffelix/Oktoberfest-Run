@@ -79,7 +79,7 @@ private:
     void calculateMovement();
     void detectCollision(std::list<GameObject*> *objectsToCalculate);
     void handleCollisions();
-    void renderGraphics(std::list<GameObject *> *objectList, Player *playerPointer);
+    void renderGraphics(std::list<GameObject *> *objectList);
     void playSound(std::list<soundStruct> *soundEvents);
     void endGame();
     bool hurtPlayer(int damage);
