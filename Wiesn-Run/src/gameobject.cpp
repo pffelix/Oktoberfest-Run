@@ -34,7 +34,7 @@ GameObject::GameObject(int posX, int posY, objectType type) {
     switch (type) {
     case obstacle: {
         // Verhältnis 1:2 (b:h)
-        this->length = playerScale;
+        this->length = playerScale * (3.0 / 2.0);
         this->height = playerScale * 2;
     }
     case player: {
