@@ -6,6 +6,8 @@
 #include <iomanip>
 #include <cmath>
 
+#include <fstream>
+
 #include "player.h"
 #include "gameobject.h"
 #include "enemy.h"
@@ -74,10 +76,17 @@ void Game::timerEvent(QTimerEvent *event)
 int Game::start() {
     qDebug("Game::start()");
     // Level erstellen bedeutet levelInitial und levelSpawn füllen
+/*
     //makeTestWorld();
     //loadLevel1();
     //loadLevel2();
     colTestLevel();
+*/
+
+    // Level festlegen, der geladen werden soll
+    QString fileSpecifier = ":/levelFiles/levelFiles/testLevel.txt";
+    loadFromFile(fileSpecifier);
+
 
     // Fundamentale stepSize setzen
     stepIntervall = 1000/frameRate;
@@ -364,13 +373,15 @@ void Game::evaluateInput() {
  */
 void Game::calculateMovement() {
     using namespace std;               // für std::list
+
+    /// für qDebug (Rupert)
+    std::string objecttypes[] = {"Player", "Enemy ", "Obstac", "Shot  ", "PwrUp ", "BOSS  "};
+    int speedX=0,speedY=0;
+
     list<GameObject*>::iterator it;     // Iterator erstellen
     /// Schleife startet beim ersten Element und geht bis zum letzen Element durch
     for(it = worldObjects.begin(); it != worldObjects.end(); ++it) {
         GameObject *aktObject = *it;
-
-        qDebug("%d Object Position: XPos=%d",aktObject->getType(), aktObject->getPosX());
-        qDebug("%d Object Position: YPos=%d",aktObject->getType(), aktObject->getPosY());
         MovingObject *aktMovingObject = dynamic_cast<MovingObject*> (aktObject);    // Versuche GameObject in Moving Object umzuwandeln
         if(aktMovingObject != 0) {
             aktMovingObject->update();          // Wenn der cast klappt, rufe update() auf.
@@ -403,10 +414,16 @@ void Game::calculateMovement() {
                 }
                 aktEnemy = 0;
             }
-            qDebug("Object Speed: XSpeed=%d",aktMovingObject->getSpeedX());
+            speedX = aktMovingObject->getSpeedX();
+            speedY = aktMovingObject->getSpeedY();
         }
+
         aktMovingObject = 0;
+
+        qDebug("%s: x=%4d y=%4d\tvx=%3d vy=%3d",objecttypes[static_cast<int>(aktObject->getType())].c_str(), aktObject->getPosX(),aktObject->getPosY(),speedX,speedY);
+
     }
+
     //Grafik - sorgt dafür dass "window" auf den Spieler zentriert bleibt
     window->centerOn(playerObjPointer->getPosX() + 512 - 100 - 0.5*playerObjPointer->getLength(), 384);
 }
@@ -1094,6 +1111,7 @@ void Game::loadLevel2() {
     playerObjPointer = dynamic_cast<Player*>(playerObject);
 }
 
+
 void Game::colTestLevel() {
     /// Skalierungsfaktor für Objekte im Spiel
     int obs = 10;
@@ -1127,6 +1145,80 @@ void Game::colTestLevel() {
     playerObjPointer = dynamic_cast<Player*>(playerObject);
 }
 
+
+/**
+ * @brief Game::loadFromFile
+ * @param fileSpecifier
+ * Funktion um Level-Dateien einzulesen. Als einziger Parameter wird ein QString mit dem Pfad zum levelFile übergeben.
+ * Es wird getestet, ob die Datei geöffnet werden kann. Ist dies möglich, so werden die Listen levelInitial und levelSpawn
+ * geleert und mit Objekten aus der Level-Datei gefüllt.
+ * Die Level-Datei wird zeilenweise ausgelesen. Beginnt eine Zeile mit den Schlüsselwörtern, z.B. "Player", "Enemy", "Obstacle" etc.,
+ * so wird das entsprechende Objekt angelegt und der zugehörigen Liste hinzugefügt. Alle Zeilen, die nicht mit Schlüsselwörtern beginnen
+ * werden übersprungen.
+ * @author Simon
+ */
+void Game::loadFromFile(QString fileSpecifier) {
+
+    // Spezifizierte Datei öffnen
+    QFile levelFile(fileSpecifier);
+    if (!levelFile.open(QFile::ReadOnly | QFile::Text)) {
+        qDebug() << "Datei konnte nicht geöffnet werden!";
+    } else {
+        // Die Datei wurde erfolgreich geöffnet
+        // Die Listen werden geleert
+        levelInitial.clear();
+        levelSpawn.clear();
+
+        qDebug() << "Lese levelFile aus:";
+
+        QTextStream fileStream(&levelFile);
+        while (!fileStream.atEnd()) {
+            QString line = fileStream.readLine();
+            //qDebug() << line;
+            // Trenne die aktuelle Zeile nach Komma getrennt auf
+            QStringList strlist = line.split(",");
+
+            if (strlist.at(0) == "Player") {
+                qDebug() << "  Player-Eintrag gefunden.";
+                // Erstelle das Spieler-Objekt und setze den playerObjPointer
+                GameObject *playerObject = new Player(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt());
+                playerObjPointer = dynamic_cast<Player*>(playerObject);
+            }
+
+            if (strlist.at(0) == "Enemy") {
+                qDebug() << "  Enemy-Eintrag gefunden.";
+                GameObject *enemyToAppend = new Enemy(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt());
+                levelSpawn.push_back(enemyToAppend);
+            }
+
+            if (strlist.at(0) == "Obstacle") {
+                qDebug() << "  Obstacle-Eintrag gefunden.";
+                GameObject *obstacleToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), strlist.at(4).toInt(), static_cast<objectType>(strlist.at(5).toInt()));
+                levelInitial.push_back(obstacleToAppend);
+            }
+
+            if (strlist.at(0) == "PowerUp") {
+                qDebug() << "  PowerUp-Eintrag gefunden.";
+                GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), strlist.at(4).toInt(), strlist.at(5).toInt(), strlist.at(6).toInt());
+                levelInitial.push_back(powerUpToAppend);
+            }
+
+            if (strlist.at(0) == "Boss") {
+                qDebug() << "  Boss-Eintrag gefunden.";
+            }
+
+        } // end of while
+
+        levelInitial.sort(compareGameObjects());
+        levelSpawn.sort(compareGameObjects());
+
+        qDebug() << "Auslesen des levelFile beendet.";
+    }
+}
+
+
 int Game::getStepIntervall() {
     return stepIntervall;
+
 }
+
