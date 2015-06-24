@@ -277,6 +277,10 @@ int Game::step() {
             distance.push_front(1);
             audioStruct player_jump{"player_jump", distance};
             audioevents.push_front(player_jump);
+            distance.push_front(0.3);
+            distance.push_front(0.2);
+            audioStruct scene_enemy{"scene_enemy", distance};
+            audioevents.push_front(scene_enemy);
             /// send filled audioevents list to AudioControl Object, which updates current Output Sounds
             audioOutput->update(&audioevents);
             /// delete List audioStruct elements in list and fill it in the next step again
