@@ -1119,6 +1119,11 @@ void Game::loadFromFile(QString fileSpecifier) {
         qDebug() << "Datei konnte nicht geöffnet werden!";
     } else {
         // Die Datei wurde erfolgreich geöffnet
+        // Die Listen werden geleert
+        levelInitial.clear();
+        levelSpawn.clear();
+
+
         QTextStream fileStream(&levelFile);
         while (!fileStream.atEnd()) {
             QString line = fileStream.readLine();
@@ -1143,7 +1148,7 @@ void Game::loadFromFile(QString fileSpecifier) {
 
             if (strlist.at(0) == "Obstacle") {
                 qDebug() << "  Obstacle-Eintrag gefunden.";
-                GameObject *obstacleToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), strlist.at(4).toInt(), strlist.at(5).toInt());
+                GameObject *obstacleToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), strlist.at(4).toInt(), static_cast<objectType>(strlist.at(5).toInt()));
                 levelInitial.push_back(obstacleToAppend);
             }
 
