@@ -84,6 +84,7 @@ int Game::start() {
     QString fileSpecifier = ":/levelFiles/levelFiles/testLevel.txt";
     loadFromFile(fileSpecifier);
 
+
     // Fundamentale stepSize setzen
     stepSize = 1000/frameRate;
 
