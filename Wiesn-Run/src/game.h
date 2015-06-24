@@ -77,12 +77,10 @@ private:
     void endGame();
     bool hurtPlayer(int damage);
 
-    void makeTestWorld();
-    void loadLevel1();
-    void loadLevel2();
     void colTestLevel();
-    void loadFromFile(QString fileSpecifier);
     void loadLevelFile(QString fileSpecifier);
+
+    void startNewGame();
 
     /// In der Welt befindliche Objekte
     std::list<GameObject*> worldObjects;
@@ -111,8 +109,7 @@ private:
     QGraphicsView * window;
 
     /// aktueller Spielzustand (running, menuStart, menuEnd)
-    //gameState state = gameMenuStart;
-    gameState state = gameIsRunning;
+    gameState state = gameMenuStart;
 
     /// Zeiger auf QApplication
     QApplication *appPointer;
@@ -127,7 +124,7 @@ private:
     Menu *menuEnd;
     /// zur Unterscheidung und Identifizierung der Menü-Einträge
     enum menuIds {
-        menuId_StartGame, menuId_EndGame, menuId_Highscore, menuId_Credits, menuId_GotoStartMenu
+        menuId_StartGame, menuId_EndGame, menuId_Resume, menuId_Highscore, menuId_Credits, menuId_GotoStartMenu
     };
 
     /// stepCount wird mit jedem Step um ein erhöht
