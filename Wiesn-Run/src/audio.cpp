@@ -91,27 +91,30 @@ void Audio::setVolume(short volume_audio_obj){
  * @author Felix Pfreundtner
  */
 void Audio::readSamples() {
-
     QString sourcepath; /// Pfad zur Wave Datei in den Ressourcendateien
     int channels; /// Anzahl an Kanälen
     int bitdepth; /// Anzahl an Bits pro Sample
     int bytedepth; /// Anzahl an Bytes pro Sample
-    char* tempbytes; /// variable to save unused bytes
+    char tempbytes[5]; // Hier liegt die Fehlerursache, kein Speicher wird reserviert. Habe [5] hinzugefügt, reicht das? /// variable to save unused bytes
     int offset; /// variable to save current offset position in file
 
     /// Öffne zum Audio Objekt gehörige Wave Datei
     sourcepath = ":/audios/audios/" + source + ".wav";
     QFile file(sourcepath);
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
 
+    bool ok = file.open(QIODevice::ReadOnly | QIODevice::Text);
+    if(ok==false) {
+        qWarning("Audio::readsamples: Cannot open File");
+    }
     /// Lese relevante Informationen aus dem fmt chunk
 
     /// lese Anzahl an Kanälen ein (Offset 22 Byte)
     file.seek(22);
-    file.read(tempbytes, 2);
+    file.read(tempbytes, 2);        // ERROR unter Linux (Segmentation Fault)
     channels = qFromLittleEndian<quint16>((uchar*)tempbytes);
     /// lese die Anzahl an Bits pro Sample ein (Offset 34 Byte)
     file.seek(34);
+
     file.read(tempbytes, 2);
     bitdepth = qFromLittleEndian<quint16>((uchar*)tempbytes);
      /// Berechne die Anzahl an Bytes pro Sample
@@ -137,7 +140,7 @@ void Audio::readSamples() {
 
     /// Data chunk erreicht
 
-    //qDebug() << QString::fromStdString(std::string(tempbytes));
+    qDebug() << QString::fromStdString(std::string(tempbytes));
      /// lese die Größe des data chunks in Bytes aus
     file.read(tempbytes, 4);
     /// berechene die Gesamtanzahl an Samples in der Datei
@@ -154,6 +157,7 @@ void Audio::readSamples() {
             samples << to16bitSample(qFromLittleEndian<quint8>((uchar*)tempbytes));
         }
     }
+
     // normalisiere QVector samples auf die maximalen 16 bit signed integer Grenzen (hier: -32767...32767)
     normalize();
 }

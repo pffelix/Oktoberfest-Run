@@ -72,7 +72,7 @@ void Game::timerEvent(QTimerEvent *event)
  * @author Felix, Rupert, Flo, Simon
  */
 int Game::start() {
-
+    qDebug("Game::start()");
     // Level erstellen bedeutet levelInitial und levelSpawn füllen
     //makeTestWorld();
     //loadLevel1();
