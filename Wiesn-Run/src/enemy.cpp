@@ -3,13 +3,21 @@
 /// Class Enemy
 /// lastUpdate:  update() 10.6 Johann
 
-
-Enemy::Enemy(int posX, int posY, int length, int height, objectType type, collisionType colType, int speedX) : MovingObject(posX, posY, length, height, type, colType, speedX, -5) {
-    health = 50;
+/**
+ * @brief Konstruktor für ein Enemy-Objekt
+ * @param posX      : X-Position
+ * @param posY      : Y-Position
+ * @param speedX    : Geschwindigkeit in X-Richtung
+ *
+ * @todo Skalieren der Werte und fireCooldown erhöhen
+ */
+Enemy::Enemy(int posX, int posY, int speedX) : MovingObject(posX, posY, enemy, speedX, -5) {
+    health = 1;
+    ///Fire Cooldown für debug zwecke niedrig
     fireCooldown = 2;
-    inflictedDamage = 10;
+    inflictedDamage = 1;
     death = false;
-    DeathCooldown = 20;
+    DeathCooldown = frameRate;
 }
 
 Enemy::~Enemy() {
@@ -36,6 +44,11 @@ void Enemy::setHealth(int health) {
     this->health = health;
 }
 
+bool Enemy::receiveDamage(int damage) {
+    health = health - damage;
+    return (!(health > 0));
+}
+
 /**
  * @brief Enemy::getInflictedDamage
  * gibt Schaden zurück, den der gegner zufügt
@@ -46,6 +59,10 @@ int Enemy::getInflictedDamage() const {
     return inflictedDamage;
 }
 
+/**
+ * @brief Enemy::getFireCooldown
+ * @return fireCooldown
+ */
 int Enemy::getFireCooldown() const{
     return fireCooldown;
 }
@@ -71,13 +88,16 @@ void Enemy::setDeath(bool death) {
 }
 
 /**
+ * @brief Enemy::getDeathCooldown
+ * @return deathCooldown
+ */
+int Enemy::getDeathCooldown() const {
+    return DeathCooldown;
+}
+
+/**
  * @brief Enemy::update
- * führt Bewegungen des Gegners aus und lässt ihn schießen
- *      , falls er lebt!
- *
- * Hier werden zwei Events erzeugt:
- *  1) DeleteEnemy : wenn gegner Tot ist und seine erscheinungszeit abgelaufen ist
- *  2) CreateShot : wenn Gegner bereit zum Schießen ist
+ * führt Bewegungen des Gegners aus
  */
 void Enemy::update() {
     if (death) {

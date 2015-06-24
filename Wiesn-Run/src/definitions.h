@@ -14,6 +14,27 @@
 #include <iostream>
 
 /**
+ * @brief Anzahl gameloop-Durchläufe pro Sekunde
+ * wird in allen Klassen für die CooldownParameter benutzt
+ */
+const int frameRate = 20;
+
+/**
+ * @brief Skalierungsfaktor für die Breite des Spielerobjekts bei 1024 Bildschirmbreite:
+ *                 Breite:Höhe
+ * Spieler, Gegner:     1:2
+ * Hindernisse:         1:2     ,     2:(1/3)           dabei ist das erste das Standardhindernis
+ * Power-Up:        (2/3):(2/3) ,
+ * Krug:            (1/3):(2/3)
+ */
+const int playerScale = 60;
+
+/**
+ * @brief Geschwindigkeit mit der sich die beweglichen Objekte durch die Welt bewegen
+ */
+const int maxSpeed = 2 * playerScale / frameRate;
+
+/**
  * @brief Enumerator für den aktuellen Spielstatus
  * ähnlich zu einer StateMachine
  * wird in step() über switch abgefragt
@@ -26,24 +47,11 @@ enum gameState {
 
 /**
  * @brief Enumerator für den Objekt-Typ
- * Hier ist der Objekt-Typ gespeichert.
+ * um welche Art von Objekt handelt es sich
  * @author Johann
  */
 enum objectType {
-    player, enemy, obstacle, shot, powerUp
-};
-
-/**
- * @brief Enumerator für den Kollisions-Typ
- * Für die Kollisionsberechnung ist es wichtig, ob eine Kollision das bewegliche Objekt stoppt (stopping),
- * eventuell stoppt (contacting) oder das bewegliche Objekt einfach hindurchgeht (traversing).
- * obstacle:        stopping
- * enemy:           contacting (das Stoppen hängt davon ab, ob der Player immun ist)
- * beer/Power-Ups:  traversing
- * @author Johann, Simon
- */
-enum collisionType {
-    stopping, contacting, travesing
+    player, enemy, obstacle, shot, powerUp, BOSS
 };
 
 /**

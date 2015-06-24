@@ -14,7 +14,7 @@ public:
     /*
      * Konstruktor und Destruktor
      */
-    PowerUp(int posX, int posY, int length, int height, int healthBonus, int alcoholLevelBonus, int ammunationBonus, int immunityCooldownBonus);
+    PowerUp(int posX, int posY, int healthBonus, int alcoholLevelBonus, int ammunationBonus, int immunityCooldownBonus);
     ~PowerUp();
 
     ///Get-Methoden für die Objekteigenschaften

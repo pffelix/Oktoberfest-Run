@@ -37,7 +37,6 @@
 struct collisionStruct {
     GameObject *affectedObject;
     GameObject *causingObject;
-    enum collisionType collision;
     enum collisionDirection direction;
 };
 
@@ -67,7 +66,7 @@ public:
 
     struct stateStruct gameStats;
     //Liste von Kollisionen
-    std::list<struct collisionStruct> eventsToHandle;
+    std::list<struct collisionStruct> collisionsToHandle;
     struct stateStruct states;
     int start();
 
@@ -80,8 +79,7 @@ private:
     void reduceWorldObjects(Player *playerPointer);
     void evaluateInput();
     void calculateMovement();
-    void detectCollision(std::list<GameObject*> *objToCalculate);
-    void handleEvents();
+    void detectCollision(std::list<GameObject*> *objectsToCalculate);
     void handleCollisions();
     void renderGraphics(std::list<GameObject *> *objectList, Player *playerPointer);
     void playSound(std::list<soundStruct> *soundEvents);
@@ -91,6 +89,7 @@ private:
     void makeTestWorld();
     void loadLevel1();
     void loadLevel2();
+    void colTestLevel();
 
     /// In der Welt befindliche Objekte
     std::list<GameObject*> worldObjects;

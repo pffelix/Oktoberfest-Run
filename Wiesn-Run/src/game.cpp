@@ -75,18 +75,19 @@ int Game::start() {
 
     // Level erstellen bedeutet levelInitial und levelSpawn füllen
     //makeTestWorld();
-    loadLevel2();
     //loadLevel1();
+    //loadLevel2();
+    colTestLevel();
 
     // Fundamentale stepSize setzen
-    stepSize = 500;
+    stepSize = 1000;
 
     // Spieler hinzufügen
     worldObjects.push_back(playerObjPointer);
     // Spawn-Distanz setzen
-    spawnDistance = 300;
+    spawnDistance = 1000;
     // Szenen-Breite setzen
-    sceneWidth = 300;
+    sceneWidth = 1000;
     // Zeiger auf Objekte aus levelInitial in worldObjects verlegen
     while (!(levelInitial.empty())) {
         GameObject *currentObject = *levelInitial.begin();
@@ -123,6 +124,13 @@ int Game::start() {
     Game::startTimer(stepSize);
 
     return appPointer->exec();
+}
+
+/**
+ * @brief Game::endGame
+ */
+void Game::endGame() {
+
 }
 
 
@@ -224,7 +232,9 @@ int Game::step() {
             appendWorldObjects(playerObjPointer);
             reduceWorldObjects(playerObjPointer);
             //    evaluateInput();
+            worldObjects.sort(compareGameObjects());
             calculateMovement();
+            worldObjects.sort(compareGameObjects());
             detectCollision(&worldObjects);
             handleCollisions();
 
@@ -237,118 +247,6 @@ int Game::step() {
 
     return 0;
 }
-
-
-/**
- * @brief Game::detectCollision
- * Diese Funktion berechnet die Kollisionen, welche zwischen ObjektA und ObjektB auftreten.
- * Die Kollision wird dabei immer aus Sicht von ObjektA berechnet. D.h. Variablen wie movingRight
- * bedeuten, dass ObjektA sich nach rechts bewegt hat und dabei ObejektB von Links getroffen hat.
- * @todo Objekt-Definitionen mit eventHandling abstimmen, Koordinatendefinition, Overlap-Problem, <= Fälle
- * @author Simon
- */
-void Game::detectCollision(std::list<GameObject*> *objToCalculate) {
-
-    for (std::list<GameObject*>::iterator it=objToCalculate->begin(); it != objToCalculate->end(); ++it) {
-
-        MovingObject *objA = dynamic_cast<MovingObject*>(*it);
-        // Prüfen, ob das aktuelle Objekt überhaupt vom Typ MovingObject ist
-        if (objA != 0) {
-
-            // Liste möglicher Kollisionen anlegen
-            std::list<GameObject*> possibleCollision;
-
-            // Vorheriges Element hinzufügen, falls currentObject nicht das erste Element ist.
-            if (it != objToCalculate->begin()) {
-                possibleCollision.push_back(*std::prev(it));
-                // Da das vorherige Element erfolgreich hinzugefügt wurde, prüfe, ob noch ein Element hinzugefügt werden kann
-                if (std::prev(it) != objToCalculate->begin()) {
-                    possibleCollision.push_back(*std::prev(it, 2));
-                }
-            }
-            // Nächstes Element hinzufügen, falls currentObject nicht das letze Element ist.
-            if (it != objToCalculate->end()) {
-                possibleCollision.push_back(*std::next(it));
-                // Da nächstes Element erfolgreich hinzugefügt wurde, prüfe, ob noch ein Element hinzugefügt werden kann
-                if (std::next(it) != objToCalculate->end()) {
-                    possibleCollision.push_back(*std::next(it, 2));
-                }
-            }
-
-            // Durchlaufe die Liste der möglichen Kollisionen, bis sie leer ist
-            while (!(possibleCollision.empty())) {
-
-                int overlapX;
-                int overlapY;
-
-                // Setze das erste Objekt in der Liste als ObjektB (das getroffene Objekt) und lösche es aus der Liste
-                GameObject *objB = *possibleCollision.begin();
-                possibleCollision.pop_front();
-
-                // Pürfen und Setzen, ob sich A links/rechts bzw. über/unter B befindet
-                bool ALeftFromB = objA->getPosX() < objB->getPosX();
-                bool AAboveB = (objA->getPosY() + objA->getHeight()) >= (objB->getPosY() + objB->getHeight());
-
-                // Berechne die Überschneidung in X-Richtung abhänging von der relativen Position von A zu B
-                if (ALeftFromB) {
-                    overlapX = objA->getPosX() + (objA->getLength() / 2) - (objB->getPosX() - (objB->getLength() / 2));
-                } else {
-                    overlapX = (objB->getPosX() + (objB->getLength() / 2)) - (objA->getPosX() - (objA->getLength() / 2));
-                }
-
-                // Berechne die Überschneidung in Y-Richtung abhängig von der relativen Position von A zu B
-                if (AAboveB) {
-                    overlapY = (objB->getPosY() + (objB->getHeight() / 1)) - (objA->getPosY());
-                } else {
-                    overlapY = (objA->getPosY() + (objA->getHeight() / 1)) - (objB->getPosY());
-                }
-
-                collisionDirection colDir;
-
-                // Prüfe, aus welcher Richtung die Kollision stattgefunden hat.
-                // Für eine Kollision muss gelten...
-                // ...von Links: (overlapX < overlapY) && (overlapX > 0) && ALeftFromB
-                // ...von Rechts: (overlapX < overlapY) && (overlapx > 0) && !ALeftFromB
-                //...von Oben: (overlapY < overlapX) && (overlapY > 0) && AAboveB
-                //...von Unten: (overlapY < overlapX) && (overlapY > 0) && !AAboveB
-                if ((overlapX < overlapY) && (overlapX > 0)) {
-                    if (ALeftFromB) {
-                        colDir = fromLeft;
-                        collisionStruct newCollision = {objA, objB, objA->getCollisionType(), colDir};
-                        eventsToHandle.push_back(newCollision);
-                        qDebug("->Kollision von Links hat stattgefunden");
-                    } else {
-                        colDir = fromRight;
-                        collisionStruct newCollision = {objA, objB, objA->getCollisionType(), colDir};
-                        eventsToHandle.push_back(newCollision);
-                        qDebug("->Kollision von Rechts hat stattgefunden");
-                    }
-                } else {
-                    if ((overlapY <= overlapX) && (overlapY > 0)) {
-                        if (AAboveB) {
-                            colDir = fromAbove;
-                            colDir = fromRight;
-                            collisionStruct newCollision = {objB, objA, objB->getCollisionType(), colDir};
-                            eventsToHandle.push_back(newCollision);
-                            qDebug("->Kollision von Oben hat stattgefunden");
-                        } else {
-                            colDir = fromBelow;
-                            colDir = fromRight;
-                            collisionStruct newCollision = {objB, objA, objB->getCollisionType(), colDir};
-                            eventsToHandle.push_back(newCollision);
-                            qDebug("->Kollision von Unten hat stattgefunden");
-                        }
-                    }
-                }
-
-            } // while
-        } // if
-    } // for
-} // function
-
-
-
-
 
 /**
  * @brief Game::appendWorldObjects
@@ -383,6 +281,7 @@ void Game::appendWorldObjects(Player *playerPointer) {
  * @author Simon, Johann
  */
 void Game::reduceWorldObjects(Player *playerPointer) {
+
     while (!(worldObjects.empty())) {
         GameObject *currentObj = *worldObjects.begin();
         if ((playerPointer->getPosX() - currentObj->getPosX()) > spawnDistance) {
@@ -410,14 +309,14 @@ void Game::reduceWorldObjects(Player *playerPointer) {
     }
 }
 
-
 void Game::evaluateInput() {
 
 }
 
-
 /**
- * @brief Geht die worldObjects durch und aktualisiert bei jedem die Position
+ * @brief Geht die worldObjects durch und aktualisiert bei jedem die Position,
+ *      Gegner bei denen der DeathCooldown abgelaufen ist, werden zum loeschen vorgemerkt,
+ *      Gegner bei denen der FireCooldownabgelaufen ist feuern.
  * wird momentan auch über Debug ausgegeben
  * @author Rupert, Johann
  */
@@ -428,7 +327,6 @@ void Game::calculateMovement() {
     for(it = worldObjects.begin(); it != worldObjects.end(); ++it) {
         GameObject *aktObject = *it;
 
-        string msg = "OBJECT Position: XPos=" + to_string(aktObject->getPosX());
         qDebug("%d Object Position: XPos=%d",aktObject->getType(), aktObject->getPosX());
         qDebug("%d Object Position: YPos=%d",aktObject->getType(), aktObject->getPosY());
         MovingObject *aktMovingObject = dynamic_cast<MovingObject*> (aktObject);    // Versuche GameObject in Moving Object umzuwandeln
@@ -436,22 +334,516 @@ void Game::calculateMovement() {
             aktMovingObject->update();          // Wenn der cast klappt, rufe update() auf.
             //falls es sich um einen Gegner handelt feuern
             if (aktMovingObject->getType() == enemy){
-                if (dynamic_cast<Enemy*> (aktMovingObject)->getFireCooldown() == 0) {
-                    Shoot* enemyFire = new Shoot(aktMovingObject->getPosX(), aktMovingObject->getPosY(), (aktMovingObject->getSpeedX() * 2), enemy);
+                Enemy *aktEnemy = dynamic_cast<Enemy*> (aktMovingObject);
+                if (aktEnemy->getDeathCooldown() == 0) {
+                    objectsToDelete.push_back(aktEnemy);
+                } else if (aktEnemy->getFireCooldown() == 0) {
+                    Shoot *enemyFire;
+                    int direction;
+                    /* Bewegungrichtung für den Krug ermitteln
+                     * bei bewegendem Gegner in Richtung der Bewegung
+                     * bei stillstehenden in Richtung des Spielers
+                     */
+                    if (aktEnemy->getSpeedX() == 0) {
+                        direction = playerObjPointer->getPosX() - aktEnemy->getPosX();
+                    } else {
+                        direction = playerObjPointer->getSpeedX();
+                    }
+                    if (direction < 0) {
+                        direction = -1;
+                    } else {
+                        direction = 1;
+                    }
+                    enemyFire = new Shoot(aktEnemy->getPosX(), aktEnemy->getPosY(), direction, enemy);
                     worldObjects.push_back(enemyFire);
                     enemyFire = 0;
                 }
+                aktEnemy = 0;
             }
             qDebug("Object Speed: XSpeed=%d",aktMovingObject->getSpeedX());
         }
+        aktMovingObject = 0;
+    }
+}
 
+/**
+ * @brief Game::detectCollision
+ * Diese Funktion berechnet die Kollisionen, welche zwischen zwei Onjekten, affectedObject und causingObject auftreten. Außerdem wird
+ *      die Richtung aus der die Bewegung verursacht wird berechnet
+ * Die Kollision wird dabei immer aus Sicht von affectedObject berechnet. So als wäre der Rest des Levels als statisch zu betrachten...
+ *
+ * @author Simon, johann
+ */
+void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
+
+    int numerator;
+
+    for (std::list<GameObject*>::iterator it=objectsToCalculate->begin(); it != objectsToCalculate->end(); ++it) {
+
+        //aktuelles Gameobjekt herausnehmen
+        MovingObject *affectedObject = dynamic_cast<MovingObject*>(*it);
+        // Prüfen, ob das aktuelle Objekt überhaupt vom Typ MovingObject ist
+        if (affectedObject != 0) {
+            // affectedObject ist ein sich bewegendes Objekt
+
+            // Liste möglicher Kollisionen anlegen
+            std::list<GameObject*> possibleCollisions;
+            /* Möglich Anzahl an Kollisionen WORST CASE:
+             *  von links:  4 (bei drei Ebenen) (evtl.5(6) Gegner in mehreren Ebenen 2(3))
+             *  von rechts: 5 (bei drei Ebenen) (evtl.6(7) Gegner in mehreren Ebenen 2(3))
+             */
+
+
+//Kollisionen von Rechts
+            // vorherige 5 Objekte aus der Liste überprüfen, falls noch so viele in Liste enthalten
+            numerator = 0;
+            while ((numerator < 5) && (std::prev(it, numerator) != objectsToCalculate->begin())) {
+                // fügt den (numerator+1)ten Vorgänger vorne zur Liste der möglichen Kollisionen hinzu
+                                                        // dadurch bleibt Reihenfolge erhalten
+                possibleCollisions.push_front(*std::prev(it,numerator + 1));
+                numerator = numerator + 1;
+            }
+
+            /* durchlaufe Liste der möglichen Kollisionen mit posX kleiner/gleich als der des sich bewegenden Objekts
+             *      möglichen Kollisinen sind also: vonRechts, vonOben, vonUnten
+             */
+            while (!(possibleCollisions.empty())) {
+                // nehme erstes Objekt aus der Menge (mögliches getroffenes Objekt)
+                    // wird als statisches Objekt betrachtet
+                GameObject *causingObject = possibleCollisions.front();
+                possibleCollisions.pop_front();
+
+                // Kollision feststellen: Dazu ist Überschneidung in X- und Y-Richtung nötig
+
+                // Überschneidung in X-Richtung
+                int overlapX = (causingObject->getPosX() + causingObject->getLength()) - affectedObject->getPosX();
+                if (overlapX > 0) {
+                    /* Objekte überschneiden sich (statisches links von beweglichem)
+                     * Lage bezüglich Y-Richtung überprüfen
+                     *      3 Möglichkeiten: bewegendes Objekt unter, auf selber Höhe, drüber
+                     */
+                    if (affectedObject->getPosY() < causingObject->getPosY()) {
+                        // bewegendes Objekt unter statischem Objekt    -> vonRechts, vonUnten
+                        // overlapY: Überschneidung in Y-Richtung
+                        int overlapY = (affectedObject->getPosY() + affectedObject->getHeight()) - causingObject->getPosY();
+                        if (overlapY > 0) {
+                            // Kollision in Y-Richtung
+                        if (overlapX < overlapY) {
+                            // Überschneidung in X-Richtung ist größer als in Y-Richtung
+                                // Kollision vonUnten
+                            collisionStruct collision = {affectedObject, causingObject, fromBelow};
+                            collisionsToHandle.push_back(collision);
+                        } else if (overlapX == overlapY) {
+                            // Überschneidungen gleichgroß
+                                // Zwei Möglichkeiten: vonUnten, vonRechts
+                            if (!(affectedObject->getSpeedX() < 0)) {
+                                // wenn sich bewegendes Objekt nicht nach links bewegt, Kollision vonUnten
+                                collisionStruct collision = {affectedObject, causingObject, fromBelow};
+                                collisionsToHandle.push_back(collision);
+                            } else if ((affectedObject->getSpeedX() < 0) && (affectedObject->getSpeedY() > 0)) {
+                                //wenn sich das bewegende Objekt sowohl nach links alsauch nach oben bewegt erzeuge zwei Kollisionen
+                                collisionStruct collision = {affectedObject, causingObject, fromBelow};
+                                collisionsToHandle.push_back(collision);
+                                collision = {affectedObject, causingObject, fromRight};
+                                collisionsToHandle.push_back(collision);
+                            } else {
+                                //wenn sich bewegendes Objekt nicht nach oben bewegt
+                                collisionStruct collision = {affectedObject, causingObject, fromRight};
+                                collisionsToHandle.push_back(collision);
+                            }
+                        } else {
+                            // Überschneidung in X-Richtung kleiner als in Y-Richtung
+                                // Kollision vonRechts
+                            collisionStruct collision = {affectedObject, causingObject, fromRight};
+                            collisionsToHandle.push_back(collision);
+                        }
+                        // bewegendes Objekt unter statischem
+                        }
+
+                    } else if (affectedObject->getPosY() == causingObject->getPosY()) {
+                        // beide Objekte auf selber Höhe                -> vonRechts
+                        collisionStruct collision = {affectedObject, causingObject, fromRight};
+                        collisionsToHandle.push_back(collision);
+                        // Objekte auf selber Höhe
+
+                    } else {
+                        // bewegendes Objekt über statischem Objekt     -> vonRechts, vonOben
+                        // overlapY: Überschneidung in Y-Richtung
+                        int overlapY = (causingObject->getPosY() + causingObject->getHeight()) - affectedObject->getPosY();
+                        if (overlapY > 0) {
+                            // Kollision in Y-Richtung
+                        if (overlapX < overlapY) {
+                            // Überschneidung in X-Richtung kleiner als in Y-Richtung
+                                // Kollision vonRechts
+                            collisionStruct collision = {affectedObject, causingObject, fromRight};
+                            collisionsToHandle.push_back(collision);
+                            // Überschneidung in X-Richtung ist größer als in Y-Richtung
+                                // Kollision vonOben
+                        } else {
+                            //sonst Kollision vonOben
+                                //Ist um eventuelle Fehler beim auftreten des "Dauer-Fallens" zu verhindern
+                            collisionStruct collision = {affectedObject, causingObject, fromAbove};
+                            collisionsToHandle.push_back(collision);
+                        }
+                        }
+                    }// Lage y-Positionen
+                }
+            }//while(possibleCollisions)
+
+
+//Kollisionen von Links
+            // nachfolgende 6 Objekte aus der Liste überprüfen, falls noch so viele in Liste enthalten
+            numerator = 0;
+            while ((numerator < 6) && (std::next(it, numerator) != objectsToCalculate->end())) {
+                // fügt den (numerator+1)ten Nachfolger hinten zur Liste der möglichen Kollisionen hinzu
+                                                        // dadurch bleibt Reihenfolge erhalten
+                possibleCollisions.push_back(*std::next(it, numerator + 1));
+                numerator = numerator + 1;
+            }
+
+            /* durchlaufe Liste der möglichen Kollisionen mit posX größer/gleich als der des sich bewegenden Objekts
+             *      möglichen Kollisinen sind also: vonRechts, vonOben, vonUnten
+             */
+            while (!(possibleCollisions.empty())) {
+                // nehme erstes Objekt aus der Menge (mögliches getroffenes Objekt)
+                    // wird als statisches Objekt betrachtet
+                GameObject *causingObject = possibleCollisions.front();
+                possibleCollisions.pop_front();
+
+                // Kollision feststellen: Dazu ist Überschneidung in X- und Y-Richtung nötig
+
+                // Überschneidung in X-Richtung
+                int overlapX = (affectedObject->getPosX() + affectedObject->getLength()) - causingObject->getPosX();
+                if (overlapX > 0) {
+                    /* Objekte überschneiden sich (statisches rechts von beweglichem)
+                     * Lage bezüglich Y-Richtung überprüfen
+                     *      3 Möglichkeiten: bewegendes Objekt unter, auf selber Höhe, drüber
+                     */
+                    if (affectedObject->getPosY() < causingObject->getPosY()) {
+                        // bewegendes Objekt unter statischem Objekt    -> vonLinks, vonUnten
+                        // overlapY: Überschneidung in Y-Richtung
+                        int overlapY = (affectedObject->getPosY() + affectedObject->getHeight()) - causingObject->getPosY();
+                        if (overlapY > 0) {
+                            // Kollision in Y-Richtung
+                        if (overlapX < overlapY) {
+                            // Überschneidung in X-Richtung ist größer als in Y-Richtung
+                                // Kollision vonUnten
+                            collisionStruct collision = {affectedObject, causingObject, fromBelow};
+                            collisionsToHandle.push_back(collision);
+                        } else if (overlapX == overlapY) {
+                            // Überschneidungen gleichgroß
+                                // Zwei Möglichkeiten: vonUnten, vonLinks
+                            if (!(affectedObject->getSpeedX() > 0)) {
+                                // wenn sich bewegendes Objekt nicht nach rechts bewegt, Kollision vonUnten
+                                collisionStruct collision = {affectedObject, causingObject, fromBelow};
+                                collisionsToHandle.push_back(collision);
+                            } else if ((affectedObject->getSpeedX() > 0) && (affectedObject->getSpeedY() > 0)) {
+                                //wenn sich das bewegende Objekt sowohl nach rechts alsauch nach oben bewegt, erzeuge zwei Kollisionen
+                                collisionStruct collision = {affectedObject, causingObject, fromBelow};
+                                collisionsToHandle.push_back(collision);
+                                collision = {affectedObject, causingObject, fromLeft};
+                                collisionsToHandle.push_back(collision);
+                            } else {
+                                //wenn sich bewegendes Objekt nicht nach oben bewegt
+                                collisionStruct collision = {affectedObject, causingObject, fromLeft};
+                                collisionsToHandle.push_back(collision);
+                            }
+                        } else {
+                            // Überschneidung in X-Richtung kleiner als in Y-Richtung
+                                // Kollision vonLinks
+                            collisionStruct collision = {affectedObject, causingObject, fromLeft};
+                            collisionsToHandle.push_back(collision);
+                        }
+                        // bewegendes Objekt unter statischem
+                        }
+
+                    } else if (affectedObject->getPosY() == causingObject->getPosY()) {
+                        // beide Objekte auf selber Höhe            -> vonLinks
+                        collisionStruct collision = {affectedObject, causingObject, fromLeft};
+                        collisionsToHandle.push_back(collision);
+                    } else {
+                        // bewegendes Objekt über statischem        ->vonOben, vonLinks
+                        // overlapY: Überschneidung in Y-Richtung
+                        int overlapY = (causingObject->getPosY() + causingObject->getHeight()) - affectedObject->getPosY();
+                        if (overlapY > 0) {
+                            // Kollision in Y-Richtung
+                        if (overlapX < overlapY) {
+                            // Überschneidung in X-Richtung kleiner als in Y-Richtung
+                                // Kollision vonLinks
+                            collisionStruct collision = {affectedObject, causingObject, fromLeft};
+                            collisionsToHandle.push_back(collision);
+                            // Überschneidung in X-Richtung ist größer als in Y-Richtung
+                                // Kollision vonOben
+                        } else {
+                            //sonst Kollision vonOben
+                                //Ist um eventuelle Fehler beim auftreten des "Dauer-Fallens" zu verhindern
+                            collisionStruct collision = {affectedObject, causingObject, fromAbove};
+                            collisionsToHandle.push_back(collision);
+                        }
+                        }
+                    }// Lage Y-Positionen
+                }
+            }// while(possibleCollisions)
+
+        } // if (cast)
+    } // for (gameObject)
+} // function
+
+/**
+ * @brief Kollisionen in der Liste collisionsToHandle werden der Reihe nach aus Sicht des affectedObjects bearbeitet.
+ * In einer Schleife wird das jeweils erst CollisionEvent bearbeitet. Dabei werden nur an dem Objekt affectedObject Änderungen vorgenommen.
+ * Mögliche Objekte: Spieler(player), Gegner(enemy), Bierkrug(shot)
+ * mögliche Kollision mit Spieler(player), Hindernis(obstacle), Gegner(enemy), Bierkrug(shot), Power-Up(powerUp)
+ *
+ * @todo Gamestats sktualisieren/Highscore!!
+ * @author Johann (15.6.15)
+ */
+void Game::handleCollisions() {
+
+    collisionStruct handleEvent;
+    int overlap;
+    Enemy *handleEnemy;
+    Shoot *handleShoot;
+
+    //Liste mit den Events abarbeiten
+    while (!collisionsToHandle.empty()) {
+        handleEvent = collisionsToHandle.front();
+        collisionsToHandle.pop_front();
+
+        switch (handleEvent.affectedObject->getType()) {
+
+        case player: {
+            /*Zusammenstöße des Spielers
+             *  mit Hindernis, Gegner, Schüssen, PowerUps
+             *
+             * default: Spieler
+             *
+             * PowerUps FEHLT!!!!!
+             */
+            switch (handleEvent.causingObject->getType()) {
+            case obstacle: {
+                /* Zusammenstoß mit Hindernis
+                 * Bewegungsabbruch, Positionskorrektur
+                 *      4 Möglichkeiten: von oben, unten, links, rechts
+                 */
+                switch (handleEvent.direction) {
+                case fromLeft: {
+                    //Bewegung  in X-Richtungstoppen
+                    playerObjPointer->setSpeedX(0);
+                    //Überlappung berechnen und Spieler nach links versetzen
+                    overlap = (playerObjPointer->getPosX() + playerObjPointer->getLength()) - handleEvent.causingObject->getPosX();
+                    playerObjPointer->setPosX(playerObjPointer->getPosX() - overlap);
+                    break;
+                }
+                case fromRight: {
+                    //Bewegung in X-Richtung stoppen
+                    playerObjPointer->setSpeedX(0);
+                    //Überlappung berechnen und Spieler nach rechts versetzen
+                    overlap = (handleEvent.causingObject->getPosX() + handleEvent.causingObject->getLength()) - playerObjPointer->getPosX();
+                    playerObjPointer->setPosX(handleEvent.causingObject->getPosX() + handleEvent.causingObject->getLength());
+                    break;
+                }
+                case fromAbove: {
+                    //Bewegung in Y-Richtung stoppen, Sprung beenden!!
+                    playerObjPointer->setSpeedY(0);
+                    playerObjPointer->resetJump();
+                    //Überlappung berechnen und Spieler nach obern versetzen
+                    overlap = (handleEvent.causingObject->getPosY() + handleEvent.causingObject->getHeight()) - playerObjPointer->getPosY();
+                    playerObjPointer->setPosY(playerObjPointer->getPosY() + overlap);
+                    break;
+                }
+                case fromBelow: {
+                    //Wegen Zusammenstoß wird ein Fall initiiert
+                    playerObjPointer->setFall();
+                    //Überlappung berechnen und Spieler nach obern versetzen
+                    overlap = (playerObjPointer->getPosY() + playerObjPointer->getHeight()) - handleEvent.causingObject->getPosY();
+                    playerObjPointer->setPosY(playerObjPointer->getPosY() + overlap);
+                    break;
+                }
+                }
+
+                break;
+            }
+            case enemy: {
+                /* Zusammenstoß mit Gegener
+                 *      Spieler läuft in Gegner oder Gegner fällt auf Spieler (sonst siehe affectedObject==enemy)
+                 *      Dem Spieler wird Schaden zugefügt und er erhält einen kurzen immunitätsbonus, falls nicht schon vorhanden
+                 */
+
+                qDebug("Spieler - Gegner:----wir berühren uns");
+
+                if (!(handleEvent.direction == fromAbove)) {
+                    //Überprüfen ob dem Spieler Schaden zugefügt werden kann
+                    if (!(playerObjPointer->getImmunityCooldown() > 0)) {
+                        handleEnemy = dynamic_cast<Enemy*>(handleEvent.causingObject);
+                        //Stirbt der Spieler durch den zugefügten Schaden -> GameOver
+                        if (hurtPlayer(handleEnemy->getInflictedDamage())) {
+                            gameStats.gameOver = true;
+                        } else {
+                            //Immunitätsbonus einer haleben Sekunde
+                            playerObjPointer->setImmunityCooldown(10);
+                        }
+                        handleEnemy = 0;
+                    }
+                }
+            }
+            case shot: {
+                // Spieler kriegt Schaden, Bierkrug zum löschen vormerken, treffen mit eigenem Krug nicht möglich
+                handleShoot = dynamic_cast<Shoot*>(handleEvent.causingObject);
+                if (hurtPlayer(handleShoot->getInflictedDamage())) {
+                    gameStats.gameOver = true;
+                }
+                objectsToDelete.push_back(handleShoot);
+                handleShoot = 0;
+                break;
+            }
+            case powerUp: {
+                /* Zusammenstöße mit PowerUps
+                 *      Der Spieler erhält zusatzfähigkeiten
+                 */
+                PowerUp *handlePowerUp = dynamic_cast<PowerUp*> (handleEvent.causingObject);
+                playerObjPointer->setHealth(playerObjPointer->getHealth() + handlePowerUp->getHealthBonus());
+                playerObjPointer->increaseAmmunation(handlePowerUp->getAmmunationBonus());
+                playerObjPointer->setImmunityCooldown(handlePowerUp->getImmunityCooldownBonus());
+                playerObjPointer->increaseAlcoholLevel(handlePowerUp->getAlcoholLevelBonus());
+                objectsToDelete.push_back(handlePowerUp);
+                handlePowerUp = 0;
+                break;
+            }
+            default: {
+                /* Zusammenstoß mit Spieler
+                 *      nicht möglich
+                 */
+            }
+            }
+            break;
+        } // end (case player)
+
+        case enemy: {
+            /*Zusammenstöße des Gegners
+             *  mit Spieler, Hindernis, Schüssen
+             *
+             * default: Gegner, PowerUps
+             *      werden durchlaufen ohne Effekt
+             */
+
+            handleEnemy = dynamic_cast<Enemy*>(handleEvent.affectedObject);
+
+            switch (handleEvent.causingObject->getType()) {
+            case player: {
+                /* Zusammenstoß mit Spieler
+                 *      Spieler springt auf Gegner (sonst siehe affectedObject==player)
+                 * Der Gegner wird getötet
+                 */
+                qDebug("Der Spieler tötet mich");
+                handleEnemy->setDeath(true);
+                break;
+            }
+            case obstacle: {
+                /* Zusammenstoß mit Hindernis
+                 *  Bewegungsabbruch, Positionskorrektur, neue Bewegungsrichtung
+                 */
+                qDebug("I change my direction");
+                if (handleEvent.direction == fromAbove) {
+                    //Fall wird beendet, X-Bewegung uneingeschränkt
+                    handleEnemy->setSpeedY(0);
+                    overlap = (handleEvent.causingObject->getPosY() + handleEvent.causingObject->getHeight()) - handleEnemy->getPosY();
+                    handleEnemy->setPosY(handleEnemy->getPosY() + overlap);
+                } else {
+                    // Bewegungsabbruch, neue Bewegungsrichtung
+                    handleEnemy->setSpeedX(-handleEnemy->getSpeedX());
+                    //PositionsKorrektur
+                    if (handleEvent.direction == fromLeft) {
+                        //Gegner kommt von links
+                        overlap = (handleEnemy->getPosX() + handleEnemy->getLength()) - handleEvent.causingObject->getPosX();
+                        handleEnemy->setPosX(handleEnemy->getPosX() - overlap);
+                        qDebug("dreh nach rechts");
+                    } else {
+                        //Gegner kommt von rechts
+                        overlap = (handleEvent.causingObject->getPosX() + handleEvent.causingObject->getLength()) - handleEnemy->getPosX();
+                        handleEnemy->setPosX(handleEnemy->getPosX() + overlap);
+                        qDebug("dreh nach links");
+                    }
+                }
+                break;
+            }
+            case shot: {
+                /* Zusammenstoß mit Bierkrug
+                 *  Fügt Schaden zu, falls von Spieler geworfen,
+                 *  Bierkrug zum löschen vormerken
+                 */
+                handleShoot = dynamic_cast<Shoot*>(handleEvent.causingObject);
+                if (handleShoot->getOrigin() == player) {
+                    //Schaden zufügen
+                    handleEnemy->setHealth(handleEnemy->getHealth() - handleShoot->getInflictedDamage());
+                    //Bierkrug zum löschen vormerken
+                    objectsToDelete.push_back(handleShoot);
+                    //Im Falle des Todes
+                    if (handleEnemy->getHealth() < 0) {
+                        handleEnemy->setDeath(true);
+                    }
+                }
+                handleShoot = 0;
+                break;
+            }
+            default: {
+                /*Zusammenstoß mit Gegner, PowerUp
+                 *      kein Effekt
+                 */
+            }
+            }
+            break;
+        }//end (case enemy)
+
+        case shot: {
+            /*Zusammenstöße des Bierkrugs
+             * mit Hindernis
+             *
+             * default: Spieler, Gegner, PowerUps
+             *      wird jeweils in der Situation Spieler/Gegner bearbeitet, bei PowerUps keinen effekt
+             */
+
+            qDebug("It is going to hurt");
+            //Bierkrug löschen, bei Kollision mit Hindernis
+            if (handleEvent.causingObject->getType() == obstacle) {
+                objectsToDelete.push_back(dynamic_cast<Shoot*>(handleEvent.affectedObject));
+            }
+            break;
+        }//end (case shot)
+        default: {
+            /*Zusammenstöße von Hindernis und PowerUps
+             *      NICHT MÖGLICH!!!   da keine MovingObjects
+             *
+             * default nur um Fehlermeldungen zu vermeiden
+             */
+        }
+        }
     }
 }
 
 
+/**
+ * @brief Fügt dem Spieler Schaden zu
+ * @param Schaden
+ * @return true Spieler ist gestorben
+ */
+bool Game::hurtPlayer(int damage) {
+    playerObjPointer->setHealth(playerObjPointer->getHealth() - damage);
+    return !(playerObjPointer->getHealth() > 0);
+
+}
+
+
+/**
+ * @brief Game::renderGraphics
+ * @param objectList
+ * @param playerPointer
+ */
 void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPointer) {
 
     scene->clear();
+    window->viewport()->update();
+
     int obstacleCount=0, enemyCount=0, attackPowerUpCount=0;
 
     // Lege leere Liste an um Zeiger auf Objekte in der Szene zu speichern.
@@ -525,7 +917,10 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
     delete renderPlayer;
 }
 
-
+/**
+ * @brief Game::playSound
+ * @param soundEvents
+ */
 void Game::playSound(std::list<struct soundStruct> *soundEvents) {
 
     /// @todo Sound-Overhead hierher
@@ -543,258 +938,6 @@ void Game::playSound(std::list<struct soundStruct> *soundEvents) {
 
 }
 
-
-void Game::endGame() {
-
-}
-
-
-void Game::handleEvents() {
-
-}
-
-/**
- * @brief Kollisionen in der Liste eventsToHandle werden der Reihe nach aus Sicht des affectedObjects bearbeitet.
- * In einer Schleife wird das jeweils erst CollisionEvent bearbeitet. Dabei werden nur an dem Objekt affectedObject Änderungen vorgenommen.
- * Mögliche Objekte: Spieler(player), Gegner(enemy), Bierkrug(shot)
- * mögliche Kollision mit Spieler(player), Spielumfeld(obstacle), Gegner(enemy), Bierkrug(shot), Power-Up(powerUp)
- *
- * @author Johann (15.6.15)
- */
-void Game::handleCollisions() {
-
-    collisionStruct handleEvent;
-    int overlay;
-    Enemy *handleEnemy;
-    Shoot *handleShoot;
-
-    //Liste mit den Events abarbeiten
-    while (!eventsToHandle.empty()) {
-        handleEvent = eventsToHandle.front();
-        eventsToHandle.pop_front();
-
-        switch (handleEvent.affectedObject->getType()) {
-
-        case player: {
-            /*Zusammenstöße des Spielers
-             *  mit Umfeld, Gegner, Schüssen, PowerUps
-             *
-             * default: Spieler
-             *
-             * PowerUps FEHLT!!!!!
-             */
-            switch (handleEvent.causingObject->getType()) {
-            case obstacle: {
-                /* Zusammenstoß mit Umfeld
-                 * Bewegungsabbruch, Positionskorrektur
-                 *      4 Möglichkeiten: von oben, unten, links, rechts
-                 */
-                switch (handleEvent.direction) {
-                case fromLeft: {
-                    //Bewegung  in X-Richtungstoppen
-                    playerObjPointer->setSpeedX(0);
-                    //Überlappung berechnen und Spieler nach links versetzen
-                    overlay = (playerObjPointer->getPosX() + playerObjPointer->getLength()) - handleEvent.causingObject->getPosX();
-                    playerObjPointer->setPosX(playerObjPointer->getPosX() - overlay);
-                    break;
-                }
-                case fromRight: {
-                    //Bewegung in X-Richtung stoppen
-                    playerObjPointer->setSpeedX(0);
-                    //Überlappung berechnen und Spieler nach rechts versetzen
-                    overlay = (handleEvent.causingObject->getPosX() + handleEvent.causingObject->getLength()) - playerObjPointer->getPosX();
-                    playerObjPointer->setPosX(playerObjPointer->getPosX() + overlay);
-                    break;
-                }
-                case fromAbove: {
-                    //Bewegung in Y-Richtung stoppen, Sprung beenden!!
-                    playerObjPointer->setSpeedY(0);
-                    playerObjPointer->resetJump();
-                    //Überlappung berechnen und Spieler nach obern versetzen
-                    overlay = (handleEvent.causingObject->getPosY() + handleEvent.causingObject->getHeight()) - playerObjPointer->getPosY();
-                    playerObjPointer->setPosY(playerObjPointer->getPosY() + overlay);
-                    break;
-                }
-                case fromBelow: {
-                    //Wegen Zusammenstoß wird ein Fall initiiert
-                    playerObjPointer->setFall();
-                    //Überlappung berechnen und Spieler nach obern versetzen
-                    overlay = (playerObjPointer->getPosY() + playerObjPointer->getHeight()) - handleEvent.causingObject->getPosY();
-                    playerObjPointer->setPosY(playerObjPointer->getPosY() + overlay);
-                    break;
-                }
-                }
-
-                break;
-            }
-            case enemy: {
-                /* Zusammenstoß mit Gegener
-                 *      Spieler läuft in Gegner oder Gegner fällt auf Spieler (sonst siehe affectedObject==enemy)
-                 *      Dem Spieler wird Schaden zugefügt und er erhält einen kurzen immunitätsbonus, falls nicht schon vorhanden
-                 */
-
-                qDebug("Spieler - Gegner:----wir berühren uns");
-
-                if (!(handleEvent.direction == fromAbove)) {
-                    //Überprüfen ob dem Spieler Schaden zugefügt werden kann
-                    if (!(playerObjPointer->getImmunityCooldown() > 0)) {
-                        handleEnemy = dynamic_cast<Enemy*>(handleEvent.causingObject);
-                        //Stirbt der Spieler durch den zugefügten Schaden -> GameOver
-                        if (hurtPlayer(handleEnemy->getInflictedDamage())) {
-                            gameStats.gameOver = true;
-                        } else {
-                            //Immunitätsbonus einer haleben Sekunde
-                            playerObjPointer->setImmunityCooldown(10);
-                        }
-                        handleEnemy = 0;
-                    }
-                }
-            }
-            case shot: {
-                // Spieler kriegt Schaden, Bierkrug zum löschen vormerken, treffen mit eigenem Krug nicht möglich
-                handleShoot = dynamic_cast<Shoot*>(handleEvent.causingObject);
-                if (hurtPlayer(handleShoot->getInflictedDamage())) {
-                    gameStats.gameOver = true;
-                }
-                objectsToDelete.push_back(handleShoot);
-                handleShoot = 0;
-                break;
-            }
-            case powerUp: {
-                /* Zusammenstöße mit PowerUps
-                 *      Der Spieler erhält zusatzfähigkeiten
-                 */
-                PowerUp *handlePowerUp = dynamic_cast<PowerUp*> (handleEvent.causingObject);
-                playerObjPointer->setHealth(playerObjPointer->getHealth() + handlePowerUp->getHealthBonus());
-                playerObjPointer->increaseAmmunation(handlePowerUp->getAmmunationBonus());
-                playerObjPointer->setImmunityCooldown(handlePowerUp->getImmunityCooldownBonus());
-                playerObjPointer->increaseAlcoholLevel(handlePowerUp->getAlcoholLevelBonus());
-                objectsToDelete.push_back(handlePowerUp);
-                handlePowerUp = 0;
-                break;
-            }
-            default: {
-                /* Zusammenstoß mit Spieler
-                 *      nicht möglich
-                 */
-            }
-            }
-            break;
-        } // end (case player)
-
-        case enemy: {
-            /*Zusammenstöße des Gegners
-             *  mit Spieler, Umfeld, Schüssen
-             *
-             * default: Gegner, PowerUps
-             *      werden durchlaufen ohne Effekt
-             */
-
-            handleEnemy = dynamic_cast<Enemy*>(handleEvent.affectedObject);
-
-            switch (handleEvent.causingObject->getType()) {
-            case player: {
-                /* Zusammenstoß mit Spieler
-                 *      Spieler springt auf Gegner (sonst siehe affectedObject==player)
-                 * Der Gegner wird getötet
-                 */
-                qDebug("Der Spieler tötet mich");
-                handleEnemy->setDeath(true);
-                break;
-            }
-            case obstacle: {
-                /* Zusammenstoß mit Umfeld
-                 *  Bewegungsabbruch, Positionskorrektur, neue Bewegungsrichtung
-                 */
-                if (handleEvent.direction == fromAbove) {
-                    //Fall wird beendet, X-Bewegung uneingeschränkt
-                    handleEnemy->setSpeedY(0);
-                    overlay = (handleEvent.causingObject->getPosY() + handleEvent.causingObject->getHeight()) - handleEnemy->getPosY();
-                    handleEnemy->setPosY(handleEnemy->getPosY() + overlay);
-                } else {
-                    // Bewegungsabbruch, neue Bewegungsrichtung
-                    handleEnemy->setSpeedX(-handleEnemy->getSpeedX());
-                    //PositionsKorrektur
-                    if (handleEnemy->getSpeedX() > 0) {
-                        //Gegner kommt von links
-                        overlay = (handleEnemy->getPosX() + handleEnemy->getLength()) - handleEvent.causingObject->getPosX();
-                        handleEnemy->setPosX(handleEnemy->getPosX() - overlay);
-                    } else {
-                        //Gegner kommt von rechts
-                        overlay = (handleEvent.causingObject->getPosX() + handleEvent.causingObject->getLength()) - handleEnemy->getPosX();
-                        handleEnemy->setPosX(handleEnemy->getPosX() + overlay);
-                    }
-                    qDebug("I changed my direction");
-                }
-                break;
-            }
-            case shot: {
-                /* Zusammenstoß mit Bierkrug
-                 *  Fügt Schaden zu, falls von Spieler geworfen,
-                 *  Bierkrug zum löschen vormerken
-                 */
-                handleShoot = dynamic_cast<Shoot*>(handleEvent.causingObject);
-                if (handleShoot->getOrigin() == player) {
-                    //Schaden zufügen
-                    handleEnemy->setHealth(handleEnemy->getHealth() - handleShoot->getInflictedDamage());
-                    //Bierkrug zum löschen vormerken
-                    objectsToDelete.push_back(handleShoot);
-                    //Im Falle des Todes
-                    if (handleEnemy->getHealth() < 0) {
-                        handleEnemy->setDeath(true);
-                    }
-                }
-                handleShoot = 0;
-                break;
-            }
-            default: {
-                /*Zusammenstoß mit Gegner, PowerUp
-                 *      kein Effekt
-                 */
-            }
-            }
-            break;
-        }//end (case enemy)
-
-        case shot: {
-            /*Zusammenstöße des Bierkrugs
-             * mit Umfeld
-             *
-             * default: Spieler, Gegner, PowerUps
-             *      wird jeweils in der Situation Spieler/Gegner bearbeitet, bei PowerUps keinen effekt
-             */
-
-            qDebug("It is going to hurt");
-            //Bierkrug löschen, bei Kollision mit Spielumfeld
-            if (handleEvent.causingObject->getType() == obstacle) {
-                objectsToDelete.push_back(dynamic_cast<Shoot*>(handleEvent.affectedObject));
-            }
-            break;
-        }//end (case shot)
-        default: {
-            /*Zusammenstöße von Umfeld und PowerUps
-             *      NICHT MÖGLICH!!!   da keine MovingObjects
-             *
-             * default nur um Fehlermeldungen zu vermeiden
-             */
-        }
-        }
-    }
-}
-
-
-/**
- * @brief Fügt dem Spieler Schaden zu
- * @param Schaden
- * @return true Spieler ist gestorben
- */
-bool Game::hurtPlayer(int damage) {
-    playerObjPointer->setHealth(playerObjPointer->getHealth() - damage);
-    return !(playerObjPointer->getHealth() > 0);
-
-}
-
-
 /**
  * @brief Erstellt ein paar Test-Objekte in worldObjects
  * Was wird erstellt:
@@ -805,9 +948,9 @@ bool Game::hurtPlayer(int damage) {
  * @author Rupert, Simon
  */
 void Game::makeTestWorld() {
-    GameObject *object1 = new GameObject(100,0,60,80,obstacle,stopping);
-    GameObject *object2 = new GameObject(180,0,60,80,obstacle,stopping);
-    Player *objectPlayer = new Player(20,0,20,60,player,stopping,8);
+    GameObject *object1 = new GameObject(100,0,60,80,obstacle);
+    GameObject *object2 = new GameObject(180,0,60,80,obstacle);
+    Player *objectPlayer = new Player(20,0,8);
     worldObjects.push_back(object1);
     worldObjects.push_back(object2);
     worldObjects.push_back(objectPlayer);
@@ -827,14 +970,14 @@ void Game::loadLevel1() {
     int obs = 10;
 
     // Erstelle statische Objekte
-    GameObject *obstackle1 = new GameObject(30*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle2 = new GameObject(40*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle3 = new GameObject(48*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle4 = new GameObject(55*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle5 = new GameObject(76*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle6 = new GameObject(90*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *powerUp1 = new PowerUp(10*obs, 0*obs, 2*obs, 2*obs, 2, -1, 0, 0);
-    GameObject *powerUp2 = new PowerUp(20*obs, 0*obs, 2*obs, 2*obs, 0, 2, 1, 0);
+    GameObject *obstackle1 = new GameObject(30*obs, 0*obs, 8*obs, 6*obs, obstacle);
+    GameObject *obstackle2 = new GameObject(40*obs, 0*obs, 8*obs, 6*obs, obstacle);
+    GameObject *obstackle3 = new GameObject(48*obs, 0*obs, 8*obs, 6*obs, obstacle);
+    GameObject *obstackle4 = new GameObject(55*obs, 0*obs, 8*obs, 6*obs, obstacle);
+    GameObject *obstackle5 = new GameObject(76*obs, 0*obs, 8*obs, 6*obs, obstacle);
+    GameObject *obstackle6 = new GameObject(90*obs, 0*obs, 8*obs, 6*obs, obstacle);
+    GameObject *powerUp1 = new PowerUp(10*obs, 0*obs, 1,1,1,1);
+    GameObject *powerUp2 = new PowerUp(20*obs, 0*obs, 1,1,1,1);
     // Füge statische Objekte der Liste levelInitial hinzu
     levelInitial.push_back(obstackle1);
     levelInitial.push_back(obstackle2);
@@ -848,7 +991,7 @@ void Game::loadLevel1() {
     levelInitial.sort(compareGameObjects());
 
     // Erstelle das Spieler-Objekt und setze den playerObjPointer
-    GameObject *playerObject = new Player(1*obs, 0*obs, 3*obs, 6*obs, player, stopping, 1*obs);
+    GameObject *playerObject = new Player(1*obs, 0*obs, 1*obs);
     playerObjPointer = dynamic_cast<Player*>(playerObject);
 }
 
@@ -858,12 +1001,12 @@ void Game::loadLevel2() {
     int obs = 10;
 
     // Erstelle statische Objekte
-    GameObject *obstackle1 = new GameObject(40*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle2 = new GameObject(60*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle3 = new GameObject(78*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle4 = new GameObject(95*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle5 = new GameObject(126*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
-    GameObject *obstackle6 = new GameObject(160*obs, 0*obs, 8*obs, 6*obs, obstacle, stopping);
+    GameObject *obstackle1 = new GameObject(40*obs, 0*obs, 8*obs, 6*obs, obstacle);
+    GameObject *obstackle2 = new GameObject(60*obs, 0*obs, 8*obs, 6*obs, obstacle);
+    GameObject *obstackle3 = new GameObject(78*obs, 0*obs, 8*obs, 6*obs, obstacle);
+    GameObject *obstackle4 = new GameObject(95*obs, 0*obs, 8*obs, 6*obs, obstacle);
+    GameObject *obstackle5 = new GameObject(126*obs, 0*obs, 8*obs, 6*obs, obstacle);
+    GameObject *obstackle6 = new GameObject(160*obs, 0*obs, 8*obs, 6*obs, obstacle);
     // Füge statische Objekte der Liste levelInitial hinzu
     levelInitial.push_back(obstackle1);
     levelInitial.push_back(obstackle2);
@@ -874,7 +1017,7 @@ void Game::loadLevel2() {
     // Erstelle und Füge PowerUps hinzu
     GameObject *powerUps;
     for (int i = 0; i < 3; i++) {
-        powerUps = new PowerUp((2+i)*obs, 0*obs, 2*obs, 2*obs, -1, 2, 1, 0);
+        powerUps = new PowerUp((2+i)*obs, 0*obs, -1, 2, 1, 0);
         levelInitial.push_back(powerUps);
         powerUps = 0;
     }
@@ -882,10 +1025,10 @@ void Game::loadLevel2() {
     levelInitial.sort(compareGameObjects());
 
     // Erstelle Gegner
-    GameObject *enemy1 = new Enemy(50*obs, 0*obs, 2*obs, 6*obs, enemy, contacting, -1*obs);
-    GameObject *enemy2 = new Enemy(85*obs, 0*obs, 2*obs, 6*obs, enemy, contacting, -1*obs);
-    GameObject *enemy3 = new Enemy(140*obs, 0*obs, 2*obs, 6*obs, enemy, contacting, -1*obs);
-    GameObject *speedEnemy1 = new Enemy(135*obs, 0*obs, 2*obs, 8*obs, enemy, contacting, -2*obs);
+    GameObject *enemy1 = new Enemy(50*obs, 0*obs, -1*obs);
+    GameObject *enemy2 = new Enemy(85*obs, 0*obs, -1*obs);
+    GameObject *enemy3 = new Enemy(140*obs, 0*obs, -1*obs);
+    GameObject *speedEnemy1 = new Enemy(135*obs, 0*obs, -2*obs);
     levelSpawn.push_back(enemy1);
     levelSpawn.push_back(enemy2);
     levelSpawn.push_back(enemy3);
@@ -894,6 +1037,38 @@ void Game::loadLevel2() {
     levelSpawn.sort(compareGameObjects());
 
     // Erstelle das Spieler-Objekt und setze den playerObjPointer
-    GameObject *playerObject = new Player(2*obs, 2*obs, 2*obs, 6*obs, player, stopping, 1*obs);
+    GameObject *playerObject = new Player(2*obs, 2*obs, 1*obs);
+    playerObjPointer = dynamic_cast<Player*>(playerObject);
+}
+
+void Game::colTestLevel() {
+    /// Skalierungsfaktor für Objekte im Spiel
+    int obs = 10;
+
+    // Erstelle statische Objekte
+    GameObject *obstackle1 = new GameObject(0*obs, 0*obs, 6*obs, 6*obs, obstacle);
+    GameObject *obstackle2 = new GameObject(50*obs, 0*obs, 6*obs, 6*obs, obstacle);
+    GameObject *obstackle3 = new GameObject(63*obs, 0*obs, 8*obs, 6*obs, obstacle);
+
+    // Erstelle PowerUp
+    GameObject *powerUp1 = new PowerUp(30*obs, 0*obs, 1,1,1,1);
+
+
+    // Füge statische Objekte der Liste levelInitial hinzu
+    levelInitial.push_back(powerUp1);
+    levelInitial.push_back(obstackle1);
+    levelInitial.push_back(obstackle2);
+    levelInitial.push_back(obstackle3);
+
+    // Erstelle Gegner
+    GameObject *enemy1 = new Enemy(20*obs, 1*obs, 1*obs);
+    GameObject *enemy2 = new Enemy(44*obs, 0*obs, -1*obs);
+
+    // Füge bewegliche Pbjekte in zugehörige liste
+    levelSpawn.push_back(enemy1);
+    levelSpawn.push_back(enemy2);
+
+    // Erstelle das Spieler-Objekt und setze den playerObjPointer
+    GameObject *playerObject = new Player(57*obs, 2*obs, 0*obs);
     playerObjPointer = dynamic_cast<Player*>(playerObject);
 }

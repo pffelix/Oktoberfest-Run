@@ -9,7 +9,7 @@ public:
     //Konstruktor und Destruktor
     //MovingObject(int length, int hight, objectType type);
     //MovingObject(int length, int hight, objectType type, int posX, int posY);
-    MovingObject(int posX, int posY, int length, int height, objectType type, collisionType colType, int speedX, int speedY);
+    MovingObject(int posX, int posY, objectType type, int speedX, int speedY);
     ~MovingObject();
 
     //Position()

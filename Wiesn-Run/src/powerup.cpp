@@ -12,7 +12,7 @@
  * @param immunityCooldownBonus
  * @author Johann
  */
-PowerUp::PowerUp(int posX, int posY, int length, int height, int healthBonus, int alcoholLevelBonus, int ammunationBonus, int immunityCooldownBonus) : GameObject(posX, posY, length, height, powerUp, travesing) {
+PowerUp::PowerUp(int posX, int posY, int healthBonus, int alcoholLevelBonus, int ammunationBonus, int immunityCooldownBonus) : GameObject(posX, posY, powerUp) {
     this->healthBonus = healthBonus;
     this->alcoholLevelBonus = alcoholLevelBonus;
     this->ammunationBonus = ammunationBonus;
