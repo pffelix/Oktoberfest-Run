@@ -1140,6 +1140,7 @@ void Game::colTestLevel() {
  * Die Level-Datei wird zeilenweise ausgelesen. Beginnt eine Zeile mit den Schlüsselwörtern, z.B. "Player", "Enemy", "Obstacle" etc.,
  * so wird das entsprechende Objekt angelegt und der zugehörigen Liste hinzugefügt. Alle Zeilen, die nicht mit Schlüsselwörtern beginnen
  * werden übersprungen.
+ * In dieser Funktion müssen alle Parameter des Objekt noch übergeben werden.
  * @author Simon
  */
 void Game::loadFromFile(QString fileSpecifier) {
@@ -1154,7 +1155,7 @@ void Game::loadFromFile(QString fileSpecifier) {
         levelInitial.clear();
         levelSpawn.clear();
 
-        qDebug() << "Lese levelFile aus:";
+        qDebug() << "Lese levelFile mit Parametern aus:";
 
         QTextStream fileStream(&levelFile);
         while (!fileStream.atEnd()) {
@@ -1180,6 +1181,82 @@ void Game::loadFromFile(QString fileSpecifier) {
                 qDebug() << "  Obstacle-Eintrag gefunden.";
                 GameObject *obstacleToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), strlist.at(4).toInt(), static_cast<objectType>(strlist.at(5).toInt()));
                 levelInitial.push_back(obstacleToAppend);
+            }
+
+            if (strlist.at(0) == "PowerUp") {
+                qDebug() << "  PowerUp-Eintrag gefunden.";
+                GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), strlist.at(4).toInt(), strlist.at(5).toInt(), strlist.at(6).toInt());
+                levelInitial.push_back(powerUpToAppend);
+            }
+
+            if (strlist.at(0) == "Boss") {
+                qDebug() << "  Boss-Eintrag gefunden.";
+            }
+
+        } // end of while
+
+        levelInitial.sort(compareGameObjects());
+        levelSpawn.sort(compareGameObjects());
+
+        qDebug() << "Auslesen des levelFile beendet.";
+    }
+}
+
+
+/**
+ * @brief Game::loadLevelFile
+ * @param fileSpecifier
+ * Diese Funktion liest Level-Dateien aus und kommt mit wenig Parametern aus.
+ * Der Player braucht posX und posY.
+ * Enemies brauchen posX, posY und speedX.
+ * Obstacles brauchen nur posX, posY ist immer null.
+ * Planes (Zwischenebenen) brauchen posX und posY.
+ * PowerUps brauchen posX, posY und die jeweiligen Boni.
+ * @author Simon
+ */
+void Game::loadLevelFile(QString fileSpecifier) {
+    // Spezifizierte Datei öffnen
+    QFile levelFile(fileSpecifier);
+    if (!levelFile.open(QFile::ReadOnly | QFile::Text)) {
+        qDebug() << "Datei konnte nicht geöffnet werden!";
+    } else {
+        // Die Datei wurde erfolgreich geöffnet
+        // Die Listen werden geleert
+        levelInitial.clear();
+        levelSpawn.clear();
+
+        qDebug() << "Lese levelFile mit vorgesetzten Parametern aus:";
+
+        QTextStream fileStream(&levelFile);
+        while (!fileStream.atEnd()) {
+            QString line = fileStream.readLine();
+            //qDebug() << line;
+            // Trenne die aktuelle Zeile nach Komma getrennt auf
+            QStringList strlist = line.split(",");
+
+            if (strlist.at(0) == "Player") {
+                qDebug() << "  Player-Eintrag gefunden.";
+                // Erstelle das Spieler-Objekt und setze den playerObjPointer
+                GameObject *playerObject = new Player(strlist.at(1).toInt(), strlist.at(2).toInt(), 0);
+                playerObjPointer = dynamic_cast<Player*>(playerObject);
+            }
+
+            if (strlist.at(0) == "Enemy") {
+                qDebug() << "  Enemy-Eintrag gefunden.";
+                GameObject *enemyToAppend = new Enemy(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt());
+                levelSpawn.push_back(enemyToAppend);
+            }
+
+            if (strlist.at(0) == "Obstacle") {
+                qDebug() << "  Obstacle-Eintrag gefunden.";
+                GameObject *obstacleToAppend = new GameObject(strlist.at(1).toInt(), 0, 2);
+                levelInitial.push_back(obstacleToAppend);
+            }
+
+            if (strlist.at(0) == "Plane") {
+                qDebug() << "  Eintrag für eine Zwischenebene gefunden.";
+                GameObject *planeToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), 2*playerScale, (playerScale / 3), 2);
+                levelInitial.push_back(planeToAppend);
             }
 
             if (strlist.at(0) == "PowerUp") {
