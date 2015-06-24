@@ -80,7 +80,20 @@ int Game::start() {
     colTestLevel();
 
     // Fundamentale stepSize setzen
-    stepSize = 1000/frameRate;
+    stepIntervall = 1000/frameRate;
+
+    // Spieler hinzufügen
+    worldObjects.push_back(playerObjPointer);
+    // Spawn-Distanz setzen
+    spawnDistance = 1000;
+    // Szenen-Breite setzen
+    sceneWidth = 1000;
+    // Zeiger auf Objekte aus levelInitial in worldObjects verlegen
+    while (!(levelInitial.empty())) {
+        GameObject *currentObject = *levelInitial.begin();
+        worldObjects.push_back(currentObject);
+        levelInitial.pop_front();
+    }
 
     // Menüs erstellen
     menuStart = new Menu(new std::string("Wiesn-Run"));
@@ -126,7 +139,7 @@ int Game::start() {
 
     // Timer installieren
     qDebug("Starte Timer mit 500msec-Intervall");
-    Game::startTimer(stepSize);
+    Game::startTimer(stepIntervall);
 
     return appPointer->exec();
 }
@@ -226,17 +239,14 @@ int Game::step() {
 
             break;
         case gameIsRunning:
-            // Menü bei ESC
-            if(keyInput->getKeyactions().contains(Input::Keyaction::Exit)) {
-                state = gameMenuEnd;
-            }
+
 
             worldObjects.sort(compareGameObjects());
             qDebug("---Nächster Zeitschritt---");
 
             appendWorldObjects(playerObjPointer);
             reduceWorldObjects(playerObjPointer);
-            //    evaluateInput();
+            evaluateInput();
             worldObjects.sort(compareGameObjects());
             calculateMovement();
             worldObjects.sort(compareGameObjects());
@@ -250,6 +260,7 @@ int Game::step() {
             break;
     }
 
+    stepCount++;
     return 0;
 }
 
@@ -323,8 +334,38 @@ void Game::reduceWorldObjects(Player *playerPointer) {
     }
 }
 
+/**
+ * @brief Checkt welche Tasten für die Spielkontrolle gedrückt sind
+ * mögliche Tasten:
+ *  - Pfeil rechts zum laufen
+ *  - Pfeil hoch zum springen
+ *  - Leertaste zum schießen
+ *  - ESC für Menü
+ * @author Rupert
+ */
 void Game::evaluateInput() {
+    // Pfeil rechts?
+    if(keyInput->getKeyactions().contains(Input::Keyaction::Right)) {
+        playerObjPointer->setSpeedX(playerSpeed);
+    } else {
+        playerObjPointer->setSpeedX(0);
+    }
 
+    // Pfeil oben?
+    if(keyInput->getKeyactions().contains(Input::Keyaction::Up)) {
+        playerObjPointer->setJump(true);
+    }
+
+    // Leertaste?
+    if(keyInput->getKeyactions().contains(Input::Keyaction::Shoot)) {
+        Shoot *playerFire = new Shoot(playerObjPointer->getPosX(),playerObjPointer->getPosY(),1,objectType::player);
+        worldObjects.push_back(playerFire);
+    }
+
+    // Menü bei ESC
+    if(keyInput->getKeyactions().contains(Input::Keyaction::Exit)) {
+        state = gameMenuEnd;
+    }
 }
 
 /**
@@ -1090,4 +1131,8 @@ void Game::colTestLevel() {
     GameObject *playerObject = new Player(13*obs, 0*obs, 1*obs);
 
     playerObjPointer = dynamic_cast<Player*>(playerObject);
+}
+
+int Game::getStepIntervall() {
+    return stepIntervall;
 }
