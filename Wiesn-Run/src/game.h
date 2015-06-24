@@ -77,6 +77,8 @@ private:
     void endGame();
     bool hurtPlayer(int damage);
 
+    void updateHighScore();
+
     void colTestLevel();
     void loadLevelFile(QString fileSpecifier);
 
@@ -98,7 +100,7 @@ private:
     int sceneWidth;
     /// Distanz in der Gegner gespawnt werden
     int spawnDistance;
-    struct scoreStruct score;
+    std::list<struct scoreStruct> scoreList;
 
 
     int stepIntervall;

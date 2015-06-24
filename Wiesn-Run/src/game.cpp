@@ -30,6 +30,19 @@ struct compareGameObjects {
 
 
 /**
+ * @brief Vergleich zweier Scores
+ * Der Vergleich findet über die Summe der Punkte in den einzelnen Kategorien statt.
+ * Der Operator im struct ist mit größer (>) programmiert, da die Liste absteigend sortiert werden soll.
+ * @author Simon
+ */
+struct compareScores {
+    bool operator()(scoreStruct scoreA, scoreStruct scoreB) {
+        return (scoreA.enemiesKilled + scoreA.distanceCovered + scoreA.alcoholPoints) > (scoreB.enemiesKilled + scoreB.distanceCovered + scoreB.alcoholPoints);
+    }
+};
+
+
+/**
  * @brief Konstruktor
  * Initialisiert den appPointer
  * @param argc
@@ -126,6 +139,9 @@ void Game::startNewGame() {
     // alles alte leeren
     scene->clear();
     worldObjects.clear();
+
+    // Test: Highscores
+    updateHighScore();
 
     // Level festlegen, der geladen werden soll
     QString fileSpecifier = ":/levelFiles/levelFiles/level1.txt";
@@ -1059,8 +1075,48 @@ void Game::loadLevelFile(QString fileSpecifier) {
 }
 
 
+void Game::updateHighScore() {
+    // Alte Highscore einlesen
+    std::ifstream input("wiesnHighscore.txt");
+    if (!input) {
+        qDebug() << "Highscore-Datei nicht vorhanden";
+    } else {
+        qDebug("Lese Highscore ein...");
+        // Highscore-Einträge zeilenweise auslesen und als scoreStruct der Liste hinzufügen
+        std::string line;
+        while (std::getline(input, line)) {
+            QString qline = QString::fromStdString(line);
+            QStringList strlist = qline.split(",");
+            if (strlist.length() == 4) {
+                scoreStruct currentScoreItem = {strlist.at(0).toStdString(), strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt()};
+                scoreList.push_back(currentScoreItem);
+            }
+        }
+    }
+    // Datei schließen
+    input.close();
+
+    // Neue Highscore schreiben
+    scoreList.sort(compareScores());
+    std::ofstream ofs;
+    ofs.open("wiesnHighscore.txt", std::ofstream::out | std::ofstream::trunc);
+
+    int i = 0;
+    // Schreibe maximal die besten 10 Scores in die Highscore-Datei
+    while (!scoreList.empty() && (i < 10)) {
+        scoreStruct currentScore = *scoreList.begin();
+        scoreList.pop_front();
+
+        // Highscore-Eintrag schreiben
+        ofs << currentScore.name.c_str() << "," << currentScore.alcoholPoints << "," << currentScore.distanceCovered << "," << currentScore.enemiesKilled << "\n";
+        i++;
+
+    }
+    qDebug("Highscore geschrieben.");
+}
+
+
 int Game::getStepIntervall() {
     return stepIntervall;
-
 }
 
