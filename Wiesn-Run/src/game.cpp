@@ -128,7 +128,7 @@ void Game::startNewGame() {
 
     // Level festlegen, der geladen werden soll
     QString fileSpecifier = ":/levelFiles/levelFiles/level1.txt";
-    loadFromFile(fileSpecifier);
+    loadLevelFile(fileSpecifier);
 
     // Spieler hinzufügen
     worldObjects.push_back(playerObjPointer);
