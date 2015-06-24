@@ -84,8 +84,10 @@ int Game::start() {
 */
 
     // Level festlegen, der geladen werden soll
-    QString fileSpecifier = ":/levelFiles/levelFiles/testLevel.txt";
-    loadFromFile(fileSpecifier);
+    //QString fileSpecifier = ":/levelFiles/levelFiles/testLevel.txt";
+    //loadFromFile(fileSpecifier);
+    QString fileSpecifier = ":/levelFiles/levelFiles/level1.txt";
+    loadLevelFile(fileSpecifier);
 
 
     // Fundamentale stepSize setzen
@@ -916,109 +918,6 @@ void Game::renderGraphics(std::list<GameObject*> *objectList) {
 
 
 
-/**
- * @brief Erstellt ein paar Test-Objekte in worldObjects
- * Was wird erstellt:
- * - Objekt1 mit v=0 an x=100,y=0
- * - Objekt2 mit v=0 an x=180,y=0
- * - ObjektPlayer mit v=8 an x=20,y=0
- * Die Objekte sind 60 breit und 80 hoch. Dimensionen müssen immer durch zwei teilbar sein.
- * @author Rupert, Simon
- */
-void Game::makeTestWorld() {
-    GameObject *object1 = new GameObject(100,0,60,80,obstacle);
-    GameObject *object2 = new GameObject(180,0,60,80,obstacle);
-    Player *objectPlayer = new Player(20,0,8);
-    worldObjects.push_back(object1);
-    worldObjects.push_back(object2);
-    worldObjects.push_back(objectPlayer);
-
-}
-
-
-/**
- * @brief Game::makeLevel1
- * Erstellt die Listen levelInitial und levelSpawn für den ersten Level. Diese müssen dann ausgelesen werden.
- * Der Spieler wird auch als GameObject erstellt. Um den Zeiger auf das Spielerobjekt playerObjPointer setzen
- * zu können, wird ein dynamic_cast auf das Spieler-Objekt ausgeführt.
- * @author Simon
- */
-void Game::loadLevel1() {
-    /// Skalierungsfaktor für Objekte im Spiel
-    int obs = 10;
-
-    // Erstelle statische Objekte
-    GameObject *obstackle1 = new GameObject(30*obs, 0*obs, 8*obs, 6*obs, obstacle);
-    GameObject *obstackle2 = new GameObject(40*obs, 0*obs, 8*obs, 6*obs, obstacle);
-    GameObject *obstackle3 = new GameObject(48*obs, 0*obs, 8*obs, 6*obs, obstacle);
-    GameObject *obstackle4 = new GameObject(55*obs, 0*obs, 8*obs, 6*obs, obstacle);
-    GameObject *obstackle5 = new GameObject(76*obs, 0*obs, 8*obs, 6*obs, obstacle);
-    GameObject *obstackle6 = new GameObject(90*obs, 0*obs, 8*obs, 6*obs, obstacle);
-    GameObject *powerUp1 = new PowerUp(10*obs, 0*obs, 1,1,1,1);
-    GameObject *powerUp2 = new PowerUp(20*obs, 0*obs, 1,1,1,1);
-    // Füge statische Objekte der Liste levelInitial hinzu
-    levelInitial.push_back(obstackle1);
-    levelInitial.push_back(obstackle2);
-    levelInitial.push_back(obstackle3);
-    levelInitial.push_back(obstackle4);
-    levelInitial.push_back(obstackle5);
-    levelInitial.push_back(obstackle6);
-    levelInitial.push_back(powerUp1);
-    levelInitial.push_back(powerUp2);
-    // Sortiere die Liste levelInitial
-    levelInitial.sort(compareGameObjects());
-
-    // Erstelle das Spieler-Objekt und setze den playerObjPointer
-    GameObject *playerObject = new Player(1*obs, 0*obs, 1*obs);
-    playerObjPointer = dynamic_cast<Player*>(playerObject);
-}
-
-
-void Game::loadLevel2() {
-    /// Skalierungsfaktor für Objekte im Spiel
-    int obs = 10;
-
-    // Erstelle statische Objekte
-    GameObject *obstackle1 = new GameObject(40*obs, 0*obs, 8*obs, 6*obs, obstacle);
-    GameObject *obstackle2 = new GameObject(60*obs, 0*obs, 8*obs, 6*obs, obstacle);
-    GameObject *obstackle3 = new GameObject(78*obs, 0*obs, 8*obs, 6*obs, obstacle);
-    GameObject *obstackle4 = new GameObject(95*obs, 0*obs, 8*obs, 6*obs, obstacle);
-    GameObject *obstackle5 = new GameObject(126*obs, 0*obs, 8*obs, 6*obs, obstacle);
-    GameObject *obstackle6 = new GameObject(160*obs, 0*obs, 8*obs, 6*obs, obstacle);
-    // Füge statische Objekte der Liste levelInitial hinzu
-    levelInitial.push_back(obstackle1);
-    levelInitial.push_back(obstackle2);
-    levelInitial.push_back(obstackle3);
-    levelInitial.push_back(obstackle4);
-    levelInitial.push_back(obstackle5);
-    levelInitial.push_back(obstackle6);
-    // Erstelle und Füge PowerUps hinzu
-    GameObject *powerUps;
-    for (int i = 0; i < 3; i++) {
-        powerUps = new PowerUp((2+i)*obs, 0*obs, -1, 2, 1, 0);
-        levelInitial.push_back(powerUps);
-        powerUps = 0;
-    }
-    // Sortiere die Liste levelInitial
-    levelInitial.sort(compareGameObjects());
-
-    // Erstelle Gegner
-    GameObject *enemy1 = new Enemy(50*obs, 0*obs, -1*obs);
-    GameObject *enemy2 = new Enemy(85*obs, 0*obs, -1*obs);
-    GameObject *enemy3 = new Enemy(140*obs, 0*obs, -1*obs);
-    GameObject *speedEnemy1 = new Enemy(135*obs, 0*obs, -2*obs);
-    levelSpawn.push_back(enemy1);
-    levelSpawn.push_back(enemy2);
-    levelSpawn.push_back(enemy3);
-    levelSpawn.push_back(speedEnemy1);
-    // Sortiere die Liste levelSpawn
-    levelSpawn.sort(compareGameObjects());
-
-    // Erstelle das Spieler-Objekt und setze den playerObjPointer
-    GameObject *playerObject = new Player(2*obs, 2*obs, 1*obs);
-    playerObjPointer = dynamic_cast<Player*>(playerObject);
-}
-
 
 void Game::colTestLevel() {
     /// Skalierungsfaktor für Objekte im Spiel
@@ -1063,6 +962,7 @@ void Game::colTestLevel() {
  * Die Level-Datei wird zeilenweise ausgelesen. Beginnt eine Zeile mit den Schlüsselwörtern, z.B. "Player", "Enemy", "Obstacle" etc.,
  * so wird das entsprechende Objekt angelegt und der zugehörigen Liste hinzugefügt. Alle Zeilen, die nicht mit Schlüsselwörtern beginnen
  * werden übersprungen.
+ * In dieser Funktion müssen alle Parameter des Objekt noch übergeben werden.
  * @author Simon
  */
 void Game::loadFromFile(QString fileSpecifier) {
@@ -1077,7 +977,7 @@ void Game::loadFromFile(QString fileSpecifier) {
         levelInitial.clear();
         levelSpawn.clear();
 
-        qDebug() << "Lese levelFile aus:";
+        qDebug() << "Lese levelFile mit Parametern aus:";
 
         QTextStream fileStream(&levelFile);
         while (!fileStream.atEnd()) {
@@ -1103,6 +1003,82 @@ void Game::loadFromFile(QString fileSpecifier) {
                 qDebug() << "  Obstacle-Eintrag gefunden.";
                 GameObject *obstacleToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), strlist.at(4).toInt(), static_cast<objectType>(strlist.at(5).toInt()));
                 levelInitial.push_back(obstacleToAppend);
+            }
+
+            if (strlist.at(0) == "PowerUp") {
+                qDebug() << "  PowerUp-Eintrag gefunden.";
+                GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), strlist.at(4).toInt(), strlist.at(5).toInt(), strlist.at(6).toInt());
+                levelInitial.push_back(powerUpToAppend);
+            }
+
+            if (strlist.at(0) == "Boss") {
+                qDebug() << "  Boss-Eintrag gefunden.";
+            }
+
+        } // end of while
+
+        levelInitial.sort(compareGameObjects());
+        levelSpawn.sort(compareGameObjects());
+
+        qDebug() << "Auslesen des levelFile beendet.";
+    }
+}
+
+
+/**
+ * @brief Game::loadLevelFile
+ * @param fileSpecifier
+ * Diese Funktion liest Level-Dateien aus und kommt mit wenig Parametern aus.
+ * Der Player braucht posX und posY.
+ * Enemies brauchen posX, posY und speedX.
+ * Obstacles brauchen nur posX, posY ist immer null.
+ * Planes (Zwischenebenen) brauchen posX und posY.
+ * PowerUps brauchen posX, posY und die jeweiligen Boni.
+ * @author Simon
+ */
+void Game::loadLevelFile(QString fileSpecifier) {
+    // Spezifizierte Datei öffnen
+    QFile levelFile(fileSpecifier);
+    if (!levelFile.open(QFile::ReadOnly | QFile::Text)) {
+        qDebug() << "Datei konnte nicht geöffnet werden!";
+    } else {
+        // Die Datei wurde erfolgreich geöffnet
+        // Die Listen werden geleert
+        levelInitial.clear();
+        levelSpawn.clear();
+
+        qDebug() << "Lese levelFile mit vorgesetzten Parametern aus:";
+
+        QTextStream fileStream(&levelFile);
+        while (!fileStream.atEnd()) {
+            QString line = fileStream.readLine();
+            //qDebug() << line;
+            // Trenne die aktuelle Zeile nach Komma getrennt auf
+            QStringList strlist = line.split(",");
+
+            if (strlist.at(0) == "Player") {
+                qDebug() << "  Player-Eintrag gefunden.";
+                // Erstelle das Spieler-Objekt und setze den playerObjPointer
+                GameObject *playerObject = new Player(strlist.at(1).toInt(), strlist.at(2).toInt(), 0);
+                playerObjPointer = dynamic_cast<Player*>(playerObject);
+            }
+
+            if (strlist.at(0) == "Enemy") {
+                qDebug() << "  Enemy-Eintrag gefunden.";
+                GameObject *enemyToAppend = new Enemy(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt());
+                levelSpawn.push_back(enemyToAppend);
+            }
+
+            if (strlist.at(0) == "Obstacle") {
+                qDebug() << "  Obstacle-Eintrag gefunden.";
+                GameObject *obstacleToAppend = new GameObject(strlist.at(1).toInt(), 0, obstacle);
+                levelInitial.push_back(obstacleToAppend);
+            }
+
+            if (strlist.at(0) == "Plane") {
+                qDebug() << "  Eintrag für eine Zwischenebene gefunden.";
+                GameObject *planeToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), 2*playerScale, (playerScale / 3), obstacle);
+                levelInitial.push_back(planeToAppend);
             }
 
             if (strlist.at(0) == "PowerUp") {

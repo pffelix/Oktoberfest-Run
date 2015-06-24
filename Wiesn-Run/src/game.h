@@ -12,12 +12,6 @@
 #include "input.h"
 #include "audiocontrol.h"
 #include "powerup.h"
-//#include "renderattack.h"
-//#include "renderbackground.h"
-//#include "renderenemy.h"
-//#include "renderguielement.h"
-//#include "renderobstacle.h"
-//#include "renderplayer.h"
 #include <QApplication>
 #include <QGraphicsView>
 #include <QGraphicsScene>
@@ -88,6 +82,7 @@ private:
     void loadLevel2();
     void colTestLevel();
     void loadFromFile(QString fileSpecifier);
+    void loadLevelFile(QString fileSpecifier);
 
     /// In der Welt befindliche Objekte
     std::list<GameObject*> worldObjects;
