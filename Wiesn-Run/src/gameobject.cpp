@@ -49,7 +49,7 @@ GameObject::GameObject(int posX, int posY, objectType type) {
     case plane: {
         // Verhältnis 2:(1/3)
         this->length = playerScale * 2;
-        this->height = (playerScale / 3) * 2;
+        this->height = playerScale / 3;
 
         // Grafik - Plane Images initialisieren
         setPixmap(QPixmap(":/images/images/plane.png"));

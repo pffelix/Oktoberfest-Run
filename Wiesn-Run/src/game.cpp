@@ -115,6 +115,7 @@ int Game::start() {
     window->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     window->setFixedSize(1024,768);
     window->setWindowTitle(QApplication::translate("Game Widget", "Game Widget (Input Test)"));
+    window->setEnabled(false);
     window->show();
     qDebug("initialize window");
 
@@ -437,11 +438,13 @@ void Game::calculateMovement() {
 
     /// für qDebug (Rupert)
     std::string objecttypes[] = {"Player", "Enemy ", "Obstac", "Shot  ", "PwrUp ", "BOSS  ", "Plane "};
+    qDebug("Object\tSize\tPosX\tPosY\tSpeed");
     int speedX=0,speedY=0;
 
     list<GameObject*>::iterator it;     // Iterator erstellen
     /// Schleife startet beim ersten Element und geht bis zum letzen Element durch
     for(it = worldObjects.begin(); it != worldObjects.end(); ++it) {
+        speedX = 0; speedY = 0;         // für Debug
         GameObject *aktObject = *it;
         MovingObject *aktMovingObject = dynamic_cast<MovingObject*> (aktObject);    // Versuche GameObject in Moving Object umzuwandeln
         if(aktMovingObject != 0) {
@@ -480,8 +483,8 @@ void Game::calculateMovement() {
         }
 
         aktMovingObject = 0;
-
-        qDebug("%s: x=%4d y=%4d\tvx=%3d vy=%3d",objecttypes[static_cast<int>(aktObject->getType())].c_str(), aktObject->getPosX(),aktObject->getPosY(),speedX,speedY);
+        // Anzeige: Object: HöhexBreite, xPos,YPos, (vx,vy)
+        qDebug("%s\t%dx%d\t%4d\t%4d\t(%3d,%3d)",objecttypes[static_cast<int>(aktObject->getType())].c_str(),aktObject->getLength(),aktObject->getHeight(), aktObject->getPosX(),aktObject->getPosY(),speedX,speedY);
 
     }
 
