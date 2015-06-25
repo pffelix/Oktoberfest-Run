@@ -16,7 +16,7 @@ public:
     bool receiveDamage(int damage);
 
     //Alcoholpegel()
-    int getAlcoholLevel() const;    /// Wird nicht benutzt 23.6
+    int getAlcoholLevel() const;    /// Nötig für Score-Berechnung
     void increaseAlcoholLevel(int additionalAlcohol);   /// Schlechte Bezeichnung
     bool decreaseAlcoholLevel(int decreaseLevel);       /// Schlechte Bezeichnung
 
@@ -34,6 +34,9 @@ public:
     bool inJump() const;
     void resetJumpState();
     void abortJump();
+
+    // Getötete Gegner
+    int getEnemiesKilled();
 
     //update()
     virtual void update();
@@ -55,6 +58,8 @@ private:
     bool jumpState;
     //In-der-Luft-'Ort'
     int jumpCooldown;
+    // Getötete Gegner
+    int enemiesKilled;
 
 };
 

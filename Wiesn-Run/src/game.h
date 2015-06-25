@@ -73,8 +73,10 @@ private:
     void handleCollisions();
     void renderGraphics(std::list<GameObject *> *objectList);
     void endGame();
+
     bool hurtPlayer(int damage);
 
+    void updateScore();
     void updateHighScore();
 
     void colTestLevel();
@@ -99,6 +101,7 @@ private:
     /// Distanz in der Gegner gespawnt werden
     int spawnDistance;
     std::list<struct scoreStruct> scoreList;
+    struct scoreStruct playerScore;
 
 
     int stepIntervall;
