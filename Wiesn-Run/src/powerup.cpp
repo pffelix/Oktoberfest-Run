@@ -17,10 +17,6 @@ PowerUp::PowerUp(int posX, int posY, int healthBonus, int alcoholLevelBonus, int
     this->alcoholLevelBonus = alcoholLevelBonus;
     this->ammunationBonus = ammunationBonus;
     this->immunityCooldownBonus = immunityCooldownBonus;
-
-    //Grafik - powerup Grafik initialisieren
-    setPixmap(QPixmap(":/images/images/powerup.png"));
-    setPos(getPosX() - getLength()*0.5, yOffset - getPosY() - getHeight());
 }
 
 /**
