@@ -16,8 +16,8 @@ Erläuterung
 # Größe: 60x120
 
 # Obstacle anlegen:
-# Obstacle,posX
-# Obstacle,200
+# Obstacle,posX,posY
+# Obstacle,200,0
 # Größe: 90x120
 
 # Zwischen-Ebenen-Element anlegen:

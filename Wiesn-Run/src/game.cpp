@@ -1100,7 +1100,7 @@ void Game::updateScore() {
     playerScore.distanceCovered = playerObjPointer->getPosX();
     playerScore.enemiesKilled = playerObjPointer->getEnemiesKilled();
     playerScore.alcoholPoints = playerObjPointer->getAlcoholLevel();
-    playerScore.name = "Horstl"
+    playerScore.name = "Horstl";
 }
 
 
