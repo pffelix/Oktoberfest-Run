@@ -303,13 +303,10 @@ int Game::step() {
             //    handleEvents();
             renderGraphics(&worldObjects);
             /// Mockup: add audioStruct player_jump to audioevents list
-            std::list <float> distance;
-            distance.push_front(1);
-            audioStruct player_jump{"player_jump", distance};
+            audioStruct player_jump{1, "player_jump", 0};
+            /// Mockup: add audioStruct powerup_beer to audioevents list
             audioevents.push_back(player_jump);
-            distance.push_front(0.3);
-            distance.push_front(0.2);
-            audioStruct scene_enemy{"powerup_beer", distance};
+            audioStruct scene_enemy{2, "powerup_beer", 0.3};
             audioevents.push_back(scene_enemy);
             /// send filled audioevents list to AudioControl Object, which updates current Output Sounds
             audioOutput->update(&audioevents);

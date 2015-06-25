@@ -20,10 +20,12 @@ class AudioControl{
 
 public:
     struct playStruct {
-        // name der playstruct objektgruppe
+        // id des playstruct Objekts
+        int id;
+        // name der playstruct Objektgruppe
         std::string name;
-        // Liste mit Lautstärken des playstruct (ein name kann mehrer Objekte besitzen-> mehrere Lautstärken)
-        std::list<float> volume;
+        // Lautstärke des playstruct
+        float volume;
         // variable welche angibt ob sound im moment abgespielt wird
         bool playnext;
         // Audiobjekt des playStruct mit Samples

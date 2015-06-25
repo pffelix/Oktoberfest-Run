@@ -31,13 +31,9 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
     /// erstelle neues temporäres audioStruct, welches stets das aktuelle playStruct Element der Liste playevents beinhaltet.
     struct playStruct newplaystruct;
     /// erstelle Variable welche true ist wenn der name von newplaystruct bereits in playevents vorhanden ist
-    bool nasnameexistinpe;    
+    bool nasidexistinpe;
     /// erstelle einen Iterator für playevents Liste
     std::list<playStruct>::iterator pe;
-    /// erstelle einen Iterator für playevents.volume Liste
-    std::list<float>::iterator pev;
-    /// erstelle einen Iterator für newplaystruct.volume Liste
-    std::list<float>::iterator npsv;
     /// setze alle die Abspielinformation aller playstructs in playevents auf false (verhindere weiteres abspielen)
     for (std::list<playStruct>::iterator pe = playevents.begin(); pe != playevents.end(); pe++) {
         pe->playnext = false;
@@ -49,33 +45,27 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
         /// entnehme neues audioStruct aus audioevents Liste
         newaudiostruct = *audioevents->begin();
         /// setzte Variable nasnameexistinpe auf false, da newaudiostruct bisher nicht in playevents gefunden wurde
-        nasnameexistinpe = false;
+        nasidexistinpe = false;
         /// iteriere über alle bereits bestehenden playStructs in Liste playevents
         for (pe = playevents.begin(); pe != playevents.end(); pe++) {
             /// falls der name eines neuen audiostruct bereits in playevents vorhanden ist (also bereits abgespielt wird)
-            if (newaudiostruct.name.compare(pe->name) == 0) {
-                /// übernehmen die aktuellen Distanzwerte des neuen audiostructs
-                pe->volume = newaudiostruct.distance;
-                /// Wandle die distance Liste in eine Volume Liste um (volume = 1 - distance).
-                for (pev = pe->volume.begin(); pev != pe->volume.end(); pev++) {
-                    *pev = 1.0 - *pev;
-                }
+            if (newaudiostruct.id == pe->id) {
+                /// übernehmen die aktuellen Distanzwerte des neuen audiostructs und wandle sie in eine Volumen Information um (volume = 1 - distance).
+                pe->volume = 1.0 - newaudiostruct.distance;
                 /// setzte play auf true, da das playstruct weiter abgespielt werden soll
                 pe->playnext = true;
                 /// setzte Variable nasnameexistinpe auf true, da newaudiostruct bisher in playevents gefunden wurde
-                nasnameexistinpe = true;    
+                nasidexistinpe = true;
             }
         }
         /// wenn der name von newaudiostruct noch nicht in audioevents vorhanden ist
-        if (nasnameexistinpe == false) {
-            /// schreibe Namen des neuen audioStruct in ein neues playStruct
+        if (nasidexistinpe == false) {
+            /// schreibe ID des neuen audioStruct in ein neues playStruct
+            newplaystruct.id = newaudiostruct.id;
+            /// schreibe Gruppen Namen des neuen audioStruct in ein neues playStruct
             newplaystruct.name = newaudiostruct.name;
-            /// schreibe Distanz Liste des neuen audioStruct in die Volume Liste des playStruct
-            newplaystruct.volume = newaudiostruct.distance;
-            /// Wandle die distance Liste in eine Volume Liste um (volume = 1 - distance).
-            for (npsv = newplaystruct.volume.begin(); npsv != newplaystruct.volume.end(); npsv++) {
-                *npsv = 1.0 - *npsv;
-            }
+            /// übernehmen die aktuellen Distanzwerte des neuen audiostructs und wandle sie in eine Volumen Information um (volume = 1 - distance).
+            newplaystruct.volume = 1.0 - newaudiostruct.distance;
             /// setzte play auf true, da das playstruct abgespielt werden soll
             newplaystruct.playnext = true;
             newplaystruct.object = new Audio (newplaystruct.name);
