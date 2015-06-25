@@ -1,12 +1,29 @@
 TEMPLATE = app
 CONFIG += console
 CONFIG += c++11
-# Felix: QT += gui declarative  # geht bei mir nicht (Rupi)
+
+linux-g++ | linux-g++-64 | linux-g++-32 {
+    # Linux includes
+    # PortAudio Library
+    # package name: portaudio19-dev
+    # version: 19+svn20111121-1
+LIBS += -L/usr/lib/x86_64-linux-gnu/libportaudiocpp.so -lportaudio
+}
+
+win32 {
+    # Windows 32 includes
 LIBS += -libportaudio-2.dll
+}
+
+win64 {
+    # Windows 32 includes
+LIBS += -libportaudio-2.dll
+}
+
+
 QT += core gui
 QT += widgets
 
-#QT += testlib
 
 SOURCES += src/main.cpp \
     src/game.cpp \
@@ -33,7 +50,8 @@ HEADERS += \
     src/audiocontrol.h \
     src/definitions.h \
     src/menu.h \
-    src/powerup.h
+    src/powerup.h \
+    src/portaudio.h
 
 RESOURCES += \
     src/ressources.qrc

@@ -20,9 +20,11 @@ Enemy::Enemy(int posX, int posY, int speedX) : MovingObject(posX, posY, enemy, s
 
     DeathCooldown = frameRate;
 
+    /*
     //Grafik - Enemy wird initialisiert
     setPixmap(QPixmap(":/images/images/enemy.png"));
     setPos(getPosX() - 0.5*getLength(), yOffset - getPosY() - getHeight());
+    */
 }
 
 Enemy::~Enemy() {

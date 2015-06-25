@@ -128,7 +128,7 @@ int Game::start() {
     Game::startTimer(stepIntervall);
 
     ///@TODO hier wird das Startmenü übersprungen
-    state = gameIsRunning;
+    //state = gameIsRunning;
 
     return appPointer->exec();
 }
@@ -160,9 +160,9 @@ void Game::startNewGame() {
     levelScene->addItem(playerObjPointer);
     window->centerOn(playerObjPointer->getPosX(), 384);
     // Spawn-Distanz setzen
-    spawnDistance = 1000;
+    spawnDistance = 1024;
     // Szenen-Breite setzen
-    sceneWidth = 1000;
+    sceneWidth = 1024;
 
     // Zeiger auf Objekte aus levelInitial in worldObjects verlegen
     while (!(levelInitial.empty())) {
@@ -439,7 +439,7 @@ void Game::calculateMovement() {
     using namespace std;               // für std::list
 
     /// für qDebug (Rupert)
-    std::string objecttypes[] = {"Player", "Enemy ", "Obstac", "Shot  ", "PwrUp ", "BOSS  "};
+    std::string objecttypes[] = {"Player", "Enemy ", "Obstac", "Shot  ", "PwrUp ", "BOSS  ", "Plane "};
     int speedX=0,speedY=0;
 
     list<GameObject*>::iterator it;     // Iterator erstellen
@@ -1064,7 +1064,7 @@ void Game::loadLevelFile(QString fileSpecifier) {
 
             if (strlist.at(0) == "Plane") {
                 qDebug() << "  Eintrag für eine Zwischenebene gefunden.";
-                GameObject *planeToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), 2*playerScale, (playerScale / 3), obstacle);
+                GameObject *planeToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), plane);
                 levelInitial.push_back(planeToAppend);
             }
 

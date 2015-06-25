@@ -12,10 +12,6 @@ Player::Player(int posX, int posY, int speedX) : MovingObject(posX, posY, player
     immunityCooldown = 0;
     fireRate = 1 * frameRate;
     fireCooldown = 0;
-
-    //Grafik - Player wird initialisiert
-    setPixmap(QPixmap(":/images/images/player.png"));
-    setPos(playerOffset - 0.5*getLength(), yOffset - getPosY() - getHeight());
 }
 
 Player::~Player() {

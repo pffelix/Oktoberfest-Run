@@ -1,7 +1,10 @@
 #ifndef PORTAUDIO_H
 #define PORTAUDIO_H
 /*
- * $Id: portaudio.h 1859 2012-09-01 00:10:13Z philburk $
+ *  INFO: Kopiert aus dem Pfad /usr/include/portaudio.h des Pakets portaudio19-dev
+ *  Version: 19+svn20111121-1
+ *
+ * $Id: portaudio.h 1745 2011-08-25 17:44:01Z rossb $
  * PortAudio Portable Real-Time Audio Library
  * PortAudio API Header File
  * Latest version available at: http://www.portaudio.com/
@@ -1021,7 +1024,7 @@ typedef struct PaStreamInfo
 /** Retrieve a pointer to a PaStreamInfo structure containing information
  about the specified stream.
  @return A pointer to an immutable PaStreamInfo structure. If the stream
- parameter is invalid, or an error is encountered, the function returns NULL.
+ parameter invalid, or an error is encountered, the function returns NULL.
 
  @param stream A pointer to an open stream previously created with Pa_OpenStream.
 
@@ -1144,6 +1147,15 @@ signed long Pa_GetStreamReadAvailable( PaStream* stream );
  error is encountered.
 */
 signed long Pa_GetStreamWriteAvailable( PaStream* stream );
+
+
+/** Retrieve the host type handling an open stream.
+
+ @return Returns a non-negative value representing the host API type
+ handling an open stream or, a PaErrorCode (which are always negative)
+ if PortAudio is not initialized or an error is encountered.
+*/
+PaHostApiTypeId Pa_GetStreamHostApiType( PaStream* stream );
 
 
 /* Miscellaneous utilities */
