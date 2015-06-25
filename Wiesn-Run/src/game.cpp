@@ -1106,7 +1106,10 @@ void Game::updateScore() {
 
 /**
  * @brief Game::updateHighScore
- * Diese Funktion liest und aktualisiert die Highscore des Spiels.
+ * Diese Funktion liest und aktualisiert die Highscore des Spiels. Als Parameter wird ein std::string mode erwartet.
+ * Ist der mode = "write", so wird die aktuelle Highscore unter Berücksichtigung der aktuellen playerScore neu geschrieben.
+ * Alle anderen Werte für mode lesen nur die alte Highscore und die des Spielers in die Liste ein, um sie z.B. im Highscore-Menü
+ * anzuzeigen.
  * Dazu wird versucht, die Datei "wiesnHighscore.txt" auszulesen. Ist dies nicht möglich,
  * so wurde das Spiel in dem aktuellen Verzeichnis noch nie gestartet.
  * Falls die Datei gefunden und gelesen werden kann, so wird jeder Highscore-Eintrag in die scoreList aufgenommen.
