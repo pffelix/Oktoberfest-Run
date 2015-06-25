@@ -1048,7 +1048,7 @@ void Game::loadLevelFile(QString fileSpecifier) {
 
                 if (strlist.at(0) == "Player") {
                     if (strlist.length() != 3) {
-                        throw -1;
+                        throw std::string("Ungültiger Player-Eintrag: ");
                     } else {
                         // Erstelle das Spieler-Objekt und setze den playerObjPointer
                         qDebug() << "  Player-Eintrag gefunden.";
@@ -1059,7 +1059,7 @@ void Game::loadLevelFile(QString fileSpecifier) {
 
                 if (strlist.at(0) == "Enemy") {
                     if (strlist.length() != 4) {
-                        throw -1;
+                        throw std::string("Ungültiger Enemy-Eintrag:");
                     } else {
                         qDebug() << "  Enemy-Eintrag gefunden.";
                         GameObject *enemyToAppend = new Enemy(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt());
@@ -1069,7 +1069,7 @@ void Game::loadLevelFile(QString fileSpecifier) {
 
                 if (strlist.at(0) == "Obstacle") {
                     if (strlist.length() != 3) {
-                        throw -1;
+                        throw std::string("  Ungültiger Obstacle-Eintrag:");
                     } else {
                         qDebug() << "  Obstacle-Eintrag gefunden.";
                         GameObject *obstacleToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), obstacle);
@@ -1079,7 +1079,7 @@ void Game::loadLevelFile(QString fileSpecifier) {
 
                 if (strlist.at(0) == "Plane") {
                     if (strlist.length() != 3) {
-                        throw -1;
+                        throw std::string("Ungültiger Plane-Eintrag:");
                     } else {
                         qDebug() << "  Plane-Eintrag gefunden.";
                         GameObject *planeToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), plane);
@@ -1089,7 +1089,7 @@ void Game::loadLevelFile(QString fileSpecifier) {
 
                 if (strlist.at(0) == "PowerUp") {
                     if (strlist.length() != 7 ) {
-                        throw -1;
+                        throw std::string("Ungültiger PowerUp-Eintrag:");
                     } else {
                         qDebug() << "  PowerUp-Eintrag gefunden.";
                         GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), strlist.at(4).toInt(), strlist.at(5).toInt(), strlist.at(6).toInt());
@@ -1102,8 +1102,8 @@ void Game::loadLevelFile(QString fileSpecifier) {
                     qDebug() << "  Boss-Eintrag gefunden.";
                 }
             }
-            catch(...) {
-                qDebug("Fehler beim Lesen des Objekts. Zeile wird ignoriert: %s", line.toStdString().c_str());
+            catch(std::string s) {
+                qDebug("%s %s", s.c_str(), line.toStdString().c_str());
             }
 
         } // end of while
