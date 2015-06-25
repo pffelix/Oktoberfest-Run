@@ -300,8 +300,8 @@ int Game::step() {
             detectCollision(&worldObjects);
             handleCollisions();
 
-            //    correctMovement();
-            //    handleEvents();
+            updateScore();
+
             renderGraphics(&worldObjects);
             /// Mockup: add audioStruct player_jump to audioevents list
             audioStruct player_jump{1, audio::player_jump, 0};
@@ -493,9 +493,9 @@ void Game::calculateMovement() {
 
 /**
  * @brief Game::detectCollision
- * Diese Funktion berechnet die Kollisionen, welche zwischen zwei Onjekten, affectedObject und causingObject auftreten. Außerdem wird
- *      die Richtung aus der die Bewegung verursacht wird berechnet
- * Die Kollision wird dabei immer aus Sicht von affectedObject berechnet. So als wäre der Rest des Levels als statisch zu betrachten...
+ * Diese Funktion berechnet die Kollisionen, welche zwischen zwei Objekten, affectedObject und causingObject auftreten.
+ * Dabei wird die Kollisionsrichtung mit berechnet.
+ * Die Kollision wird dabei immer aus Sicht von affectedObject berechnet.
  *
  * @author Simon, johann
  */
@@ -713,6 +713,7 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
         } // if (cast)
     } // for (gameObject)
 } // function
+
 
 /**
  * @brief Kollisionen in der Liste collisionsToHandle werden der Reihe nach aus Sicht des affectedObjects bearbeitet.
@@ -1017,7 +1018,7 @@ void Game::colTestLevel() {
  * Diese Funktion liest Level-Dateien aus und kommt mit wenig Parametern aus.
  * Der Player braucht posX und posY.
  * Enemies brauchen posX, posY und speedX.
- * Obstacles brauchen nur posX, posY ist immer null.
+ * Obstacles brauchen posX und posY.
  * Planes (Zwischenebenen) brauchen posX und posY.
  * PowerUps brauchen posX, posY und die jeweiligen Boni.
  * @author Simon
@@ -1057,12 +1058,12 @@ void Game::loadLevelFile(QString fileSpecifier) {
 
             if (strlist.at(0) == "Obstacle") {
                 qDebug() << "  Obstacle-Eintrag gefunden.";
-                GameObject *obstacleToAppend = new GameObject(strlist.at(1).toInt(), 0, obstacle);
+                GameObject *obstacleToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), obstacle);
                 levelInitial.push_back(obstacleToAppend);
             }
 
             if (strlist.at(0) == "Plane") {
-                qDebug() << "  Eintrag für eine Zwischenebene gefunden.";
+                qDebug() << "  Plane-Eintrag gefunden.";
                 GameObject *planeToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), plane);
                 levelInitial.push_back(planeToAppend);
             }
@@ -1084,6 +1085,21 @@ void Game::loadLevelFile(QString fileSpecifier) {
 
         qDebug() << "Auslesen des levelFile beendet.";
     }
+}
+
+
+/**
+ * @brief Game::updateScore
+ * Aktualisiert die Score des Spielers. Diese Score wird von der Grafik
+ * während des Spiels ausgegeben und am Ende des Spiels in die Highscore
+ * aufgenommen.
+ * @author Simon
+ */
+void Game::updateScore() {
+    playerScore.distanceCovered = playerObjPointer->getPosX();
+    playerScore.enemiesKilled = playerObjPointer->getEnemiesKilled();
+    playerScore.alcoholPoints = playerObjPointer->getAlcoholLevel();
+    playerScore.name = "Horstl"
 }
 
 

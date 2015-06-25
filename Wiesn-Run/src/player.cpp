@@ -12,6 +12,8 @@ Player::Player(int posX, int posY, int speedX) : MovingObject(posX, posY, player
     immunityCooldown = 0;
     fireRate = 1 * frameRate;
     fireCooldown = 0;
+
+    enemiesKilled = 0;
 }
 
 Player::~Player() {
@@ -171,6 +173,14 @@ void Player::resetJumpState() {
  */
 void Player::abortJump() {
     setSpeedY(-maxSpeedY);
+}
+
+/**
+ * @brief Player::getEnemiesKilled
+ * Übergibt die Zahl getöteter Gegner
+ */
+int Player::getEnemiesKilled() {
+    return enemiesKilled;
 }
 
 /**
