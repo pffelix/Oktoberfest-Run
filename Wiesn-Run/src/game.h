@@ -93,6 +93,8 @@ private:
 
     /// Liste audioevents mit allen im Step stattfindenden AudioStructs
     std::list<struct audioStruct> audioevents;
+    /// Liste mit den Audioevents die einmal aufgerufen werden aber eine Längere Spielzeit haben
+    std::list<struct audioCooldownstruct> audioStorage;
 
     /// Breite der Szene
     int sceneWidth;

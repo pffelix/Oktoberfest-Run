@@ -182,6 +182,14 @@ struct audioStruct {
 };
 
 /**
+ * @brief Struktur für audioevents mit ihrer abspielzeit als Cooldown
+ */
+struct audioCooldownstruct {
+    struct audioStruct audioEvent;
+    int cooldown;
+};
+
+/**
  * @brief Struktur für die States des Spiels
  * Sowohl Sound- als auch Grafik-Ausgabe erhalten aus den States Informationen darüber, was gerade im Spiel passiert,
  * z.B. dass gerade der Spieler angreift, ein Gegner stribt etc.
