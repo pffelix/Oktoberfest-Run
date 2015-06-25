@@ -286,7 +286,10 @@ int Game::step() {
 
             break;
         case gameIsRunning:
-
+            // Menü bei ESC
+            if(keyInput->getKeyactions().contains(Input::Keyaction::Exit)) {
+                state = gameMenuEnd;
+            }
 
             worldObjects.sort(compareGameObjects());
             qDebug("---Nächster Zeitschritt---");
