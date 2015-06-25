@@ -104,7 +104,7 @@ void Audio::readSamples() {
 
     bool ok = file.open(QIODevice::ReadOnly | QIODevice::Text);
     if(ok == false) {
-        qWarning("Audio::readsamples: Cannot open File");
+        qWarning() << "Audio::readsamples: Cannot open File" << QString::fromStdString(source);
     }
     /// Lese relevante Informationen aus dem fmt chunk
 

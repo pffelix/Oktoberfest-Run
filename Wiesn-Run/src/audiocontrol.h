@@ -1,13 +1,18 @@
 #ifndef AUDIOCONTROL_H
 #define AUDIOCONTROL_H
+#define WAITSECONDS   (4)
+#define SAMPLERATE   (44100)
+#define BLOCKSIZE (1024)
 
 #include "audio.h"
+#include <QtGlobal>
 #include <QString>
 #include <QDebug>
 #include <iostream>
 #include <QList>
 #include "definitions.h"
 #include <algorithm>
+#include "portaudio.h"
 
 /**
  * @brief  AudioControl-Klasse
@@ -19,6 +24,12 @@
 class AudioControl{
 
 public:
+    typedef struct
+    {
+        float left_phase;
+        float right_phase;
+    }
+    paTestData;
 
     struct playStruct {
         /// id des playstruct Objekts
@@ -29,7 +40,7 @@ public:
         float volume;
         /// variable welche angibt ob sound im moment abgespielt wird
         bool playnext;
-        /// Audiobjekt des playStruct mit Samples
+        /// Zeiger auf das (Audio-)object des playStruct, welches Eventgruppe "name" zugeordnet ist.
         Audio* object;
         /// aktuelle Abspielposition in Audiobjekt in Samples (Beginn des Abspielblockes mit Länge 1024 Samples
         int position;
@@ -37,10 +48,46 @@ public:
 
     };
 
+    /**
+     * @brief  playCallback
+     *         playCallback wird von Portaudio aufgerufen wenn nahezu alle
+     *         Audiosamples abgespielt sind und neu Audiosamples benötigt werden.
+     * @param  Qlist audioevents
+     * @author  Felix Pfreundtner
+     */
+    static int patestCallback( const void *inputBuffer, void *outputBuffer,
+                               unsigned long framesPerBuffer,
+                               const PaStreamCallbackTimeInfo* timeInfo,
+                               PaStreamCallbackFlags statusFlags,
+                               void *userData )
+    {
+        /* Cast data passed through stream to our structure. */
+        paTestData *data = (paTestData*)userData;
+        float *out = (float*)outputBuffer;
+        unsigned int i;
+        (void) inputBuffer; /* Prevent unused variable warning. */
+
+        for( i=0; i<framesPerBuffer; i++ )
+        {
+            *out++ = data->left_phase;  /* left */
+            *out++ = data->right_phase;  /* right */
+            /* Generate simple sawtooth phaser that ranges between -1.0 and 1.0. */
+            data->left_phase += 0.01f;
+            /* When signal reaches top, drop back down. */
+            if( data->left_phase >= 1.0f ) data->left_phase -= 2.0f;
+            /* higher pitch so we can distinguish left and right. */
+            data->right_phase += 0.03f;
+            if( data->right_phase >= 1.0f ) data->right_phase -= 2.0f;
+        }
+        return 0;
+    }
+
+
     AudioControl();
     ~AudioControl();
 
     void update(std::list<struct audioStruct> *audioevents);
+
 private:
     /**
      * @brief  playevents
@@ -59,13 +106,12 @@ private:
      *         blocksize gibt an wie viele Samples jeweils Blockweise zusammen als Audioausgabe mit Portaudio ausgegeben werden.
      * @author  Felix Pfreundtner
      */
-    int blocksize;
+    unsigned long blocksize;
 
-    void initializeplay();
+    PaError playInitialize();
     void play();
-
 
 protected:
 };
 
-#endif // INPUT_H
+#endif // AUDIOCONTROL_H

@@ -7,9 +7,8 @@
  * @author  Felix Pfreundtner
  */
 AudioControl::AudioControl() {
-    /// setzte die Blockgröße auf 1024 Samples
-    blocksize = 1024;
-    // erstelle für jede objektgruppe ein audio Objekt welches die Samples speichert
+
+    /// erstelle für jede objektgruppe "name" ein audio Objekt welches unter anderem die Samples beinhaltet
     audioobjects.push_back(Audio ("scene_beer"));
     audioobjects.push_back(Audio ("scene_enemy"));
     audioobjects.push_back(Audio ("powerup_chicken"));
@@ -23,6 +22,12 @@ AudioControl::AudioControl() {
     audioobjects.push_back(Audio ("background_level1"));
     audioobjects.push_back(Audio ("background_level2"));
     audioobjects.push_back(Audio ("background_level3"));
+
+    /// setzte die Abspiel Blockgröße auf 1024 Samples
+    blocksize = 1024;
+    /// initialisere Abspielbibliothek PortAudio
+    void playInitialize();
+
 
 }
 
@@ -116,36 +121,65 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
 
 
 /**
- * @brief  initializeplay
- *         initializeplay initialisiert die Abspielbibliothek Portaudio
- * @param  Qlist audioevents
- * @author  Felix Pfreundtner
- */
-void initializeplay(){
-    PaStream *stream;
-    PaError Pa_error;
-    /// initialisiere Port Audio
-    Pa_error = Pa_Initialize();
-        ///if( Pa_error != paNoError ) goto error;
-
-        /// Öffenen einen Ausgabe Stream
-        //error = Pa_OpenDefaultStream( &stream,
-                                    //0,          /// erstelle keine Eingangskänale
-                                    //1,          /// erstelle Mono Audio Ausgabe
-                                    //paInt16,  /// setze Bittiefe der Audioausgabe 16 bit Integer
-                                    //44100, /// setze Samplerate der Audioausgabe zu 44100 Hz
-                                    //1024, /// setze Anzahl an Samples per Bufferblock auf 1024
-                                    //patestCallback, /// verweise auf Callback Funktion
-                                    //&data ); /// übergebe User-Data
-        ///if( Pa_error != paNoError ) goto error;
-}
-/**
  * @brief  play
  *         play spielt alle in playevents gespeicherten playStructs ab.
  * @param  Qlist audioevents
  * @author  Felix Pfreundtner
  */
-void play(){
+void AudioControl::play(){
 }
+
+
+/**
+ * @brief  initializeplay
+ *         initializeplay initialisiert die Abspielbibliothek Portaudio
+ * @param  Qlist audioevents
+ * @author  Felix Pfreundtner
+ */
+PaError AudioControl::playInitialize(){
+    /// erstelle data
+    static paTestData data;
+    /// Erstelle Zeiger auf Stream pastream
+    PaStream *pastream;
+    /// Erstelle error Variable
+    PaError paerror;
+    data.left_phase = data.right_phase = 0.0;
+    /// initialisiere Port Audio
+    paerror = Pa_Initialize();
+    if( paerror != paNoError ) goto error;
+
+    /// Öffene einen Ausgabe Stream
+    paerror = Pa_OpenDefaultStream (&pastream,
+                                    0,          /// erstelle keine Eingangskänale
+                                    1,          /// erstelle Mono Audio Ausgabe
+                                    paFloat32,  /// setze Bittiefe der Audioausgabe 16 bit Integer
+                                    SAMPLERATE, /// setze Samplerate der Audioausgabe zu 44100 Hz
+                                    BLOCKSIZE, /// setze Anzahl an Samples per Bufferblock auf 1024
+                                    patestCallback, /// verweise auf Callback Funktion
+                                    &data); /// übergebe User-Data
+    if( paerror != paNoError ) goto error;
+
+    paerror = Pa_StartStream( pastream );
+    if( paerror != paNoError ) goto error;
+
+    /* Sleep for several seconds. */
+    Pa_Sleep(WAITSECONDS*1000);
+
+    paerror = Pa_StopStream( pastream );
+    if( paerror != paNoError ) goto error;
+    paerror = Pa_CloseStream( pastream );
+    if( paerror != paNoError ) goto error;
+    Pa_Terminate();
+    printf("Test finished.\n");
+    return paerror;
+error:
+    Pa_Terminate();
+    fprintf( stderr, "An error occured while using the portaudio stream\n" );
+    fprintf( stderr, "Error number: %d\n", paerror );
+    fprintf( stderr, "Error message: %s\n", Pa_GetErrorText( paerror ) );
+    return paerror;
+}
+
+
 
 

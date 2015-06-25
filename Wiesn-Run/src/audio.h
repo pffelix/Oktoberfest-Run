@@ -14,6 +14,7 @@
 #include <string>
 #include <QVector>
 
+
 /**
  * @brief  Audio-Klasse
  *         Die Audio-Klasse erzeugt Audioobjekte.
@@ -67,9 +68,8 @@ private:
 
     void readSamples();
     qint16 to16bitSample(quint8 sample8bit);
-    void normalize();
-
+    void normalize();    
 protected:
 };
 
-#endif // INPUT_H
+#endif // AUDIO_H
