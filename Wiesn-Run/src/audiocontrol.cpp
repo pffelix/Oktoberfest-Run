@@ -96,7 +96,7 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
             /// setzte Iterator auf das Objekt in audioobjects Liste mit enum "name"
             ao = std::next(audioobjects.begin(), newaudiostruct.name);
             /// speichere einen Zeiger auf das (Audio-)Objekt in audioobjects in newplaystruct
-            newplaystruct.object = &*ao;
+            newplaystruct.objectref = &*ao;
             /// setzte Abspielposition auf 0 Samples (Beginne Abspielen)
             newplaystruct.position = 0;
             /// setzte playnext auf true, da das playstruct auch im nächsten Step abgespielt werden soll
