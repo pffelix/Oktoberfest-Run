@@ -54,8 +54,6 @@ public:
     /// Startet die Mockup QApplication app
     int run(QApplication& app);
 
-
-
     struct stateStruct gameStats;
     //Liste von Kollisionen
     std::list<struct collisionStruct> collisionsToHandle;
@@ -76,6 +74,8 @@ private:
     void renderGraphics(std::list<GameObject *> *objectList);
     void endGame();
     bool hurtPlayer(int damage);
+
+    void updateHighScore();
 
     void colTestLevel();
     void loadLevelFile(QString fileSpecifier);
@@ -98,14 +98,14 @@ private:
     int sceneWidth;
     /// Distanz in der Gegner gespawnt werden
     int spawnDistance;
-    struct scoreStruct score;
+    std::list<struct scoreStruct> scoreList;
 
 
     int stepIntervall;
     Player *playerObjPointer;
 
     /// für das Ausgabefenster QGraphicsView
-    QGraphicsScene * scene;
+    QGraphicsScene * levelScene;
     QGraphicsView * window;
 
     /// aktueller Spielzustand (running, menuStart, menuEnd)

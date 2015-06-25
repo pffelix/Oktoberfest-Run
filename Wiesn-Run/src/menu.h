@@ -4,6 +4,10 @@
 #include <list>
 #include <string>
 #include "definitions.h"
+#include <QGraphicsScene>
+#include <QGraphicsTextItem>
+#include <QFont>
+#include <QString>
 
 /**
  * @brief Menü-Klasse
@@ -24,6 +28,7 @@ public:
         std::string name;
         int id;
         int position;
+        QGraphicsTextItem showEntry;
     };
     /// wird von der Menu-Klasse zur Auswahl-Änderung benötigt
     enum menuSelectionChange {
@@ -36,8 +41,11 @@ public:
     /// gibt den Titel zurück
     std::string *getTitle();
 
-    /// Zeigt das Menü an
-    int display();
+    /// Initialisiert das angezeigt Menü
+    int displayInit();
+
+    /// Aktualisiert das angezeigt Menü
+    int displayUpdate();
 
     /// Neuen Eintrag hinzufügen (evtl private -> Einträge nur im Konstruktor erstellen -> unterschiedlich viele Argumente)
     int addEntry(std::string name, int id);
@@ -47,6 +55,10 @@ public:
 
     /// Zeiger auf aktuelle gewählten Menüeintrag, sollte nach Enter aufgerufen werden
     Menu::menuEntry *getSelection();
+
+    /// Zeiger auf die Menü-Scene und das Menü-Hintergrundbild
+    QGraphicsPixmapItem * background;
+    QGraphicsScene * menuScene;
 
 private:
     /// Liste, die die Menü-Einträge enthalt

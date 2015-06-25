@@ -84,12 +84,13 @@ enum collisionDirection {
 
 /**
  * @brief Struktur für die Score des Spielers
- * In dieser Struktur werden getötete Gegner, zurückgelegte Entfernung und Alkohol-Punkte gespeichert.
+ * In dieser Struktur werden Name des Spielers, getötete Gegner, zurückgelegte Entfernung und Alkohol-Punkte gespeichert.
  * Alkohol-Punkte erhält der Spieler für einen gewissen Pegel in einem Zeitabschnitt.
  * @todo Das Konzept der Alkohol-Punkte muss noch ausgearbeitet werden.
  * @author Simon
  */
 struct scoreStruct {
+    std::string name;
     int enemiesKilled;
     int distanceCovered;
     int alcoholPoints;

@@ -30,6 +30,19 @@ struct compareGameObjects {
 
 
 /**
+ * @brief Vergleich zweier Scores
+ * Der Vergleich findet über die Summe der Punkte in den einzelnen Kategorien statt.
+ * Der Operator im struct ist mit größer (>) programmiert, da die Liste absteigend sortiert werden soll.
+ * @author Simon
+ */
+struct compareScores {
+    bool operator()(scoreStruct scoreA, scoreStruct scoreB) {
+        return (scoreA.enemiesKilled + scoreA.distanceCovered + scoreA.alcoholPoints) > (scoreB.enemiesKilled + scoreB.distanceCovered + scoreB.alcoholPoints);
+    }
+};
+
+
+/**
  * @brief Konstruktor
  * Initialisiert den appPointer
  * @param argc
@@ -84,17 +97,20 @@ int Game::start() {
     menuStart = new Menu(new std::string("Wiesn-Run"));
     menuStart->addEntry("Spiel neustarten",menuId_StartGame);
     menuStart->addEntry("Spiel beenden", menuId_EndGame);
+    menuStart->displayInit();
 
     menuEnd = new Menu(new std::string("Game Over"));
     menuEnd->addEntry("Weiterspielen",menuId_Resume);
     menuEnd->addEntry("Highscore anzeigen",menuId_Highscore);
     menuEnd->addEntry("Credits anzeigen",menuId_Credits);
     menuEnd->addEntry("zurück zum Anfang",menuId_GotoStartMenu);
+    menuEnd->displayInit();
+
+    // QGraphicsScene der Level erstellen
+    levelScene = new QGraphicsScene;
 
     // QGraphicsView Widget (Anzeigefenster) erstellen und einstellen
-    scene = new QGraphicsScene;
-    scene->setSceneRect(0,0,100000,768);
-    window = new QGraphicsView(scene);
+    window = new QGraphicsView();
     window->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     window->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     window->setFixedSize(1024,768);
@@ -124,8 +140,15 @@ int Game::start() {
  */
 void Game::startNewGame() {
     // alles alte leeren
-    scene->clear();
+    levelScene->clear();
     worldObjects.clear();
+
+    // Highscore aktualisieren
+    updateHighScore();
+
+    //Levelscene einstellen
+    levelScene->setSceneRect(0,0,100000,768);
+    window->setScene(levelScene);
 
     // Level festlegen, der geladen werden soll
     QString fileSpecifier = ":/levelFiles/levelFiles/level1.txt";
@@ -134,7 +157,7 @@ void Game::startNewGame() {
     // Spieler hinzufügen
     worldObjects.push_back(playerObjPointer);
     //Grafik - Spieler der Scene hinzufügen und window auf ihn zentrieren
-    scene->addItem(playerObjPointer);
+    levelScene->addItem(playerObjPointer);
     window->centerOn(playerObjPointer->getPosX(), 384);
     // Spawn-Distanz setzen
     spawnDistance = 1000;
@@ -147,7 +170,7 @@ void Game::startNewGame() {
         worldObjects.push_back(currentObject);
         levelInitial.pop_front();
         //Grafik
-        scene->addItem(currentObject);
+        levelScene->addItem(currentObject);
     }
 }
 
@@ -191,7 +214,10 @@ int Game::step() {
 
     switch(state) {
         case gameMenuEnd:
-            menuEnd->display();
+            menuEnd->displayUpdate();
+            //MenüScene wird vom Anzeigewidget aufgerufen
+            window->setScene(menuEnd->menuScene);
+
             // Enter?
             if(keyInput->getKeyactions().contains(Input::Keyaction::Enter)) {
                 // Menüpunkt ausgewählt
@@ -229,7 +255,10 @@ int Game::step() {
             break;
 
         case gameMenuStart:
-            menuStart->display();
+
+            menuStart->displayUpdate();
+            //MenüScene wird vom Anzeigewidget aufgerufen
+            window->setScene(menuStart->menuScene);
 
             // Enter?
             if(keyInput->getKeyactions().contains(Input::Keyaction::Enter)) {
@@ -310,7 +339,7 @@ void Game::appendWorldObjects(Player *playerPointer) {
             worldObjects.push_back(currentObj);
             levelSpawn.pop_front();
             //Grafik - Gegner de Scene hinzufügen
-            scene->addItem(currentObj);
+            levelScene->addItem(currentObj);
         } else {
             break;
         }
@@ -334,7 +363,7 @@ void Game::reduceWorldObjects(Player *playerPointer) {
         if ((playerPointer->getPosX() - currentObj->getPosX()) > spawnDistance) {
             worldObjects.pop_front();
             //Grafik - Objekte aus der Scene löschen
-            scene->removeItem(currentObj);
+            levelScene->removeItem(currentObj);
 
             delete currentObj;
         } else {
@@ -356,7 +385,7 @@ void Game::reduceWorldObjects(Player *playerPointer) {
             objectsToDelete.pop_front();
 
             //Grafik - Bierkrüge löschen
-            scene->removeItem(currentObject);
+            levelScene->removeItem(currentObject);
 
             delete currentObject;
         }
@@ -390,7 +419,7 @@ void Game::evaluateInput() {
         //Shoot *playerFire = new Shoot(playerObjPointer->getPosX(),playerObjPointer->getPosY(),1,player);
         Shoot *playerFire = new Shoot(playerObjPointer->getPosX()+playerObjPointer->getLength()/2,playerObjPointer->getPosY(),1,player);
         worldObjects.push_back(playerFire);
-        scene->addItem(playerFire);
+        levelScene->addItem(playerFire);
     }
 
     // Menü bei ESC
@@ -444,7 +473,7 @@ void Game::calculateMovement() {
                     }
                     enemyFire = new Shoot(aktEnemy->getPosX(), aktEnemy->getPosY(), direction, enemy);
                     worldObjects.push_back(enemyFire);
-                    scene->addItem(enemyFire);
+                    levelScene->addItem(enemyFire);
                     enemyFire = 0;
                 }
                 aktEnemy = 0;
@@ -1059,8 +1088,60 @@ void Game::loadLevelFile(QString fileSpecifier) {
 }
 
 
+/**
+ * @brief Game::updateHighScore
+ * Diese Funktion liest und aktualisiert die Highscore des Spiels.
+ * Dazu wird versucht, die Datei "wiesnHighscore.txt" auszulesen. Ist dies nicht möglich,
+ * so wurde das Spiel in dem aktuellen Verzeichnis noch nie gestartet.
+ * Falls die Datei gefunden und gelesen werden kann, so wird jeder Highscore-Eintrag in die scoreList aufgenommen.
+ * Anschließend wird die Liste nach der Summe der Punkte absteigend sortiert, und nur die 10 besten Elemente werden gespeichert.
+ * Wird für das aktuelle Spiel eine Score angelegt und in der scoreList gespeichert, so wird dieser Eintrag eingeordnet
+ * und gegebenenfalls auch abgespeichert.
+ */
+void Game::updateHighScore() {
+    // Alte Highscore einlesen
+    std::ifstream input("wiesnHighscore.txt");
+    if (!input) {
+        qDebug() << "Highscore-Datei nicht vorhanden";
+    } else {
+        qDebug("Lese Highscore ein...");
+        // Highscore-Einträge zeilenweise auslesen und als scoreStruct der Liste hinzufügen
+        std::string line;
+        while (std::getline(input, line)) {
+            QString qline = QString::fromStdString(line);
+            QStringList strlist = qline.split(",");
+            if (strlist.length() == 4) {
+                scoreStruct currentScoreItem = {strlist.at(0).toStdString(), strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt()};
+                scoreList.push_back(currentScoreItem);
+            }
+        }
+    }
+    // Datei schließen
+    input.close();
+
+    // Neue Highscore schreiben
+    scoreList.sort(compareScores());
+    std::ofstream ofs;
+    ofs.open("wiesnHighscore.txt", std::ofstream::out | std::ofstream::trunc);
+
+    int i = 0;
+    // Schreibe maximal die besten 10 Scores in die Highscore-Datei
+    while (!scoreList.empty() && (i < 10)) {
+        scoreStruct currentScore = *scoreList.begin();
+        scoreList.pop_front();
+
+        // Highscore-Eintrag schreiben
+        ofs << currentScore.name.c_str() << "," << currentScore.alcoholPoints << "," << currentScore.distanceCovered << "," << currentScore.enemiesKilled << "\n";
+        i++;
+
+    }
+    // Datei schließen, damit Änderungen gespeichert werden
+    ofs.close();
+    qDebug("Highscore geschrieben.");
+}
+
+
 int Game::getStepIntervall() {
     return stepIntervall;
-
 }
 
