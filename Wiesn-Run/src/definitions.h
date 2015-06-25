@@ -69,7 +69,7 @@ enum gameState {
  * @author Johann
  */
 enum objectType {
-    player, enemy, obstacle, shot, powerUp, BOSS
+    player, enemy, obstacle, shot, powerUp, BOSS, plane
 };
 
 /**

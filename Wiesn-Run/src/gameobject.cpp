@@ -19,11 +19,14 @@ GameObject::GameObject(int posX, int posY, int length, int height, objectType ty
     this->height = height;
     this->type = type;
 
+    /*
     //Grafik - Plane Image initialisieren
+    /// @todo Das muss vermutlich entfernt werden
      if(getType() == obstacle && getLength() == 2*playerScale) {
         setPixmap(QPixmap(":/images/images/plane.png"));
         setPos(getPosX() - getLength()*0.5, yOffset - getPosY() - getHeight());
      }
+     */
 }
 
 GameObject::GameObject(int posX, int posY, objectType type) {
@@ -40,15 +43,40 @@ GameObject::GameObject(int posX, int posY, objectType type) {
         //Grafik - Obstacle Images initialisieren
         setPixmap(QPixmap(":/images/images/obstacle.png"));
         setPos(getPosX() - 0.5*getLength(), yOffset - getPosY() - getHeight());
+        qDebug("   Obstacle erstellt");
+        break;
+    }
+    case plane: {
+        // Verhältnis 2:(1/3)
+        this->length = playerScale * 2;
+        this->height = (playerScale / 3) * 2;
 
+        // Grafik - Plane Images initialisieren
+        setPixmap(QPixmap(":/images/images/plane.png"));
+        setPos(getPosX() - getLength()*0.5, yOffset - getPosY() - getHeight());
+        qDebug("   Plane erstellt");
+        break;
     }
     case player: {
         // Verhältnis 1:2 (b:h)
+        this->length = playerScale;
+        this->height = playerScale * 2;
+
+        //Grafik - Player wird initialisiert
+        setPixmap(QPixmap(":/images/images/player.png"));
+        setPos(playerOffset - 0.5*getLength(), yOffset - getPosY() - getHeight());
+        qDebug("   Player erstellt");
+        break;
     }
     case enemy: {
         // Verhältnis 1:2 (b:h)
         this->length = playerScale;
         this->height = playerScale * 2;
+
+        //Grafik - Enemy wird initialisiert
+        setPixmap(QPixmap(":/images/images/enemy.png"));
+        setPos(getPosX() - 0.5*getLength(), yOffset - getPosY() - getHeight());
+        qDebug("   Enemy erstellt");
         break;
     }
     case powerUp: {
@@ -63,8 +91,9 @@ GameObject::GameObject(int posX, int posY, objectType type) {
         this->height = playerScale * (2.0 / 3.0);
         break;
     }
-    case BOSS:{
+    case BOSS: {
 /// BOSS definieren (Flo wegen Bild/Abmessungen fragen)
+        break;
     }
     };
 }
