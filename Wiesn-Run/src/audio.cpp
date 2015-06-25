@@ -8,7 +8,7 @@
 Audio::Audio(std::string state_name) {
     source = state_name;
     readSamples();
-    qDebug("Audio object created");
+    qDebug() << QString("Audio object created: ") + QString::fromStdString(source);
 
 }
 

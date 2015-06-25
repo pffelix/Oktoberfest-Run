@@ -41,7 +41,7 @@ public:
         /// variable welche angibt ob sound im moment abgespielt wird
         bool playnext;
         /// Zeiger auf das (Audio-)object des playStruct, welches Eventgruppe "name" zugeordnet ist.
-        Audio* object;
+        Audio* objectref;
         /// aktuelle Abspielposition in Audiobjekt in Samples (Beginn des Abspielblockes mit Länge 1024 Samples
         int position;
         /// Gesamtanzahl an Samples des Audioobjekts
