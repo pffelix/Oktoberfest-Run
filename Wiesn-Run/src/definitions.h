@@ -96,6 +96,22 @@ struct scoreStruct {
     int alcoholPoints;
 };
 
+enum audio {
+    scene_beer,
+    scene_enemy,
+    powerup_chicken,
+    powerup_beer,
+    status_life,
+    status_alcohol,
+    player_walk,
+    player_jump,
+    background_menu,
+    background_highscore,
+    background_level1,
+    background_level2,
+    background_level3
+};
+
 
 /**
  * @brief Struktur für einzelne Audio Events
@@ -161,7 +177,7 @@ struct scoreStruct {
  */
 struct audioStruct {
     int id;
-    std::string name;
+    audio name;
     float distance;
 };
 

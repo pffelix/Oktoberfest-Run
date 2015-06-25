@@ -7,6 +7,22 @@
  * @author  Felix Pfreundtner
  */
 AudioControl::AudioControl() {
+
+    objects.push_back(Audio ("scene_beer"));
+    objects.push_back(Audio ("scene_enemy"));
+    objects.push_back(Audio ("powerup_chicken"));
+    objects.push_back(Audio ("powerup_beer"));
+    objects.push_back(Audio ("status_life"));
+    objects.push_back(Audio ("status_alcohol"));
+    objects.push_back(Audio ("player_walk"));
+    objects.push_back(Audio ("player_jump"));
+    objects.push_back(Audio ("background_menu"));
+    objects.push_back(Audio ("background_highscore"));
+    objects.push_back(Audio ("background_level1"));
+    objects.push_back(Audio ("background_level2"));
+    objects.push_back(Audio ("background_level3"));
+
+
 }
 
 
@@ -68,7 +84,6 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
             newplaystruct.volume = 1.0 - newaudiostruct.distance;
             /// setzte play auf true, da das playstruct abgespielt werden soll
             newplaystruct.playnext = true;
-            newplaystruct.object = new Audio (newplaystruct.name);
             /// füge das neue playstruct der Liste playevents hinzu
             playevents.push_back(newplaystruct);
         }

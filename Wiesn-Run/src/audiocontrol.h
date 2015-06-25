@@ -19,11 +19,12 @@
 class AudioControl{
 
 public:
+
     struct playStruct {
         // id des playstruct Objekts
         int id;
         // name der playstruct Objektgruppe
-        std::string name;
+        audio name;
         // Lautstärke des playstruct
         float volume;
         // variable welche angibt ob sound im moment abgespielt wird
@@ -45,6 +46,7 @@ private:
      * @author  Felix Pfreundtner
      */
     std::list<struct playStruct> playevents;
+    std::list<Audio> objects;
 
     void initializeplay();
     void play();
