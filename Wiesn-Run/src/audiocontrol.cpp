@@ -7,21 +7,22 @@
  * @author  Felix Pfreundtner
  */
 AudioControl::AudioControl() {
-
-    objects.push_back(Audio ("scene_beer"));
-    objects.push_back(Audio ("scene_enemy"));
-    objects.push_back(Audio ("powerup_chicken"));
-    objects.push_back(Audio ("powerup_beer"));
-    objects.push_back(Audio ("status_life"));
-    objects.push_back(Audio ("status_alcohol"));
-    objects.push_back(Audio ("player_walk"));
-    objects.push_back(Audio ("player_jump"));
-    objects.push_back(Audio ("background_menu"));
-    objects.push_back(Audio ("background_highscore"));
-    objects.push_back(Audio ("background_level1"));
-    objects.push_back(Audio ("background_level2"));
-    objects.push_back(Audio ("background_level3"));
-
+    /// setzte die Blockgröße auf 1024 Samples
+    blocksize = 1024;
+    // erstelle für jede objektgruppe ein audio Objekt welches die Samples speichert
+    audioobjects.push_back(Audio ("scene_beer"));
+    audioobjects.push_back(Audio ("scene_enemy"));
+    audioobjects.push_back(Audio ("powerup_chicken"));
+    audioobjects.push_back(Audio ("powerup_beer"));
+    audioobjects.push_back(Audio ("status_life"));
+    audioobjects.push_back(Audio ("status_alcohol"));
+    audioobjects.push_back(Audio ("player_walk"));
+    audioobjects.push_back(Audio ("player_jump"));
+    audioobjects.push_back(Audio ("background_menu"));
+    audioobjects.push_back(Audio ("background_highscore"));
+    audioobjects.push_back(Audio ("background_level1"));
+    audioobjects.push_back(Audio ("background_level2"));
+    audioobjects.push_back(Audio ("background_level3"));
 
 }
 
@@ -50,7 +51,10 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
     bool nasidexistinpe;
     /// erstelle einen Iterator für playevents Liste
     std::list<playStruct>::iterator pe;
-    /// setze alle die Abspielinformation aller playstructs in playevents auf false (verhindere weiteres abspielen)
+    /// Erstelle einen Iterator auf audioobjects Liste mit Objekten der Klasse Audio
+    std::list<Audio>::iterator ao;
+
+    /// initialisiere die Abspielinformation aller playstructs in playevents auf false (verhindere weiteres abspielen im nächsten Step)
     for (std::list<playStruct>::iterator pe = playevents.begin(); pe != playevents.end(); pe++) {
         pe->playnext = false;
     }
@@ -64,17 +68,19 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
         nasidexistinpe = false;
         /// iteriere über alle bereits bestehenden playStructs in Liste playevents
         for (pe = playevents.begin(); pe != playevents.end(); pe++) {
-            /// falls der name eines neuen audiostruct bereits in playevents vorhanden ist (also bereits abgespielt wird)
+            /// falls die id eines neuen audiostruct bereits in diesem playStruct von playevents vorhanden ist (also bereits abgespielt wird)
             if (newaudiostruct.id == pe->id) {
                 /// übernehmen die aktuellen Distanzwerte des neuen audiostructs und wandle sie in eine Volumen Information um (volume = 1 - distance).
                 pe->volume = 1.0 - newaudiostruct.distance;
-                /// setzte play auf true, da das playstruct weiter abgespielt werden soll
+                /// erhöhe Abspielposition um Blocksize, da ein Step vergangen ist
+                //pe->position += blocksize;
+                /// setzte playnext auf true, da das playstruct auch im nächsten Step abgespielt werden soll
                 pe->playnext = true;
                 /// setzte Variable nasnameexistinpe auf true, da newaudiostruct bisher in playevents gefunden wurde
                 nasidexistinpe = true;
             }
         }
-        /// wenn der name von newaudiostruct noch nicht in audioevents vorhanden ist
+        /// wenn der name von newaudiostruct noch nicht in audioevents vorhanden ist (struct noch nicht abgespielt wird)
         if (nasidexistinpe == false) {
             /// schreibe ID des neuen audioStruct in ein neues playStruct
             newplaystruct.id = newaudiostruct.id;
@@ -82,7 +88,13 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
             newplaystruct.name = newaudiostruct.name;
             /// übernehmen die aktuellen Distanzwerte des neuen audiostructs und wandle sie in eine Volumen Information um (volume = 1 - distance).
             newplaystruct.volume = 1.0 - newaudiostruct.distance;
-            /// setzte play auf true, da das playstruct abgespielt werden soll
+            /// setzte Iterator auf das Objekt in audioobjects Liste mit enum "name"
+            ao = std::next(audioobjects.begin(), newaudiostruct.name);
+            /// speichere einen Zeiger auf das (Audio-)Objekt in audioobjects in newplaystruct
+            newplaystruct.object = &*ao;
+            /// setzte Abspielposition auf 0 Samples (Beginne Abspielen)
+            newplaystruct.position = 0;
+            /// setzte playnext auf true, da das playstruct auch im nächsten Step abgespielt werden soll
             newplaystruct.playnext = true;
             /// füge das neue playstruct der Liste playevents hinzu
             playevents.push_back(newplaystruct);

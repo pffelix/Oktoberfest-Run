@@ -21,16 +21,19 @@ class AudioControl{
 public:
 
     struct playStruct {
-        // id des playstruct Objekts
+        /// id des playstruct Objekts
         int id;
-        // name der playstruct Objektgruppe
+        /// name der playstruct Objektgruppe
         audio name;
-        // Lautstärke des playstruct
+        /// Lautstärke des playstruct
         float volume;
-        // variable welche angibt ob sound im moment abgespielt wird
+        /// variable welche angibt ob sound im moment abgespielt wird
         bool playnext;
-        // Audiobjekt des playStruct mit Samples
+        /// Audiobjekt des playStruct mit Samples
         Audio* object;
+        /// aktuelle Abspielposition in Audiobjekt in Samples (Beginn des Abspielblockes mit Länge 1024 Samples
+        int position;
+        /// Gesamtanzahl an Samples des Audioobjekts
 
     };
 
@@ -39,14 +42,24 @@ public:
 
     void update(std::list<struct audioStruct> *audioevents);
 private:
-    Audio *audio_object;
     /**
-     * @brief  played
-     *         played beinhaltet eine Liste mit allen im Moment abgespielten audioStruct Informationen.
+     * @brief  playevents
+     *         playevents beinhaltet eine Liste mit allen im Moment abgespielten playStructs.
      * @author  Felix Pfreundtner
      */
     std::list<struct playStruct> playevents;
-    std::list<Audio> objects;
+    /**
+     * @brief  audioobjects
+     *         audioobjects beinhaltet eine Liste mit allen vorhandenen Objekten der Klasse Audio( und deren Samples).
+     * @author  Felix Pfreundtner
+     */
+    std::list<Audio> audioobjects;
+    /**
+     * @brief  blocksize
+     *         blocksize gibt an wie viele Samples jeweils Blockweise zusammen als Audioausgabe mit Portaudio ausgegeben werden.
+     * @author  Felix Pfreundtner
+     */
+    int blocksize;
 
     void initializeplay();
     void play();
