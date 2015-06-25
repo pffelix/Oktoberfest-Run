@@ -155,6 +155,14 @@ void Game::startNewGame() {
     QString fileSpecifier = ":/levelFiles/levelFiles/level1.txt";
     loadLevelFile(fileSpecifier);
 
+    //Backgrounds initialisieren
+    background = new QGraphicsPixmapItem[4];
+    background->setPixmap(QPixmap(":/images/images/background.png"));
+    (background+1)->setPixmap(QPixmap(":/images/images/background.png"));
+    (background+1)->setPos(2048,0);
+    levelScene->addItem(background);
+    levelScene->addItem(background+1);
+
     // Spieler hinzufügen
     worldObjects.push_back(playerObjPointer);
     //Grafik - Spieler der Scene hinzufügen und window auf ihn zentrieren

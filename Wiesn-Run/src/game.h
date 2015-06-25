@@ -107,6 +107,7 @@ private:
     /// für das Ausgabefenster QGraphicsView
     QGraphicsScene * levelScene;
     QGraphicsView * window;
+    QGraphicsPixmapItem * background;
 
     /// aktueller Spielzustand (running, menuStart, menuEnd)
     gameState state = gameMenuStart;

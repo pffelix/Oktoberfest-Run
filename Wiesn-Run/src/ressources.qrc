@@ -7,6 +7,7 @@
         <file>images/attack.png</file>
         <file>images/plane.png</file>
         <file>images/menubackground.png</file>
+        <file>images/background.png</file>
     </qresource>
     <qresource prefix="/audios">
         <file>audios/electrical_guitar_(44.1,1,16).wav</file>
