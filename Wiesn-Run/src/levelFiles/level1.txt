@@ -38,7 +38,7 @@ Player,4800,0
 
 
 # Ubahn-Station: 0 bis 2000
-Obstacle,45,0
+Obstacle,45
 Plane,60,140
 Plane,180,140
 Plane,300,140

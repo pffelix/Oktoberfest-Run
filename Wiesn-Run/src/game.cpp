@@ -1044,39 +1044,66 @@ void Game::loadLevelFile(QString fileSpecifier) {
             // Trenne die aktuelle Zeile nach Komma getrennt auf
             QStringList strlist = line.split(",");
 
-            if (strlist.at(0) == "Player") {
-                qDebug() << "  Player-Eintrag gefunden.";
-                // Erstelle das Spieler-Objekt und setze den playerObjPointer
-                GameObject *playerObject = new Player(strlist.at(1).toInt(), strlist.at(2).toInt(), 0);
-                playerObjPointer = dynamic_cast<Player*>(playerObject);
-            }
+            try {
 
-            if (strlist.at(0) == "Enemy") {
-                qDebug() << "  Enemy-Eintrag gefunden.";
-                GameObject *enemyToAppend = new Enemy(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt());
-                levelSpawn.push_back(enemyToAppend);
-            }
+                if (strlist.at(0) == "Player") {
+                    if (strlist.length() != 3) {
+                        throw -1;
+                    } else {
+                        // Erstelle das Spieler-Objekt und setze den playerObjPointer
+                        qDebug() << "  Player-Eintrag gefunden.";
+                        GameObject *playerObject = new Player(strlist.at(1).toInt(), strlist.at(2).toInt(), 0);
+                        playerObjPointer = dynamic_cast<Player*>(playerObject);
+                    }
+                }
 
-            if (strlist.at(0) == "Obstacle") {
-                qDebug() << "  Obstacle-Eintrag gefunden.";
-                GameObject *obstacleToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), obstacle);
-                levelInitial.push_back(obstacleToAppend);
-            }
+                if (strlist.at(0) == "Enemy") {
+                    if (strlist.length() != 4) {
+                        throw -1;
+                    } else {
+                        qDebug() << "  Enemy-Eintrag gefunden.";
+                        GameObject *enemyToAppend = new Enemy(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt());
+                        levelSpawn.push_back(enemyToAppend);
+                    }
+                }
 
-            if (strlist.at(0) == "Plane") {
-                qDebug() << "  Plane-Eintrag gefunden.";
-                GameObject *planeToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), plane);
-                levelInitial.push_back(planeToAppend);
-            }
+                if (strlist.at(0) == "Obstacle") {
+                    if (strlist.length() != 3) {
+                        throw -1;
+                    } else {
+                        qDebug() << "  Obstacle-Eintrag gefunden.";
+                        GameObject *obstacleToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), obstacle);
+                        levelInitial.push_back(obstacleToAppend);
+                    }
+                }
 
-            if (strlist.at(0) == "PowerUp") {
-                qDebug() << "  PowerUp-Eintrag gefunden.";
-                GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), strlist.at(4).toInt(), strlist.at(5).toInt(), strlist.at(6).toInt());
-                levelInitial.push_back(powerUpToAppend);
-            }
+                if (strlist.at(0) == "Plane") {
+                    if (strlist.length() != 3) {
+                        throw -1;
+                    } else {
+                        qDebug() << "  Plane-Eintrag gefunden.";
+                        GameObject *planeToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), plane);
+                        levelInitial.push_back(planeToAppend);
+                    }
+                }
 
-            if (strlist.at(0) == "Boss") {
-                qDebug() << "  Boss-Eintrag gefunden.";
+                if (strlist.at(0) == "PowerUp") {
+                    if (strlist.length() != 7 ) {
+                        throw -1;
+                    } else {
+                        qDebug() << "  PowerUp-Eintrag gefunden.";
+                        GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), strlist.at(4).toInt(), strlist.at(5).toInt(), strlist.at(6).toInt());
+                        levelInitial.push_back(powerUpToAppend);
+                    }
+                }
+
+                if (strlist.at(0) == "Boss") {
+                    /// @todo try/catch für Bosseintrag sobald der Konstruktor steht.
+                    qDebug() << "  Boss-Eintrag gefunden.";
+                }
+            }
+            catch(...) {
+                qDebug("Fehler beim Lesen des Objekts. Zeile wird ignoriert: %s", line.toStdString().c_str());
             }
 
         } // end of while
