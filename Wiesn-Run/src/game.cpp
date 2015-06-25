@@ -178,7 +178,7 @@ void Game::startNewGame() {
  */
 void Game::endGame() {
     // Highscore aktualisieren
-    std::string mode = "write"
+    std::string mode = "write";
     updateHighScore(mode);
 }
 
@@ -1154,7 +1154,6 @@ void Game::updateHighScore(std::string mode) {
             // Highscore-Eintrag schreiben
             ofs << currentScore.name.c_str() << "," << currentScore.alcoholPoints << "," << currentScore.distanceCovered << "," << currentScore.enemiesKilled << "\n";
             i++;
-
         }
         // Datei schließen, damit Änderungen gespeichert werden
         ofs.close();
