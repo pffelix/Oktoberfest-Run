@@ -144,9 +144,6 @@ void Game::startNewGame() {
     levelScene->clear();
     worldObjects.clear();
 
-    // Highscore aktualisieren
-    updateHighScore();
-
     //Levelscene einstellen
     levelScene->setSceneRect(0,0,100000,768);
     window->setScene(levelScene);
@@ -175,11 +172,14 @@ void Game::startNewGame() {
     }
 }
 
+
 /**
  * @brief Game::endGame
  */
 void Game::endGame() {
-
+    // Highscore aktualisieren
+    std::string mode = "write"
+    updateHighScore(mode);
 }
 
 
@@ -1114,8 +1114,9 @@ void Game::updateScore() {
  * Wird für das aktuelle Spiel eine Score angelegt und in der scoreList gespeichert, so wird dieser Eintrag eingeordnet
  * und gegebenenfalls auch abgespeichert.
  */
-void Game::updateHighScore() {
-    // Alte Highscore einlesen
+void Game::updateHighScore(std::string mode) {
+    // scoreList leeren und alte Highscore einlesen
+    scoreList.clear();
     std::ifstream input("wiesnHighscore.txt");
     if (!input) {
         qDebug() << "Highscore-Datei nicht vorhanden";
@@ -1135,25 +1136,30 @@ void Game::updateHighScore() {
     // Datei schließen
     input.close();
 
-    // Neue Highscore schreiben
+    // Aktuelle Spielerscore hinzufügen und sortieren
+    scoreList.push_back(playerScore);
     scoreList.sort(compareScores());
-    std::ofstream ofs;
-    ofs.open("wiesnHighscore.txt", std::ofstream::out | std::ofstream::trunc);
 
-    int i = 0;
-    // Schreibe maximal die besten 10 Scores in die Highscore-Datei
-    while (!scoreList.empty() && (i < 10)) {
-        scoreStruct currentScore = *scoreList.begin();
-        scoreList.pop_front();
+    if (mode == "write") {
+        // Neue Highscore schreiben
+        std::ofstream ofs;
+        ofs.open("wiesnHighscore.txt", std::ofstream::out | std::ofstream::trunc);
 
-        // Highscore-Eintrag schreiben
-        ofs << currentScore.name.c_str() << "," << currentScore.alcoholPoints << "," << currentScore.distanceCovered << "," << currentScore.enemiesKilled << "\n";
-        i++;
+        int i = 0;
+        // Schreibe maximal die besten 10 Scores in die Highscore-Datei
+        while (!scoreList.empty() && (i < 10)) {
+            scoreStruct currentScore = *scoreList.begin();
+            scoreList.pop_front();
 
+            // Highscore-Eintrag schreiben
+            ofs << currentScore.name.c_str() << "," << currentScore.alcoholPoints << "," << currentScore.distanceCovered << "," << currentScore.enemiesKilled << "\n";
+            i++;
+
+        }
+        // Datei schließen, damit Änderungen gespeichert werden
+        ofs.close();
+        qDebug("Highscore geschrieben.");
     }
-    // Datei schließen, damit Änderungen gespeichert werden
-    ofs.close();
-    qDebug("Highscore geschrieben.");
 }
 
 
