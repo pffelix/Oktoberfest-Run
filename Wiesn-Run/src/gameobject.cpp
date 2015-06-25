@@ -72,7 +72,6 @@ GameObject::GameObject(int posX, int posY, objectType type) {
         // Verhältnis 1:2 (b:h)
         this->length = playerScale;
         this->height = playerScale * 2;
-        break;
 
         //Grafik - Enemy wird initialisiert
         setPixmap(QPixmap(":/images/images/enemy.png"));
