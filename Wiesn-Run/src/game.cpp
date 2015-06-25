@@ -443,6 +443,7 @@ void Game::calculateMovement() {
     list<GameObject*>::iterator it;     // Iterator erstellen
     /// Schleife startet beim ersten Element und geht bis zum letzen Element durch
     for(it = worldObjects.begin(); it != worldObjects.end(); ++it) {
+        speedX = 0; speedY = 0;         // für Debug
         GameObject *aktObject = *it;
         MovingObject *aktMovingObject = dynamic_cast<MovingObject*> (aktObject);    // Versuche GameObject in Moving Object umzuwandeln
         if(aktMovingObject != 0) {
