@@ -438,6 +438,7 @@ void Game::calculateMovement() {
 
     /// für qDebug (Rupert)
     std::string objecttypes[] = {"Player", "Enemy ", "Obstac", "Shot  ", "PwrUp ", "BOSS  ", "Plane "};
+    qDebug("Object\tSize\tPosX\tPosY\tSpeed");
     int speedX=0,speedY=0;
 
     list<GameObject*>::iterator it;     // Iterator erstellen
@@ -482,8 +483,8 @@ void Game::calculateMovement() {
         }
 
         aktMovingObject = 0;
-
-        qDebug("%s: x=%4d y=%4d\tvx=%3d vy=%3d",objecttypes[static_cast<int>(aktObject->getType())].c_str(), aktObject->getPosX(),aktObject->getPosY(),speedX,speedY);
+        // Anzeige: Object: HöhexBreite, xPos,YPos, (vx,vy)
+        qDebug("%s\t%dx%d\t%4d\t%4d\t(%3d,%3d)",objecttypes[static_cast<int>(aktObject->getType())].c_str(),aktObject->getLength(),aktObject->getHeight(), aktObject->getPosX(),aktObject->getPosY(),speedX,speedY);
 
     }
 
