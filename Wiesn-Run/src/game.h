@@ -73,7 +73,7 @@ private:
     void handleCollisions();
     void renderGraphics(std::list<GameObject *> *objectList);
     void endGame();
-    bool hurtPlayer(int damage);
+    void updateAudioLists();
 
     void updateHighScore();
 
@@ -91,8 +91,8 @@ private:
     /// Zu löschende Schüsse
     std::list<GameObject*> objectsToDelete;
 
-    /// Liste audioevents mit allen im Step stattfindenden AudioStructs
-    std::list<struct audioStruct> audioevents;
+    /// Liste audioEvents mit allen im Step stattfindenden AudioStructs
+    std::list<struct audioStruct> audioEvents;
     /// Liste mit den Audioevents die einmal aufgerufen werden aber eine Längere Spielzeit haben
     std::list<struct audioCooldownstruct> audioStorage;
 

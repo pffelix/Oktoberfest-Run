@@ -299,19 +299,22 @@ int Game::step() {
             detectCollision(&worldObjects);
             handleCollisions();
 
+            //Grafik - sorgt dafür dass "window" auf den Spieler zentriert bleibt
+            window->centerOn(playerObjPointer->getPosX() + 512 - 100 - 0.5*playerObjPointer->getLength(), 384);
+
             //    correctMovement();
             //    handleEvents();
             renderGraphics(&worldObjects);
-            /// Mockup: add audioStruct player_jump to audioevents list
+            /// Mockup: add audioStruct player_jump to audioEvents list
             audioStruct player_jump{1, audio::player_jump, 0};
-            /// Mockup: add audioStruct powerup_beer to audioevents list
-            audioevents.push_back(player_jump);
+            /// Mockup: add audioStruct powerup_beer to audioEvents list
+            audioEvents.push_back(player_jump);
             audioStruct scene_enemy{2, audio::powerup_beer, 0.3};
-            audioevents.push_back(scene_enemy);
-            /// send filled audioevents list to AudioControl Object, which updates current Output Sounds
-            audioOutput->update(&audioevents);
+            audioEvents.push_back(scene_enemy);
+            /// send filled audioEvents list to AudioControl Object, which updates current Output Sounds
+            audioOutput->update(&audioEvents);
             /// delete List audioStruct elements in list and fill it in the next step again
-            audioevents.clear();
+            audioEvents.clear();
             break;
     }
 
@@ -413,10 +416,11 @@ void Game::evaluateInput() {
 
     // Leertaste?
     if(keyInput->getKeyactions().contains(Input::Keyaction::Shoot)) {
-        //Shoot *playerFire = new Shoot(playerObjPointer->getPosX(),playerObjPointer->getPosY(),1,player);
-        Shoot *playerFire = new Shoot(playerObjPointer->getPosX()+playerObjPointer->getLength()/2,playerObjPointer->getPosY(),1,player);
-        worldObjects.push_back(playerFire);
-        levelScene->addItem(playerFire);
+        if (playerObjPointer->getAmmunatiuon() > 0) {
+            Shoot *playerFire = new Shoot(playerObjPointer->getPosX()+playerObjPointer->getLength()/2,playerObjPointer->getPosY(),1,player);
+            worldObjects.push_back(playerFire);
+            levelScene->addItem(playerFire);
+        }
     }
 
     // Menü bei ESC
@@ -485,8 +489,6 @@ void Game::calculateMovement() {
 
     }
 
-    //Grafik - sorgt dafür dass "window" auf den Spieler zentriert bleibt
-    window->centerOn(playerObjPointer->getPosX() + 512 - 100 - 0.5*playerObjPointer->getLength(), 384);
 }
 
 /**
@@ -801,12 +803,12 @@ void Game::handleCollisions() {
                     if (!(playerObjPointer->getImmunityCooldown() > 0)) {
                         handleEnemy = dynamic_cast<Enemy*>(handleEvent.causingObject);
                         //Stirbt der Spieler durch den zugefügten Schaden -> GameOver
-                        if (hurtPlayer(handleEnemy->getInflictedDamage())) {
+                       /* if (hurtPlayer(handleEnemy->getInflictedDamage())) {
                             gameStats.gameOver = true;
                         } else {
                             //Immunitätsbonus einer haleben Sekunde
                             playerObjPointer->setImmunityCooldown(10);
-                        }
+                        }*/
                         handleEnemy = 0;
                     }
                 }
@@ -814,9 +816,9 @@ void Game::handleCollisions() {
             case shot: {
                 // Spieler kriegt Schaden, Bierkrug zum löschen vormerken, treffen mit eigenem Krug nicht möglich
                 handleShoot = dynamic_cast<Shoot*>(handleEvent.causingObject);
-                if (hurtPlayer(handleShoot->getInflictedDamage())) {
+               /* if (hurtPlayer(handleShoot->getInflictedDamage())) {
                     gameStats.gameOver = true;
-                }
+                }*/
                 objectsToDelete.push_back(handleShoot);
                 handleShoot = 0;
                 break;
@@ -945,16 +947,19 @@ void Game::handleCollisions() {
     }
 }
 
-
 /**
- * @brief Fügt dem Spieler Schaden zu
- * @param Schaden
- * @return true Spieler ist gestorben
+ * @brief durchläuft die Liste audioStorage, zählt die Cooldowns runter
+ *  Die Soundevents die noch laufen, werden an die Liste SoundEvents übergeben. Die fertigen werden gelöscht.
  */
-bool Game::hurtPlayer(int damage) {
-    playerObjPointer->setHealth(playerObjPointer->getHealth() - damage);
-    return !(playerObjPointer->getHealth() > 0);
-
+void Game::updateAudioLists() {
+    for (std::list<audioCooldownstruct>::iterator it = audioStorage.begin(); it != audioStorage.end(); ++it) {
+        if (it->cooldown > 0) {
+            it->cooldown = it->cooldown - 1;
+            audioEvents.push_back(it->audioEvent);
+        } else {
+            audioStorage.erase(it);
+        }
+    }
 }
 
 
@@ -1141,4 +1146,3 @@ void Game::updateHighScore() {
 int Game::getStepIntervall() {
     return stepIntervall;
 }
-
