@@ -77,7 +77,7 @@ private:
     bool hurtPlayer(int damage);
 
     void updateScore();
-    void updateHighScore();
+    void updateHighScore(std::string mode);
 
     void colTestLevel();
     void loadLevelFile(QString fileSpecifier);
