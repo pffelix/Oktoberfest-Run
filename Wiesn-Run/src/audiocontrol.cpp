@@ -1,4 +1,5 @@
 #include "audiocontrol.h"
+#include "portaudio.h"
 
 /**
  * @brief  AudioControl::AudioControl
@@ -7,6 +8,7 @@
  */
 AudioControl::AudioControl() {
 }
+
 
 /**
  * @brief  AudioControl::~AudioControl
@@ -93,5 +95,40 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
             pe++;
         }
     }
-    qDebug("stop");
 }
+
+
+/**
+ * @brief  initializeplay
+ *         initializeplay initialisiert die Abspielbibliothek Portaudio
+ * @param  Qlist audioevents
+ * @author  Felix Pfreundtner
+ */
+void initializeplay(){
+    PaStream *stream;
+    PaError Pa_error;
+    /// initialisiere Port Audio
+    Pa_error = Pa_Initialize();
+        ///if( Pa_error != paNoError ) goto error;
+
+        /// Öffenen einen Ausgabe Stream
+        //error = Pa_OpenDefaultStream( &stream,
+                                    //0,          /// erstelle keine Eingangskänale
+                                    //1,          /// erstelle Mono Audio Ausgabe
+                                    //paInt16,  /// setze Bittiefe der Audioausgabe 16 bit Integer
+                                    //44100, /// setze Samplerate der Audioausgabe zu 44100 Hz
+                                    //1024, /// setze Anzahl an Samples per Bufferblock auf 1024
+                                    //patestCallback, /// verweise auf Callback Funktion
+                                    //&data ); /// übergebe User-Data
+        ///if( Pa_error != paNoError ) goto error;
+}
+/**
+ * @brief  play
+ *         play spielt alle in playevents gespeicherten playStructs ab.
+ * @param  Qlist audioevents
+ * @author  Felix Pfreundtner
+ */
+void play(){
+}
+
+

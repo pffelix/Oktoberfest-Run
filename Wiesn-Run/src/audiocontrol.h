@@ -29,8 +29,6 @@ public:
         // Audiobjekt des playStruct mit Samples
         Audio* object;
 
-
-
     };
 
     AudioControl();
@@ -45,6 +43,10 @@ private:
      * @author  Felix Pfreundtner
      */
     std::list<struct playStruct> playevents;
+
+    void initializeplay();
+    void play();
+
 
 protected:
 };

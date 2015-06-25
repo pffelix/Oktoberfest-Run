@@ -1,0 +1,31 @@
+How To Build Portaudio DLL for Windows:
+http://portaudio.com/docs/v19-doxydocs/compile_windows_mingw.html
+
+Step by Step:
+Install Full MinGW
+http://sourceforge.net/projects/mingw/files/latest/download
+-> install MInGW Get installer
+
+in popup window mark all packages in Basic Setup -> installation apply
+
+Go to start menu and select MinGW->Mysis Console or C:\MinGW\msys\1.0\mysis.bat (run as administrator)
+
+change to portaudio directory (cd) (just directory without space, best you put files to c:portaudio this works)
+type in ./configure
+
+if there is an error:  no acceptable C compiler found in $PATH 
+rename C:\MinGW\msys\1.0\etc\fstab.sample to C:\MinGW\msys\1.0\etc\fstab
+
+type in:
+make (this takes some time with cryptic symbols)
+make install
+
+now you have two files in c:portaudio/lib/.libs
+libportaudio-2.dll and libportaudio.dll.a
+
+the dll library file needs to be included into pro file of qt
+LIBS += libportaudio-2.dll
+and put to C:\Qt\Qt5.4.1\5.4\mingw491_32\bin
+
+How To Build Portaudio DLL for Linux
+http://portaudio.com/docs/v19-doxydocs/compile_linux.html
