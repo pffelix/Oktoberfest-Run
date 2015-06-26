@@ -41,7 +41,7 @@ struct collisionStruct {
  *
  * @lastChanges funtion handleCollisions hinzugefügt
  *
- * @author Simon, Johann
+ * @author Simon, Johann, Felix
  */
 class Game : QObject {
     //Q_OBJECT
@@ -84,6 +84,7 @@ private:
 
     void startNewGame();
 
+
     /// In der Welt befindliche Objekte
     std::list<GameObject*> worldObjects;
     /// Statische Objekte, die zu Anfang gespawnt werden
@@ -93,6 +94,8 @@ private:
     /// Zu löschende Schüsse
     std::list<GameObject*> objectsToDelete;
 
+    /// Audiocontrol Objekt zum Erzeugen der Soundausgabe
+    AudioControl *audioOutput;
     /// Liste audioevents mit allen im Step stattfindenden AudioStructs
     std::list<struct audioStruct> audioevents;
 
@@ -120,8 +123,6 @@ private:
     std::chrono::high_resolution_clock::time_point letzterAufruf;
     /// Erstelle Input Objekt zum Aufzeichnen der Keyboard Inputs
     Input *keyInput = new Input();
-    /// Erstelle Audiocontrol Objekt zum Erzeugen der Soundausgabe
-    AudioControl *audioOutput = new AudioControl();
     /// Menüs
     Menu *menuStart;
     Menu *menuEnd;

@@ -1,6 +1,6 @@
 #ifndef AUDIOCONTROL_H
 #define AUDIOCONTROL_H
-#define WAITSECONDS   (4)
+#define WAITMS   (4)
 #define SAMPLERATE   (44100)
 #define BLOCKSIZE (1024)
 
@@ -107,6 +107,8 @@ private:
      * @author  Felix Pfreundtner
      */
     unsigned long blocksize;
+
+    PaError playinitializeerror;
 
     PaError playInitialize();
     void play();

@@ -26,7 +26,7 @@ AudioControl::AudioControl() {
     /// setzte die Abspiel Blockgröße auf 1024 Samples
     blocksize = 1024;
     /// initialisere Abspielbibliothek PortAudio
-    void playInitialize();
+    playinitializeerror = playInitialize();
 
 
 }
@@ -146,29 +146,39 @@ PaError AudioControl::playInitialize(){
     data.left_phase = data.right_phase = 0.0;
     /// initialisiere Port Audio
     paerror = Pa_Initialize();
-    if( paerror != paNoError ) goto error;
+    if( paerror != paNoError ) {
+        goto error;
+    }
 
     /// Öffene einen Ausgabe Stream
     paerror = Pa_OpenDefaultStream (&pastream,
                                     0,          /// erstelle keine Eingangskänale
-                                    1,          /// erstelle Mono Audio Ausgabe
+                                    2,          /// erstelle Mono Audio Ausgabe
                                     paFloat32,  /// setze Bittiefe der Audioausgabe 16 bit Integer
                                     SAMPLERATE, /// setze Samplerate der Audioausgabe zu 44100 Hz
                                     BLOCKSIZE, /// setze Anzahl an Samples per Bufferblock auf 1024
                                     patestCallback, /// verweise auf Callback Funktion
                                     &data); /// übergebe User-Data
-    if( paerror != paNoError ) goto error;
+    if( paerror != paNoError ) {
+        goto error;
+    }
 
     paerror = Pa_StartStream( pastream );
-    if( paerror != paNoError ) goto error;
+    if( paerror != paNoError ) {
+        goto error;
+    }
 
     /* Sleep for several seconds. */
-    Pa_Sleep(WAITSECONDS*1000);
+    Pa_Sleep(WAITMS*1000);
 
     paerror = Pa_StopStream( pastream );
-    if( paerror != paNoError ) goto error;
+    if( paerror != paNoError ) {
+        goto error;
+    }
     paerror = Pa_CloseStream( pastream );
-    if( paerror != paNoError ) goto error;
+    if( paerror != paNoError ) {
+        goto error;
+    }
     Pa_Terminate();
     printf("Test finished.\n");
     return paerror;

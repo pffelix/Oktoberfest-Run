@@ -52,6 +52,7 @@ struct compareScores {
 Game::Game(int argc, char *argv[]) : QObject() {
     /// Initialisiert den appPointer mit der QApplication
     appPointer = new QApplication(argc,argv);
+
 }
 
 Game::~Game() {
@@ -140,6 +141,9 @@ int Game::start() {
  * füllt worldobjects
  */
 void Game::startNewGame() {
+    /// Erstelle Audiocontrol Objekt zum Erzeugen der Soundausgabe
+    audioOutput = new AudioControl();
+
     // alles alte leeren
     levelScene->clear();
     worldObjects.clear();
@@ -151,10 +155,10 @@ void Game::startNewGame() {
     levelScene->setSceneRect(0,0,100000,768);
     window->setScene(levelScene);
 
+
     // Level festlegen, der geladen werden soll
     QString fileSpecifier = ":/levelFiles/levelFiles/level1.txt";
     loadLevelFile(fileSpecifier);
-
     // Spieler hinzufügen
     worldObjects.push_back(playerObjPointer);
     //Grafik - Spieler der Scene hinzufügen und window auf ihn zentrieren
