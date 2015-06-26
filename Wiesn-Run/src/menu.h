@@ -28,6 +28,7 @@ public:
         std::string name;
         int id;
         int position;
+        bool isClickable;   // für Highscore-Menü
         QGraphicsTextItem showEntry;
     };
     /// wird von der Menu-Klasse zur Auswahl-Änderung benötigt
@@ -48,13 +49,16 @@ public:
     int displayUpdate();
 
     /// Neuen Eintrag hinzufügen (evtl private -> Einträge nur im Konstruktor erstellen -> unterschiedlich viele Argumente)
-    int addEntry(std::string name, int id);
+    int addEntry(std::string name, int id, bool clickable);
 
     /// wird nach Tastendruck aufgerufen
     int changeSelection(menuSelectionChange changeType);
 
     /// Zeiger auf aktuelle gewählten Menüeintrag, sollte nach Enter aufgerufen werden
     Menu::menuEntry *getSelection();
+
+    /// Gibt Menü-Eintrag an der entsprechenden Position zurück
+    Menu::menuEntry *getEntry(int position);
 
     /// Zeiger auf die Menü-Scene und das Menü-Hintergrundbild
     QGraphicsPixmapItem * background;
@@ -65,7 +69,7 @@ private:
     std::list<struct menuEntry*> menuEntrys;
 
     /// Zeiger auf gewählten Menüpunkt
-    struct menuEntry *currentSelection;
+    //struct menuEntry *currentSelection;
     int currentPosition = 0;
 
     /// Anzahl der Einträge
