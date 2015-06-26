@@ -95,15 +95,15 @@ int Game::start() {
 
     // Menüs erstellen
     menuStart = new Menu(new std::string("Wiesn-Run"));
-    menuStart->addEntry("Spiel neustarten",menuId_StartGame);
-    menuStart->addEntry("Spiel beenden", menuId_EndGame);
+    menuStart->addEntry("Spiel neustarten",menuId_StartGame,true);
+    menuStart->addEntry("Spiel beenden", menuId_EndGame,true);
     menuStart->displayInit();
 
     menuEnd = new Menu(new std::string("Game Over"));
-    menuEnd->addEntry("Weiterspielen",menuId_Resume);
-    menuEnd->addEntry("Highscore anzeigen",menuId_Highscore);
-    menuEnd->addEntry("Credits anzeigen",menuId_Credits);
-    menuEnd->addEntry("zurück zum Anfang",menuId_GotoStartMenu);
+    menuEnd->addEntry("Weiterspielen",menuId_Resume,true);
+    menuEnd->addEntry("Highscore anzeigen",menuId_Highscore,true);
+    menuEnd->addEntry("Credits anzeigen",menuId_Credits,true);
+    menuEnd->addEntry("zurück zum Anfang",menuId_GotoStartMenu,true);
     menuEnd->displayInit();
 
     // QGraphicsScene der Level erstellen
