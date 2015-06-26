@@ -22,8 +22,15 @@ public:
     void setSpeedX(int speedX);
     void setSpeedY(int speedY);
 
+    //Wir benötigt um Richtungsänderungen festzustellen
+    void setDirLastFrame(bool dirLastFrame);
+    bool getDirLastFrame();
+
     //'Abstrakte Methode' update
     virtual void update()=0;
+
+    //spiegelt Grafiken
+    void flipHorizontal();
 
 protected:
     //Positionsupdate
@@ -33,6 +40,9 @@ private:
     //Geschwindigkeit
     int speedX;
     int speedY;
+
+    //Richtungsänderung im letzten Frame
+    bool dirLastFrame;
 
 };
 

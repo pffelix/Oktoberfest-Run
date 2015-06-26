@@ -13,7 +13,8 @@
 #include "enemy.h"
 #include "shoot.h"
 #include "menu.h"
-#include <vector>
+
+
 
 
 /**
@@ -1013,8 +1014,19 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
 
     //Positionsaktualisierungen aller Movingobjects
     for (std::list<GameObject*>::iterator it = objectList->begin(); it != objectList->end(); ++it) {
-        if(dynamic_cast<MovingObject*> (*it) != 0) {
-            (*it)->setPos((*it)->getPosX() - 0.5*(*it)->getLength(), yOffset -(*it)->getPosY() - (*it)->getHeight());
+        MovingObject *aktMovingObject = dynamic_cast<MovingObject*> (*it);
+        if(aktMovingObject != 0) {
+
+            if( (aktMovingObject->getSpeedX() > 0) && (aktMovingObject->getDirLastFrame() == false) ) {
+                aktMovingObject->flipHorizontal();
+                aktMovingObject->setDirLastFrame(true);
+            }
+            else if( (aktMovingObject->getSpeedX() < 0) && (aktMovingObject->getDirLastFrame() == true) ) {
+                aktMovingObject->flipHorizontal();
+                aktMovingObject->setDirLastFrame(false);
+            }
+
+            aktMovingObject->setPos((*it)->getPosX() - 0.5*aktMovingObject->getLength(), yOffset -aktMovingObject->getPosY() - aktMovingObject->getHeight());
         }
     }
 }
