@@ -125,15 +125,12 @@ int Game::start() {
     /// Installiere Event Filter zum Loggen der Keyboard Eingabe
     window->installEventFilter(keyInput);
 
-<<<<<<< HEAD
     /// Erstelle Audiocontrol Objekt zum Erzeugen der Soundausgabe
     audioOutput = new AudioControl();
 
-    startNewGame();
-=======
     ///@TODO flo: ka was das hier an der Stelle soll, habs mal auskommentiert
     //startNewGame();
->>>>>>> flo
+
 
     // Timer installieren
     qDebug("Starte Timer mit 500msec-Intervall");
@@ -165,8 +162,6 @@ void Game::startNewGame() {
     // Level festlegen, der geladen werden soll
     QString fileSpecifier = ":/levelFiles/levelFiles/level1.txt";
     loadLevelFile(fileSpecifier);
-<<<<<<< HEAD
-=======
 
     //Backgroundgrafiken initialisieren
     backgrounds = std::vector<QGraphicsPixmapItem>(4);
@@ -185,7 +180,6 @@ void Game::startNewGame() {
         levelScene->addItem(&backgrounds[i]);
     }
 
->>>>>>> flo
     // Spieler hinzufügen
     worldObjects.push_back(playerObjPointer);
     //Grafik - Spieler der Scene hinzufügen und window auf ihn zentrieren
@@ -337,15 +331,10 @@ int Game::step() {
             detectCollision(&worldObjects);
             handleCollisions();
 
-<<<<<<< HEAD
             updateScore();
 
-            renderGraphics(&worldObjects);
-=======
-            //    correctMovement();
-            //    handleEvents();
             renderGraphics(&worldObjects, playerObjPointer);
->>>>>>> flo
+
             /// Mockup: add audioStruct player_jump to audioevents list
             audioStruct player_jump{1, audio::player_jump, 0};
             /// Mockup: add audioStruct powerup_beer to audioevents list
@@ -1021,10 +1010,6 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
                backgrounds[i].setPos(backgrounds[i].x() + 5120, 0);
         }
     }
-
-    qDebug("%lf", (backgrounds[0].x()));
-    qDebug("%d", (playerPointer->getPosX()-130));
-    qDebug("%d", (playerPointer->getPosX() - (playerScale/2) - (playerPointer->x())));
 
     //Positionsaktualisierungen aller Movingobjects
     for (std::list<GameObject*>::iterator it = objectList->begin(); it != objectList->end(); ++it) {
