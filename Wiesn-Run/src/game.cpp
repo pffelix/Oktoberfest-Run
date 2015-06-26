@@ -68,7 +68,7 @@ void Game::timerEvent(QTimerEvent *event)
 {
     Q_UNUSED (event)        // Warnung unterdrücken
     step();
-    ///@TODO return von step...
+    ///@todo return von step...
 }
 
 
@@ -96,6 +96,7 @@ int Game::start() {
     // Menüs erstellen
     menuStart = new Menu(new std::string("Wiesn-Run"));
     menuStart->addEntry("Spiel neustarten",menuId_StartGame,true);
+    menuStart->addEntry("Nicht anklickbar",menuId_NonClickable,false);
     menuStart->addEntry("Spiel beenden", menuId_EndGame,true);
     menuStart->displayInit();
 
@@ -128,7 +129,7 @@ int Game::start() {
     qDebug("Starte Timer mit 500msec-Intervall");
     Game::startTimer(stepIntervall);
 
-    ///@TODO hier wird das Startmenü übersprungen
+    ///@todo hier wird das Startmenü übersprungen
     //state = gameIsRunning;
 
     return appPointer->exec();

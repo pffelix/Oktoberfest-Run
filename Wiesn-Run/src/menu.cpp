@@ -94,14 +94,36 @@ int Menu::changeSelection(enum menuSelectionChange changeType) {
     switch(changeType) {
         case menuSelectionChange::up:
             if(currentPosition > 0) {   // noch nicht ganz oben
-                currentPosition--;
+                // finde nächsten klickbaren Eintrag
+                int tmpPos = currentPosition - 1;
+                while (tmpPos >= 0) {
+                    menuEntry *entry = getEntry(tmpPos);
+                    if(entry->isClickable) {
+                        currentPosition = tmpPos;
+                        return 0;
+                    }
+                    tmpPos--;
+                }
+                // keinen Eintrag gefunden
+                return -1;
             } else {
                 return -1;
             }
             break;
         case menuSelectionChange::down:
             if(currentPosition < numberOfEntrys - 1) {
-                currentPosition++;
+                // finde nächsten klickbaren Eintrag
+                int tmpPos = currentPosition + 1;
+                while (tmpPos <= numberOfEntrys - 1) {
+                    menuEntry *entry = getEntry(tmpPos);
+                    if(entry->isClickable) {
+                        currentPosition = tmpPos;
+                        return 0;
+                    }
+                    tmpPos++;
+                }
+                // keinen Eintrag gefunden
+                return -1;
             } else {
                 return -1;
             }
