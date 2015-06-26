@@ -51,7 +51,7 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
     /// erstelle neues temporäres audioStruct, welches stets das aktuelle audioStruct Element der Liste audioevents beinhaltet.
     struct audioStruct newaudiostruct;
     /// erstelle neues temporäres audioStruct, welches stets das aktuelle playStruct Element der Liste playevents beinhaltet.
-    struct playStruct newplaystruct;
+    playStruct newplaystruct;
     /// erstelle Variable welche true ist wenn der name von newplaystruct bereits in playevents vorhanden ist
     bool nasidexistinpe;
     /// erstelle einen Iterator für playevents Liste
@@ -107,7 +107,7 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
         /// Lösche audioStruct aus audioevents Liste da alle Werte in playevents übernommen wurden
         audioevents->pop_front();
     }
-    /// lösche alle playstructs aus der events Liste welche nicht mehr abgespielt werden sollen
+    /// lösche alle playstructs aus der events Liste welche im nächsten Step nicht mehr abgespielt werden sollen (playnext = false).
     pe = playevents.begin();
     while(pe != playevents.end()) {
         if(pe->playnext == false) {
@@ -120,19 +120,11 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
 }
 
 
-/**
- * @brief  play
- *         play spielt alle in playevents gespeicherten playStructs ab.
- * @param  Qlist audioevents
- * @author  Felix Pfreundtner
- */
-void AudioControl::play(){
-}
 
 
 /**
- * @brief  initializeplay
- *         initializeplay initialisiert die Abspielbibliothek Portaudio
+ * @brief  playInitialize
+ *         playInitialize initialisiert die Abspielbibliothek Portaudio
  * @param  Qlist audioevents
  * @author  Felix Pfreundtner
  */
@@ -168,7 +160,7 @@ PaError AudioControl::playInitialize(){
         goto error;
     }
 
-    /* Sleep for several seconds. */
+    /// Pausiere um Audiostream abzuwarten
     Pa_Sleep(WAITMS*1000);
 
     paerror = Pa_StopStream( pastream );
@@ -180,13 +172,12 @@ PaError AudioControl::playInitialize(){
         goto error;
     }
     Pa_Terminate();
-    printf("Test finished.\n");
     return paerror;
 error:
     Pa_Terminate();
-    fprintf( stderr, "An error occured while using the portaudio stream\n" );
-    fprintf( stderr, "Error number: %d\n", paerror );
-    fprintf( stderr, "Error message: %s\n", Pa_GetErrorText( paerror ) );
+    fprintf( stderr, "Ein Error trat während der Benutzung der PortAudio Ausgabe auf\n" );
+    fprintf( stderr, "Error Nummer: %d\n", paerror );
+    fprintf( stderr, "Error Nachricht: %s\n", Pa_GetErrorText( paerror ) );
     return paerror;
 }
 
@@ -225,3 +216,12 @@ int AudioControl::patestCallback( const void *inputBuffer, void *outputBuffer,
     return 0;
 }
 
+
+/**
+ * @brief  play
+ *         play spielt alle in playevents gespeicherten playStructs ab.
+ * @param  Qlist audioevents
+ * @author  Felix Pfreundtner
+ */
+void AudioControl::play(){
+}

@@ -31,7 +31,7 @@ public:
     }
     paTestData;
 
-    struct playStruct {
+    typedef struct {
         /// id des playstruct Objekts
         int id;
         /// name der playstruct Objektgruppe
@@ -46,27 +46,20 @@ public:
         int position;
         /// Gesamtanzahl an Samples des Audioobjekts
 
-    };
-
-
+    } playStruct;
 
     AudioControl();
     ~AudioControl();
 
     void update(std::list<struct audioStruct> *audioevents);
 
-    static int patestCallback( const void *inputBuffer, void *outputBuffer,
-                               unsigned long framesPerBuffer,
-                               const PaStreamCallbackTimeInfo* timeInfo,
-                               PaStreamCallbackFlags statusFlags,
-                               void *userData );
     private:
     /**
      * @brief  playevents
      *         playevents beinhaltet eine Liste mit allen im Moment abgespielten playStructs.
      * @author  Felix Pfreundtner
      */
-    std::list<struct playStruct> playevents;
+    std::list<playStruct> playevents;
     /**
      * @brief  audioobjects
      *         audioobjects beinhaltet eine Liste mit allen vorhandenen Objekten der Klasse Audio( und deren Samples).
@@ -75,14 +68,23 @@ public:
     std::list<Audio> audioobjects;
     /**
      * @brief  blocksize
-     *         blocksize gibt an wie viele Samples jeweils Blockweise zusammen als Audioausgabe mit Portaudio ausgegeben werden.
+     *         blocksize gibt an wie viele Samples jeweils Blockweise zusammen als Audioausgabe mit PortAudio ausgegeben werden.
      * @author  Felix Pfreundtner
      */
     unsigned long blocksize;
-
+    /**
+     * @brief  playinitializeerror
+     *         playinitializeerror speichert eventuell auftretende Error beim Öffenen und Schließen des PortAudio Streams.
+     * @author  Felix Pfreundtner
+     */
     PaError playinitializeerror;
 
     PaError playInitialize();
+    static int patestCallback( const void *inputBuffer, void *outputBuffer,
+                               unsigned long framesPerBuffer,
+                               const PaStreamCallbackTimeInfo* timeInfo,
+                               PaStreamCallbackFlags statusFlags,
+                               void *userData );
     void play();
 
 protected:
