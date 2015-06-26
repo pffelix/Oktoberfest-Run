@@ -3,6 +3,7 @@
 
 
 #include <list>
+#include <vector>
 
 #include "definitions.h"
 #include "gameobject.h"
@@ -107,7 +108,9 @@ private:
     /// für das Ausgabefenster QGraphicsView
     QGraphicsScene * levelScene;
     QGraphicsView * window;
-    QGraphicsPixmapItem * background;
+
+    /// Liste aller Hintergrundbilder
+    std::vector<QGraphicsPixmapItem> backgrounds;
 
     /// aktueller Spielzustand (running, menuStart, menuEnd)
     gameState state = gameMenuStart;

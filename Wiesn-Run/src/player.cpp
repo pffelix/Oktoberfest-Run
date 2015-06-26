@@ -195,9 +195,6 @@ void Player::update() {
         jumpState = false;
     }
 
-    //Grafik - Bewegung anzeigen
-    setPos(getPosX() - 0.5*getLength(), -getPosY() + 548);
-
     //Alkoholpegel Zeitabbau
     if (alcoholLevel > 0) {
         alcoholLevel = alcoholLevel - 1;
