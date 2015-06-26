@@ -51,7 +51,7 @@ private:
      *         Objekts als QVektor mit 32 bit float Werten.
      * @author  Felix Pfreundtner
      */
-    QVector<float> samples;
+    std::vector<float> samples;
     /**
      * @brief  samplenbr
      *         samplenbr speichert die Anzahl an Samples in der gesamten Audio Datei
