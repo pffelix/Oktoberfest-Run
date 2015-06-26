@@ -23,13 +23,14 @@ AudioControl::AudioControl() {
     audioobjects.push_back(Audio("background_level2"));
     audioobjects.push_back(Audio("background_level3"));
 
-    /// setzte die Abspiel Blockgröße auf 1024 Samples
-    blocksize = 1024;
+
     /// fülle Block Ausgabe mit Nullen
     std::fill_n(block, BLOCKSIZE, 0.8);
     /// setzte blockcounter auf 0 Blöcke
     blockcounter = 0;
-    /// initialisere Abspielbibliothek PortAudio
+    /// setzte Wartezeit von Portaudio auf 1000 ms
+    waitinms = 80000;
+    /// initialisiere Abspielbibliothek PortAudio
     playinitializeerror = playInitialize();
 
 
@@ -80,7 +81,7 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
                 /// übernehmen die aktuellen Distanzwerte des neuen audiostructs und wandle sie in eine Volumen Information um (volume = 1 - distance).
                 pe->volume = 1.0f - newaudiostruct.distance;
                 /// erhöhe Abspielposition um Blocksize, da ein Step vergangen ist
-                //pe->position += blocksize;
+                //pe->position += BLOCKSIZE;
                 /// setzte playnext auf true, da das playstruct auch im nächsten Step abgespielt werden soll
                 pe->playnext = true;
                 /// setzte Variable nasnameexistinpe auf true, da newaudiostruct bisher in playevents gefunden wurde
@@ -157,8 +158,8 @@ PaError AudioControl::playInitialize(){
         goto error;
     }
 
-    /// Pausiere um Audiostream abzuwarten
-    Pa_Sleep(WAITMS*100);
+    /// Pausiere um Audiostream Ende abzuwarten
+    Pa_Sleep(waitinms);
 
     paerror = Pa_StopStream( pastream );
     if( paerror != paNoError ) {
@@ -205,7 +206,7 @@ int AudioControl::myMemberpatestCallback( const void *inputBuffer, void *outputB
     {
         int position;
         position = i+blockcounter*BLOCKSIZE;
-        block[i] = audioobjects[0].getSample(position);
+        block[i] = audioobjects[1].getSample(position);
         *out++ = block[i];
 
         //data->mono = audioobjects[0].getSample(i);

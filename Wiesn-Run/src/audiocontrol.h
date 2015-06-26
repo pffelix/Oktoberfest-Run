@@ -1,8 +1,7 @@
 #ifndef AUDIOCONTROL_H
 #define AUDIOCONTROL_H
-#define WAITMS   (4)
-#define SAMPLERATE   (44100)
-#define BLOCKSIZE (1024)
+#define BLOCKSIZE (1024) /// Blockgröße eines Audio Ausgabe Blocks in Samples.
+#define SAMPLERATE (44100) ///Samplerate des Audio Ausgabe Signals.
 
 #include "audio.h"
 #include <QtGlobal>
@@ -67,18 +66,17 @@ public:
      */
     std::vector<Audio> audioobjects;
     /**
-     * @brief  blocksize
-     *         blocksize gibt an wie viele Samples jeweils Blockweise zusammen als Audioausgabe mit PortAudio ausgegeben werden.
+     * @brief  waitinms
+     *         Wartezeit bis zum Beenden von PortAudio in Millisekunden.
      * @author  Felix Pfreundtner
      */
-    unsigned long blocksize;
+    int waitinms;
     /**
      * @brief  playinitializeerror
      *         playinitializeerror speichert eventuell auftretende Error beim Öffenen und Schließen des PortAudio Streams.
      * @author  Felix Pfreundtner
      */
     PaError playinitializeerror;
-
     /**
      * @brief  blockoutput
      *         Audio Ausgabe Block mit gemischen Samples aller im moment abgespielten Audiostructs.
@@ -86,11 +84,17 @@ public:
      */
     float block[BLOCKSIZE];
     /**
-     * @brief  blockcounter
-     *         blockcounter zählt die bereits abgespielten Audio Ausgabe Blöcke.
+     * @brief  blockcontinue
+     *         Audio Ausgabe blockcontinue mit gemischen Samples aller während der Programmlaufzeit abgespielten block's.
      * @author  Felix Pfreundtner
      */
     std::vector<float> blockcontinue;
+
+    /**
+     * @brief  blockcounter
+     *         blockcounter zählt die bereits abgespielten Audio Ausgabe Blöcke.
+     * @author  Felix Pfreundtner
+     */    
     int blockcounter;
 
     PaError playInitialize();
