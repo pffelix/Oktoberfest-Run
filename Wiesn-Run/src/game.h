@@ -77,7 +77,7 @@ private:
     bool hurtPlayer(int damage);
 
     void updateScore();
-    void updateHighScore();
+    void updateHighScore(std::string mode);
 
     void colTestLevel();
     void loadLevelFile(QString fileSpecifier);
@@ -128,7 +128,7 @@ private:
     Menu *menuEnd;
     /// zur Unterscheidung und Identifizierung der Menü-Einträge
     enum menuIds {
-        menuId_StartGame, menuId_EndGame, menuId_Resume, menuId_Highscore, menuId_Credits, menuId_GotoStartMenu
+        menuId_NonClickable, menuId_StartGame, menuId_EndGame, menuId_Resume, menuId_Highscore, menuId_Credits, menuId_GotoStartMenu
     };
 
     /// stepCount wird mit jedem Step um ein erhöht

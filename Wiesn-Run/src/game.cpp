@@ -69,7 +69,7 @@ void Game::timerEvent(QTimerEvent *event)
 {
     Q_UNUSED (event)        // Warnung unterdrücken
     step();
-    ///@TODO return von step...
+    ///@todo return von step...
 }
 
 
@@ -96,15 +96,16 @@ int Game::start() {
 
     // Menüs erstellen
     menuStart = new Menu(new std::string("Wiesn-Run"));
-    menuStart->addEntry("Spiel neustarten",menuId_StartGame);
-    menuStart->addEntry("Spiel beenden", menuId_EndGame);
+    menuStart->addEntry("Spiel neustarten",menuId_StartGame,true);
+    menuStart->addEntry("Nicht anklickbar",menuId_NonClickable,false);
+    menuStart->addEntry("Spiel beenden", menuId_EndGame,true);
     menuStart->displayInit();
 
     menuEnd = new Menu(new std::string("Game Over"));
-    menuEnd->addEntry("Weiterspielen",menuId_Resume);
-    menuEnd->addEntry("Highscore anzeigen",menuId_Highscore);
-    menuEnd->addEntry("Credits anzeigen",menuId_Credits);
-    menuEnd->addEntry("zurück zum Anfang",menuId_GotoStartMenu);
+    menuEnd->addEntry("Weiterspielen",menuId_Resume,true);
+    menuEnd->addEntry("Highscore anzeigen",menuId_Highscore,true);
+    menuEnd->addEntry("Credits anzeigen",menuId_Credits,true);
+    menuEnd->addEntry("zurück zum Anfang",menuId_GotoStartMenu,true);
     menuEnd->displayInit();
 
     // QGraphicsScene der Level erstellen
@@ -129,7 +130,7 @@ int Game::start() {
     qDebug("Starte Timer mit 500msec-Intervall");
     Game::startTimer(stepIntervall);
 
-    ///@TODO hier wird das Startmenü übersprungen
+    ///@todo hier wird das Startmenü übersprungen
     //state = gameIsRunning;
 
     return appPointer->exec();
@@ -147,9 +148,6 @@ void Game::startNewGame() {
     // alles alte leeren
     levelScene->clear();
     worldObjects.clear();
-
-    // Highscore aktualisieren
-    updateHighScore();
 
     //Levelscene einstellen
     levelScene->setSceneRect(0,0,100000,768);
@@ -179,11 +177,14 @@ void Game::startNewGame() {
     }
 }
 
+
 /**
  * @brief Game::endGame
  */
 void Game::endGame() {
-
+    // Highscore aktualisieren
+    std::string mode = "write";
+    updateHighScore(mode);
 }
 
 
@@ -290,7 +291,10 @@ int Game::step() {
 
             break;
         case gameIsRunning:
-
+            // Menü bei ESC
+            if(keyInput->getKeyactions().contains(Input::Keyaction::Exit)) {
+                state = gameMenuEnd;
+            }
 
             worldObjects.sort(compareGameObjects());
             qDebug("---Nächster Zeitschritt---");
@@ -1048,39 +1052,66 @@ void Game::loadLevelFile(QString fileSpecifier) {
             // Trenne die aktuelle Zeile nach Komma getrennt auf
             QStringList strlist = line.split(",");
 
-            if (strlist.at(0) == "Player") {
-                qDebug() << "  Player-Eintrag gefunden.";
-                // Erstelle das Spieler-Objekt und setze den playerObjPointer
-                GameObject *playerObject = new Player(strlist.at(1).toInt(), strlist.at(2).toInt(), 0);
-                playerObjPointer = dynamic_cast<Player*>(playerObject);
-            }
+            try {
 
-            if (strlist.at(0) == "Enemy") {
-                qDebug() << "  Enemy-Eintrag gefunden.";
-                GameObject *enemyToAppend = new Enemy(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt());
-                levelSpawn.push_back(enemyToAppend);
-            }
+                if (strlist.at(0) == "Player") {
+                    if (strlist.length() != 3) {
+                        throw std::string("Ungültiger Player-Eintrag: ");
+                    } else {
+                        // Erstelle das Spieler-Objekt und setze den playerObjPointer
+                        qDebug() << "  Player-Eintrag gefunden.";
+                        GameObject *playerObject = new Player(strlist.at(1).toInt(), strlist.at(2).toInt(), 0);
+                        playerObjPointer = dynamic_cast<Player*>(playerObject);
+                    }
+                }
 
-            if (strlist.at(0) == "Obstacle") {
-                qDebug() << "  Obstacle-Eintrag gefunden.";
-                GameObject *obstacleToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), obstacle);
-                levelInitial.push_back(obstacleToAppend);
-            }
+                if (strlist.at(0) == "Enemy") {
+                    if (strlist.length() != 4) {
+                        throw std::string("Ungültiger Enemy-Eintrag:");
+                    } else {
+                        qDebug() << "  Enemy-Eintrag gefunden.";
+                        GameObject *enemyToAppend = new Enemy(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt());
+                        levelSpawn.push_back(enemyToAppend);
+                    }
+                }
 
-            if (strlist.at(0) == "Plane") {
-                qDebug() << "  Plane-Eintrag gefunden.";
-                GameObject *planeToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), plane);
-                levelInitial.push_back(planeToAppend);
-            }
+                if (strlist.at(0) == "Obstacle") {
+                    if (strlist.length() != 3) {
+                        throw std::string("  Ungültiger Obstacle-Eintrag:");
+                    } else {
+                        qDebug() << "  Obstacle-Eintrag gefunden.";
+                        GameObject *obstacleToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), obstacle);
+                        levelInitial.push_back(obstacleToAppend);
+                    }
+                }
 
-            if (strlist.at(0) == "PowerUp") {
-                qDebug() << "  PowerUp-Eintrag gefunden.";
-                GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), strlist.at(4).toInt(), strlist.at(5).toInt(), strlist.at(6).toInt());
-                levelInitial.push_back(powerUpToAppend);
-            }
+                if (strlist.at(0) == "Plane") {
+                    if (strlist.length() != 3) {
+                        throw std::string("Ungültiger Plane-Eintrag:");
+                    } else {
+                        qDebug() << "  Plane-Eintrag gefunden.";
+                        GameObject *planeToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), plane);
+                        levelInitial.push_back(planeToAppend);
+                    }
+                }
 
-            if (strlist.at(0) == "Boss") {
-                qDebug() << "  Boss-Eintrag gefunden.";
+                if (strlist.at(0) == "PowerUp") {
+                    if (strlist.length() != 7 ) {
+                        throw std::string("Ungültiger PowerUp-Eintrag:");
+                    } else {
+                        qDebug() << "  PowerUp-Eintrag gefunden.";
+                        GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), strlist.at(4).toInt(), strlist.at(5).toInt(), strlist.at(6).toInt());
+                        levelInitial.push_back(powerUpToAppend);
+                    }
+                }
+
+                if (strlist.at(0) == "Boss") {
+                    /// @todo try/catch für Bosseintrag sobald der Konstruktor steht.
+                    qDebug() << "  Boss-Eintrag gefunden.";
+                }
+            }
+            catch(std::string s) {
+                qDebug("%s %s", s.c_str(), line.toStdString().c_str());
             }
 
         } // end of while
@@ -1110,7 +1141,10 @@ void Game::updateScore() {
 
 /**
  * @brief Game::updateHighScore
- * Diese Funktion liest und aktualisiert die Highscore des Spiels.
+ * Diese Funktion liest und aktualisiert die Highscore des Spiels. Als Parameter wird ein std::string mode erwartet.
+ * Ist der mode = "write", so wird die aktuelle Highscore unter Berücksichtigung der aktuellen playerScore neu geschrieben.
+ * Alle anderen Werte für mode lesen nur die alte Highscore und die des Spielers in die Liste ein, um sie z.B. im Highscore-Menü
+ * anzuzeigen.
  * Dazu wird versucht, die Datei "wiesnHighscore.txt" auszulesen. Ist dies nicht möglich,
  * so wurde das Spiel in dem aktuellen Verzeichnis noch nie gestartet.
  * Falls die Datei gefunden und gelesen werden kann, so wird jeder Highscore-Eintrag in die scoreList aufgenommen.
@@ -1118,8 +1152,9 @@ void Game::updateScore() {
  * Wird für das aktuelle Spiel eine Score angelegt und in der scoreList gespeichert, so wird dieser Eintrag eingeordnet
  * und gegebenenfalls auch abgespeichert.
  */
-void Game::updateHighScore() {
-    // Alte Highscore einlesen
+void Game::updateHighScore(std::string mode) {
+    // scoreList leeren und alte Highscore einlesen
+    scoreList.clear();
     std::ifstream input("wiesnHighscore.txt");
     if (!input) {
         qDebug() << "Highscore-Datei nicht vorhanden";
@@ -1139,25 +1174,29 @@ void Game::updateHighScore() {
     // Datei schließen
     input.close();
 
-    // Neue Highscore schreiben
+    // Aktuelle Spielerscore hinzufügen und sortieren
+    scoreList.push_back(playerScore);
     scoreList.sort(compareScores());
-    std::ofstream ofs;
-    ofs.open("wiesnHighscore.txt", std::ofstream::out | std::ofstream::trunc);
 
-    int i = 0;
-    // Schreibe maximal die besten 10 Scores in die Highscore-Datei
-    while (!scoreList.empty() && (i < 10)) {
-        scoreStruct currentScore = *scoreList.begin();
-        scoreList.pop_front();
+    if (mode == "write") {
+        // Neue Highscore schreiben
+        std::ofstream ofs;
+        ofs.open("wiesnHighscore.txt", std::ofstream::out | std::ofstream::trunc);
 
-        // Highscore-Eintrag schreiben
-        ofs << currentScore.name.c_str() << "," << currentScore.alcoholPoints << "," << currentScore.distanceCovered << "," << currentScore.enemiesKilled << "\n";
-        i++;
+        int i = 0;
+        // Schreibe maximal die besten 10 Scores in die Highscore-Datei
+        while (!scoreList.empty() && (i < 10)) {
+            scoreStruct currentScore = *scoreList.begin();
+            scoreList.pop_front();
 
+            // Highscore-Eintrag schreiben
+            ofs << currentScore.name.c_str() << "," << currentScore.alcoholPoints << "," << currentScore.distanceCovered << "," << currentScore.enemiesKilled << "\n";
+            i++;
+        }
+        // Datei schließen, damit Änderungen gespeichert werden
+        ofs.close();
+        qDebug("Highscore geschrieben.");
     }
-    // Datei schließen, damit Änderungen gespeichert werden
-    ofs.close();
-    qDebug("Highscore geschrieben.");
 }
 
 
