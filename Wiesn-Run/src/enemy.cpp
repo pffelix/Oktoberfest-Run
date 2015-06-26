@@ -128,7 +128,4 @@ void Enemy::update() {
      *      ist außerhalb dem IF-statement weil der Gegner noch fallen soll, wenn er in der Luft stirbt.
      */
     updatePosition();
-
-    //Grafik - Bewegung anzeigen
-    setPos(getPosX() - 0.5*getLength(), -getPosY() + 548);
 }

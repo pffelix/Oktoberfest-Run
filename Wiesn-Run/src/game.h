@@ -3,6 +3,7 @@
 
 
 #include <list>
+#include <vector>
 
 #include "definitions.h"
 #include "gameobject.h"
@@ -71,7 +72,7 @@ private:
     void calculateMovement();
     void detectCollision(std::list<GameObject*> *objectsToCalculate);
     void handleCollisions();
-    void renderGraphics(std::list<GameObject *> *objectList);
+    void renderGraphics(std::list<GameObject *> *objectList, Player *playerPointer);
     void endGame();
 
     bool hurtPlayer(int damage);
@@ -113,6 +114,9 @@ private:
     /// für das Ausgabefenster QGraphicsView
     QGraphicsScene * levelScene;
     QGraphicsView * window;
+
+    /// Liste aller Hintergrundbilder
+    std::vector<QGraphicsPixmapItem> backgrounds;
 
     /// aktueller Spielzustand (running, menuStart, menuEnd)
     gameState state = gameMenuStart;

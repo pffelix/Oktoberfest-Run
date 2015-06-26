@@ -13,6 +13,7 @@
 #include "enemy.h"
 #include "shoot.h"
 #include "menu.h"
+#include <vector>
 
 
 /**
@@ -124,10 +125,15 @@ int Game::start() {
     /// Installiere Event Filter zum Loggen der Keyboard Eingabe
     window->installEventFilter(keyInput);
 
+<<<<<<< HEAD
     /// Erstelle Audiocontrol Objekt zum Erzeugen der Soundausgabe
     audioOutput = new AudioControl();
 
     startNewGame();
+=======
+    ///@TODO flo: ka was das hier an der Stelle soll, habs mal auskommentiert
+    //startNewGame();
+>>>>>>> flo
 
     // Timer installieren
     qDebug("Starte Timer mit 500msec-Intervall");
@@ -159,6 +165,27 @@ void Game::startNewGame() {
     // Level festlegen, der geladen werden soll
     QString fileSpecifier = ":/levelFiles/levelFiles/level1.txt";
     loadLevelFile(fileSpecifier);
+<<<<<<< HEAD
+=======
+
+    //Backgroundgrafiken initialisieren
+    backgrounds = std::vector<QGraphicsPixmapItem>(4);
+
+    backgrounds[0].setPixmap(QPixmap(":/images/images/bg_lev1_1.png"));
+    backgrounds[1].setPixmap(QPixmap(":/images/images/bg_lev1_2.png"));
+    backgrounds[2].setPixmap(QPixmap(":/images/images/bg_lev1_3.png"));
+    backgrounds[3].setPixmap(QPixmap(":/images/images/bg_lev1_4.png"));
+
+    //Backgroundgrafiken positionieren
+    backgrounds[1].setPos(2560,0);
+    backgrounds[3].setPos(2560,0);
+
+    //Backgroundgrafiken der Scene hinzufügen
+    for(int i=0; i<4; i++) {
+        levelScene->addItem(&backgrounds[i]);
+    }
+
+>>>>>>> flo
     // Spieler hinzufügen
     worldObjects.push_back(playerObjPointer);
     //Grafik - Spieler der Scene hinzufügen und window auf ihn zentrieren
@@ -310,9 +337,15 @@ int Game::step() {
             detectCollision(&worldObjects);
             handleCollisions();
 
+<<<<<<< HEAD
             updateScore();
 
             renderGraphics(&worldObjects);
+=======
+            //    correctMovement();
+            //    handleEvents();
+            renderGraphics(&worldObjects, playerObjPointer);
+>>>>>>> flo
             /// Mockup: add audioStruct player_jump to audioevents list
             audioStruct player_jump{1, audio::player_jump, 0};
             /// Mockup: add audioStruct powerup_beer to audioevents list
@@ -977,7 +1010,23 @@ bool Game::hurtPlayer(int damage) {
  * Positionssaktualisierungen der Grafiken aller Beewglichen Objekte
  * @param objectList
  */
-void Game::renderGraphics(std::list<GameObject*> *objectList) {
+void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPointer) {
+    //Bewegunsparralaxe Positionsaktualisierung
+    (backgrounds[0]).setPos(((backgrounds[0]).x()) + ((playerPointer->getPosX() - (playerScale/2) - (playerPointer->x())) /2), 0);
+    (backgrounds[1]).setPos(((backgrounds[1]).x()) + ((playerPointer->getPosX() - (playerScale/2) - (playerPointer->x())) /2), 0);
+
+    //Wenn der Spieler aus einerm Hintergrundbild "rausläuft" wird die Position nachvorne verschoben
+    for(int i = 0; i<=3; i++) {
+        if(playerPointer->getPosX() - playerOffset >= static_cast<int>(backgrounds[i].x()+ 2560)) {
+               backgrounds[i].setPos(backgrounds[i].x() + 5120, 0);
+        }
+    }
+
+    qDebug("%lf", (backgrounds[0].x()));
+    qDebug("%d", (playerPointer->getPosX()-130));
+    qDebug("%d", (playerPointer->getPosX() - (playerScale/2) - (playerPointer->x())));
+
+    //Positionsaktualisierungen aller Movingobjects
     for (std::list<GameObject*>::iterator it = objectList->begin(); it != objectList->end(); ++it) {
         if(dynamic_cast<MovingObject*> (*it) != 0) {
             (*it)->setPos((*it)->getPosX() - 0.5*(*it)->getLength(), yOffset -(*it)->getPosY() - (*it)->getHeight());
