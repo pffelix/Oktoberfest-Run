@@ -32,15 +32,14 @@ std::string Audio::getSource() {
 }
 
 /**
- * @brief  Audio::getSamples
- *         "getSamples" gibt bei Aufruf alle Samples der zu Audioobjekt
- *         gehörigen Wave Datei mit Bittiefe 16 bit und 44100 Hz Samplerate
- *         zurück.
- * @return QVector<float> samples
+ * @brief  Audio::getSample
+ *         "getSample" gibt bei Aufruf das Sample an Position = pos der zu Audioobjekt
+ *         gehörigen Wave Datei mit Bittiefe 16 bit zurück.
+ * @return float sample
  * @author Felix Pfreundtner
  */
-QVector<float> Audio::getSamples() {
-    return samples;
+float Audio::getSample(int pos) {
+    return samples[pos];
 }
 
 /**

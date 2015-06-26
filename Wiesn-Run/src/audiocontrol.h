@@ -26,8 +26,7 @@ class AudioControl{
 public:
     typedef struct
     {
-        float left_phase;
-        float right_phase;
+        float mono;
     }
     paTestData;
 
@@ -48,6 +47,7 @@ public:
 
     } playStruct;
 
+
     AudioControl();
     ~AudioControl();
 
@@ -62,10 +62,10 @@ public:
     std::list<playStruct> playevents;
     /**
      * @brief  audioobjects
-     *         audioobjects beinhaltet eine Liste mit allen vorhandenen Objekten der Klasse Audio( und deren Samples).
+     *         audioobjects beinhaltet eine QVector mit allen vorhandenen Objekten der Klasse Audio( beispielsweise deren Samples als QVector).
      * @author  Felix Pfreundtner
      */
-    std::list<Audio> audioobjects;
+    std::vector<Audio> audioobjects;
     /**
      * @brief  blocksize
      *         blocksize gibt an wie viele Samples jeweils Blockweise zusammen als Audioausgabe mit PortAudio ausgegeben werden.
@@ -80,11 +80,27 @@ public:
     PaError playinitializeerror;
 
     PaError playInitialize();
-    static int patestCallback( const void *inputBuffer, void *outputBuffer,
-                               unsigned long framesPerBuffer,
-                               const PaStreamCallbackTimeInfo* timeInfo,
-                               PaStreamCallbackFlags statusFlags,
-                               void *userData );
+
+    // Instanzfunktion Callback des aktuellen AudioControl Objekts
+    int myMemberpatestCallback(const void *input, void *output,
+      unsigned long frameCount,
+      const PaStreamCallbackTimeInfo* timeInfo,
+      PaStreamCallbackFlags statusFlags);
+
+    // Statische Funktion Callback der AudioControl Klasse
+    static int patestCallback(
+      const void *input, void *output,
+      unsigned long frameCount,
+      const PaStreamCallbackTimeInfo* timeInfo,
+      PaStreamCallbackFlags statusFlags,
+      void *userData )
+    // gebe Instanzfunktion Callback zurück
+    {
+      return ((AudioControl*)userData)
+         ->myMemberpatestCallback(input, output, frameCount, timeInfo, statusFlags);
+    }
+
+
     void play();
 
 protected:

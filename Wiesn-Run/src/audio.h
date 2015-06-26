@@ -31,7 +31,7 @@ public:
     ~Audio();
 
     std::string getSource();
-    QVector<float> getSamples();
+    float getSample(int pos);
     int getSamplenbr();
     short getVolume();
     void setVolume(short volume_audio_obj);
@@ -48,7 +48,7 @@ private:
     /**
      * @brief  samples
      *         samples speichert die normalisierten samples des Audio
-     *         Objekts als QVektor.
+     *         Objekts als QVektor mit 32 bit float Werten.
      * @author  Felix Pfreundtner
      */
     QVector<float> samples;

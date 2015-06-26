@@ -9,19 +9,19 @@
 AudioControl::AudioControl() {
 
     /// erstelle für jede objektgruppe "name" ein audio Objekt welches unter anderem die Samples beinhaltet
-    audioobjects.push_back(Audio ("scene_beer"));
-    audioobjects.push_back(Audio ("scene_enemy"));
-    audioobjects.push_back(Audio ("powerup_chicken"));
-    audioobjects.push_back(Audio ("powerup_beer"));
-    audioobjects.push_back(Audio ("status_life"));
-    audioobjects.push_back(Audio ("status_alcohol"));
-    audioobjects.push_back(Audio ("player_walk"));
-    audioobjects.push_back(Audio ("player_jump"));
-    audioobjects.push_back(Audio ("background_menu"));
-    audioobjects.push_back(Audio ("background_highscore"));
-    audioobjects.push_back(Audio ("background_level1"));
-    audioobjects.push_back(Audio ("background_level2"));
-    audioobjects.push_back(Audio ("background_level3"));
+    audioobjects.push_back(Audio("scene_beer"));
+    audioobjects.push_back(Audio("scene_enemy"));
+    audioobjects.push_back(Audio("powerup_chicken"));
+    audioobjects.push_back(Audio("powerup_beer"));
+    audioobjects.push_back(Audio("status_life"));
+    audioobjects.push_back(Audio("status_alcohol"));
+    audioobjects.push_back(Audio("player_walk"));
+    audioobjects.push_back(Audio("player_jump"));
+    audioobjects.push_back(Audio("background_menu"));
+    audioobjects.push_back(Audio("background_highscore"));
+    audioobjects.push_back(Audio("background_level1"));
+    audioobjects.push_back(Audio("background_level2"));
+    audioobjects.push_back(Audio("background_level3"));
 
     /// setzte die Abspiel Blockgröße auf 1024 Samples
     blocksize = 1024;
@@ -56,8 +56,6 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
     bool nasidexistinpe;
     /// erstelle einen Iterator für playevents Liste
     std::list<playStruct>::iterator pe;
-    /// Erstelle einen Iterator auf audioobjects Liste mit Objekten der Klasse Audio
-    std::list<Audio>::iterator ao;
 
     /// initialisiere die Abspielinformation aller playstructs in playevents auf false (verhindere weiteres abspielen im nächsten Step)
     for (std::list<playStruct>::iterator pe = playevents.begin(); pe != playevents.end(); pe++) {
@@ -76,7 +74,7 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
             /// falls die id eines neuen audiostruct bereits in diesem playStruct von playevents vorhanden ist (also bereits abgespielt wird)
             if (newaudiostruct.id == pe->id) {
                 /// übernehmen die aktuellen Distanzwerte des neuen audiostructs und wandle sie in eine Volumen Information um (volume = 1 - distance).
-                pe->volume = 1.0 - newaudiostruct.distance;
+                pe->volume = 1.0f - newaudiostruct.distance;
                 /// erhöhe Abspielposition um Blocksize, da ein Step vergangen ist
                 //pe->position += blocksize;
                 /// setzte playnext auf true, da das playstruct auch im nächsten Step abgespielt werden soll
@@ -92,11 +90,9 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
             /// schreibe Gruppen Namen des neuen audioStruct in ein neues playStruct
             newplaystruct.name = newaudiostruct.name;
             /// übernehmen die aktuellen Distanzwerte des neuen audiostructs und wandle sie in eine Volumen Information um (volume = 1 - distance).
-            newplaystruct.volume = 1.0 - newaudiostruct.distance;
-            /// setzte Iterator auf das Objekt in audioobjects Liste mit enum "name"
-            ao = std::next(audioobjects.begin(), newaudiostruct.name);
+            newplaystruct.volume = 1.0f - newaudiostruct.distance;
             /// speichere einen Zeiger auf das (Audio-)Objekt in audioobjects in newplaystruct
-            newplaystruct.objectref = &*ao;
+            //newplaystruct.objectref = &audioobjects[newaudiostruct.name];
             /// setzte Abspielposition auf 0 Samples (Beginne Abspielen)
             newplaystruct.position = 0;
             /// setzte playnext auf true, da das playstruct auch im nächsten Step abgespielt werden soll
@@ -129,13 +125,10 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
  * @author  Felix Pfreundtner
  */
 PaError AudioControl::playInitialize(){
-    /// erstelle data
-    static paTestData data;
     /// Erstelle Zeiger auf Stream pastream
     PaStream *pastream;
     /// Erstelle error Variable
     PaError paerror;
-    data.left_phase = data.right_phase = 0.0;
     /// initialisiere Port Audio
     paerror = Pa_Initialize();
     if( paerror != paNoError ) {
@@ -149,8 +142,8 @@ PaError AudioControl::playInitialize(){
                                     paFloat32,  /// setze Bittiefe der Audioausgabe 16 bit Integer
                                     SAMPLERATE, /// setze Samplerate der Audioausgabe zu 44100 Hz
                                     BLOCKSIZE, /// setze Anzahl an Samples per Bufferblock auf 1024
-                                    patestCallback, /// verweise auf Callback Funktion
-                                    &data); /// übergebe User-Data
+                                    &AudioControl::patestCallback, /// verweise auf Callback Funktion
+                                    this); /// übergebe User-Data
     if( paerror != paNoError ) {
         goto error;
     }
@@ -189,29 +182,35 @@ error:
  * @param  Qlist audioevents
  * @author  Felix Pfreundtner
  */
-int AudioControl::patestCallback( const void *inputBuffer, void *outputBuffer,
+int AudioControl::myMemberpatestCallback( const void *inputBuffer, void *outputBuffer,
                            unsigned long framesPerBuffer,
                            const PaStreamCallbackTimeInfo* timeInfo,
-                           PaStreamCallbackFlags statusFlags,
-                           void *userData )
+                           PaStreamCallbackFlags statusFlags )
 {
     /* Cast data passed through stream to our structure. */
-    paTestData *data = (paTestData*)userData;
+    /// erstelle data
+    paTestData datas;
+    datas.mono = 0.0f;
+    paTestData *data = &datas;
     float *out = (float*)outputBuffer;
     unsigned int i;
-    (void) inputBuffer; /* Prevent unused variable warning. */
+    /// kein Input aktiviert, verhindere Warnmeldung "unbenutzter Parameter inputBuffer"
+    (void) inputBuffer;
+
 
     for( i=0; i<framesPerBuffer; i++ )
     {
-        *out++ = data->left_phase;  /* left */
-        *out++ = data->right_phase;  /* right */
+        *out++ = data->mono;
+        //data->mono = audioobjects[0].getSample(i);
+        //*out++ = data->left_phase;  /* left */
+        //*out++ = data->right_phase;  /* right */
         /* Generate simple sawtooth phaser that ranges between -1.0 and 1.0. */
-        data->left_phase += 0.01f;
+        //data->left_phase += 0.01f;
         /* When signal reaches top, drop back down. */
-        if( data->left_phase >= 1.0f ) data->left_phase -= 2.0f;
+        //if( data->left_phase >= 1.0f ) data->left_phase -= 2.0f;
         /* higher pitch so we can distinguish left and right. */
-        data->right_phase += 0.03f;
-        if( data->right_phase >= 1.0f ) data->right_phase -= 2.0f;
+        //data->right_phase += 0.03f;
+        //if( data->right_phase >= 1.0f ) data->right_phase -= 2.0f;
     }
     return 0;
 }

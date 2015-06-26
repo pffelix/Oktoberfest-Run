@@ -121,8 +121,11 @@ int Game::start() {
     window->show();
     qDebug("initialize window");
 
-    // Event Filter installieren
+    /// Installiere Event Filter zum Loggen der Keyboard Eingabe
     window->installEventFilter(keyInput);
+
+    /// Erstelle Audiocontrol Objekt zum Erzeugen der Soundausgabe
+    audioOutput = new AudioControl();
 
     startNewGame();
 
@@ -142,8 +145,7 @@ int Game::start() {
  * füllt worldobjects
  */
 void Game::startNewGame() {
-    /// Erstelle Audiocontrol Objekt zum Erzeugen der Soundausgabe
-    audioOutput = new AudioControl();
+
 
     // alles alte leeren
     levelScene->clear();
