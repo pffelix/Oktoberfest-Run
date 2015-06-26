@@ -166,7 +166,7 @@ void Game::startNewGame() {
     backgrounds[3].setPixmap(QPixmap(":/images/images/bg_lev1_4.png"));
 
     //Backgroundgrafiken positionieren
-    backgrounds[1].setPos(2048,0);
+    backgrounds[1].setPos(2560,0);
     backgrounds[3].setPos(2560,0);
 
     //Backgroundgrafiken der Scene hinzufügen
@@ -986,9 +986,20 @@ bool Game::hurtPlayer(int damage) {
  * @param objectList
  */
 void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPointer) {
-    //Bewegunsparralaxe Positoinssktualisierung
-    (backgrounds[0]).setPos( static_cast<int>((backgrounds[0]).x()) + ((playerPointer->getPosX() - (playerScale/2) - static_cast<int>(playerPointer->x())) /2), 0);
-    (backgrounds[1]).setPos( static_cast<int>((backgrounds[1]).x()) + ((playerPointer->getPosX() - (playerScale/2) - static_cast<int>(playerPointer->x())) /2), 0);
+    //Bewegunsparralaxe Positionsaktualisierung
+    (backgrounds[0]).setPos(((backgrounds[0]).x()) + ((playerPointer->getPosX() - (playerScale/2) - (playerPointer->x())) /2), 0);
+    (backgrounds[1]).setPos(((backgrounds[1]).x()) + ((playerPointer->getPosX() - (playerScale/2) - (playerPointer->x())) /2), 0);
+
+    //Wenn der Spieler aus einerm Hintergrundbild "rausläuft" wird die Position nachvorne verschoben
+    for(int i = 0; i<=3; i++) {
+        if(playerPointer->getPosX() - playerOffset >= static_cast<int>(backgrounds[i].x()+ 2560)) {
+               backgrounds[i].setPos(backgrounds[i].x() + 5120, 0);
+        }
+    }
+
+    qDebug("%lf", (backgrounds[0].x()));
+    qDebug("%d", (playerPointer->getPosX()-130));
+    qDebug("%d", (playerPointer->getPosX() - (playerScale/2) - (playerPointer->x())));
 
     //Positionsaktualisierungen aller Movingobjects
     for (std::list<GameObject*>::iterator it = objectList->begin(); it != objectList->end(); ++it) {
