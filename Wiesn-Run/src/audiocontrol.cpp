@@ -29,9 +29,9 @@ AudioControl::AudioControl() {
     /// setzte blockcounter auf 0 Blöcke
     blockcounter = 0;
     /// setzte Wartezeit von Portaudio auf 1000 ms
-    waitinms = 80000;
+    waitinms = 1000;
     /// initialisiere Abspielbibliothek PortAudio
-    playinitializeerror = playInitialize();
+    //playinitializeerror = playInitialize();
 
 
 }
@@ -129,7 +129,7 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
  * @param  Qlist audioevents
  * @author  Felix Pfreundtner
  */
-PaError AudioControl::playInitialize(){
+void AudioControl::playInitialize(){
     /// Erstelle Zeiger auf Stream pastream
     PaStream *pastream;
     /// Erstelle error Variable
@@ -170,13 +170,11 @@ PaError AudioControl::playInitialize(){
         goto error;
     }
     Pa_Terminate();
-    return paerror;
 error:
     Pa_Terminate();
     fprintf( stderr, "Ein Error trat während der Benutzung der PortAudio Ausgabe auf\n" );
     fprintf( stderr, "Error Nummer: %d\n", paerror );
     fprintf( stderr, "Error Nachricht: %s\n", Pa_GetErrorText( paerror ) );
-    return paerror;
 }
 
 

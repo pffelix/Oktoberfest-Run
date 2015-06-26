@@ -49,7 +49,7 @@ public:
 
     AudioControl();
     ~AudioControl();
-
+    void playInitialize();
     void update(std::list<struct audioStruct> *audioevents);
 
     private:
@@ -97,7 +97,6 @@ public:
      */    
     int blockcounter;
 
-    PaError playInitialize();
 
     // Instanzfunktion Callback des aktuellen AudioControl Objekts
     int myMemberpatestCallback(const void *input, void *output,
