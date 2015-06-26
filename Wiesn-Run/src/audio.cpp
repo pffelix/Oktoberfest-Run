@@ -101,7 +101,7 @@ void Audio::readSamples() {
     sourcepath = ":/audios/audios/" + source + ".wav";
     QFile file(QString::fromStdString(sourcepath));
 
-    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    if(!file.open(QIODevice::ReadOnly)) {
         qWarning() << "Audio::readsamples: Cannot open File" << QString::fromStdString(source);
         return;
     }
@@ -145,14 +145,14 @@ void Audio::readSamples() {
     samplenbr = (qFromLittleEndian<quint32>((uchar*)tempbytes)) * 8 / bitdepth / channels;
     /// lese Sample für Sample aus dem data chunk aus
     while(!file.atEnd()){
-        file.read(tempbytes, bytedepth);
+        file.read(tempbytes, 2);
         /// lese 16 bit integer Samples in float QVector ein
         if (bytedepth == 2) {
-            samples << qFromLittleEndian<qint16>((uchar*)tempbytes);
+            samples.push_back(qFromLittleEndian<qint16>((uchar*)tempbytes));
         }
         /// lese 8 bit integer Samples in float QVector ein
         else {
-            samples << to16bitSample(qFromLittleEndian<quint8>((uchar*)tempbytes));
+            samples.push_back(to16bitSample(qFromLittleEndian<quint8>((uchar*)tempbytes)));
         }
     }
 
