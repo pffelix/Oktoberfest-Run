@@ -199,7 +199,7 @@ int AudioControl::myMemberpatestCallback( const void *inputBuffer, void *outputB
 
     for(unsigned int i=0; i<framesPerBuffer; i++ )
     {
-        mix[i] = audioobjects[0].getSample(i)/32767;
+        //mix[i] = audioobjects[0].getSample(i)/32767;
         *out++ = mix[i];
         //data->mono = audioobjects[0].getSample(i);
         //*out++ = data->left_phase;  /* left */

@@ -317,8 +317,8 @@ int Game::step() {
             audioStruct player_jump{1, audio::player_jump, 0};
             /// Mockup: add audioStruct powerup_beer to audioevents list
             audioevents.push_back(player_jump);
-            audioStruct scene_enemy{2, audio::powerup_beer, 0.3};
-            audioevents.push_back(scene_enemy);
+            audioStruct scene_beer{2, audio::scene_beer, 0.3};
+            audioevents.push_back(scene_beer);
             /// send filled audioevents list to AudioControl Object, which updates current Output Sounds
             audioOutput->update(&audioevents);
             /// delete List audioStruct elements in list and fill it in the next step again

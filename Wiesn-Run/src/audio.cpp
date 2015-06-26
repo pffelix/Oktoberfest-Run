@@ -101,9 +101,9 @@ void Audio::readSamples() {
     sourcepath = ":/audios/audios/" + source + ".wav";
     QFile file(QString::fromStdString(sourcepath));
 
-    bool ok = file.open(QIODevice::ReadOnly | QIODevice::Text);
-    if(ok == false) {
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qWarning() << "Audio::readsamples: Cannot open File" << QString::fromStdString(source);
+        return;
     }
     /// Lese relevante Informationen aus dem fmt chunk
 
