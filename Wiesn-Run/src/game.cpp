@@ -122,6 +122,7 @@ int Game::start() {
     // Event Filter installieren
     window->installEventFilter(keyInput);
 
+    ///@TODO flo: ka was das hier an der Stelle soll, habs mal auskommentiert
     startNewGame();
 
     // Timer installieren
@@ -159,9 +160,14 @@ void Game::startNewGame() {
     background = new QGraphicsPixmapItem[4];
     background->setPixmap(QPixmap(":/images/images/background.png"));
     (background+1)->setPixmap(QPixmap(":/images/images/background.png"));
+    (background+2)->setPixmap(QPixmap(":/images/images/background2.png"));
+    (background+3)->setPixmap(QPixmap(":/images/images/background2.png"));
     (background+1)->setPos(2048,0);
+    (background+3)->setPos(2048,0);
     levelScene->addItem(background);
     levelScene->addItem(background+1);
+    levelScene->addItem(background+2);
+    levelScene->addItem(background+3);
 
     // Spieler hinzufügen
     worldObjects.push_back(playerObjPointer);
@@ -310,7 +316,7 @@ int Game::step() {
 
             //    correctMovement();
             //    handleEvents();
-            renderGraphics(&worldObjects);
+            renderGraphics(&worldObjects, playerObjPointer);
             /// Mockup: add audioStruct player_jump to audioevents list
             audioStruct player_jump{1, audio::player_jump, 0};
             /// Mockup: add audioStruct powerup_beer to audioevents list
@@ -974,7 +980,10 @@ bool Game::hurtPlayer(int damage) {
  * Positionssaktualisierungen der Grafiken aller Beewglichen Objekte
  * @param objectList
  */
-void Game::renderGraphics(std::list<GameObject*> *objectList) {
+void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPointer) {
+    (background+2)->setPos( static_cast<int>((background+2)->x()) + ((playerPointer->getPosX() - (playerScale/2) - static_cast<int>(playerPointer->x())) /2), 0);
+    (background+3)->setPos( static_cast<int>((background+3)->x()) + ((playerPointer->getPosX() - (playerScale/2) - static_cast<int>(playerPointer->x())) /2), 0);
+
     for (std::list<GameObject*>::iterator it = objectList->begin(); it != objectList->end(); ++it) {
         if(dynamic_cast<MovingObject*> (*it) != 0) {
             (*it)->setPos((*it)->getPosX() - 0.5*(*it)->getLength(), yOffset -(*it)->getPosY() - (*it)->getHeight());
