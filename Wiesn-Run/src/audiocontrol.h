@@ -80,27 +80,34 @@ public:
     PaError playinitializeerror;
 
     /**
-     * @brief  mix
-     *         mixed block output of all currently played audio sounds.
+     * @brief  blockoutput
+     *         Audio Ausgabe Block mit gemischen Samples aller im moment abgespielten Audiostructs.
      * @author  Felix Pfreundtner
      */
-    std::array<float, BLOCKSIZE> mix;
+    float block[BLOCKSIZE];
+    /**
+     * @brief  blockcounter
+     *         blockcounter zählt die bereits abgespielten Audio Ausgabe Blöcke.
+     * @author  Felix Pfreundtner
+     */
+    std::vector<float> blockcontinue;
+    int blockcounter;
 
     PaError playInitialize();
 
     // Instanzfunktion Callback des aktuellen AudioControl Objekts
     int myMemberpatestCallback(const void *input, void *output,
-      unsigned long frameCount,
-      const PaStreamCallbackTimeInfo* timeInfo,
-      PaStreamCallbackFlags statusFlags);
+                               unsigned long frameCount,
+                               const PaStreamCallbackTimeInfo* timeInfo,
+                               PaStreamCallbackFlags statusFlags);
 
     // Statische Funktion Callback der AudioControl Klasse
     static int patestCallback(
-      const void *input, void *output,
-      unsigned long frameCount,
-      const PaStreamCallbackTimeInfo* timeInfo,
-      PaStreamCallbackFlags statusFlags,
-      void *userData )
+                              const void *input, void *output,
+                              unsigned long frameCount,
+                              const PaStreamCallbackTimeInfo* timeInfo,
+                              PaStreamCallbackFlags statusFlags,
+                              void *userData )
     // gebe einen Function Pointer auf Instanz Callback Funktion zurück
     {
       return ((AudioControl*)userData)
