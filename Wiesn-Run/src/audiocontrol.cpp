@@ -34,7 +34,7 @@ AudioControl::AudioControl() {
 
 
     /// fülle Block Ausgabe mit Nullen
-    std::fill_n(block, BLOCKSIZE, 0.8);
+    std::fill_n(block, BLOCKSIZE, 0);
     /// setzte blockcounter auf 0 Blöcke
     blockcounter = 0;
     /// setzte Wartezeit von Portaudio auf 100 ms
@@ -127,6 +127,7 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
             pe++;
         }
     }
+    playeventsnumber = playevents.size();
 }
 
 
@@ -199,24 +200,25 @@ error:
 int AudioControl::myMemberpatestCallback( const void *inputBuffer, void *outputBuffer,
                            unsigned long framesPerBuffer,
                            const PaStreamCallbackTimeInfo* timeInfo,
-                           PaStreamCallbackFlags statusFlags )
-{
+                           PaStreamCallbackFlags statusFlags ) {
     /* Cast data passed through stream to our structure. */
     /// erstelle data
-    paTestData datas;
-    datas.mono = 0.0f;
-    paTestData *data = &datas;
     int *out = (int*)outputBuffer;
     /// kein Input aktiviert, verhindere Warnmeldung "unbenutzter Parameter inputBuffer"
     (void) inputBuffer;
 
 
-    for(unsigned int i=0; i<framesPerBuffer; i++ )
-    {
-        int position;
-        position = i+blockcounter*BLOCKSIZE;
-        block[i] = audioobjects[16].getSample(position);
-        *out++ = block[i];
+    for(unsigned int block_pos=0; block_pos<framesPerBuffer; block_pos++ ) {
+
+
+        /// Mix Samples
+        mixed_sample = 0;
+        for (std::list<playStruct>::iterator ps = playevents.begin(); ps != playevents.end(); ps++) {
+            mixed_sample += ps->objectref->getSample(ps->position);
+            ps->position += 1;
+        }
+        // block[block_pos] = mixSample();
+        *out++ = mixed_sample;
 
         //data->mono = audioobjects[0].getSample(i);
         //*out++ = data->left_phase;  /* left */
@@ -230,9 +232,10 @@ int AudioControl::myMemberpatestCallback( const void *inputBuffer, void *outputB
         //if( data->right_phase >= 1.0f ) data->right_phase -= 2.0f;
     }
     blockcounter += 1;
-    std::copy ( block, block + BLOCKSIZE, std::back_inserter ( blockcontinue ) );
+    //std::copy ( block, block + BLOCKSIZE, std::back_inserter ( blockcontinue ) );
     return 0;
 }
+
 
 
 /**
