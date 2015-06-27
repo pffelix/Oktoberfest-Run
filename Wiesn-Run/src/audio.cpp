@@ -39,7 +39,7 @@ std::string Audio::getSource() {
  */
 float Audio::getSample(int pos) {
     /// falls Ende der Audiodatei erreicht
-    if (pos > samples.size()) {
+    if (pos >= samples.size()) {
         /// gebe Stille zurück (Samplewert 0)
         return 0;
     }
