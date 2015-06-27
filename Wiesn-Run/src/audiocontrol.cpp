@@ -37,8 +37,8 @@ AudioControl::AudioControl() {
     std::fill_n(block, BLOCKSIZE, 0.8);
     /// setzte blockcounter auf 0 Blöcke
     blockcounter = 0;
-    /// setzte Wartezeit von Portaudio auf 1000 ms
-    waitinms = 30000;
+    /// setzte Wartezeit von Portaudio auf 100 ms
+    waitinms = 100;
     /// initialisiere Abspielbibliothek PortAudio
     //playinitializeerror = playInitialize();
 
@@ -167,8 +167,10 @@ void AudioControl::playInitialize(){
         goto error;
     }
 
-    /// Pausiere um Audiostream Ende abzuwarten
-    Pa_Sleep(waitinms);
+    /// Pausiere Funktion wenn Audiostream gerade aktiv ist
+    while (Pa_IsStreamActive(pastream) == 1) {
+        Pa_Sleep(waitinms);
+    }
 
     paerror = Pa_StopStream( pastream );
     if( paerror != paNoError ) {
