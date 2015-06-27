@@ -140,6 +140,8 @@ private:
     Input *keyInput = new Input();
 
     /// Menüs
+    Menu *aktiveMenu;
+
     Menu *menuStart;
     Menu *menuCredits;
     Menu *menuLevel;
