@@ -57,6 +57,7 @@ const int maxSpeedY = 2 * (playerScale / frameRate);
  * @brief maximales Leben
  */
 const int maxHealth = 5;
+const int maxAlcohol = 4500;
 
 /**
  * @brief Enumerator für den aktuellen Spielstatus

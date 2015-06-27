@@ -891,6 +891,16 @@ void Game::updateAudio() {
     audioStruct newAudio = {0, levelBackground[gameStats.actLevel], 0.5};
     audioevents.push_back(newAudio);
 
+    //Warntöne Leben/Alcoholpegel
+    if (playerObjPointer->getHealth() < 2) {
+        newAudio = {1, status_life, 0};
+        audioevents.push_back(newAudio);
+    }
+    if (playerObjPointer->getAlcoholLevel() >maxAlcohol) {
+        newAudio = {2, status_alcohol, 0};
+        audioevents.push_back(newAudio);
+    }
+
     // Alle Objekte durchlaufen und für die sich bewegenden die entsprechenden Sounds ausgeben
     for (std::list<GameObject*>::iterator it=worldObjects.begin(); it != worldObjects.end(); ++it) {
         GameObject *handleObject =  (*it);
