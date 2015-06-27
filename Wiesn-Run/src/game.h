@@ -146,7 +146,7 @@ private:
         menuId_NonClickable,
         menuStartId_NewGame, menuStartId_EndGame, menuStartId_Credits,   // Startmenü
         menuCreditsId_Back, // Credits
-        menuLevelId_Level1, menuLevelId_Level2, menuLevelId_Level3, menuLevelId_StartGame,   // Levelauswahl
+        menuLevelId_Back, menuLevelId_Level1, menuLevelId_Level2, menuLevelId_Level3, menuLevelId_StartGame,   // Levelauswahl
         menuBreakId_Resume, menuBreakId_EndGame,    // Pause
         menuStatisticsId_Next,  // Statistik
         menuNameId_Next,        // Name eingeben

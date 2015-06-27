@@ -9,7 +9,7 @@
 Menu::Menu(std::string *menuTitle)
 {
     title = menuTitle;
-
+    this->addEntry(*menuTitle,0,false);
 }
 
 /**
