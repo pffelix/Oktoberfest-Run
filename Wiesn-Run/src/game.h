@@ -130,12 +130,25 @@ private:
     std::chrono::high_resolution_clock::time_point letzterAufruf;
     /// Erstelle Input Objekt zum Aufzeichnen der Keyboard Inputs
     Input *keyInput = new Input();
+
     /// Menüs
     Menu *menuStart;
-    Menu *menuEnd;
+    Menu *menuCredits;
+    Menu *menuLevel;
+    Menu *menuBreak;
+    Menu *menuStatistics;
+    Menu *menuName;
+    Menu *menuHighscore;
     /// zur Unterscheidung und Identifizierung der Menü-Einträge
     enum menuIds {
-        menuId_NonClickable, menuId_StartGame, menuId_EndGame, menuId_Resume, menuId_Highscore, menuId_Credits, menuId_GotoStartMenu
+        menuId_NonClickable,
+        menuStartId_StartGame, menuStartId_EndGame, menuStartId_Credits,   // Startmenü
+        menuCreditsId_Back, // Credits
+        menuLevelId_Level1, menuLevelId_Level2, menuLevelId_Level3, menuLevelId_Next,   // Levelauswahl
+        menuBreakId_Resume, menuBreakId_EndGame,    // Pause
+        menuStatisticsId_Next,  // Statistik
+        menuNameId_Next,        // Name eingeben
+        menuHighscoreId_Next   // Highscoretabelle
     };
 
     /// stepCount wird mit jedem Step um ein erhöht
