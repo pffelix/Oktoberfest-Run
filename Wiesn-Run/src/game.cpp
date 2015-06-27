@@ -113,6 +113,7 @@ int Game::start() {
     menuCredits->addEntry("Flo:", menuId_NonClickable,false);
     menuCredits->addEntry("Johann:", menuId_NonClickable,false);
     menuCredits->addEntry("zurück", menuCreditsId_Back,true);
+    menuCredits->displayInit();
 
     menuLevel = new Menu(new std::string("Levelauswahl"));
     menuLevel->addEntry("zurück",menuLevelId_Back, true);
@@ -120,19 +121,24 @@ int Game::start() {
     menuLevel->addEntry("Level 2",menuLevelId_Level2, true);
     menuLevel->addEntry("Level 3",menuLevelId_Level3, true);
     menuLevel->addEntry("Spiel starten",menuLevelId_StartGame, true);
+    menuLevel->displayInit();
 
     menuBreak = new Menu(new std::string("Pause"));
     menuBreak->addEntry("weiterspielen",menuBreakId_Resume,true);
     menuBreak->addEntry("Startmenü",menuBreakId_EndGame,true);
+    menuBreak->displayInit();
 
     menuStatistics = new Menu(new std::string("Punkte"));
     menuStatistics->addEntry("weiter",menuStatisticsId_Next,true);
+    menuStatistics->displayInit();
 
     menuName = new Menu(new std::string("Neme eingeben"));
     menuName->addEntry("weiter",menuNameId_Next,true);
+    menuName->displayInit();
 
     menuHighscore = new Menu(new std::string("Highscores"));
     menuHighscore->addEntry("weiter",menuHighscoreId_Next,true);
+    menuHighscore->displayInit();
 
     // QGraphicsScene der Level erstellen
     levelScene = new QGraphicsScene;
@@ -322,36 +328,63 @@ int Game::step() {
     //letzterAufruf = high_resolution_clock::now();
     //qDebug("Game::step() | Vergangene Zeit seit letztem step(): %d ms", static_cast<int>(duration_cast<milliseconds>(letzterAufruf-akt).count()));
 
+    // falls Menü aktiv, Inputs verarbeiten, Grafik:
+    if(aktMenu!=NULL) {
+        // Up || Down?
+        if(keyInput->getKeyactions().contains(Input::Keyaction::Up)) {
+            aktMenu->changeSelection(Menu::menuSelectionChange::up);
+        }
+        if(keyInput->getKeyactions().contains(Input::Keyaction::Down)) {
+            aktMenu->changeSelection(Menu::menuSelectionChange::down);
+        }
+
+        aktMenu->displayUpdate();
+        //MenüScene wird vom Anzeigewidget aufgerufen
+        window->setScene(aktMenu->menuScene);
+
+        ///@todo Enter auswerten (Rupi): Handler zu menuEntry
+    }
+
     switch(state) {
         case gameMenuStart:
-            menuStart->displayUpdate();
-            //MenüScene wird vom Anzeigewidget aufgerufen
-            window->setScene(menuStart->menuScene);
-
+/*
             // Enter?
             if(keyInput->getKeyactions().contains(Input::Keyaction::Enter)) {
                 // Menüpunkt ausgewählt
                 switch(menuStart->getSelection()->id) {
                     case menuStartId_NewGame:
                         startNewGame();
-                        state = gameIsRunning;
+                        setState(gameIsRunning);
                         break;
                     case menuStartId_EndGame:
                         qDebug("Spiel wurde vom Startmenü ordentlich beendet");
                         exit(0);
                         break;
                 }
-            }
+            }*/
 
-            // Up || Down?
-            if(keyInput->getKeyactions().contains(Input::Keyaction::Up)) {
-                menuStart->changeSelection(Menu::menuSelectionChange::up);
-            }
-            if(keyInput->getKeyactions().contains(Input::Keyaction::Down)) {
-                menuStart->changeSelection(Menu::menuSelectionChange::down);
-            }
+
 
             break;
+        case gameMenuLevel:
+            aktMenu = menuLevel;
+            break;
+        case gameMenuCredits:
+            aktMenu = menuCredits;
+            break;
+        case gameMenuBreak:
+            aktMenu = menuBreak;
+            break;
+        case gameMenuStatisitcs:
+            aktMenu = menuStatistics;
+            break;
+        case gameMenuName:
+            aktMenu = menuName;
+            break;
+        case gameMenuHighscore:
+            aktMenu = menuHighscore;
+            break;
+
         case gameIsRunning:
             // Menü bei ESC
             /*if(keyInput->getKeyactions().contains(Input::Keyaction::Exit)) {
@@ -389,7 +422,6 @@ int Game::step() {
             audioevents.clear();
             break;
     }
-
     stepCount++;
     return 0;
 }
@@ -507,10 +539,11 @@ void Game::evaluateInput() {
         }
     }
 
+    /* passiert in step()
     // Menü bei ESC
     if(keyInput->getKeyactions().contains(Input::Keyaction::Exit)) {
-        state = gameMenuEnd;
-    }
+        state = menuBreak;
+    }*/
 }
 
 /**
@@ -1334,6 +1367,32 @@ int Game::getStepIntervall() {
  * @param newState
  * @author Rupert
  */
-void Game::setState(gameState newState) {
+void Game::setState(enum gameState newState) {
    state = newState;
+    switch(state) {
+        case gameIsRunning:
+            aktMenu = NULL;
+            break;
+        case gameMenuStart:
+            aktMenu = menuStart;
+            break;
+        case gameMenuLevel:
+            aktMenu = menuLevel;
+            break;
+        case gameMenuCredits:
+            aktMenu = menuCredits;
+            break;
+        case gameMenuBreak:
+            aktMenu = menuBreak;
+            break;
+        case gameMenuStatisitcs:
+            aktMenu = menuStatistics;
+            break;
+        case gameMenuName:
+            aktMenu = menuName;
+            break;
+        case gameMenuHighscore:
+            aktMenu = menuHighscore;
+            break;
+    }
 }

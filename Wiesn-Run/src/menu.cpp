@@ -72,7 +72,11 @@ int Menu::displayUpdate() {
  * @return 0 bei Erfolg
  * @author Rupert
  */
-int Menu::addEntry(std::string name, int id, bool clickable) {
+int Menu::addEntry(std::string name, int id, bool clickable, void (*handlerFunction)()) {
+    // fehlerüberprüfung
+    if(handlerFunction==NULL) {
+        clickable = false;
+    }
     struct menuEntry *entry = new menuEntry;
     entry->id = id;
     entry->name = name;
