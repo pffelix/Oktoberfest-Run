@@ -50,7 +50,6 @@ Plane,1450,150
 Plane,1570,150
 Plane,1690,150
 
-Obstacle,1820,0
 Plane,1860,170
 Plane,1980,170
 Plane,2100,150
