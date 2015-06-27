@@ -39,7 +39,7 @@ Erläuterung
 Level1: Weg zum Zelt (keine Gegner, nur Obstacles und PowerUps
 ------------
 
-Player,5900,0
+Player,5000,0
 Levellänge,20000
 
 
