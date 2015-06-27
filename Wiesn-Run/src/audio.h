@@ -13,6 +13,8 @@
 #include <iostream>
 #include <string>
 #include <QVector>
+#include <QCoreApplication>
+#include <QDir>
 
 /**
  * @brief  Audio-Klasse

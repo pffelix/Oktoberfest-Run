@@ -57,7 +57,8 @@ HEADERS += \
 RESOURCES += \
     src/ressources.qrc
 
-# Um Dateien zu kopieren
+
+# Kopiere Dateien in Build Verzeichnis (zu große Dateigrößen für Ressources)
 audios.path = $$OUT_PWD/audios
 audios.files = src/audios/*
 images.path = $$OUT_PWD/images

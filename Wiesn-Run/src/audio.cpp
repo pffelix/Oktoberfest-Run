@@ -8,7 +8,6 @@
 Audio::Audio(std::string state_name) {
     source = state_name;
     readSamples();
-    qDebug() << QString("Audio object created: ") + QString::fromStdString(source);
 
 }
 
@@ -100,20 +99,31 @@ void Audio::setVolume(short volume_audio_obj){
  */
 void Audio::readSamples() {
     std::string sourcepath; /// Pfad zur Wave Datei in den Ressourcendateien
+    QDir buildpath; /// Pfad zum Ordner der Build (Exe Datei)
     int channels; /// Anzahl an Kanälen
     int bitdepth; /// Anzahl an Bits pro Sample
     int bytedepth; /// Anzahl an Bytes pro Sample
     char tempbytes[5]; /// variable aktuell ausgelesene Bytes der Wave Datei zwischenzuspeichern
     int offset; /// Variab um aktuelle Byte Position in Wave Datei zu speichern
 
-    /// Öffne zum Audio Objekt gehörige Wave Datei
-    sourcepath = ":/audios/audios/" + source + ".wav";
-    QFile file(QString::fromStdString(sourcepath));
+    /// wenn buidpath/audios nicht auffindar ist wechsel ein Verzeichnis höher und suche dort erneut
+    buildpath = QDir(QCoreApplication::applicationDirPath());
+    while(buildpath.cd(QString("audios")) == false) {
+        buildpath.cdUp();
+    }
 
+    /// Öffne zum Audio Objekt gehörige Wave Datei
+    sourcepath = buildpath.absolutePath().toStdString() + "/" + source + ".wav";
+    std::cout << sourcepath;
+    QFile file(QString::fromStdString(sourcepath));
     if(!file.open(QIODevice::ReadOnly)) {
         qWarning() << "Audio::readsamples: Cannot open File" << QString::fromStdString(source);
         return;
     }
+    else {
+        qWarning() << "Audio::readsamples: openend File" << QString::fromStdString(source);
+    }
+
     /// Lese relevante Informationen aus dem fmt chunk
 
     /// lese Anzahl an Kanälen ein (Offset 22 Byte)
