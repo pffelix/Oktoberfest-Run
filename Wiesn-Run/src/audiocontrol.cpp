@@ -29,7 +29,7 @@ AudioControl::AudioControl() {
     /// setzte blockcounter auf 0 Blöcke
     blockcounter = 0;
     /// setzte Wartezeit von Portaudio auf 1000 ms
-    waitinms = 1000;
+    waitinms = 5000;
     /// initialisiere Abspielbibliothek PortAudio
     //playinitializeerror = playInitialize();
 
@@ -172,7 +172,7 @@ void AudioControl::playInitialize(){
     Pa_Terminate();
 error:
     Pa_Terminate();
-    fprintf( stderr, "Ein Error trat während der Benutzung der PortAudio Ausgabe auf\n" );
+    fprintf( stderr, "Ein Meldung trat während der Benutzung der PortAudio Ausgabe auf\n" );
     fprintf( stderr, "Error Nummer: %d\n", paerror );
     fprintf( stderr, "Error Nachricht: %s\n", Pa_GetErrorText( paerror ) );
 }
