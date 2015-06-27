@@ -56,3 +56,16 @@ HEADERS += \
 
 RESOURCES += \
     src/ressources.qrc
+
+# Um Dateien zu kopieren
+audios.path = $$OUT_PWD/audios
+audios.files = src/audios/*
+images.path = $$OUT_PWD/images
+images.files = src/images/*
+levelFiles.path = $$OUT_PWD/levelFiles
+levelFiles.files = src/levelFiles/*
+
+INSTALLS += \
+    audio \
+    images \
+    levelFiles
