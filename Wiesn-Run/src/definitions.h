@@ -197,7 +197,7 @@ struct audioCooldownstruct {
  * @todo Diese Struktur ist vermutlich überflüssig.
  * @author Simon
  */
-struct stateStruct {
+/*struct stateStruct {
     bool playerJumping;
     bool playerAttacking;
     bool playerRunning;
@@ -212,7 +212,7 @@ struct stateStruct {
     bool beerCollected;
     bool chickenCollected;
 
-};
+};*/
 
 
 #endif // DEFINITIONS_H
