@@ -29,6 +29,7 @@ public:
         int id;
         int position;
         bool isClickable;   // für Highscore-Menü
+        void (*handler)();  // Zeiger auf Funktion (Handler für Enter)
         QGraphicsTextItem showEntry;
     };
     /// wird von der Menu-Klasse zur Auswahl-Änderung benötigt
@@ -49,7 +50,7 @@ public:
     int displayUpdate();
 
     /// Neuen Eintrag hinzufügen (evtl private -> Einträge nur im Konstruktor erstellen -> unterschiedlich viele Argumente)
-    int addEntry(std::string name, int id, bool clickable);
+    int addEntry(std::string name, int id, bool clickable=false, void (*handlerFunction)()=NULL);
 
     /// wird nach Tastendruck aufgerufen
     int changeSelection(menuSelectionChange changeType);

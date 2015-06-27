@@ -123,8 +123,7 @@ private:
     /// Liste aller Hintergrundbilder
     std::vector<QGraphicsPixmapItem> backgrounds;
 
-    /// aktueller Spielzustand (running, menuStart, menuEnd)
-    gameState state = gameMenuStart;
+
 
     /// Zeiger auf QApplication
     QApplication *appPointer;
@@ -133,8 +132,9 @@ private:
     /// Erstelle Input Objekt zum Aufzeichnen der Keyboard Inputs
     Input *keyInput = new Input();
 
-    /// Menüs
-    Menu *aktiveMenu;
+    // Menüs
+    enum gameState state = gameMenuStart;    /// aktueller Spielzustand
+    Menu *aktMenu;      /// aktuell aktives Menü, null während das Spiel läuft; wird in setState gesetzt
 
     Menu *menuStart;
     Menu *menuCredits;
