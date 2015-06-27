@@ -729,7 +729,11 @@ void Game::handleCollisions() {
                     break;
                 }
                 }
-
+                //Audioevent
+                audioCooldownstruct newAudio;
+                newAudio.audioEvent = {audioIDs, scene_collision_obstacle, 0};
+                newAudio.cooldown = 1000;
+                audioStorage.push_back(newAudio);
                 break;
             }
             case enemy_security:
@@ -887,7 +891,7 @@ void Game::handleCollisions() {
 void Game::updateAudio() {
 
     //Hintergrundmusik
-    int levelBackground [3] {background_level1, background_level2, background_level3};
+    audioType levelBackground [3] {background_level1, background_level2, background_level3};
     audioStruct newAudio = {0, levelBackground[gameStats.actLevel], 0.5};
     audioevents.push_back(newAudio);
 
