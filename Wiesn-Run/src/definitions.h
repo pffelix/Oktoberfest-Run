@@ -217,9 +217,9 @@ typedef struct {
     float player_jump = 0;
     float background_menu = 0.2;
     float background_highscore = 0.2;
-    float background_level1 = 0.5;
-    float background_level2 = 0.5;
-    float background_level3 = 0.5;
+    float background_level1 = 0.3;
+    float background_level2 = 0.3;
+    float background_level3 = 0.3;
     float background_startgame = 0.2;
     float background_levelfinished = 0.2;
 
