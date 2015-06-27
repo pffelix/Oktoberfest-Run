@@ -32,6 +32,9 @@ public:
     //spiegelt Grafiken
     void flipHorizontal();
 
+    //wechselt Grafiken um Animation zu erzeugen
+    void swapImage();
+
 protected:
     //Positionsupdate
     void updatePosition();
@@ -43,6 +46,9 @@ private:
 
     //gibt an für wieviele Frames ohne Unterbrechung in einer Richtung gelaufen wurde
     int framesDirection = 0;
+
+    //merkt sich welches Bild gerade gesetzt ist
+    bool imageState = true;
 
 };
 

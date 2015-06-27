@@ -1070,34 +1070,31 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
                 aktMovingObject->setDirLastFrame(false);
             }*/
 
-
-            //im letzten Frame vorwärst gelaufen?
-            if(aktMovingObject->getSpeedX() > 0 ) {
-                if(aktMovingObject->getFramesDirection() < 0) {
+            if(dynamic_cast<Shoot*> (aktMovingObject) == 0 ) {
+                //im letzten Frame vorwärst gelaufen?
+                if(aktMovingObject->getSpeedX() > 0 ) {
+                    if(aktMovingObject->getFramesDirection() < 0) {
+                        aktMovingObject->setFramesDirection(0);
+                    }
+                    if(aktMovingObject->getFramesDirection()%10 == 0) {
+                        aktMovingObject->swapImage();
+                    }
+                    aktMovingObject->setFramesDirection(aktMovingObject->getFramesDirection()+1);
+                }
+                //im letzten Frame rückwärtsgelaufen?
+                else if(aktMovingObject->getSpeedX()< 0 ) {
+                    if(aktMovingObject->getFramesDirection() > 0) {
+                        aktMovingObject->setFramesDirection(0);
+                    }
+                    if(aktMovingObject->getFramesDirection()%10 == 0) {
+                      aktMovingObject->swapImage();
+                    }
+                    aktMovingObject->setFramesDirection(aktMovingObject->getFramesDirection()-1);
+                }
+                else {
                     aktMovingObject->setFramesDirection(0);
                 }
-                if(aktMovingObject->getFramesDirection()%10 == 0) {
-                        //change  pix
-                }
-                aktMovingObject->setFramesDirection(aktMovingObject->getFramesDirection()+1);
             }
-            //im letzten Frame rückwärtsgelaufen?
-            else if(aktMovingObject->getSpeedX()< 0 ) {
-                if(aktMovingObject->getFramesDirection() > 0) {
-                    aktMovingObject->setFramesDirection(0);
-                }
-                if(aktMovingObject->getFramesDirection()%10 == 0) {
-                        //change  pix
-                }
-                aktMovingObject->setFramesDirection(aktMovingObject->getFramesDirection()-1);
-            }
-            else {
-                aktMovingObject->setFramesDirection(0);
-            }
-
-
-
-
 
             aktMovingObject->setPos(aktMovingObject->getPosX() - 0.5*aktMovingObject->getLength(), yOffset - aktMovingObject->getPosY() - aktMovingObject->getHeight());
         }
