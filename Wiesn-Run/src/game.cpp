@@ -1119,6 +1119,16 @@ void Game::loadLevelFile(QString fileSpecifier) {
 
             try {
 
+                if (strlist.at(0) == "Levellänge") {
+                    if (strlist.length() != 2) {
+                        throw std::string("Ungültiger Eintrag für die Levellänge");
+                    } else {
+                        // Setze die Levellänge
+                        levelLength = strlist.at(1).toInt();
+                        qDebug() << "  Levellänge gesetzt.";
+                    }
+                }
+
                 if (strlist.at(0) == "Player") {
                     if (strlist.length() != 3) {
                         throw std::string("Ungültiger Player-Eintrag: ");

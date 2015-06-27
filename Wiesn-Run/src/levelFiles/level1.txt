@@ -40,6 +40,7 @@ Level1: Weg zum Zelt (keine Gegner, nur Obstacles und PowerUps
 ------------
 
 Player,5900,0
+Levellänge,20000
 
 
 # Ubahn-Station: 0 bis 2000
