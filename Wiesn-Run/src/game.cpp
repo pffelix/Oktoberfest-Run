@@ -165,6 +165,8 @@ void Game::startNewGame() {
     window->setScene(levelScene);
 
 
+    //level nummer speichern
+    gameStats.actLevel = 1;
     // Level festlegen, der geladen werden soll
     QString fileSpecifier = ":/levelFiles/levelFiles/level1.txt";
     loadLevelFile(fileSpecifier);
@@ -509,9 +511,11 @@ void Game::evaluateInput() {
         if (!(playerObjPointer->inJump())) {
             playerObjPointer->startJump();
             // Audioevent erzeugen
-            audioStruct playerAudio = {audioIDs, player_jump, 0};
-            audioevents.push_back(playerAudio);
+            audioCooldownstruct playerjump;
+            playerjump.audioEvent= {audioIDs, player_jump, audioDistance.player_jump};
+            playerjump.cooldown = audioCooldown.player_jump;
             audioIDs = audioIDs + 1;
+            audioStorage.push_back(playerjump);
         }
     }
 
@@ -756,10 +760,18 @@ void Game::handleCollisions() {
                     //Überlappung berechnen und Spieler nach unten versetzen
                     overlap = (playerObjPointer->getPosY() + playerObjPointer->getHeight()) - handleEvent.causingObject->getPosY();
                     playerObjPointer->setPosY(playerObjPointer->getPosY() - overlap);
+                    if (handleEvent.causingObject->getAudioID() == 0) {
+                        //Audioevent
+                        audioCooldownstruct newAudio;
+                        handleEvent.causingObject->setAudioID(audioIDs);
+                        newAudio.audioEvent = {audioIDs, scene_collision_obstacle, audioDistance.scene_collision_obstacle};
+                        audioIDs = audioIDs + 1;
+                        newAudio.cooldown = audioCooldown.scene_collision_obstacle;
+                        audioStorage.push_back(newAudio);
+                    }
                     break;
                 }
                 }
-
                 break;
             }
             case enemy_security:
@@ -782,6 +794,16 @@ void Game::handleCollisions() {
                         handleEnemy = 0;
                     }
                 }
+
+                if (handleEvent.causingObject->getAudioID() == 0) {
+                    //Audioevent
+                    audioCooldownstruct newAudio;
+                    handleEvent.causingObject->setAudioID(audioIDs);
+                    newAudio.audioEvent = {audioIDs, scene_collision_enemy, audioDistance.scene_collision_enemy};
+                    audioIDs = audioIDs + 1;
+                    newAudio.cooldown = audioCooldown.scene_collision_enemy;
+                    audioStorage.push_back(newAudio);
+                }
             }
             case shot: {
                 // Spieler kriegt Schaden, Bierkrug zum löschen vormerken, treffen mit eigenem Krug nicht möglich
@@ -789,6 +811,15 @@ void Game::handleCollisions() {
                 gameStats.gameOver = playerObjPointer->receiveDamage(handleShoot->getInflictedDamage());
                 objectsToDelete.push_back(handleShoot);
                 handleShoot = 0;
+                if (handleEvent.causingObject->getAudioID() == 0) {
+                    //Audioevent
+                    audioCooldownstruct newAudio;
+                    handleEvent.causingObject->setAudioID(audioIDs);
+                    newAudio.audioEvent = {audioIDs, scene_collision_flyingbeer, audioDistance.scene_collision_flyingbeer};
+                    audioIDs = audioIDs + 1;
+                    newAudio.cooldown = audioCooldown.scene_collision_flyingbeer;
+                    audioStorage.push_back(newAudio);
+                }
                 break;
             }
             case powerUp: {
@@ -806,7 +837,7 @@ void Game::handleCollisions() {
                 break;
             }
             default: {
-                ///@todo Boss und Plane
+                ///@todo Boss
                 /* Zusammenstoß mit Spieler
                  *      nicht möglich
                  */
@@ -874,6 +905,15 @@ void Game::handleCollisions() {
                     objectsToDelete.push_back(handleShoot);
                 }
                 handleShoot = 0;
+                if (handleEvent.causingObject->getAudioID() == 0) {
+                    //Audioevent
+                    audioCooldownstruct newAudio;
+                    handleEvent.causingObject->setAudioID(audioIDs);
+                    newAudio.audioEvent = {audioIDs, scene_collision_flyingbeer, audioDistance.scene_collision_flyingbeer};
+                    audioIDs = audioIDs + 1;
+                    newAudio.cooldown = audioCooldown.scene_collision_flyingbeer;
+                    audioStorage.push_back(newAudio);
+                }
                 break;
             }
             default: {
@@ -896,6 +936,15 @@ void Game::handleCollisions() {
              */
             if ((handleEvent.causingObject->getType() == obstacle) || (handleEvent.causingObject->getType() == plane)){
                 objectsToDelete.push_back(dynamic_cast<Shoot*>(handleEvent.affectedObject));
+                if (handleEvent.affectedObject->getAudioID() == 0) {
+                    //Audioevent
+                    audioCooldownstruct newAudio;
+                    handleEvent.affectedObject->setAudioID(audioIDs);
+                    newAudio.audioEvent = {audioIDs, scene_collision_flyingbeer, audioDistance.scene_collision_flyingbeer};
+                    audioIDs = audioIDs + 1;
+                    newAudio.cooldown = audioCooldown.scene_collision_flyingbeer;
+                    audioStorage.push_back(newAudio);
+                }
             }
             break;
         }//end (case shot)
@@ -917,17 +966,17 @@ void Game::handleCollisions() {
 void Game::updateAudio() {
 
     //Hintergrundmusik
-    int levelBackground [3] {background_level1, background_level2, background_level3};
+    audioType levelBackground [3] {background_level1, background_level2, background_level3};
     audioStruct newAudio = {0, levelBackground[gameStats.actLevel], 0.5};
     audioevents.push_back(newAudio);
 
     //Warntöne Leben/Alcoholpegel
     if (playerObjPointer->getHealth() < 2) {
-        newAudio = {1, status_life, 0};
+        newAudio = {1, status_life, audioDistance.status_life};
         audioevents.push_back(newAudio);
     }
     if (playerObjPointer->getAlcoholLevel() >maxAlcohol) {
-        newAudio = {2, status_alcohol, 0};
+        newAudio = {2, status_alcohol, audioDistance.status_alcohol};
         audioevents.push_back(newAudio);
     }
 
