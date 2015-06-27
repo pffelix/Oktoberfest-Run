@@ -100,17 +100,29 @@ int Game::start() {
 
     // Menüs erstellen
     menuStart = new Menu(new std::string("Wiesn-Run"));
-    //menuStart->addEntry("Spiel neustarten",menuId_StartGame,true);
-//    menuStart->addEntry("Nicht anklickbar",menuId_NonClickable,false);
-//    menuStart->addEntry("Spiel beenden", menuId_EndGame,true);
+    menuStart->addEntry("Neues Spiel",menuStartId_NewGame,true);
+    menuStart->addEntry("Spiel beenden", menuStartId_EndGame,true);
+    menuStart->addEntry("Credits", menuStartId_Credits,true);
     menuStart->displayInit();
 
-    //menuEnd = new Menu(new std::string("Game Over"));
-//    menuEnd->addEntry("Weiterspielen",menuId_Resume,true);
-//    menuEnd->addEntry("Highscore anzeigen",menuId_Highscore,true);
-//    menuEnd->addEntry("Credits anzeigen",menuId_Credits,true);
-//    menuEnd->addEntry("zurück zum Anfang",menuId_GotoStartMenu,true);
-    //menuEnd->displayInit();
+    menuCredits = new Menu(new std::string("Credits"));
+    menuCredits->addEntry("Entwickler:", menuId_NonClickable,false);
+    menuCredits->addEntry("Simon:", menuId_NonClickable,false);
+    menuCredits->addEntry("Rupert:", menuId_NonClickable,false);
+    menuCredits->addEntry("Felix:", menuId_NonClickable,false);
+    menuCredits->addEntry("Flo:", menuId_NonClickable,false);
+    menuCredits->addEntry("Johann:", menuId_NonClickable,false);
+    menuCredits->addEntry("zurück", menuCreditsId_Back,true);
+
+    menuLevel = new Menu(new std::string("Levelauswahl"));
+
+    menuBreak = new Menu(new std::string("Pause"));
+
+    menuStatistics = new Menu(new std::string("Punkte"));
+
+    menuName = new Menu(new std::string("Neme eingeben"));
+
+    menuHighscore = new Menu(new std::string("Highscores"));
 
     // QGraphicsScene der Level erstellen
     levelScene = new QGraphicsScene;
@@ -1340,7 +1352,20 @@ void Game::updateHighScore(std::string mode) {
     }
 }
 
-
+/** gibt stepIntervall zurück
+ * wird für Zeit auslesen gebraucht
+ * @return int Stepintervall in ms
+ * @author Rupert
+ */
 int Game::getStepIntervall() {
     return stepIntervall;
+}
+
+/**
+ * @brief setzt den Spielstatus
+ * @param newState
+ * @author Rupert
+ */
+void Game::setState(gameState newState) {
+   state = newState;
 }
