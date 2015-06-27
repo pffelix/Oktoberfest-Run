@@ -17,7 +17,6 @@
     </qresource>
     <qresource prefix="/audios">
         <file>audios/background_highscore.wav</file>
-        <file>audios/background_level1.wav</file>
         <file>audios/background_level2.wav</file>
         <file>audios/background_level3.wav</file>
         <file>audios/background_menu.wav</file>
@@ -29,5 +28,6 @@
         <file>audios/status_alcohol.wav</file>
         <file>audios/status_life.wav</file>
         <file>audios/scene_enemy.wav</file>
+        <file>audios/background_level1.wav</file>
     </qresource>
 </RCC>

@@ -29,7 +29,7 @@ AudioControl::AudioControl() {
     /// setzte blockcounter auf 0 Blöcke
     blockcounter = 0;
     /// setzte Wartezeit von Portaudio auf 1000 ms
-    waitinms = 5000;
+    waitinms = 30000;
     /// initialisiere Abspielbibliothek PortAudio
     //playinitializeerror = playInitialize();
 
@@ -204,7 +204,7 @@ int AudioControl::myMemberpatestCallback( const void *inputBuffer, void *outputB
     {
         int position;
         position = i+blockcounter*BLOCKSIZE;
-        block[i] = audioobjects[1].getSample(position);
+        block[i] = audioobjects[10].getSample(position);
         *out++ = block[i];
 
         //data->mono = audioobjects[0].getSample(i);
