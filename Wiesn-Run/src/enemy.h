@@ -8,7 +8,7 @@ class Enemy : public MovingObject {
 public:
 
     //Konstruktor und Destruktor
-    Enemy(int posX, int posY, int speedX);
+    Enemy(int posX, int posY, int speedX, objectType enemy);
     ~Enemy();
 
     //Leben()
