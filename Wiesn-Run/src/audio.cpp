@@ -101,26 +101,28 @@ void Audio::readSamples() {
     std::string sourcepath; /// Pfad zur Wave Datei in den Ressourcendateien
     QDir buildpath; /// Pfad zum Ordner der Build (Exe Datei)
     int folderchanges; /// Anzahl gewechselter Ordner
+    std::string errormessage; /// Error Nachricht wenn Ordner mit Audiodateien nicht gefunden werden kann
     int channels; /// Anzahl an Kanälen
     int bitdepth; /// Anzahl an Bits pro Sample
     int bytedepth; /// Anzahl an Bytes pro Sample
     char tempbytes[5]; /// variable aktuell ausgelesene Bytes der Wave Datei zwischenzuspeichern
     int offset; /// Variab um aktuelle Byte Position in Wave Datei zu speichern
 
-    /// wenn buidpath/audios nicht auffindar ist wechsel ein Verzeichnis höher und suche dort erneut
+    /// Installationspfad des Audioordners über make install ist Betriebssystem abhängig
+    /// wenn installierte Audio Dateiein nicht in Build Verzeichnis auffindar sind wechsel ein Verzeichnis höher und suche dort erneut
     buildpath = QDir(QCoreApplication::applicationDirPath());
     folderchanges = 0;
     while(buildpath.cd(QString("audios")) == false) {
         buildpath.cdUp();
         folderchanges += 1;
         if (folderchanges > 2) {
+        errormessage = "Folder with audio files could not be found, needs to be located in: " + QCoreApplication::applicationDirPath().toStdString();
+        qFatal(errormessage.c_str());
         }
     }
-    qWarning() << "Folder with audio files could not be found, needs to be located in directory of exe file";
 
     /// Öffne zum Audio Objekt gehörige Wave Datei
     sourcepath = buildpath.absolutePath().toStdString() + "/" + source + ".wav";
-    std::cout << sourcepath;
     QFile file(QString::fromStdString(sourcepath));
     if(!file.open(QIODevice::ReadOnly)) {
         qWarning() << "Audio::readsamples: Cannot open File" << QString::fromStdString(source);
@@ -180,9 +182,11 @@ void Audio::readSamples() {
             samples.push_back(to16bitSample(qFromLittleEndian<quint8>((uchar*)tempbytes)));
         }
     }
-
-    // normalisiere QVector samples auf die maximalen 16 bit signed integer Grenzen (hier: -32767...32767)
+    /// schließe Audiodatei
+    file.close();
+    /// normalisiere QVector samples auf die maximalen 16 bit signed integer Grenzen (hier: -32767...32767)
     normalize();
+
 }
 
 /**
