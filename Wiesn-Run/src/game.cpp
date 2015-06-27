@@ -488,7 +488,7 @@ void Game::calculateMovement() {
     using namespace std;               // für std::list
 
     /// für qDebug (Rupert)
-    std::string objecttypes[] = {"Player", "Enemy ", "Obstac", "Shot  ", "PwrUp ", "BOSS  ", "Plane "};
+    std::string objecttypes[] = {"Player ", "Tourist ", "Securit", "Obstacl", "Plane  ", "Shot   ", "PowerUp", "Boss   "};
     qDebug("Object\tSize\tPosX\tPosY\tSpeed");
     int speedX=0,speedY=0;
 
@@ -1135,17 +1135,17 @@ void Game::loadLevelFile(QString fileSpecifier) {
                         throw std::string("Ungültiger Tourist-Eintrag:");
                     } else {
                         qDebug() << "  Tourist-Eintrag gefunden.";
-                        GameObject *enemyToAppend = new Enemy(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt());
+                        GameObject *enemyToAppend = new Enemy(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), enemy_tourist);
                         levelSpawn.push_back(enemyToAppend);
                     }
                 }
 
-                if (strlist.at(0) == "Enemy") {
-                    if (strlist.length() != 4) {
-                        throw std::string("Ungültiger Enemy-Eintrag:");
+                if (strlist.at(0) == "Security") {
+                    if (strlist.length() != 3) {
+                        throw std::string("Ungültiger Security-Eintrag:");
                     } else {
-                        qDebug() << "  Enemy-Eintrag gefunden.";
-                        GameObject *enemyToAppend = new Enemy(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt());
+                        qDebug() << "  Security-Eintrag gefunden.";
+                        GameObject *enemyToAppend = new Enemy(strlist.at(1).toInt(), strlist.at(2).toInt(), 0, enemy_security);
                         levelSpawn.push_back(enemyToAppend);
                     }
                 }

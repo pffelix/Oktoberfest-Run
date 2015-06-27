@@ -10,17 +10,22 @@ Erläuterung
 # Player,160,0
 # Größe: 60x120
 
-# Gegner anlegen:
-# Enemy,posX,posY,speedX
-# Enemy,300,0,-10
+# Tourist anlegen:
+# Tourist,posX,posY,speedX
+# Tourist,300,0,-10
 # Größe: 60x120
+
+# Security anlegen:
+# Security,posX,posY
+# Security,300,0
+# Größe: 60:120
 
 # Obstacle anlegen:
 # Obstacle,posX,posY
 # Obstacle,200,0
 # Größe: 90x120
 
-# Zwischen-Ebenen-Element anlegen:
+# Plane anlegen:
 # Plane,posX,posY
 # Plane,400,100
 # Größe: 120x20
@@ -94,6 +99,7 @@ Obstacle,5100,240
 Obstacle,5100,360
 
 Obstacle,6000,0
-Enemy,6300,0,-10
+Tourist,6300,0,-10
+Security,6400,0
 Obstacle,6800,0
 
