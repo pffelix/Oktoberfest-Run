@@ -66,6 +66,6 @@ levelFiles.path = $$OUT_PWD/levelFiles
 levelFiles.files = src/levelFiles/*
 
 INSTALLS += \
-    audio \
+    audios \
     images \
     levelFiles
