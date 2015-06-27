@@ -276,6 +276,10 @@ struct audioCooldownstruct {
     int cooldown;
 };
 
+enum powerUpType {
+    beer, food
+};
+
 /**
  * @brief Struktur für die States des Spiels
  * Sowohl Sound- als auch Grafik-Ausgabe erhalten aus den States Informationen darüber, was gerade im Spiel passiert,

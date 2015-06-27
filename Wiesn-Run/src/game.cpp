@@ -885,15 +885,30 @@ void Game::handleCollisions() {
  *  Die Soundevents die noch laufen, werden an die Liste SoundEvents übergeben. Die fertigen werden gelöscht.
  */
 void Game::updateAudio() {
-///@todo
     for (std::list<GameObject*>::iterator it=worldObjects.begin(); it != worldObjects.end(); ++it) {
         GameObject *handleObject =  (*it);
         switch (handleObject->getType()) {
-        case enemy_tourist:
-        case enemy_security: {
+        case enemy_tourist: {
             float distance = static_cast<float> ((std::abs(playerObjPointer->getPosX() - handleObject->getPosX()) / sceneWidth));
             audioStruct newAudio = {handleObject->getAudioID(), scene_enemy_tourist, distance};
             audioevents.push_back(newAudio);
+        }
+        case enemy_security: {
+            float distance = static_cast<float> ((std::abs(playerObjPointer->getPosX() - handleObject->getPosX()) / sceneWidth));
+            audioStruct newAudio = {handleObject->getAudioID(), scene_enemy_security, distance};
+            audioevents.push_back(newAudio);
+        }
+        case BOSS: {
+            float distance = static_cast<float> ((std::abs(playerObjPointer->getPosX() - handleObject->getPosX()) / sceneWidth));
+            audioStruct newAudio = {handleObject->getAudioID(), scene_enemy_boss, distance};
+            audioevents.push_back(newAudio);
+
+        }
+        case shot: {
+            float distance = static_cast<float> ((std::abs(playerObjPointer->getPosX() - handleObject->getPosX()) / sceneWidth));
+            audioStruct newAudio = {handleObject->getAudioID(), scene_flyingbeer, distance};
+            audioevents.push_back(newAudio);
+
         }
         }
     }
