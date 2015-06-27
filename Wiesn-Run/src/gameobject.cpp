@@ -64,7 +64,7 @@ GameObject::GameObject(int posX, int posY, objectType type) {
 
         //Grafik - Player wird initialisiert
         setPixmap(QPixmap(":/images/images/player.png"));
-        setPos(playerOffset - 0.5*getLength(), yOffset - getPosY() - getHeight());
+        setPos(getPosX() - 0.5*getLength(), yOffset - getPosY() - getHeight());
         qDebug("   Player erstellt");
         break;
     }
