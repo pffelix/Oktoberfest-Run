@@ -124,8 +124,10 @@ enum audioType {
     scene_enemy_boss,
     /// Kollision mit Hinderniss aufgetreten: wird einmal gesendet wenn eine Kollision mit einem Hindernis auftritt (cooldown)
     scene_collision_obstacle,
-    /// Kollision mit Gegner aufgetreten: wird einmal gesendet wenn eine Kollision mit einem Gegner auftritt (cooldown)
+    /// Kollision mit Gegner aufgetreten (Schaden): wird einmal gesendet wenn eine Kollision mit einem Gegner auftritt (cooldown)
     scene_collision_enemy,
+    /// Kollision mit Gegner aufgetreten (Besiegt): wird einmal gesendet wenn eine Kollision mit einem Gegner auftritt (cooldown)
+    scene_collision_player,
     /// Kollision mit geworfenen Bier aufgetreten: wird einmal gesendet wenn eine Kollision mit einem geworfenen Bier auftritt (cooldown)
     scene_collision_flyingbeer,
     /// Bier Powerup aufgenommen: wird einmal gesendet wenn Powerup aufgenommen wird (cooldown)
@@ -173,6 +175,7 @@ typedef struct {
     int scene_enemy_boss = 0;
     int scene_collision_obstacle = 1000;
     int scene_collision_enemy = 1000;
+    int scene_collision_player = 1000;
     int scene_collision_flyingbeer = 1000;
     int powerup_beer = 1000;
     int powerup_food = 1000;
@@ -180,7 +183,7 @@ typedef struct {
     int status_life = 0;
     int status_dead = 2000;
     int player_walk = 0;
-    int player_jump = 1000;
+    int player_jump = 2000;
     int background_menu = 0;
     int background_highscore = 0;
     int background_level1 = 0;
@@ -203,6 +206,7 @@ typedef struct {
     float scene_enemy_boss = -1;
     float scene_collision_obstacle = 0;
     float scene_collision_enemy = 0;
+    float scene_collision_player = 0;
     float scene_collision_flyingbeer = 0;
     float powerup_beer = 0;
     float powerup_food = 0;

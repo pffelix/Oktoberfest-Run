@@ -9,27 +9,43 @@
 AudioControl::AudioControl() {
 
     /// erstelle für jede objektgruppe "type" ein audio Objekt welches unter anderem die Samples beinhaltet
-    audioobjects.reserve(21);
+    audioobjects.reserve(22);
     audioobjects.insert(audioobjects.begin() + audioType::scene_flyingbeer, Audio("scene_flyingbeer")); // 16bit
+
     audioobjects.insert(audioobjects.begin() + audioType::scene_enemy_tourist, Audio("scene_enemy_tourist")); // 16bit
     audioobjects.insert(audioobjects.begin() + audioType::scene_enemy_security, Audio("scene_enemy_security")); // 16bit
+    //source: http://soundbible.com/1501-Buzzer.html
     audioobjects.insert(audioobjects.begin() + audioType::scene_enemy_boss, Audio("scene_enemy_boss")); // 16bit
+    //source: http://soundbible.com/1522-Balloon-Popping.html
     audioobjects.insert(audioobjects.begin() + audioType::scene_collision_obstacle, Audio("scene_collision_obstacle")); // 16bit
+    //source: http://soundbible.com/1773-Strong-Punch.html
     audioobjects.insert(audioobjects.begin() + audioType::scene_collision_enemy, Audio("scene_collision_enemy")); // 16bit
+    audioobjects.insert(audioobjects.begin() + audioType::scene_collision_player, Audio("scene_collision_player")); // 16bit
+    //source: http://helios.augustana.edu/~dr/105/wav/glasbk.wav
     audioobjects.insert(audioobjects.begin() + audioType::scene_collision_flyingbeer, Audio("scene_collision_flyingbeer")); // 16bit
+    //source: http://soundbible.com/1858-Metroid-Door.html
     audioobjects.insert(audioobjects.begin() + audioType::powerup_beer, Audio("powerup_beer")); // 16bit
+    //source: http://soundbible.com/1639-Power-Up.html
     audioobjects.insert(audioobjects.begin() + audioType::powerup_food, Audio("powerup_food")); // 16bit
     audioobjects.insert(audioobjects.begin() + audioType::status_alcohol, Audio("status_alcohol")); // 16bit
+    // source: http://soundbible.com/1612-Slow-HeartBeat.html
     audioobjects.insert(audioobjects.begin() + audioType::status_life, Audio("status_life")); // 16bit
+    //source: http://soundbible.com/1266-City-Ambiance.html
     audioobjects.insert(audioobjects.begin() + audioType::status_dead, Audio("status_dead")); // 16bit
+    //source: http://www.arts.rpi.edu/public_html/ruiz/VES01/sebram/final/walk_crop.wav
     audioobjects.insert(audioobjects.begin() + audioType::player_walk, Audio("player_walk")); // 16bit
+    //source: http://soundbible.com/1343-Jump.html
     audioobjects.insert(audioobjects.begin() + audioType::player_jump, Audio("player_jump")); // 16bit
+    //source: http://soundbible.com/1563-Pacman-Introduction-Music.html
     audioobjects.insert(audioobjects.begin() + audioType::background_menu, Audio("background_menu")); // 16bit
+
     audioobjects.insert(audioobjects.begin() + audioType::background_highscore, Audio("background_highscore")); // 16bit
     audioobjects.insert(audioobjects.begin() + audioType::background_level1, Audio("background_level1")); // 16bit
+    //source: http://soundbible.com/1763-Ambience-Casino.html
     audioobjects.insert(audioobjects.begin() + audioType::background_level2, Audio("background_level2")); // 16bit
     audioobjects.insert(audioobjects.begin() + audioType::background_level3, Audio("background_level3")); // 16bit
     audioobjects.insert(audioobjects.begin() + audioType::background_startgame, Audio("background_startgame")); // 16bit
+    //source: http://soundbible.com/1823-Winning-Triumphal-Fanfare.html
     audioobjects.insert(audioobjects.begin() + audioType::background_levelfinished, Audio("background_levelfinished")); // 16bit
 
 
