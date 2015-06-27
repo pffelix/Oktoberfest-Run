@@ -132,9 +132,11 @@ private:
     /// Erstelle Input Objekt zum Aufzeichnen der Keyboard Inputs
     Input *keyInput = new Input();
 
+
+    void test();
     // Menüs
     enum gameState state = gameMenuStart;    /// aktueller Spielzustand
-    Menu *aktMenu;      /// aktuell aktives Menü, null während das Spiel läuft; wird in setState gesetzt
+    Menu *aktMenu = menuStart;      /// aktuell aktives Menü, null während das Spiel läuft; wird in setState gesetzt
 
     Menu *menuStart;
     Menu *menuCredits;
