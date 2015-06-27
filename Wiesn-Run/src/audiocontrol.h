@@ -42,7 +42,6 @@ public:
         Audio* objectref;
         /// aktuelle Abspielposition in Audiobjekt in Samples (Beginn des Abspielblockes mit Länge 1024 Samples
         int position;
-        /// Gesamtanzahl an Samples des Audioobjekts
 
     } playStruct;
 

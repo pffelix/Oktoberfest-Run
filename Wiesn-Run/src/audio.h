@@ -34,7 +34,7 @@ public:
 
     std::string getSource();
     float getSample(int pos);
-    int getSamplenbr();
+    int getSamplenumber();
     short getVolume();
     void setVolume(short volume_audio_obj);
 
@@ -55,12 +55,12 @@ private:
      */
     std::vector<float> samples;
     /**
-     * @brief  samplenbr
-     *         samplenbr speichert die Anzahl an Samples in der gesamten Audio Datei
+     * @brief  samplenumber
+     *         samplenumber speichert die Anzahl an Samples in der gesamten Audio Datei
      *         des Audio Objekts als Integer.
      * @author  Felix Pfreundtner
      */    
-    int samplenbr;
+    int samplenumber;
     /**
      * @brief  volume
      *         volume speichert die Lautstärkeinformation des Audioobjektes (Bereich 0...1).

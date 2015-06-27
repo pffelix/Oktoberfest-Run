@@ -39,7 +39,7 @@ std::string Audio::getSource() {
  */
 float Audio::getSample(int pos) {
     /// falls Ende der Audiodatei erreicht
-    if (pos > samples.size()) {
+    if (pos >= samples.size()) {
         /// gebe Stille zurück (Samplewert 0)
         return 0;
     }
@@ -51,14 +51,14 @@ float Audio::getSample(int pos) {
 }
 
 /**
- * @brief  Audio::getSamplenbr
- *         "getSamplenbr" gibt bei Aufruf die Anzahl an Samples der zu Audioobjekt
+ * @brief  Audio::getSamplenumber
+ *         "getSamplenumber" gibt bei Aufruf die Anzahl an Samples der zu Audioobjekt
  *         gehörigen Wave Datei zurück.
- * @return int samplenbr
+ * @return int samplenumber
  * @author Felix Pfreundtner
  */
-int Audio::getSamplenbr() {
-    return samplenbr;
+int Audio::getSamplenumber() {
+    return samplenumber;
 }
 
 /**
@@ -169,7 +169,7 @@ void Audio::readSamples() {
      /// lese die Größe des data chunks in Bytes aus
     file.read(tempbytes, 4);
     /// berechene die Gesamtanzahl an Samples in der Datei
-    samplenbr = (qFromLittleEndian<quint32>((uchar*)tempbytes)) * 8 / bitdepth / channels;
+    samplenumber = (qFromLittleEndian<quint32>((uchar*)tempbytes)) * 8 / bitdepth / channels;
     /// lese Sample für Sample aus dem data chunk aus
     while(!file.atEnd()){
         file.read(tempbytes, 2);
