@@ -34,7 +34,7 @@ Erläuterung
 Level1: Weg zum Zelt (keine Gegner, nur Obstacles und PowerUps
 ------------
 
-Player,100,0
+Player,5900,0
 
 
 # Ubahn-Station: 0 bis 2000
@@ -92,3 +92,8 @@ Obstacle,5100,0
 Obstacle,5100,120
 Obstacle,5100,240
 Obstacle,5100,360
+
+Obstacle,6000,0
+Enemy,6300,0,-10
+Obstacle,6800,0
+

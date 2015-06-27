@@ -211,6 +211,7 @@ void Game::startNewGame() {
  * @brief Game::endGame
  */
 void Game::endGame() {
+    /// @todo Aufräumarbeiten
     // Highscore aktualisieren
     std::string mode = "write";
     updateHighScore(mode);
