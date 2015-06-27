@@ -95,6 +95,20 @@ public:
      * @author  Felix Pfreundtner
      */    
     int blockcounter;
+    /**
+     * @brief  mixed_sample
+     *         mixed_sample beinhaltet das aktuell von mixSample() gemixte Sample aller audioEvents.
+     * @author  Felix Pfreundtner
+     */
+    int mixed_sample;
+    /**
+     * @brief  playeventsnumber
+     *         playeventsnumber beinhaltet die Anzahl an aktuelle abzuspielenden audioEvents.
+     *         Float Format da mit diesem Wert in mixsamples effizient gerechnet werden muss ohne Castumwandlung Integer in Float.
+     * @author  Felix Pfreundtner
+     */
+    int playeventsnumber;
+
 
 
     // Instanzfunktion Callback des aktuellen AudioControl Objekts
@@ -115,7 +129,6 @@ public:
       return ((AudioControl*)userData)
          ->myMemberpatestCallback(input, output, frameCount, timeInfo, statusFlags);
     }
-
 
     void play();
 
