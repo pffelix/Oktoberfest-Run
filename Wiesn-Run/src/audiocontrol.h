@@ -32,13 +32,13 @@ public:
     typedef struct {
         /// id des playstruct Objekts
         int id;
-        /// name der playstruct Objektgruppe
-        audio name;
+        /// type der playstruct Objektgruppe
+        audioType type;
         /// Lautstärke des playstruct
         float volume;
         /// variable welche angibt ob sound im moment abgespielt wird
         bool playnext;
-        /// Zeiger auf das (Audio-)object des playStruct, welches Eventgruppe "name" zugeordnet ist.
+        /// Zeiger auf das (Audio-)object des playStruct, welches Eventgruppe "type" zugeordnet ist.
         Audio* objectref;
         /// aktuelle Abspielposition in Audiobjekt in Samples (Beginn des Abspielblockes mit Länge 1024 Samples
         int position;
@@ -61,7 +61,7 @@ public:
     std::list<playStruct> playevents;
     /**
      * @brief  audioobjects
-     *         audioobjects beinhaltet eine QVector mit allen vorhandenen Objekten der Klasse Audio( beispielsweise deren Samples als QVector).
+     *         audioobjects beinhaltet eine Array mit allen vorhandenen Objekten der Klasse Audio( beispielsweise deren Samples als QVector).
      * @author  Felix Pfreundtner
      */
     std::vector<Audio> audioobjects;

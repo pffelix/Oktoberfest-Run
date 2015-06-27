@@ -8,20 +8,29 @@
  */
 AudioControl::AudioControl() {
 
-    /// erstelle für jede objektgruppe "name" ein audio Objekt welches unter anderem die Samples beinhaltet
-    audioobjects.push_back(Audio("player_jump")); // 16bit
-    audioobjects.push_back(Audio("scene_beer")); // 8bit
-    audioobjects.push_back(Audio("powerup_beer"));
-    audioobjects.push_back(Audio("scene_enemy"));
-    audioobjects.push_back(Audio("powerup_chicken"));
-    audioobjects.push_back(Audio("status_life"));
-    audioobjects.push_back(Audio("status_alcohol"));
-    audioobjects.push_back(Audio("player_walk"));
-    audioobjects.push_back(Audio("background_menu"));
-    audioobjects.push_back(Audio("background_highscore"));
-    audioobjects.push_back(Audio("background_level1"));
-    audioobjects.push_back(Audio("background_level2"));
-    audioobjects.push_back(Audio("background_level3"));
+    /// erstelle für jede objektgruppe "type" ein audio Objekt welches unter anderem die Samples beinhaltet
+    audioobjects.reserve(21);
+    audioobjects.insert(audioobjects.begin() + audioType::scene_flyingbeer, Audio("scene_flyingbeer")); // 16bit
+    audioobjects.insert(audioobjects.begin() + audioType::scene_enemy_tourist, Audio("scene_enemy_tourist")); // 16bit
+    audioobjects.insert(audioobjects.begin() + audioType::scene_enemy_security, Audio("scene_enemy_security")); // 16bit
+    audioobjects.insert(audioobjects.begin() + audioType::scene_enemy_boss, Audio("scene_enemy_boss")); // 16bit
+    audioobjects.insert(audioobjects.begin() + audioType::scene_collision_obstacle, Audio("scene_collision_obstacle")); // 16bit
+    audioobjects.insert(audioobjects.begin() + audioType::scene_collision_enemy, Audio("scene_collision_enemy")); // 16bit
+    audioobjects.insert(audioobjects.begin() + audioType::scene_collision_flyingbeer, Audio("scene_collision_flyingbeer")); // 16bit
+    audioobjects.insert(audioobjects.begin() + audioType::powerup_beer, Audio("powerup_beer")); // 16bit
+    audioobjects.insert(audioobjects.begin() + audioType::powerup_food, Audio("powerup_food")); // 16bit
+    audioobjects.insert(audioobjects.begin() + audioType::status_alcohol, Audio("status_alcohol")); // 16bit
+    audioobjects.insert(audioobjects.begin() + audioType::status_life, Audio("status_life")); // 16bit
+    audioobjects.insert(audioobjects.begin() + audioType::status_dead, Audio("status_dead")); // 16bit
+    audioobjects.insert(audioobjects.begin() + audioType::player_walk, Audio("player_walk")); // 16bit
+    audioobjects.insert(audioobjects.begin() + audioType::player_jump, Audio("player_jump")); // 16bit
+    audioobjects.insert(audioobjects.begin() + audioType::background_menu, Audio("background_menu")); // 16bit
+    audioobjects.insert(audioobjects.begin() + audioType::background_highscore, Audio("background_highscore")); // 16bit
+    audioobjects.insert(audioobjects.begin() + audioType::background_level1, Audio("background_level1")); // 16bit
+    audioobjects.insert(audioobjects.begin() + audioType::background_level2, Audio("background_level2")); // 16bit
+    audioobjects.insert(audioobjects.begin() + audioType::background_level3, Audio("background_level3")); // 16bit
+    audioobjects.insert(audioobjects.begin() + audioType::background_startgame, Audio("background_startgame")); // 16bit
+    audioobjects.insert(audioobjects.begin() + audioType::background_levelfinished, Audio("background_levelfinished")); // 16bit
 
 
     /// fülle Block Ausgabe mit Nullen
@@ -57,7 +66,7 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
     struct audioStruct newaudiostruct;
     /// erstelle neues temporäres audioStruct, welches stets das aktuelle playStruct Element der Liste playevents beinhaltet.
     playStruct newplaystruct;
-    /// erstelle Variable welche true ist wenn der name von newplaystruct bereits in playevents vorhanden ist
+    /// erstelle Variable welche true ist wenn die id von newplaystruct bereits in playevents vorhanden ist
     bool nasidexistinpe;
     /// erstelle einen Iterator für playevents Liste
     std::list<playStruct>::iterator pe;
@@ -72,7 +81,7 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
     while (!(audioevents->empty())) {
         /// entnehme neues audioStruct aus audioevents Liste
         newaudiostruct = *audioevents->begin();
-        /// setzte Variable nasnameexistinpe auf false, da newaudiostruct bisher nicht in playevents gefunden wurde
+        /// setzte Variable nasidexistinpe auf false, da newaudiostruct bisher nicht in playevents gefunden wurde
         nasidexistinpe = false;
         /// iteriere über alle bereits bestehenden playStructs in Liste playevents
         for (pe = playevents.begin(); pe != playevents.end(); pe++) {
@@ -84,20 +93,20 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
                 //pe->position += BLOCKSIZE;
                 /// setzte playnext auf true, da das playstruct auch im nächsten Step abgespielt werden soll
                 pe->playnext = true;
-                /// setzte Variable nasnameexistinpe auf true, da newaudiostruct bisher in playevents gefunden wurde
+                /// setzte Variable nasidexistinpe auf true, da newaudiostruct bisher in playevents gefunden wurde
                 nasidexistinpe = true;
             }
         }
-        /// wenn der name von newaudiostruct noch nicht in audioevents vorhanden ist (struct noch nicht abgespielt wird)
+        /// wenn die id von newaudiostruct noch nicht in audioevents vorhanden ist (struct noch nicht abgespielt wird)
         if (nasidexistinpe == false) {
             /// schreibe ID des neuen audioStruct in ein neues playStruct
             newplaystruct.id = newaudiostruct.id;
-            /// schreibe Gruppen Namen des neuen audioStruct in ein neues playStruct
-            newplaystruct.name = newaudiostruct.name;
+            /// schreibe Gruppen Type des neuen audioStruct in ein neues playStruct
+            newplaystruct.type = newaudiostruct.type;
             /// übernehmen die aktuellen Distanzwerte des neuen audiostructs und wandle sie in eine Volumen Information um (volume = 1 - distance).
             newplaystruct.volume = 1.0f - newaudiostruct.distance;
             /// speichere einen Zeiger auf das (Audio-)Objekt in audioobjects in newplaystruct
-            newplaystruct.objectref = &audioobjects[newaudiostruct.name];
+            newplaystruct.objectref = &audioobjects[newaudiostruct.type];
             /// setzte Abspielposition auf 0 Samples (Beginne Abspielen)
             newplaystruct.position = 0;
             /// setzte playnext auf true, da das playstruct auch im nächsten Step abgespielt werden soll
@@ -204,7 +213,7 @@ int AudioControl::myMemberpatestCallback( const void *inputBuffer, void *outputB
     {
         int position;
         position = i+blockcounter*BLOCKSIZE;
-        block[i] = audioobjects[10].getSample(position);
+        block[i] = audioobjects[14].getSample(position);
         *out++ = block[i];
 
         //data->mono = audioobjects[0].getSample(i);

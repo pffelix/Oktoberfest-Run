@@ -340,10 +340,10 @@ int Game::step() {
             renderGraphics(&worldObjects, playerObjPointer);
 
             /// Mockup: add audioStruct player_jump to audioevents list
-            audioStruct player_jump{1, audio::player_jump, 0};
+            audioStruct player_jump{1, audioType::player_jump, 0};
             /// Mockup: add audioStruct powerup_beer to audioevents list
             audioevents.push_back(player_jump);
-            audioStruct scene_beer{2, audio::scene_beer, 0.3};
+            audioStruct scene_beer{2, audioType::scene_flyingbeer, 0.3};
             audioevents.push_back(scene_beer);
             /// send filled audioevents list to AudioControl Object, which updates current Output Sounds
             audioOutput->update(&audioevents);

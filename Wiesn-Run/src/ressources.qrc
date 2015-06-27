@@ -16,18 +16,26 @@
         <file>levelFiles/level1.txt</file>
     </qresource>
     <qresource prefix="/audios">
+        <file>audios/background_level1.wav</file>
+        <file>audios/player_jump.wav</file>
+        <file>audios/scene_beer.wav</file>
         <file>audios/background_highscore.wav</file>
         <file>audios/background_level2.wav</file>
         <file>audios/background_level3.wav</file>
+        <file>audios/background_levelfinished.wav</file>
         <file>audios/background_menu.wav</file>
-        <file>audios/player_jump.wav</file>
+        <file>audios/background_startgame.wav</file>
         <file>audios/player_walk.wav</file>
         <file>audios/powerup_beer.wav</file>
-        <file>audios/powerup_chicken.wav</file>
-        <file>audios/scene_beer.wav</file>
+        <file>audios/powerup_food.wav</file>
+        <file>audios/scene_collision_enemy.wav</file>
+        <file>audios/scene_collision_flyingbeer.wav</file>
+        <file>audios/scene_collision_obstacle.wav</file>
+        <file>audios/scene_enemy_boss.wav</file>
+        <file>audios/scene_enemy_security.wav</file>
+        <file>audios/scene_enemy_tourist.wav</file>
         <file>audios/status_alcohol.wav</file>
+        <file>audios/status_dead.wav</file>
         <file>audios/status_life.wav</file>
-        <file>audios/scene_enemy.wav</file>
-        <file>audios/background_level1.wav</file>
     </qresource>
 </RCC>

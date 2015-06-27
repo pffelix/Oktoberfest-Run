@@ -96,21 +96,121 @@ struct scoreStruct {
     int alcoholPoints;
 };
 
-enum audio {
-    scene_beer,
-    scene_enemy,
-    powerup_chicken,
+
+
+/**
+ * @brief Enum für den Audiotype
+ *        In diesen Enum wird der Audiotype in einen Integer gewandelt.
+ * @author Simon, Felix Pfreundtner
+ */
+
+enum audioType {
+    /// fliegendes Bier: wird solange gesendet wie Bier in der Luft fliegt
+    scene_flyingbeer,
+    /// auftretender Tourist Gegner: wird gesendet solange Gegner lebt
+    scene_enemy_tourist,
+    /// auftretender Security Gegner: wird gesendet solange Gegner lebt
+    scene_enemy_security,
+    /// lebender Boss Gegner: wird gesendet solange Bossgegner lebt
+    scene_enemy_boss,
+    /// Kollision mit Hinderniss aufgetreten: wird einmal gesendet wenn eine Kollision mit einem Hindernis auftritt (cooldown)
+    scene_collision_obstacle,
+    /// Kollision mit Gegner aufgetreten: wird einmal gesendet wenn eine Kollision mit einem Gegner auftritt (cooldown)
+    scene_collision_enemy,
+    /// Kollision mit geworfenen Bier aufgetreten: wird einmal gesendet wenn eine Kollision mit einem geworfenen Bier auftritt (cooldown)
+    scene_collision_flyingbeer,
+    /// Bier Powerup aufgenommen: wird einmal gesendet wenn Powerup aufgenommen wird (cooldown)
     powerup_beer,
-    status_life,
+    /// Essens Powerup aufgenommen: wird einmal gesendet wenn Powerup aufgenommen wird (cooldown)
+    powerup_food,
+    /// Alkohol Status höher als 60%: wird solange gesendet wie Alkoholstatus höher als 60% ist
     status_alcohol,
+    /// Leben Status geringer als 40%: wird solange gesendet wie Lebenstatus geringer als 40% ist
+    status_life,
+    /// Gameover des Spielers: wird gesendet wenn der Spieler 0% Lebenstatus hat (cooldown)
+    status_dead,
+    /// Laufbewegung des Spielers: wird solange gesendet wie Spieler sich bewegt
     player_walk,
+    /// Springbewegung des Spielers: wird einmal gesendet wenn der Spiel losspringt (cooldown)
     player_jump,
+    /// Hintergrund Musik des Hauptmenüs: wird solange gesendet wie Hauptmenü aktiv ist
     background_menu,
+    /// Hintergrund Musik des Highscoremenüs: wird solange gesendet wie Highscoremenü aktiv ist
     background_highscore,
+    /// Hintergrund Musik des Levels 1: wird solange gesendet wie Level 1 aktiv ist
     background_level1,
+    /// Hintergrund Musik des Levels 2: wird solange gesendet wie Level 2 aktiv ist
     background_level2,
-    background_level3
+    /// Hintergrund Musik des Levels 3: wird solange gesendet wie Level 3 aktiv ist
+    background_level3,
+    /// Startton wenn Spiel begonnen wird: wird einmal zu Beginn des Level 1 gesendet (cooldown)
+    background_startgame,
+    /// Gewinnton wenn Level erfolgreich beendet wurde: wird einmal an jedem Levelende gesendet (cooldown)
+    background_levelfinished
+
+
 };
+
+/**
+ * @brief Struct mit Konstanten für den Audiocooldown jedes Audiotypes
+ *        In diesen Konstanten wird festgelegt wie viele millisekunden für ein Events eines Audiotypes trotz verschwinden in der Grafik nachwievor audioStructs gesendet werden.
+ *        Ein 0 bedeteutet, dass kein Cooldown erfolgt, die Audiostructs werden hier solange gesendet wie das Event sichtbar ist.
+ * @author Felix
+ */
+typedef struct {
+    int scene_flyingbeer = 0;
+    int scene_enemy_tourist = 0;
+    int scene_enemy_security = 0;
+    int scene_enemy_boss = 0;
+    int scene_collision_obstacle = 1000;
+    int scene_collision_enemy = 1000;
+    int scene_collision_flyingbeer = 1000;
+    int powerup_beer = 1000;
+    int powerup_food = 1000;
+    int status_alcohol = 0;
+    int status_life = 0;
+    int status_dead = 2000;
+    int player_walk = 0;
+    int player_jump = 1000;
+    int background_menu = 0;
+    int background_highscore = 0;
+    int background_level1 = 0;
+    int background_level2 = 0;
+    int background_level3 = 0;
+    int background_startgame = 1000;
+    int background_levelfinished = 2000;
+} audioCooldown;
+
+/**
+ * @brief Konstanten für die Distance jedes Audiotypes
+ *        In diesen Konstanten wird festgelegt wie weit entfernt ein Event des Typs audioTypes vom Spieler auftritt [Werbereicht 0 (beim spieler) bis 1(maximale Distanz des Fensters).
+ *        Ist die Konstante -1 ist die Distance eines Events vom Typ audioType variabel und muss von der Gamelogik bestimmt werden.
+ * @author Felix
+ */
+typedef struct {
+    int scene_flyingbeer = -1;
+    int scene_enemy_tourist = -1;
+    int scene_enemy_security = -1;
+    int scene_enemy_boss = -1;
+    int scene_collision_obstacle = 0;
+    int scene_collision_enemy = 0;
+    int scene_collision_flyingbeer = 0;
+    int powerup_beer = 0;
+    int powerup_food = 0;
+    int status_alcohol = 0;
+    int status_life = 0;
+    int status_dead = 0;
+    int player_walk = 0;
+    int player_jump = 0;
+    int background_menu = 0.2;
+    int background_highscore = 0.2;
+    int background_level1 = 0.5;
+    int background_level2 = 0.5;
+    int background_level3 = 0.5;
+    int background_startgame = 0.2;
+    int background_levelfinished = 0.2;
+
+} audioDistance;
 
 
 /**
@@ -152,34 +252,15 @@ enum audio {
  *  Zudem wird über einen Cooldown das objekt nachwievor für etwas länger angehängt (Cooldown Timer = 1 Sekunde).
  *
  * Übersicht über alle audioStruct's:
- * (wird regelmäßig von Felix erweitert, bei Neuigkeiten bitte audioStructs in GameLogik erstellen -> Neuigkeiten sind mit + markiert):
- *
- * scene_beer (distance = variabele)
- * scene_enemy (distance = variable)
- *
- * powerup_chicken (distance = 0)
- * powerup_beer (distance = 0)
- *
- * status_life (distance = 0)
- * status_alcohol (distance = 0)
- *
- * player_walk (distance = 0)
- * player_jump (distance = 0)
- *
- * background_menu (distance = 1)
- * background_highscore (distance=1)
- * background_level1 (distance = 0.5)
- * background_level2 (distance = 0.5)
- * background_level3 (distance = 0.5)
- *
  *
  * @author Felix Pfreundtner
  */
 struct audioStruct {
     int id;
-    audio name;
+    audioType type;
     float distance;
 };
+
 
 /**
  * @brief Struktur für die States des Spiels
