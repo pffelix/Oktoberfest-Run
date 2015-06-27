@@ -76,6 +76,12 @@ void Game::timerEvent(QTimerEvent *event)
     ///@todo return von step...
 }
 
+void Game::test() {
+    startNewGame();
+    setState(gameIsRunning);
+
+}
+
 
 /**
  * @brief Erstelle QApplication app mit QGraphicsView Widget window (Eventfilter installiert) und Zeiger input auf Input Objekt.
@@ -100,7 +106,7 @@ int Game::start() {
 
     // Menüs erstellen
     menuStart = new Menu(new std::string("Wiesn-Run"));
-    menuStart->addEntry("Neues Spiel",menuStartId_NewGame,true);
+    menuStart->addEntry("Neues Spiel",menuStartId_NewGame,true,{test});
     menuStart->addEntry("Spiel beenden", menuStartId_EndGame,true);
     menuStart->addEntry("Credits", menuStartId_Credits,true);
     menuStart->displayInit();
@@ -169,9 +175,8 @@ int Game::start() {
     Game::startTimer(stepIntervall);
 
     ///@todo hier wird das Startmenü übersprungen
-    //startNewGame();
-    //state = gameIsRunning;
-
+    // startNewGame();
+    setState(gameMenuStart);
     return appPointer->exec();
 }
 
@@ -329,7 +334,15 @@ int Game::step() {
     //qDebug("Game::step() | Vergangene Zeit seit letztem step(): %d ms", static_cast<int>(duration_cast<milliseconds>(letzterAufruf-akt).count()));
 
     // falls Menü aktiv, Inputs verarbeiten, Grafik:
+    qDebug("aktMenu: %d",aktMenu);
+
     if(aktMenu!=NULL) {
+        qDebug("Name: %s",aktMenu->getTitle()->c_str());
+
+        aktMenu->displayUpdate();
+        //MenüScene wird vom Anzeigewidget aufgerufen
+        window->setScene(aktMenu->menuScene);
+
         // Up || Down?
         if(keyInput->getKeyactions().contains(Input::Keyaction::Up)) {
             aktMenu->changeSelection(Menu::menuSelectionChange::up);
@@ -338,11 +351,10 @@ int Game::step() {
             aktMenu->changeSelection(Menu::menuSelectionChange::down);
         }
 
-        aktMenu->displayUpdate();
-        //MenüScene wird vom Anzeigewidget aufgerufen
-        window->setScene(aktMenu->menuScene);
-
-        ///@todo Enter auswerten (Rupi): Handler zu menuEntry
+        // Enter auswerten
+        if(keyInput->getKeyactions().contains(Input::Keyaction::Enter)) {
+            aktMenu->getSelection()->handler();
+        }
     }
 
     switch(state) {
