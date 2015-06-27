@@ -42,15 +42,16 @@ const int playerOffset = 100 + (playerScale/2);
 /**
  * @brief Geschwindigkeit mit der sich die beweglichen Objekte durch die Welt bewegen
  */
-const int maxSpeed = 2 * playerScale / frameRate;
+const int maxSpeed = 2 * (playerScale / frameRate) ;
 
 /// normale Player-Speed
-const int playerSpeed = maxSpeed / 2;
+const int playerSpeed = 2 * (playerScale / frameRate) + 1;
+//const int playerSpeed = maxSpeed / 2;
 
 /**
  * @brief Fall- / Sprunggeschwindigkeit
  */
-const int maxSpeedY = 3 * (playerScale / frameRate);
+const int maxSpeedY = 2 * (playerScale / frameRate);
 
 /**
  * @brief maximales Leben
