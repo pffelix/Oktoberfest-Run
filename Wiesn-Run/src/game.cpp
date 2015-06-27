@@ -163,8 +163,8 @@ int Game::start() {
     Game::startTimer(stepIntervall);
 
     ///@todo hier wird das Startmenü übersprungen
-    startNewGame();
-    state = gameIsRunning;
+    //startNewGame();
+    //state = gameIsRunning;
 
     return appPointer->exec();
 }
@@ -363,7 +363,7 @@ int Game::step() {
             }
 
             break;
-*/ /*
+*/
         case gameMenuStart:
 
             menuStart->displayUpdate();
@@ -374,14 +374,14 @@ int Game::step() {
             if(keyInput->getKeyactions().contains(Input::Keyaction::Enter)) {
                 // Menüpunkt ausgewählt
                 switch(menuStart->getSelection()->id) {
-                    case menuId_StartGame:
+                    /*case menuId_StartGame:
                         startNewGame();
                         state = gameIsRunning;
                         break;
                     case menuId_EndGame:
                         qDebug("Spiel wurde über menuStart beendet");
                         exit(0);
-                        break;
+                        break;*/
                 }
             }
 
@@ -393,7 +393,7 @@ int Game::step() {
                 menuStart->changeSelection(Menu::menuSelectionChange::down);
             }
 
-            break; */
+            break;
         case gameIsRunning:
             // Menü bei ESC
             if(keyInput->getKeyactions().contains(Input::Keyaction::Exit)) {
