@@ -760,6 +760,16 @@ void Game::handleCollisions() {
                         handleEnemy = 0;
                     }
                 }
+
+                if (handleEvent.causingObject->getAudioID() == 0) {
+                    //Audioevent
+                    audioCooldownstruct newAudio;
+                    handleEvent.causingObject->setAudioID(audioIDs);
+                    newAudio.audioEvent = {audioIDs, scene_collision_enemy, 0};
+                    audioIDs = audioIDs + 1;
+                    newAudio.cooldown = 1000;
+                    audioStorage.push_back(newAudio);
+                }
             }
             case shot: {
                 // Spieler kriegt Schaden, Bierkrug zum löschen vormerken, treffen mit eigenem Krug nicht möglich
@@ -767,6 +777,15 @@ void Game::handleCollisions() {
                 gameStats.gameOver = playerObjPointer->receiveDamage(handleShoot->getInflictedDamage());
                 objectsToDelete.push_back(handleShoot);
                 handleShoot = 0;
+                if (handleEvent.causingObject->getAudioID() == 0) {
+                    //Audioevent
+                    audioCooldownstruct newAudio;
+                    handleEvent.causingObject->setAudioID(audioIDs);
+                    newAudio.audioEvent = {audioIDs, scene_collision_flyingbeer, 0};
+                    audioIDs = audioIDs + 1;
+                    newAudio.cooldown = 1000;
+                    audioStorage.push_back(newAudio);
+                }
                 break;
             }
             case powerUp: {
