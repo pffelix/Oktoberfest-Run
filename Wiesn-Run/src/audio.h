@@ -15,6 +15,7 @@
 #include <QVector>
 #include <QCoreApplication>
 #include <QDir>
+#include <QtGlobal>
 
 /**
  * @brief  Audio-Klasse
