@@ -726,14 +726,18 @@ void Game::handleCollisions() {
                     //Überlappung berechnen und Spieler nach unten versetzen
                     overlap = (playerObjPointer->getPosY() + playerObjPointer->getHeight()) - handleEvent.causingObject->getPosY();
                     playerObjPointer->setPosY(playerObjPointer->getPosY() - overlap);
+                    if (handleEvent.causingObject->getAudioID() == 0) {
+                        //Audioevent
+                        audioCooldownstruct newAudio;
+                        handleEvent.causingObject->setAudioID(audioIDs);
+                        newAudio.audioEvent = {audioIDs, scene_collision_obstacle, 0};
+                        audioIDs = audioIDs + 1;
+                        newAudio.cooldown = 1000;
+                        audioStorage.push_back(newAudio);
+                    }
                     break;
                 }
                 }
-                //Audioevent
-                audioCooldownstruct newAudio;
-                newAudio.audioEvent = {audioIDs, scene_collision_obstacle, 0};
-                newAudio.cooldown = 1000;
-                audioStorage.push_back(newAudio);
                 break;
             }
             case enemy_security:
