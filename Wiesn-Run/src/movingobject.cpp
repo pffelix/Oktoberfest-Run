@@ -6,12 +6,6 @@ MovingObject::MovingObject(int posX, int posY, objectType type, int speedX, int 
     this->speedX = speedX;
     this->speedY = speedY;
 
-    if(speedX > 0) {
-        this->dirLastFrame = true;
-    }
-    else {
-        this->dirLastFrame = false;
-    }
 }
 MovingObject::~MovingObject() {
 
@@ -41,12 +35,12 @@ void MovingObject::setSpeedY(int speedY) {
     this->speedY = speedY;
 }
 
-void MovingObject::setDirLastFrame(bool dirLastFrame) {
-    this->dirLastFrame = dirLastFrame;
+void MovingObject::setFramesDirection(int framesDirection) {
+    this->framesDirection = framesDirection;
 }
 
-bool MovingObject::getDirLastFrame() {
-    return dirLastFrame;
+int MovingObject::getFramesDirection() {
+    return framesDirection;
 }
 
 // Ist schon im Header mit =0 beschrieben
@@ -98,4 +92,36 @@ void MovingObject::flipHorizontal()
     // Set the items transformation
     setTransform(transform);
 }
+
+void MovingObject::swapImage()
+{
+    switch (getType()) {
+    case enemy_tourist: {
+        if(imageState == true) {
+            setPixmap(QPixmap(":/images/images/enemy2.png"));
+            imageState = false;
+        }
+        else {
+            setPixmap(QPixmap(":/images/images/enemy1.png"));
+            imageState = true;
+        }
+        break;
+    }
+    case player: {
+        if(imageState == true) {
+            setPixmap(QPixmap(":/images/images/player2.png"));
+            imageState = false;
+        }
+        else {
+            setPixmap(QPixmap(":/images/images/player1.png"));
+            imageState = true;
+        }
+        break;
+    }
+    default: {
+        break;
+    }
+    }
+}
+
 

@@ -1044,7 +1044,7 @@ void Game::updateAudio() {
  * @param objectList
  */
 void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPointer) {
-    window->centerOn(playerObjPointer->getPosX() + 512 - 100 - 0.5 * playerObjPointer->getLength(), 384);
+
     //Bewegunsparralaxe Positionsaktualisierung
     (backgrounds[0]).setPos(((backgrounds[0]).x()) + ((playerPointer->getPosX() - (playerScale/2) - (playerPointer->x())) /2), 0);
     (backgrounds[1]).setPos(((backgrounds[1]).x()) + ((playerPointer->getPosX() - (playerScale/2) - (playerPointer->x())) /2), 0);
@@ -1067,18 +1067,50 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
         MovingObject *aktMovingObject = dynamic_cast<MovingObject*> (*it);
         if(aktMovingObject != 0) {
 
-            if( (aktMovingObject->getSpeedX() > 0) && (aktMovingObject->getDirLastFrame() == false) ) {
+           /* if( (aktMovingObject->getSpeedX() > 0) && (aktMovingObject->getDirLastFrame() == false) ) {
                 aktMovingObject->flipHorizontal();
                 aktMovingObject->setDirLastFrame(true);
             }
             else if( (aktMovingObject->getSpeedX() < 0) && (aktMovingObject->getDirLastFrame() == true) ) {
                 aktMovingObject->flipHorizontal();
                 aktMovingObject->setDirLastFrame(false);
+            }*/
+
+            //if(dynamic_cast<Shoot*> (aktMovingObject) == 0 ) {
+              if(aktMovingObject->getType() != shot) {
+                //im letzten Frame vorwärst gelaufen?
+                if(aktMovingObject->getSpeedX() > 0 ) {
+                    if(aktMovingObject->getFramesDirection() < 0) {
+                        aktMovingObject->setFramesDirection(0);
+                        aktMovingObject->flipHorizontal();
+                    }
+                    if(aktMovingObject->getFramesDirection()%(frameRate/2) == 0) {
+                        aktMovingObject->swapImage();
+                    }
+                    aktMovingObject->setFramesDirection(aktMovingObject->getFramesDirection()+1);
+                }
+                //im letzten Frame rückwärtsgelaufen?
+                else if(aktMovingObject->getSpeedX()< 0 ) {
+                    if(aktMovingObject->getFramesDirection() > 0) {
+                        aktMovingObject->setFramesDirection(0);
+                        aktMovingObject->flipHorizontal();
+                    }
+                    if(aktMovingObject->getFramesDirection()%10 == 0) {
+                      aktMovingObject->swapImage();
+                    }
+                    aktMovingObject->setFramesDirection(aktMovingObject->getFramesDirection()-1);
+                }
+                else {
+                    aktMovingObject->setFramesDirection(0);
+                }
             }
 
-            aktMovingObject->setPos((*it)->getPosX() - 0.5*aktMovingObject->getLength(), yOffset -aktMovingObject->getPosY() - aktMovingObject->getHeight());
+            aktMovingObject->setPos(aktMovingObject->getPosX() - 0.5*aktMovingObject->getLength(), yOffset - aktMovingObject->getPosY() - aktMovingObject->getHeight());
         }
     }
+
+    //View wird wieder auf den Spieler zentriert
+    window->centerOn(playerObjPointer->getPosX() + 512 - 100 - 0.5 * playerObjPointer->getLength(), 384);
 }
 
 
