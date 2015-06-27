@@ -100,17 +100,17 @@ int Game::start() {
 
     // Menüs erstellen
     menuStart = new Menu(new std::string("Wiesn-Run"));
-    menuStart->addEntry("Spiel neustarten",menuId_StartGame,true);
-    menuStart->addEntry("Nicht anklickbar",menuId_NonClickable,false);
-    menuStart->addEntry("Spiel beenden", menuId_EndGame,true);
+    //menuStart->addEntry("Spiel neustarten",menuId_StartGame,true);
+//    menuStart->addEntry("Nicht anklickbar",menuId_NonClickable,false);
+//    menuStart->addEntry("Spiel beenden", menuId_EndGame,true);
     menuStart->displayInit();
 
-    menuEnd = new Menu(new std::string("Game Over"));
-    menuEnd->addEntry("Weiterspielen",menuId_Resume,true);
-    menuEnd->addEntry("Highscore anzeigen",menuId_Highscore,true);
-    menuEnd->addEntry("Credits anzeigen",menuId_Credits,true);
-    menuEnd->addEntry("zurück zum Anfang",menuId_GotoStartMenu,true);
-    menuEnd->displayInit();
+    //menuEnd = new Menu(new std::string("Game Over"));
+//    menuEnd->addEntry("Weiterspielen",menuId_Resume,true);
+//    menuEnd->addEntry("Highscore anzeigen",menuId_Highscore,true);
+//    menuEnd->addEntry("Credits anzeigen",menuId_Credits,true);
+//    menuEnd->addEntry("zurück zum Anfang",menuId_GotoStartMenu,true);
+    //menuEnd->displayInit();
 
     // QGraphicsScene der Level erstellen
     levelScene = new QGraphicsScene;
@@ -134,8 +134,6 @@ int Game::start() {
     /// Initialisiere dort PortAudio und beginne eine Audioausgabe zu erzeugen.
     std::thread portaudiothread(&AudioControl::playInitialize, audioOutput);
 
-    ///@TODO flo: ka was das hier an der Stelle soll, habs mal auskommentiert
-    //startNewGame();
 
 
     // Timer installieren
@@ -143,7 +141,8 @@ int Game::start() {
     Game::startTimer(stepIntervall);
 
     ///@todo hier wird das Startmenü übersprungen
-    //state = gameIsRunning;
+    startNewGame();
+    state = gameIsRunning;
 
     return appPointer->exec();
 }
@@ -302,7 +301,7 @@ int Game::step() {
     //qDebug("Game::step() | Vergangene Zeit seit letztem step(): %d ms", static_cast<int>(duration_cast<milliseconds>(letzterAufruf-akt).count()));
 
     switch(state) {
-        case gameMenuEnd:
+       /* case gameMenuEnd:
             menuEnd->displayUpdate();
             //MenüScene wird vom Anzeigewidget aufgerufen
             window->setScene(menuEnd->menuScene);
@@ -342,7 +341,7 @@ int Game::step() {
             }
 
             break;
-
+*/ /*
         case gameMenuStart:
 
             menuStart->displayUpdate();
@@ -372,7 +371,7 @@ int Game::step() {
                 menuStart->changeSelection(Menu::menuSelectionChange::down);
             }
 
-            break;
+            break; */
         case gameIsRunning:
             // Menü bei ESC
             if(keyInput->getKeyactions().contains(Input::Keyaction::Exit)) {
