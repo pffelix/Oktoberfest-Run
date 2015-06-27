@@ -56,7 +56,6 @@ const int maxSpeed = 3 * (playerScale / frameRate) ;
 
 /// normale Player-Speed
 const int playerSpeed = maxSpeed + 1;
-//const int playerSpeed = maxSpeed / 2;
 
 /**
  * @brief Fall- / Sprunggeschwindigkeit
@@ -68,7 +67,6 @@ const int maxSpeedY = maxSpeed;
  */
 const int maxHealth = 5;
 const int maxAlcohol = 4500;
-
 
 /**
  * @brief Enumerator für den Objekt-Typ
