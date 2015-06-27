@@ -996,7 +996,7 @@ void Game::updateAudio() {
         case enemy_tourist:
         case enemy_security: {
             float distance = static_cast<float> ((std::abs(playerObjPointer->getPosX() - handleObject->getPosX()) / sceneWidth));
-            audioStruct newAudio = {handleObject->getAudioID(), scene_enemy, distance};
+            audioStruct newAudio = {handleObject->getAudioID(), scene_enemy_tourist, distance};
             audioevents.push_back(newAudio);
         }
         }

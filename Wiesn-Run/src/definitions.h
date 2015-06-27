@@ -107,7 +107,8 @@ struct scoreStruct {
 /**
  * @brief Enum für den Audiotype
  *        In diesen Enum wird der Audiotype in einen Integer gewandelt.
- * @author Simon, Felix Pfreundtner
+ *        Jede ID wird dabei einem Audiotype zugeordnet welcher angibt welches Audiofile zur ID abgespielt werden soll.
+ * @author Felix Pfreundtner
  */
 
 enum audioType {
@@ -158,8 +159,8 @@ enum audioType {
 };
 
 /**
- * @brief Struct mit Konstanten für den Audiocooldown jedes Audiotypes
- *        In diesen Konstanten wird festgelegt wie viele millisekunden für ein Events eines Audiotypes trotz verschwinden in der Grafik nachwievor audioStructs gesendet werden.
+ * @brief Typdef Struct mit Konstanten für den Audiocooldown jedes Audiotypes
+ *        In diesen Konstanten wird festgelegt wie viele millisekunden für ein Event (mit "id=...") eines audioTypes trotz verschwinden in der Grafik nachwievor audioStructs gesendet werden.
  *        Ein 0 bedeteutet, dass kein Cooldown erfolgt, die Audiostructs werden hier solange gesendet wie das Event sichtbar ist.
  * @author Felix
  */
@@ -188,33 +189,33 @@ typedef struct {
 } audioCooldown;
 
 /**
- * @brief Konstanten für die Distance jedes Audiotypes
- *        In diesen Konstanten wird festgelegt wie weit entfernt ein Event des Typs audioTypes vom Spieler auftritt [Werbereicht 0 (beim spieler) bis 1(maximale Distanz des Fensters).
+ * @brief Typdef Struct mit Konstanten für die Distance jedes Audiotypes
+ *        In diesen Konstanten wird festgelegt wie weit entfernt ein Event (mit "id=...) eines audioTypes vom Spieler standardmäßig auftritt [Werbereicht 0 (beim spieler) bis 1(maximale Distanz des Fensters).
  *        Ist die Konstante -1 ist die Distance eines Events vom Typ audioType variabel und muss von der Gamelogik bestimmt werden.
  * @author Felix
  */
 typedef struct {
-    int scene_flyingbeer = -1;
-    int scene_enemy_tourist = -1;
-    int scene_enemy_security = -1;
-    int scene_enemy_boss = -1;
-    int scene_collision_obstacle = 0;
-    int scene_collision_enemy = 0;
-    int scene_collision_flyingbeer = 0;
-    int powerup_beer = 0;
-    int powerup_food = 0;
-    int status_alcohol = 0;
-    int status_life = 0;
-    int status_dead = 0;
-    int player_walk = 0;
-    int player_jump = 0;
-    int background_menu = 0.2;
-    int background_highscore = 0.2;
-    int background_level1 = 0.5;
-    int background_level2 = 0.5;
-    int background_level3 = 0.5;
-    int background_startgame = 0.2;
-    int background_levelfinished = 0.2;
+    float scene_flyingbeer = -1;
+    float scene_enemy_tourist = -1;
+    float scene_enemy_security = -1;
+    float scene_enemy_boss = -1;
+    float scene_collision_obstacle = 0;
+    float scene_collision_enemy = 0;
+    float scene_collision_flyingbeer = 0;
+    float powerup_beer = 0;
+    float powerup_food = 0;
+    float status_alcohol = 0;
+    float status_life = 0;
+    float status_dead = 0;
+    float player_walk = 0;
+    float player_jump = 0;
+    float background_menu = 0.2;
+    float background_highscore = 0.2;
+    float background_level1 = 0.5;
+    float background_level2 = 0.5;
+    float background_level3 = 0.5;
+    float background_startgame = 0.2;
+    float background_levelfinished = 0.2;
 
 } audioDistance;
 
@@ -222,14 +223,18 @@ typedef struct {
 /**
  * @brief Struktur für einzelne Audio Events
  * AudioControl arbeitet Events von dieser Struktur ab.
- * Jedes audioStruct hat eine eindeutige int ID, einen string Gruppen "namen" und eine float Distanzinformation.
- * und ordnet somit jedem Objekt einen Sound zu.
+ * Jedes Audioevent hat eine eindeutige int "id", einen enum->integer Gruppen "type" und eine float "distance"
+ * und ordnet somit jedem Objekt einen Sound zu, wobei sich die Distanzinformation des Sounds ändern kann.
  * Ein Distanzwert beträgt dabei minimal 0 und maximal 1 (größte Entfernung im Gamefenster).
+ * Die Standarddistanzwerte sind in "typedef struct audioDistance" für jeden AudioStruct "type" definiert.
+ *
  * Alle in einem Step auftretetenden audioStruct's werden in einer std::list audioevents
  * gesammelt (game.h) und über die Methode update() in jedem Step der Klasse Audiocontrol übergeben.
  * Audiocontrol steuert den richtigen Abspieltyp jedes audioStruct.
  * Nach jedem Step wird die Liste gelöscht und wieder neu mit audioStructs gefüllt.
- * Audio Events welche in der GameLogik nur einmal auftreten wie ein Powerup aufnehmen werden mit einem Cooldown Timer zusätzlich für 1 Sekunde an die Liste audioevents angehängt.
+ * Audio Events welche in der GameLogik nur einmal auftreten, wie ein Powerup aufnehmen, werden mit einem Cooldown Timer
+ * zusätzlich länger  an die Liste audioevents angehängt um ein weiteres Abspielen zu garantieren.
+ * Die Dauer des Cooldown Timers ist in "typedef struct audioCooldown" für jeden AudioStruct "type" definiert.
  *
  * Ist ein Event mit zu erfolgender Audioausgabe vorhanden wird
  * ein audioStruct mit Eventname und aktueller Distanz des Audio-Events vom
@@ -237,28 +242,22 @@ typedef struct {
  * Dieses Audiostruct wird an die Liste audioevents mit allen im Step
  * stattfinden audioStructs angehängt.
  * Ist ein Objekt / Event nachwievor aktiv in der Szene wird das
- * Struct im nächsten Step wieder an die Liste audioevents angehängt.
+ * Struct im nächsten Step wieder an die Liste audioevents angehängt und die audioStruct "id" konstant gehalten.
  * Ist ein Objekt nicht mehr in der Szene zu sehen, so muss kein audioStruct übergeben werden.
+ * Die audioStruct "id" diese Objekts wird im weiteren Spielverlauf nicht mehr verwendet.
  *
- * Befindet sich z.B. ein Bier in der Szene, so ist der audioStruct "name = scene_beer".
- * In jedem Step muss in der Audio-Struktur die Distanz des Biers zum Spieler
+ * Befindet sich z.B. ein Bier mit "id = ..." in der Szene, so ist der "type = scene_beer".
+ * In jedem Step muss in der Audio-Struktur die "distance" des Biers zum Spieler
  * aktualisiert werden und an die Liste audioevents angehängt werden.
- * Verschwindet des Bierobjekt so wird das audioStruct nicht mehr übergeben.
- * Gibt es mehrere Bierobjekte so wird das Struct mit Gruppen "name=scene_beer" mit verschiednen Ids und mit anderen Distanzen an die Liste angehängt.
+ * Verschwindet des Bierobjekt so wird das audioStruct nicht mehr übergeben und die "id" nicht mehr verwendet.
+ * Gibt es mehrere Bierobjekte so wird das Struct mit Gruppen "type=scene_beer" mit verschiednen "id"'s an die Liste angehängt.
  *
  * Läuft der Spieler im aktuellen Step so wird das audioStruct "player_walk" erstellt("distance" stets 0).
  * Läuft er im nächsten Step nachwievor (hat also seine Position geändert) wird das Audiostruct wieder an die audioevents Liste angehängt.
  * Läuft er nicht mehr wird es nicht mehr an die audioevents liste angehängt.
  *
- * Ist gerade das Level 1 aktiv so wird in jedem Step das audioStruct "background_level1" an die Liste angehängt.
+ * Ist gerade das Level 1 aktiv so wird in jedem Step ein audioStruct mit "ID=..." und "type=background_level1" an die Liste angehängt.
  * Bei Background Musik ist "distance=0.5". Dies bewirkt dass sie leiser als Playersounds (distance = 0) abgespielt wird.
- *
- * Status_ audioStruct's werden in jedem Zeitschritt in dem das Spiel aktiv ist neu an die Liste angehängt.
- * powerup_ audioStruct's werden angehängt wenn gerade das Powerup aufgenommen wird.
- *  Zudem wird über einen Cooldown das objekt nachwievor für etwas länger angehängt (Cooldown Timer = 1 Sekunde).
- *
- * Übersicht über alle audioStruct's:
- *
  * @author Felix Pfreundtner
  */
 struct audioStruct {

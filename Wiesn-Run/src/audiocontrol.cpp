@@ -213,7 +213,7 @@ int AudioControl::myMemberpatestCallback( const void *inputBuffer, void *outputB
     {
         int position;
         position = i+blockcounter*BLOCKSIZE;
-        block[i] = audioobjects[14].getSample(position);
+        block[i] = audioobjects[16].getSample(position);
         *out++ = block[i];
 
         //data->mono = audioobjects[0].getSample(i);
