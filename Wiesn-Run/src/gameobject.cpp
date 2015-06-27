@@ -68,7 +68,7 @@ GameObject::GameObject(int posX, int posY, objectType type) {
         qDebug("   Player erstellt");
         break;
     }
-    case enemy: {
+    case enemy_tourist: {
         // Verhältnis 1:2 (b:h)
         this->length = playerScale;
         this->height = playerScale * 2;
@@ -78,6 +78,9 @@ GameObject::GameObject(int posX, int posY, objectType type) {
         setPos(getPosX() - 0.5*getLength(), yOffset - getPosY() - getHeight());
         qDebug("   Enemy erstellt");
         break;
+    }
+    case enemy_security: {
+
     }
     case powerUp: {
         // Verhältnis (2/3):(2/3)

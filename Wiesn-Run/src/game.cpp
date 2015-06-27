@@ -500,7 +500,7 @@ void Game::calculateMovement() {
         if(aktMovingObject != 0) {
             aktMovingObject->update();          // Wenn der cast klappt, rufe update() auf.
             //falls es sich um einen Gegner handelt feuern
-            if ((aktMovingObject->getType() == enemy_security) || (aktMovingObject->getType() = enemy_tourist)){
+            if ((aktMovingObject->getType() == enemy_security) || (aktMovingObject->getType() == enemy_tourist)){
                 Enemy *aktEnemy = dynamic_cast<Enemy*> (aktMovingObject);
                 if (aktEnemy->getDeathCooldown() == 0) {
                     objectsToDelete.push_back(aktEnemy);
@@ -521,7 +521,7 @@ void Game::calculateMovement() {
                     } else {
                         direction = 1;
                     }
-                    enemyFire = new Shoot(aktEnemy->getPosX(), aktEnemy->getPosY(), direction, enemy);
+                    enemyFire = new Shoot(aktEnemy->getPosX(), aktEnemy->getPosY(), direction, aktEnemy->getType());
                     worldObjects.push_back(enemyFire);
                     levelScene->addItem(enemyFire);
                     enemyFire = 0;
@@ -967,7 +967,7 @@ void Game::handleCollisions() {
              *      wird jeweils in der Situation Spieler/Gegner bearbeitet, bei PowerUps keinen effekt
              * Bierkrug löschen, bei Kollision mit Hindernis
              */
-            if (handleEvent.causingObject->getType() == obstacle) || (handleEvent.causingObject->getType() == plane) {
+            if ((handleEvent.causingObject->getType() == obstacle) || (handleEvent.causingObject->getType() == plane)){
                 objectsToDelete.push_back(dynamic_cast<Shoot*>(handleEvent.affectedObject));
             }
             break;
