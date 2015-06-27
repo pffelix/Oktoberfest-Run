@@ -138,6 +138,8 @@ enum audioType {
     status_alcohol,
     /// Leben Status geringer als 40%: wird solange gesendet wie Lebenstatus geringer als 40% ist
     status_life,
+    /// Leben Status geringer als 20%: wird solange gesendet wie Lebenstatus geringer als 20% ist
+    status_lifecritical,
     /// Gameover des Spielers: wird gesendet wenn der Spieler 0% Lebenstatus hat (cooldown)
     status_dead,
     /// Laufbewegung des Spielers: wird solange gesendet wie Spieler sich bewegt
@@ -181,6 +183,7 @@ typedef struct {
     int powerup_food = 1000;
     int status_alcohol = 0;
     int status_life = 0;
+    int status_lifecritical = 0;
     int status_dead = 2000;
     int player_walk = 0;
     int player_jump = 2000;
@@ -212,6 +215,7 @@ typedef struct {
     float powerup_food = 0;
     float status_alcohol = 0;
     float status_life = 0;
+    float status_lifecritical = 0;
     float status_dead = 0;
     float player_walk = 0;
     float player_jump = 0;
