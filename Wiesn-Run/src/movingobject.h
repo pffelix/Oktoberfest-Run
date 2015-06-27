@@ -22,9 +22,9 @@ public:
     void setSpeedX(int speedX);
     void setSpeedY(int speedY);
 
-    //Wir benötigt um Richtungsänderungen festzustellen
-    void setDirLastFrame(bool dirLastFrame);
-    bool getDirLastFrame();
+    //gibt an für wieviele Frames ohne Unterbrechung in einer Richtung gelaufen wurde
+    void setFramesDirection(int framesDirection);
+    int getFramesDirection();
 
     //'Abstrakte Methode' update
     virtual void update()=0;
@@ -41,8 +41,8 @@ private:
     int speedX;
     int speedY;
 
-    //Richtungsänderung im letzten Frame
-    bool dirLastFrame;
+    //gibt an für wieviele Frames ohne Unterbrechung in einer Richtung gelaufen wurde
+    int framesDirection = 0;
 
 };
 

@@ -74,7 +74,7 @@ GameObject::GameObject(int posX, int posY, objectType type) {
         this->height = playerScale * 2;
 
         //Grafik - Enemy wird initialisiert
-        setPixmap(QPixmap(":/images/images/enemy.png"));
+        setPixmap(QPixmap(":/images/images/enemy1.png"));
         setPos(getPosX() - 0.5*getLength(), yOffset - getPosY() - getHeight());
         qDebug("   Enemy erstellt");
         break;

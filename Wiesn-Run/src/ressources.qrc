@@ -2,7 +2,6 @@
     <qresource prefix="/images">
         <file>images/obstacle.png</file>
         <file>images/player.png</file>
-        <file>images/enemy.png</file>
         <file>images/powerup.png</file>
         <file>images/attack.png</file>
         <file>images/plane.png</file>
@@ -11,6 +10,8 @@
         <file>images/bg_lev1_2.png</file>
         <file>images/bg_lev1_3.png</file>
         <file>images/bg_lev1_4.png</file>
+        <file>images/enemy1.png</file>
+        <file>images/enemy2.png</file>
     </qresource>
     <qresource prefix="/levelFiles">
         <file>levelFiles/level1.txt</file>
