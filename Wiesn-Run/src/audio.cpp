@@ -100,6 +100,7 @@ void Audio::setVolume(short volume_audio_obj){
 void Audio::readSamples() {
     std::string sourcepath; /// Pfad zur Wave Datei in den Ressourcendateien
     QDir buildpath; /// Pfad zum Ordner der Build (Exe Datei)
+    int folderchanges; /// Anzahl gewechselter Ordner
     int channels; /// Anzahl an Kanälen
     int bitdepth; /// Anzahl an Bits pro Sample
     int bytedepth; /// Anzahl an Bytes pro Sample
@@ -108,9 +109,14 @@ void Audio::readSamples() {
 
     /// wenn buidpath/audios nicht auffindar ist wechsel ein Verzeichnis höher und suche dort erneut
     buildpath = QDir(QCoreApplication::applicationDirPath());
+    folderchanges = 0;
     while(buildpath.cd(QString("audios")) == false) {
         buildpath.cdUp();
+        folderchanges += 1;
+        if (folderchanges > 2) {
+        }
     }
+    qWarning() << "Folder with audio files could not be found, needs to be located in directory of exe file";
 
     /// Öffne zum Audio Objekt gehörige Wave Datei
     sourcepath = buildpath.absolutePath().toStdString() + "/" + source + ".wav";
