@@ -18,7 +18,7 @@
  * @brief Anzahl gameloop-Durchläufe pro Sekunde
  * wird in allen Klassen für die CooldownParameter benutzt
  */
-const int frameRate = 20;
+const int frameRate = 30;
 
 /**
  * @brief Skalierungsfaktor für die Breite des Spielerobjekts bei 1024 Bildschirmbreite:
@@ -94,6 +94,7 @@ struct scoreStruct {
     int enemiesKilled;
     int distanceCovered;
     int alcoholPoints;
+    int totalPoints;
 };
 
 enum audio {
