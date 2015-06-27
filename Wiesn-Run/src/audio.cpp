@@ -39,7 +39,16 @@ std::string Audio::getSource() {
  * @author Felix Pfreundtner
  */
 float Audio::getSample(int pos) {
-    return samples[pos];
+    /// falls Ende der Audiodatei erreicht
+    if (pos > samples.size()) {
+        /// gebe Stille zurück (Samplewert 0)
+        return 0;
+    }
+    /// sonst
+    else {
+        /// gebe Sample an der Stelle pos zurück
+        return samples[pos];
+    }
 }
 
 /**

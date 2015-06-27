@@ -7,6 +7,7 @@
 #include <cmath>
 
 #include <fstream>
+#include <thread>
 
 #include "player.h"
 #include "gameobject.h"
@@ -126,8 +127,10 @@ int Game::start() {
     /// Installiere Event Filter zum Loggen der Keyboard Eingabe
     window->installEventFilter(keyInput);
 
-    /// Erstelle Audiocontrol Objekt zum Erzeugen der Soundausgabe
-    audioOutput = new AudioControl();
+    /// Erstelle Audiocontrol Objekt zum Einlesen der Audiodatein und speichern der Ausgabeparameter
+    audioOutput = new AudioControl;
+    /// Erstelle einen Thread der PortAudio initialisiert wird und in audioOutput gespeicherte Audiodaten abspielt
+    std::thread audiothread(&AudioControl::playInitialize, audioOutput);
 
     ///@TODO flo: ka was das hier an der Stelle soll, habs mal auskommentiert
     //startNewGame();

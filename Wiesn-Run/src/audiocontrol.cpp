@@ -23,10 +23,15 @@ AudioControl::AudioControl() {
     audioobjects.push_back(Audio("background_level2"));
     audioobjects.push_back(Audio("background_level3"));
 
-    /// setzte die Abspiel Blockgröße auf 1024 Samples
-    blocksize = 1024;
-    /// initialisere Abspielbibliothek PortAudio
-    playinitializeerror = playInitialize();
+
+    /// fülle Block Ausgabe mit Nullen
+    std::fill_n(block, BLOCKSIZE, 0.8);
+    /// setzte blockcounter auf 0 Blöcke
+    blockcounter = 0;
+    /// setzte Wartezeit von Portaudio auf 1000 ms
+    waitinms = 30000;
+    /// initialisiere Abspielbibliothek PortAudio
+    //playinitializeerror = playInitialize();
 
 
 }
@@ -76,7 +81,7 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
                 /// übernehmen die aktuellen Distanzwerte des neuen audiostructs und wandle sie in eine Volumen Information um (volume = 1 - distance).
                 pe->volume = 1.0f - newaudiostruct.distance;
                 /// erhöhe Abspielposition um Blocksize, da ein Step vergangen ist
-                //pe->position += blocksize;
+                //pe->position += BLOCKSIZE;
                 /// setzte playnext auf true, da das playstruct auch im nächsten Step abgespielt werden soll
                 pe->playnext = true;
                 /// setzte Variable nasnameexistinpe auf true, da newaudiostruct bisher in playevents gefunden wurde
@@ -92,7 +97,7 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
             /// übernehmen die aktuellen Distanzwerte des neuen audiostructs und wandle sie in eine Volumen Information um (volume = 1 - distance).
             newplaystruct.volume = 1.0f - newaudiostruct.distance;
             /// speichere einen Zeiger auf das (Audio-)Objekt in audioobjects in newplaystruct
-            //newplaystruct.objectref = &audioobjects[newaudiostruct.name];
+            newplaystruct.objectref = &audioobjects[newaudiostruct.name];
             /// setzte Abspielposition auf 0 Samples (Beginne Abspielen)
             newplaystruct.position = 0;
             /// setzte playnext auf true, da das playstruct auch im nächsten Step abgespielt werden soll
@@ -124,7 +129,7 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
  * @param  Qlist audioevents
  * @author  Felix Pfreundtner
  */
-PaError AudioControl::playInitialize(){
+void AudioControl::playInitialize(){
     /// Erstelle Zeiger auf Stream pastream
     PaStream *pastream;
     /// Erstelle error Variable
@@ -139,7 +144,7 @@ PaError AudioControl::playInitialize(){
     paerror = Pa_OpenDefaultStream (&pastream,
                                     0,          /// erstelle keine Eingangskänale
                                     2,          /// erstelle Mono Audio Ausgabe
-                                    paFloat32,  /// setze Bittiefe der Audioausgabe 16 bit Integer
+                                    paInt16,  /// setze Bittiefe der Audioausgabe 16 bit Integer
                                     SAMPLERATE, /// setze Samplerate der Audioausgabe zu 44100 Hz
                                     BLOCKSIZE, /// setze Anzahl an Samples per Bufferblock auf 1024
                                     &AudioControl::patestCallback, /// verweise auf Callback Funktion
@@ -153,8 +158,8 @@ PaError AudioControl::playInitialize(){
         goto error;
     }
 
-    /// Pausiere um Audiostream abzuwarten
-    Pa_Sleep(WAITMS*1000);
+    /// Pausiere um Audiostream Ende abzuwarten
+    Pa_Sleep(waitinms);
 
     paerror = Pa_StopStream( pastream );
     if( paerror != paNoError ) {
@@ -165,13 +170,11 @@ PaError AudioControl::playInitialize(){
         goto error;
     }
     Pa_Terminate();
-    return paerror;
 error:
     Pa_Terminate();
-    fprintf( stderr, "Ein Error trat während der Benutzung der PortAudio Ausgabe auf\n" );
+    fprintf( stderr, "Ein Meldung trat während der Benutzung der PortAudio Ausgabe auf\n" );
     fprintf( stderr, "Error Nummer: %d\n", paerror );
     fprintf( stderr, "Error Nachricht: %s\n", Pa_GetErrorText( paerror ) );
-    return paerror;
 }
 
 
@@ -192,15 +195,18 @@ int AudioControl::myMemberpatestCallback( const void *inputBuffer, void *outputB
     paTestData datas;
     datas.mono = 0.0f;
     paTestData *data = &datas;
-    float *out = (float*)outputBuffer;
+    int *out = (int*)outputBuffer;
     /// kein Input aktiviert, verhindere Warnmeldung "unbenutzter Parameter inputBuffer"
     (void) inputBuffer;
 
 
     for(unsigned int i=0; i<framesPerBuffer; i++ )
     {
-        mix[i] = audioobjects[0].getSample(i)/32767;
-        *out++ = mix[i];
+        int position;
+        position = i+blockcounter*BLOCKSIZE;
+        block[i] = audioobjects[10].getSample(position);
+        *out++ = block[i];
+
         //data->mono = audioobjects[0].getSample(i);
         //*out++ = data->left_phase;  /* left */
         //*out++ = data->right_phase;  /* right */
@@ -212,6 +218,8 @@ int AudioControl::myMemberpatestCallback( const void *inputBuffer, void *outputB
         //data->right_phase += 0.03f;
         //if( data->right_phase >= 1.0f ) data->right_phase -= 2.0f;
     }
+    blockcounter += 1;
+    std::copy ( block, block + BLOCKSIZE, std::back_inserter ( blockcontinue ) );
     return 0;
 }
 

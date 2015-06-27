@@ -1,8 +1,7 @@
 #ifndef AUDIOCONTROL_H
 #define AUDIOCONTROL_H
-#define WAITMS   (4)
-#define SAMPLERATE   (44100)
-#define BLOCKSIZE (1024)
+#define BLOCKSIZE (1024) /// Blockgröße eines Audio Ausgabe Blocks in Samples.
+#define SAMPLERATE (44100) ///Samplerate des Audio Ausgabe Signals.
 
 #include "audio.h"
 #include <QtGlobal>
@@ -50,7 +49,7 @@ public:
 
     AudioControl();
     ~AudioControl();
-
+    void playInitialize();
     void update(std::list<struct audioStruct> *audioevents);
 
     private:
@@ -67,40 +66,51 @@ public:
      */
     std::vector<Audio> audioobjects;
     /**
-     * @brief  blocksize
-     *         blocksize gibt an wie viele Samples jeweils Blockweise zusammen als Audioausgabe mit PortAudio ausgegeben werden.
+     * @brief  waitinms
+     *         Wartezeit bis zum Beenden von PortAudio in Millisekunden.
      * @author  Felix Pfreundtner
      */
-    unsigned long blocksize;
+    int waitinms;
     /**
      * @brief  playinitializeerror
      *         playinitializeerror speichert eventuell auftretende Error beim Öffenen und Schließen des PortAudio Streams.
      * @author  Felix Pfreundtner
      */
     PaError playinitializeerror;
-
     /**
-     * @brief  mix
-     *         mixed block output of all currently played audio sounds.
+     * @brief  blockoutput
+     *         Audio Ausgabe Block mit gemischen Samples aller im moment abgespielten Audiostructs.
      * @author  Felix Pfreundtner
      */
-    std::array<float, BLOCKSIZE> mix;
+    float block[BLOCKSIZE];
+    /**
+     * @brief  blockcontinue
+     *         Audio Ausgabe blockcontinue mit gemischen Samples aller während der Programmlaufzeit abgespielten block's.
+     * @author  Felix Pfreundtner
+     */
+    std::vector<float> blockcontinue;
 
-    PaError playInitialize();
+    /**
+     * @brief  blockcounter
+     *         blockcounter zählt die bereits abgespielten Audio Ausgabe Blöcke.
+     * @author  Felix Pfreundtner
+     */    
+    int blockcounter;
+
 
     // Instanzfunktion Callback des aktuellen AudioControl Objekts
     int myMemberpatestCallback(const void *input, void *output,
-      unsigned long frameCount,
-      const PaStreamCallbackTimeInfo* timeInfo,
-      PaStreamCallbackFlags statusFlags);
+                               unsigned long frameCount,
+                               const PaStreamCallbackTimeInfo* timeInfo,
+                               PaStreamCallbackFlags statusFlags);
 
     // Statische Funktion Callback der AudioControl Klasse
     static int patestCallback(
-      const void *input, void *output,
-      unsigned long frameCount,
-      const PaStreamCallbackTimeInfo* timeInfo,
-      PaStreamCallbackFlags statusFlags,
-      void *userData )
+                              const void *input, void *output,
+                              unsigned long frameCount,
+                              const PaStreamCallbackTimeInfo* timeInfo,
+                              PaStreamCallbackFlags statusFlags,
+                              void *userData )
     // gebe einen Function Pointer auf Instanz Callback Funktion zurück
     {
       return ((AudioControl*)userData)

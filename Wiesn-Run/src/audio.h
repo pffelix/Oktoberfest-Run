@@ -14,7 +14,6 @@
 #include <string>
 #include <QVector>
 
-
 /**
  * @brief  Audio-Klasse
  *         Die Audio-Klasse erzeugt Audioobjekte.
