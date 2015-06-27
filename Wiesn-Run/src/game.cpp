@@ -115,14 +115,24 @@ int Game::start() {
     menuCredits->addEntry("zurück", menuCreditsId_Back,true);
 
     menuLevel = new Menu(new std::string("Levelauswahl"));
+    menuLevel->addEntry("zurück",menuLevelId_Back, true);
+    menuLevel->addEntry("Level 1",menuLevelId_Level1, true);
+    menuLevel->addEntry("Level 2",menuLevelId_Level2, true);
+    menuLevel->addEntry("Level 3",menuLevelId_Level3, true);
+    menuLevel->addEntry("Spiel starten",menuLevelId_StartGame, true);
 
     menuBreak = new Menu(new std::string("Pause"));
+    menuBreak->addEntry("weiterspielen",menuBreakId_Resume,true);
+    menuBreak->addEntry("Startmenü",menuBreakId_EndGame,true);
 
     menuStatistics = new Menu(new std::string("Punkte"));
+    menuStatistics->addEntry("weiter",menuStatisticsId_Next,true);
 
     menuName = new Menu(new std::string("Neme eingeben"));
+    menuName->addEntry("weiter",menuNameId_Next,true);
 
     menuHighscore = new Menu(new std::string("Highscores"));
+    menuHighscore->addEntry("weiter",menuHighscoreId_Next,true);
 
     // QGraphicsScene der Level erstellen
     levelScene = new QGraphicsScene;
