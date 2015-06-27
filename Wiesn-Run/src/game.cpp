@@ -193,7 +193,7 @@ void Game::startNewGame() {
     // Szenen-Breite setzen
     sceneWidth = 1024;
     // audioIDs initialisieren
-    audioIDs = 1;
+    audioIDs = 10;
 
     playerStats = std::vector<QGraphicsTextItem>(3);
 
@@ -885,6 +885,13 @@ void Game::handleCollisions() {
  *  Die Soundevents die noch laufen, werden an die Liste SoundEvents übergeben. Die fertigen werden gelöscht.
  */
 void Game::updateAudio() {
+
+    //Hintergrundmusik
+    int levelBackground [3] {background_level1, background_level2, background_level3};
+    audioStruct newAudio = {0, levelBackground[gameStats.actLevel], 0.5};
+    audioevents.push_back(newAudio);
+
+    // Alle Objekte durchlaufen und für die sich bewegenden die entsprechenden Sounds ausgeben
     for (std::list<GameObject*>::iterator it=worldObjects.begin(); it != worldObjects.end(); ++it) {
         GameObject *handleObject =  (*it);
         switch (handleObject->getType()) {
@@ -894,7 +901,7 @@ void Game::updateAudio() {
                 audioIDs = audioIDs + 1;
             }
             float distance = static_cast<float> ((std::abs(playerObjPointer->getPosX() - handleObject->getPosX()) / sceneWidth));
-            audioStruct newAudio = {handleObject->getAudioID(), scene_enemy_tourist, distance};
+            newAudio = {handleObject->getAudioID(), scene_enemy_tourist, distance};
             audioevents.push_back(newAudio);
             break;
         }
@@ -904,7 +911,7 @@ void Game::updateAudio() {
                 audioIDs = audioIDs + 1;
             }
             float distance = static_cast<float> ((std::abs(playerObjPointer->getPosX() - handleObject->getPosX()) / sceneWidth));
-            audioStruct newAudio = {handleObject->getAudioID(), scene_enemy_security, distance};
+            newAudio = {handleObject->getAudioID(), scene_enemy_security, distance};
             audioevents.push_back(newAudio);
             break;
         }
@@ -914,7 +921,7 @@ void Game::updateAudio() {
                 audioIDs = audioIDs + 1;
             }
             float distance = static_cast<float> ((std::abs(playerObjPointer->getPosX() - handleObject->getPosX()) / sceneWidth));
-            audioStruct newAudio = {handleObject->getAudioID(), scene_enemy_boss, distance};
+            newAudio = {handleObject->getAudioID(), scene_enemy_boss, distance};
             audioevents.push_back(newAudio);
             break;
 
@@ -925,12 +932,13 @@ void Game::updateAudio() {
                 audioIDs = audioIDs + 1;
             }
             float distance = static_cast<float> ((std::abs(playerObjPointer->getPosX() - handleObject->getPosX()) / sceneWidth));
-            audioStruct newAudio = {handleObject->getAudioID(), scene_flyingbeer, distance};
+            newAudio = {handleObject->getAudioID(), scene_flyingbeer, distance};
             audioevents.push_back(newAudio);
             break;
         }
         }
     }
+
     for (std::list<audioCooldownstruct>::iterator it = audioStorage.begin(); it != audioStorage.end(); ++it) {
         if (it->cooldown > 0) {
             it->cooldown = it->cooldown - 1;

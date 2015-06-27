@@ -290,6 +290,7 @@ enum powerUpType {
 struct stateStruct {
     bool gameOver;
     int actLevel;
+    int audioID_Background;
 
     bool playerJumping;
     bool playerAttacking;
