@@ -95,13 +95,32 @@ void MovingObject::flipHorizontal()
 
 void MovingObject::swapImage()
 {
-    if(imageState == true) {
-        setPixmap(QPixmap(":/images/images/enemy2.png"));
-        imageState = false;
+    switch (getType()) {
+    case enemy_tourist: {
+        if(imageState == true) {
+            setPixmap(QPixmap(":/images/images/enemy2.png"));
+            imageState = false;
+        }
+        else {
+            setPixmap(QPixmap(":/images/images/enemy1.png"));
+            imageState = true;
+        }
+        break;
     }
-    else {
-        setPixmap(QPixmap(":/images/images/enemy1.png"));
-        imageState = true;
+    case player: {
+        if(imageState == true) {
+            setPixmap(QPixmap(":/images/images/player2.png"));
+            imageState = false;
+        }
+        else {
+            setPixmap(QPixmap(":/images/images/player1.png"));
+            imageState = true;
+        }
+        break;
+    }
+    default: {
+        break;
+    }
     }
 }
 

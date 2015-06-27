@@ -1070,13 +1070,15 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
                 aktMovingObject->setDirLastFrame(false);
             }*/
 
-            if(dynamic_cast<Shoot*> (aktMovingObject) == 0 ) {
+            //if(dynamic_cast<Shoot*> (aktMovingObject) == 0 ) {
+              if(aktMovingObject->getType() != shot) {
                 //im letzten Frame vorwärst gelaufen?
                 if(aktMovingObject->getSpeedX() > 0 ) {
                     if(aktMovingObject->getFramesDirection() < 0) {
                         aktMovingObject->setFramesDirection(0);
+                        aktMovingObject->flipHorizontal();
                     }
-                    if(aktMovingObject->getFramesDirection()%10 == 0) {
+                    if(aktMovingObject->getFramesDirection()%(frameRate/2) == 0) {
                         aktMovingObject->swapImage();
                     }
                     aktMovingObject->setFramesDirection(aktMovingObject->getFramesDirection()+1);
@@ -1085,6 +1087,7 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
                 else if(aktMovingObject->getSpeedX()< 0 ) {
                     if(aktMovingObject->getFramesDirection() > 0) {
                         aktMovingObject->setFramesDirection(0);
+                        aktMovingObject->flipHorizontal();
                     }
                     if(aktMovingObject->getFramesDirection()%10 == 0) {
                       aktMovingObject->swapImage();
