@@ -270,49 +270,7 @@ int Game::step() {
     //qDebug("Game::step() | Vergangene Zeit seit letztem step(): %d ms", static_cast<int>(duration_cast<milliseconds>(letzterAufruf-akt).count()));
 
     switch(state) {
-       /* case gameMenuEnd:
-            menuEnd->displayUpdate();
-            //MenüScene wird vom Anzeigewidget aufgerufen
-            window->setScene(menuEnd->menuScene);
-
-            // Enter?
-            if(keyInput->getKeyactions().contains(Input::Keyaction::Enter)) {
-                // Menüpunkt ausgewählt
-                switch(menuEnd->getSelection()->id) {
-                    case menuId_Resume:
-                        // Weiterspielen
-                        state = gameIsRunning;
-                        break;
-                    case menuId_Highscore:
-                        // Highscore Fenster anzeigen
-                        break;
-                    case menuId_Credits:
-                        // Credit Fenster anzeigen
-                        break;
-                    case menuId_GotoStartMenu:
-                        // Startmenü anzeigen
-                        state = gameMenuStart;
-                        break;
-                }
-            }
-
-            // Up || Down?
-            if(keyInput->getKeyactions().contains(Input::Keyaction::Up)) {
-                menuEnd->changeSelection(Menu::menuSelectionChange::up);
-            }
-            if(keyInput->getKeyactions().contains(Input::Keyaction::Down)) {
-                menuEnd->changeSelection(Menu::menuSelectionChange::down);
-            }
-
-            // ESC? -> Weiterspielen
-            if(keyInput->getKeyactions().contains(Input::Keyaction::Exit)) {
-                state = gameIsRunning;
-            }
-
-            break;
-*/
         case gameMenuStart:
-
             menuStart->displayUpdate();
             //MenüScene wird vom Anzeigewidget aufgerufen
             window->setScene(menuStart->menuScene);
@@ -321,14 +279,14 @@ int Game::step() {
             if(keyInput->getKeyactions().contains(Input::Keyaction::Enter)) {
                 // Menüpunkt ausgewählt
                 switch(menuStart->getSelection()->id) {
-                    /*case menuId_StartGame:
+                    case menuStartId_NewGame:
                         startNewGame();
                         state = gameIsRunning;
                         break;
-                    case menuId_EndGame:
-                        qDebug("Spiel wurde über menuStart beendet");
+                    case menuStartId_EndGame:
+                        qDebug("Spiel wurde vom Startmenü ordentlich beendet");
                         exit(0);
-                        break;*/
+                        break;
                 }
             }
 
@@ -343,9 +301,9 @@ int Game::step() {
             break;
         case gameIsRunning:
             // Menü bei ESC
-            if(keyInput->getKeyactions().contains(Input::Keyaction::Exit)) {
+            /*if(keyInput->getKeyactions().contains(Input::Keyaction::Exit)) {
                 state = gameMenuEnd;
-            }
+            }*/
 
             worldObjects.sort(compareGameObjects());
             qDebug("---Nächster Zeitschritt---");
