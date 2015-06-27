@@ -8,7 +8,7 @@
 Audio::Audio(std::string state_name) {
     source = state_name;
     readSamples();
-    qDebug("Audio object created");
+    qDebug() << QString("Audio object created: ") + QString::fromStdString(source);
 
 }
 
@@ -32,15 +32,14 @@ std::string Audio::getSource() {
 }
 
 /**
- * @brief  Audio::getSamples
- *         "getSamples" gibt bei Aufruf alle Samples der zu Audioobjekt
- *         gehörigen Wave Datei mit Bittiefe 16 bit und 44100 Hz Samplerate
- *         zurück.
- * @return QVector<float> samples
+ * @brief  Audio::getSample
+ *         "getSample" gibt bei Aufruf das Sample an Position = pos der zu Audioobjekt
+ *         gehörigen Wave Datei mit Bittiefe 16 bit zurück.
+ * @return float sample
  * @author Felix Pfreundtner
  */
-QVector<float> Audio::getSamples() {
-    return samples;
+float Audio::getSample(int pos) {
+    return samples[pos];
 }
 
 /**
@@ -102,9 +101,9 @@ void Audio::readSamples() {
     sourcepath = ":/audios/audios/" + source + ".wav";
     QFile file(QString::fromStdString(sourcepath));
 
-    bool ok = file.open(QIODevice::ReadOnly | QIODevice::Text);
-    if(ok == false) {
-        qWarning("Audio::readsamples: Cannot open File");
+    if(!file.open(QIODevice::ReadOnly)) {
+        qWarning() << "Audio::readsamples: Cannot open File" << QString::fromStdString(source);
+        return;
     }
     /// Lese relevante Informationen aus dem fmt chunk
 
@@ -146,14 +145,14 @@ void Audio::readSamples() {
     samplenbr = (qFromLittleEndian<quint32>((uchar*)tempbytes)) * 8 / bitdepth / channels;
     /// lese Sample für Sample aus dem data chunk aus
     while(!file.atEnd()){
-        file.read(tempbytes, bytedepth);
+        file.read(tempbytes, 2);
         /// lese 16 bit integer Samples in float QVector ein
         if (bytedepth == 2) {
-            samples << qFromLittleEndian<qint16>((uchar*)tempbytes);
+            samples.push_back(qFromLittleEndian<qint16>((uchar*)tempbytes));
         }
         /// lese 8 bit integer Samples in float QVector ein
         else {
-            samples << to16bitSample(qFromLittleEndian<quint8>((uchar*)tempbytes));
+            samples.push_back(to16bitSample(qFromLittleEndian<quint8>((uchar*)tempbytes)));
         }
     }
 

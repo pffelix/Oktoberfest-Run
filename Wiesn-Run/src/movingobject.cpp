@@ -1,9 +1,17 @@
 #include "movingobject.h"
+#include <QTransform>
 
 
 MovingObject::MovingObject(int posX, int posY, objectType type, int speedX, int speedY) : GameObject(posX, posY, type) {
     this->speedX = speedX;
     this->speedY = speedY;
+
+    if(speedX > 0) {
+        this->dirLastFrame = true;
+    }
+    else {
+        this->dirLastFrame = false;
+    }
 }
 MovingObject::~MovingObject() {
 
@@ -33,6 +41,14 @@ void MovingObject::setSpeedY(int speedY) {
     this->speedY = speedY;
 }
 
+void MovingObject::setDirLastFrame(bool dirLastFrame) {
+    this->dirLastFrame = dirLastFrame;
+}
+
+bool MovingObject::getDirLastFrame() {
+    return dirLastFrame;
+}
+
 // Ist schon im Header mit =0 beschrieben
 /*void MovingObject::update() {
 
@@ -51,3 +67,35 @@ void MovingObject::updatePosition() {
     }
 
 }
+
+/**
+ * @brief spiegelt Grafiken an der Y-Achse
+ * @author Flo
+ */
+void MovingObject::flipHorizontal()
+{
+    // Get the current transform
+    QTransform transform(this->transform());
+
+    qreal m11 = transform.m11();    // Horizontal scaling
+    qreal m31 = transform.m31();    // Horizontal Position (DX)
+
+    // We need this in a minute
+    qreal scale = m11;
+
+    // Horizontal flip
+    m11 = -m11;
+
+    // Re-position back to origin
+    if(m31 > 0)
+        m31 = 0;
+    else
+        m31 = (boundingRect().width() * scale);
+
+    // Write back to the matrix
+    transform.setMatrix(m11, 0, 0, 0, 1, 0, m31, 0, 1);
+
+    // Set the items transformation
+    setTransform(transform);
+}
+

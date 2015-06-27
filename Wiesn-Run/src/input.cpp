@@ -75,10 +75,7 @@ void Input::updateKeyactions() {
             keyactions += Keyaction::Down;
             qDebug("Down");
     }
-    if(keyevents.contains(Qt::Key_Left) && keyevents.contains(Qt::Key_Up)) {
-            keyactions += Keyaction::Jump_Left;
-            qDebug("Jump_Left");
-    }
+
     if(keyevents.contains(Qt::Key_Right) && keyevents.contains(Qt::Key_Up)) {
             keyactions += Keyaction::Jump_Right;
             qDebug("Jump_Right");

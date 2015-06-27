@@ -72,11 +72,12 @@ int Menu::displayUpdate() {
  * @return 0 bei Erfolg
  * @author Rupert
  */
-int Menu::addEntry(std::string name, int id) {
+int Menu::addEntry(std::string name, int id, bool clickable) {
     struct menuEntry *entry = new menuEntry;
     entry->id = id;
     entry->name = name;
     entry->position = numberOfEntrys;
+    entry->isClickable = clickable;
     numberOfEntrys++;
     menuEntrys.push_back(entry);
 
@@ -86,29 +87,49 @@ int Menu::addEntry(std::string name, int id) {
 /**
  * @brief wird nach Tastendruck aufgerufen
  * @param changeType entweder up oder down
- * @return neue Position
+ * @return 0 bei Erfolg, -1 wenn kein klickbarer Eintrag vorhanden
  * @author Rupert
  */
 int Menu::changeSelection(enum menuSelectionChange changeType) {
     switch(changeType) {
         case menuSelectionChange::up:
-
-        //qDebug("menuUpTry");
-            if(currentPosition > 0) {
-                currentPosition--;
-                //qDebug("menuUp");
+            if(currentPosition > 0) {   // noch nicht ganz oben
+                // finde nächsten klickbaren Eintrag
+                int tmpPos = currentPosition - 1;
+                while (tmpPos >= 0) {
+                    menuEntry *entry = getEntry(tmpPos);
+                    if(entry->isClickable) {
+                        currentPosition = tmpPos;
+                        return 0;
+                    }
+                    tmpPos--;
+                }
+                // keinen Eintrag gefunden
+                return -1;
+            } else {
+                return -1;
             }
             break;
         case menuSelectionChange::down:
-
-        //qDebug("menuDownTry");
             if(currentPosition < numberOfEntrys - 1) {
-                currentPosition++;
-                //qDebug("menuDown");
+                // finde nächsten klickbaren Eintrag
+                int tmpPos = currentPosition + 1;
+                while (tmpPos <= numberOfEntrys - 1) {
+                    menuEntry *entry = getEntry(tmpPos);
+                    if(entry->isClickable) {
+                        currentPosition = tmpPos;
+                        return 0;
+                    }
+                    tmpPos++;
+                }
+                // keinen Eintrag gefunden
+                return -1;
+            } else {
+                return -1;
             }
             break;
     }
-    return currentPosition;
+    return 0;
 }
 
 /**
@@ -118,15 +139,25 @@ int Menu::changeSelection(enum menuSelectionChange changeType) {
  * @author Rupert
  */
 struct Menu::menuEntry *Menu::getSelection() {
+    return getEntry(currentPosition);
+}
+
+/**
+ * @brief gibt Eintrag an der gesuchten Position zurück
+ * @param position
+ * @return Zeiger auf gefundenen Eintrag, sonst NULL
+ * @author Rupert
+ */
+struct Menu::menuEntry *Menu::getEntry(int position) {
     using namespace std;               // für std::list
     list<menuEntry*>::iterator it;     // Iterator erstellen
     /// Schleife startet beim ersten Element und geht bis zum letzen Element durch
     for(it = menuEntrys.begin(); it != menuEntrys.end(); ++it) {
         menuEntry *aktEntry = *it;
-        if(aktEntry->position == currentPosition) {
+        if(aktEntry->position == position) {
             return aktEntry;
         }
     }
-    qDebug("ERROR | Menu::getSelection(): menuEntry not found");
+    qDebug("ERROR | Menu::getEntry(): menuEntry not found");
     return NULL;
 }

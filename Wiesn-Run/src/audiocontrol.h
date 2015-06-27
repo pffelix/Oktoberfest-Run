@@ -1,13 +1,18 @@
 #ifndef AUDIOCONTROL_H
 #define AUDIOCONTROL_H
+#define WAITMS   (4)
+#define SAMPLERATE   (44100)
+#define BLOCKSIZE (1024)
 
 #include "audio.h"
+#include <QtGlobal>
 #include <QString>
 #include <QDebug>
 #include <iostream>
 #include <QList>
 #include "definitions.h"
 #include <algorithm>
+#include "portaudio.h"
 
 /**
  * @brief  AudioControl-Klasse
@@ -19,40 +24,93 @@
 class AudioControl{
 
 public:
+    typedef struct
+    {
+        float mono;
+    }
+    paTestData;
 
-    struct playStruct {
-        // id des playstruct Objekts
+    typedef struct {
+        /// id des playstruct Objekts
         int id;
-        // name der playstruct Objektgruppe
+        /// name der playstruct Objektgruppe
         audio name;
-        // Lautstärke des playstruct
+        /// Lautstärke des playstruct
         float volume;
-        // variable welche angibt ob sound im moment abgespielt wird
+        /// variable welche angibt ob sound im moment abgespielt wird
         bool playnext;
-        // Audiobjekt des playStruct mit Samples
-        Audio* object;
+        /// Zeiger auf das (Audio-)object des playStruct, welches Eventgruppe "name" zugeordnet ist.
+        Audio* objectref;
+        /// aktuelle Abspielposition in Audiobjekt in Samples (Beginn des Abspielblockes mit Länge 1024 Samples
+        int position;
+        /// Gesamtanzahl an Samples des Audioobjekts
 
-    };
+    } playStruct;
+
 
     AudioControl();
     ~AudioControl();
 
     void update(std::list<struct audioStruct> *audioevents);
-private:
-    Audio *audio_object;
+
+    private:
     /**
-     * @brief  played
-     *         played beinhaltet eine Liste mit allen im Moment abgespielten audioStruct Informationen.
+     * @brief  playevents
+     *         playevents beinhaltet eine Liste mit allen im Moment abgespielten playStructs.
      * @author  Felix Pfreundtner
      */
-    std::list<struct playStruct> playevents;
-    std::list<Audio> objects;
+    std::list<playStruct> playevents;
+    /**
+     * @brief  audioobjects
+     *         audioobjects beinhaltet eine QVector mit allen vorhandenen Objekten der Klasse Audio( beispielsweise deren Samples als QVector).
+     * @author  Felix Pfreundtner
+     */
+    std::vector<Audio> audioobjects;
+    /**
+     * @brief  blocksize
+     *         blocksize gibt an wie viele Samples jeweils Blockweise zusammen als Audioausgabe mit PortAudio ausgegeben werden.
+     * @author  Felix Pfreundtner
+     */
+    unsigned long blocksize;
+    /**
+     * @brief  playinitializeerror
+     *         playinitializeerror speichert eventuell auftretende Error beim Öffenen und Schließen des PortAudio Streams.
+     * @author  Felix Pfreundtner
+     */
+    PaError playinitializeerror;
 
-    void initializeplay();
+    /**
+     * @brief  mix
+     *         mixed block output of all currently played audio sounds.
+     * @author  Felix Pfreundtner
+     */
+    std::array<float, BLOCKSIZE> mix;
+
+    PaError playInitialize();
+
+    // Instanzfunktion Callback des aktuellen AudioControl Objekts
+    int myMemberpatestCallback(const void *input, void *output,
+      unsigned long frameCount,
+      const PaStreamCallbackTimeInfo* timeInfo,
+      PaStreamCallbackFlags statusFlags);
+
+    // Statische Funktion Callback der AudioControl Klasse
+    static int patestCallback(
+      const void *input, void *output,
+      unsigned long frameCount,
+      const PaStreamCallbackTimeInfo* timeInfo,
+      PaStreamCallbackFlags statusFlags,
+      void *userData )
+    // gebe einen Function Pointer auf Instanz Callback Funktion zurück
+    {
+      return ((AudioControl*)userData)
+         ->myMemberpatestCallback(input, output, frameCount, timeInfo, statusFlags);
+    }
+
+
     void play();
-
 
 protected:
 };
 
-#endif // INPUT_H
+#endif // AUDIOCONTROL_H

@@ -15,6 +15,8 @@
 #include "menu.h"
 
 
+
+
 /**
  * @brief Verglecht zwei GameObjects, bezüglich der X-Position
  * @param 1.Objekt
@@ -52,6 +54,7 @@ struct compareScores {
 Game::Game(int argc, char *argv[]) : QObject() {
     /// Initialisiert den appPointer mit der QApplication
     appPointer = new QApplication(argc,argv);
+
 }
 
 Game::~Game() {
@@ -68,7 +71,7 @@ void Game::timerEvent(QTimerEvent *event)
 {
     Q_UNUSED (event)        // Warnung unterdrücken
     step();
-    ///@TODO return von step...
+    ///@todo return von step...
 }
 
 
@@ -95,15 +98,16 @@ int Game::start() {
 
     // Menüs erstellen
     menuStart = new Menu(new std::string("Wiesn-Run"));
-    menuStart->addEntry("Spiel neustarten",menuId_StartGame);
-    menuStart->addEntry("Spiel beenden", menuId_EndGame);
+    menuStart->addEntry("Spiel neustarten",menuId_StartGame,true);
+    menuStart->addEntry("Nicht anklickbar",menuId_NonClickable,false);
+    menuStart->addEntry("Spiel beenden", menuId_EndGame,true);
     menuStart->displayInit();
 
     menuEnd = new Menu(new std::string("Game Over"));
-    menuEnd->addEntry("Weiterspielen",menuId_Resume);
-    menuEnd->addEntry("Highscore anzeigen",menuId_Highscore);
-    menuEnd->addEntry("Credits anzeigen",menuId_Credits);
-    menuEnd->addEntry("zurück zum Anfang",menuId_GotoStartMenu);
+    menuEnd->addEntry("Weiterspielen",menuId_Resume,true);
+    menuEnd->addEntry("Highscore anzeigen",menuId_Highscore,true);
+    menuEnd->addEntry("Credits anzeigen",menuId_Credits,true);
+    menuEnd->addEntry("zurück zum Anfang",menuId_GotoStartMenu,true);
     menuEnd->displayInit();
 
     // QGraphicsScene der Level erstellen
@@ -115,19 +119,25 @@ int Game::start() {
     window->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     window->setFixedSize(1024,768);
     window->setWindowTitle(QApplication::translate("Game Widget", "Game Widget (Input Test)"));
+    window->setEnabled(false);
     window->show();
     qDebug("initialize window");
 
-    // Event Filter installieren
+    /// Installiere Event Filter zum Loggen der Keyboard Eingabe
     window->installEventFilter(keyInput);
 
-    startNewGame();
+    /// Erstelle Audiocontrol Objekt zum Erzeugen der Soundausgabe
+    audioOutput = new AudioControl();
+
+    ///@TODO flo: ka was das hier an der Stelle soll, habs mal auskommentiert
+    //startNewGame();
+
 
     // Timer installieren
     qDebug("Starte Timer mit 500msec-Intervall");
     Game::startTimer(stepIntervall);
 
-    ///@TODO hier wird das Startmenü übersprungen
+    ///@todo hier wird das Startmenü übersprungen
     //state = gameIsRunning;
 
     return appPointer->exec();
@@ -139,20 +149,37 @@ int Game::start() {
  * füllt worldobjects
  */
 void Game::startNewGame() {
+
+
     // alles alte leeren
     levelScene->clear();
     worldObjects.clear();
-
-    // Highscore aktualisieren
-    updateHighScore();
 
     //Levelscene einstellen
     levelScene->setSceneRect(0,0,100000,768);
     window->setScene(levelScene);
 
+
     // Level festlegen, der geladen werden soll
     QString fileSpecifier = ":/levelFiles/levelFiles/level1.txt";
     loadLevelFile(fileSpecifier);
+
+    //Backgroundgrafiken initialisieren
+    backgrounds = std::vector<QGraphicsPixmapItem>(4);
+
+    backgrounds[0].setPixmap(QPixmap(":/images/images/bg_lev1_1.png"));
+    backgrounds[1].setPixmap(QPixmap(":/images/images/bg_lev1_2.png"));
+    backgrounds[2].setPixmap(QPixmap(":/images/images/bg_lev1_3.png"));
+    backgrounds[3].setPixmap(QPixmap(":/images/images/bg_lev1_4.png"));
+
+    //Backgroundgrafiken positionieren
+    backgrounds[1].setPos(2560,0);
+    backgrounds[3].setPos(2560,0);
+
+    //Backgroundgrafiken der Scene hinzufügen
+    for(int i=0; i<4; i++) {
+        levelScene->addItem(&backgrounds[i]);
+    }
 
     // Spieler hinzufügen
     worldObjects.push_back(playerObjPointer);
@@ -163,6 +190,8 @@ void Game::startNewGame() {
     spawnDistance = 1024;
     // Szenen-Breite setzen
     sceneWidth = 1024;
+    // audioIDs initialisieren
+    audioIDs = 0;
 
     // Zeiger auf Objekte aus levelInitial in worldObjects verlegen
     while (!(levelInitial.empty())) {
@@ -174,11 +203,14 @@ void Game::startNewGame() {
     }
 }
 
+
 /**
  * @brief Game::endGame
  */
 void Game::endGame() {
-
+    // Highscore aktualisieren
+    std::string mode = "write";
+    updateHighScore(mode);
 }
 
 
@@ -285,13 +317,19 @@ int Game::step() {
 
             break;
         case gameIsRunning:
-
+            // Menü bei ESC
+            if(keyInput->getKeyactions().contains(Input::Keyaction::Exit)) {
+                state = gameMenuEnd;
+            }
 
             worldObjects.sort(compareGameObjects());
             qDebug("---Nächster Zeitschritt---");
 
             appendWorldObjects(playerObjPointer);
             reduceWorldObjects(playerObjPointer);
+
+            //calculateAudio
+
             evaluateInput();
             worldObjects.sort(compareGameObjects());
             calculateMovement();
@@ -299,22 +337,20 @@ int Game::step() {
             detectCollision(&worldObjects);
             handleCollisions();
 
-            //Grafik - sorgt dafür dass "window" auf den Spieler zentriert bleibt
-            window->centerOn(playerObjPointer->getPosX() + 512 - 100 - 0.5*playerObjPointer->getLength(), 384);
+            renderGraphics(&worldObjects, playerObjPointer);
 
-            //    correctMovement();
-            //    handleEvents();
-            renderGraphics(&worldObjects);
-            /// Mockup: add audioStruct player_jump to audioEvents list
+            updateAudio();
+
+            /// Mockup: add audioStruct player_jump to audioevents list
             audioStruct player_jump{1, audio::player_jump, 0};
-            /// Mockup: add audioStruct powerup_beer to audioEvents list
-            audioEvents.push_back(player_jump);
-            audioStruct scene_enemy{2, audio::powerup_beer, 0.3};
-            audioEvents.push_back(scene_enemy);
-            /// send filled audioEvents list to AudioControl Object, which updates current Output Sounds
-            audioOutput->update(&audioEvents);
+            /// Mockup: add audioStruct powerup_beer to audioevents list
+            audioevents.push_back(player_jump);
+            audioStruct scene_beer{2, audio::scene_beer, 0.3};
+            audioevents.push_back(scene_beer);
+            /// send filled audioevents list to AudioControl Object, which updates current Output Sounds
+            audioOutput->update(&audioevents);
             /// delete List audioStruct elements in list and fill it in the next step again
-            audioEvents.clear();
+            audioevents.clear();
             break;
     }
 
@@ -338,7 +374,7 @@ void Game::appendWorldObjects(Player *playerPointer) {
         if ( (currentObj->getPosX() - playerPointer->getPosX()) < spawnDistance ) {
             worldObjects.push_back(currentObj);
             levelSpawn.pop_front();
-            //Grafik - Gegner de Scene hinzufügen
+            //Grafik - Gegner der Scene hinzufügen
             levelScene->addItem(currentObj);
         } else {
             break;
@@ -405,6 +441,10 @@ void Game::evaluateInput() {
     // Pfeil rechts?
     if(keyInput->getKeyactions().contains(Input::Keyaction::Right)) {
         playerObjPointer->setSpeedX(playerSpeed);
+        // Audioevent erzeugen
+        audioStruct playerAudio = {audioIDs, player_walk, 0};
+        audioevents.push_back(playerAudio);
+        audioIDs = audioIDs + 1;
     } else {
         playerObjPointer->setSpeedX(0);
     }
@@ -412,6 +452,10 @@ void Game::evaluateInput() {
     // Pfeil oben?
     if(keyInput->getKeyactions().contains(Input::Keyaction::Up)) {
         playerObjPointer->startJump();
+        // Audioevent erzeugen
+        audioStruct playerAudio = {audioIDs, player_jump, 0};
+        audioevents.push_back(playerAudio);
+        audioIDs = audioIDs + 1;
     }
 
     // Leertaste?
@@ -441,11 +485,13 @@ void Game::calculateMovement() {
 
     /// für qDebug (Rupert)
     std::string objecttypes[] = {"Player", "Enemy ", "Obstac", "Shot  ", "PwrUp ", "BOSS  ", "Plane "};
+    qDebug("Object\tSize\tPosX\tPosY\tSpeed");
     int speedX=0,speedY=0;
 
     list<GameObject*>::iterator it;     // Iterator erstellen
     /// Schleife startet beim ersten Element und geht bis zum letzen Element durch
     for(it = worldObjects.begin(); it != worldObjects.end(); ++it) {
+        speedX = 0; speedY = 0;         // für Debug
         GameObject *aktObject = *it;
         MovingObject *aktMovingObject = dynamic_cast<MovingObject*> (aktObject);    // Versuche GameObject in Moving Object umzuwandeln
         if(aktMovingObject != 0) {
@@ -484,8 +530,8 @@ void Game::calculateMovement() {
         }
 
         aktMovingObject = 0;
-
-        qDebug("%s: x=%4d y=%4d\tvx=%3d vy=%3d",objecttypes[static_cast<int>(aktObject->getType())].c_str(), aktObject->getPosX(),aktObject->getPosY(),speedX,speedY);
+        // Anzeige: Object: HöhexBreite, xPos,YPos, (vx,vy)
+        qDebug("%s\t%dx%d\t%4d\t%4d\t(%3d,%3d)",objecttypes[static_cast<int>(aktObject->getType())].c_str(),aktObject->getLength(),aktObject->getHeight(), aktObject->getPosX(),aktObject->getPosY(),speedX,speedY);
 
     }
 
@@ -493,9 +539,9 @@ void Game::calculateMovement() {
 
 /**
  * @brief Game::detectCollision
- * Diese Funktion berechnet die Kollisionen, welche zwischen zwei Onjekten, affectedObject und causingObject auftreten. Außerdem wird
- *      die Richtung aus der die Bewegung verursacht wird berechnet
- * Die Kollision wird dabei immer aus Sicht von affectedObject berechnet. So als wäre der Rest des Levels als statisch zu betrachten...
+ * Diese Funktion berechnet die Kollisionen, welche zwischen zwei Objekten, affectedObject und causingObject auftreten.
+ * Dabei wird die Kollisionsrichtung mit berechnet.
+ * Die Kollision wird dabei immer aus Sicht von affectedObject berechnet.
  *
  * @author Simon, johann
  */
@@ -541,7 +587,7 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
                 // Kollision feststellen: Dazu ist Überschneidung in X- und Y-Richtung nötig
 
                 // Überschneidung in X-Richtung
-                int overlapX = (causingObject->getPosX() + causingObject->getLength()) - affectedObject->getPosX();
+                int overlapX = (causingObject->getPosX() + (causingObject->getLength() / 2)) - (affectedObject->getPosX() - (affectedObject->getLength() / 2));
                 if (overlapX > 0) {
                     /* Objekte überschneiden sich (statisches links von beweglichem)
                      * Lage bezüglich Y-Richtung überprüfen
@@ -566,10 +612,8 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
                                 collisionStruct collision = {affectedObject, causingObject, fromBelow};
                                 collisionsToHandle.push_back(collision);
                             } else if ((affectedObject->getSpeedX() < 0) && (affectedObject->getSpeedY() > 0)) {
-                                //wenn sich das bewegende Objekt sowohl nach links alsauch nach oben bewegt erzeuge zwei Kollisionen
+                                //wenn sich das bewegende Objekt sowohl nach links alsauch nach oben
                                 collisionStruct collision = {affectedObject, causingObject, fromBelow};
-                                collisionsToHandle.push_back(collision);
-                                collision = {affectedObject, causingObject, fromRight};
                                 collisionsToHandle.push_back(collision);
                             } else {
                                 //wenn sich bewegendes Objekt nicht nach oben bewegt
@@ -638,7 +682,7 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
                 // Kollision feststellen: Dazu ist Überschneidung in X- und Y-Richtung nötig
 
                 // Überschneidung in X-Richtung
-                int overlapX = (affectedObject->getPosX() + affectedObject->getLength()) - causingObject->getPosX();
+                int overlapX = (affectedObject->getPosX() + (affectedObject->getLength() / 2)) - (causingObject->getPosX() - (causingObject->getLength() / 2));
                 if (overlapX > 0) {
                     /* Objekte überschneiden sich (statisches rechts von beweglichem)
                      * Lage bezüglich Y-Richtung überprüfen
@@ -663,10 +707,8 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
                                 collisionStruct collision = {affectedObject, causingObject, fromBelow};
                                 collisionsToHandle.push_back(collision);
                             } else if ((affectedObject->getSpeedX() > 0) && (affectedObject->getSpeedY() > 0)) {
-                                //wenn sich das bewegende Objekt sowohl nach rechts alsauch nach oben bewegt, erzeuge zwei Kollisionen
+                                //wenn sich das bewegende Objekt sowohl nach rechts alsauch nach oben bewegt
                                 collisionStruct collision = {affectedObject, causingObject, fromBelow};
-                                collisionsToHandle.push_back(collision);
-                                collision = {affectedObject, causingObject, fromLeft};
                                 collisionsToHandle.push_back(collision);
                             } else {
                                 //wenn sich bewegendes Objekt nicht nach oben bewegt
@@ -714,6 +756,7 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
     } // for (gameObject)
 } // function
 
+
 /**
  * @brief Kollisionen in der Liste collisionsToHandle werden der Reihe nach aus Sicht des affectedObjects bearbeitet.
  * In einer Schleife wird das jeweils erst CollisionEvent bearbeitet. Dabei werden nur an dem Objekt affectedObject Änderungen vorgenommen.
@@ -742,8 +785,6 @@ void Game::handleCollisions() {
              *  mit Hindernis, Gegner, Schüssen, PowerUps
              *
              * default: Spieler
-             *
-             * PowerUps FEHLT!!!!!
              */
             switch (handleEvent.causingObject->getType()) {
             case obstacle: {
@@ -756,7 +797,7 @@ void Game::handleCollisions() {
                     //Bewegung  in X-Richtungstoppen
                     playerObjPointer->setSpeedX(0);
                     //Überlappung berechnen und Spieler nach links versetzen
-                    overlap = (playerObjPointer->getPosX() + playerObjPointer->getLength()) - handleEvent.causingObject->getPosX();
+                    overlap = (playerObjPointer->getPosX() + (playerObjPointer->getLength() / 2)) - (handleEvent.causingObject->getPosX() - (handleEvent.causingObject->getLength() / 2));
                     playerObjPointer->setPosX(playerObjPointer->getPosX() - overlap);
                     break;
                 }
@@ -764,7 +805,7 @@ void Game::handleCollisions() {
                     //Bewegung in X-Richtung stoppen
                     playerObjPointer->setSpeedX(0);
                     //Überlappung berechnen und Spieler nach rechts versetzen
-                    overlap = (handleEvent.causingObject->getPosX() + handleEvent.causingObject->getLength()) - playerObjPointer->getPosX();
+                    overlap = (handleEvent.causingObject->getPosX() + (handleEvent.causingObject->getLength() / 2)) - (playerObjPointer->getPosX() - (playerObjPointer->getLength() / 2));
                     playerObjPointer->setPosX(handleEvent.causingObject->getPosX() + handleEvent.causingObject->getLength());
                     break;
                 }
@@ -796,19 +837,16 @@ void Game::handleCollisions() {
                  *      Dem Spieler wird Schaden zugefügt und er erhält einen kurzen immunitätsbonus, falls nicht schon vorhanden
                  */
 
-                qDebug("Spieler - Gegner:----wir berühren uns");
-
                 if (!(handleEvent.direction == fromAbove)) {
                     //Überprüfen ob dem Spieler Schaden zugefügt werden kann
                     if (!(playerObjPointer->getImmunityCooldown() > 0)) {
                         handleEnemy = dynamic_cast<Enemy*>(handleEvent.causingObject);
-                        //Stirbt der Spieler durch den zugefügten Schaden -> GameOver
-                       /* if (hurtPlayer(handleEnemy->getInflictedDamage())) {
-                            gameStats.gameOver = true;
-                        } else {
-                            //Immunitätsbonus einer haleben Sekunde
-                            playerObjPointer->setImmunityCooldown(10);
-                        }*/
+                        if (!(handleEnemy->getDeath())) {
+                            //Stirbt der Spieler durch den zugefügten Schaden -> GameOver
+                            gameStats.gameOver = playerObjPointer->receiveDamage(handleEnemy->getInflictedDamage());
+                            //Immunitätsbonus einer halben Sekunde
+                            playerObjPointer->setImmunityCooldown(frameRate / 2);
+                        }
                         handleEnemy = 0;
                     }
                 }
@@ -816,9 +854,7 @@ void Game::handleCollisions() {
             case shot: {
                 // Spieler kriegt Schaden, Bierkrug zum löschen vormerken, treffen mit eigenem Krug nicht möglich
                 handleShoot = dynamic_cast<Shoot*>(handleEvent.causingObject);
-               /* if (hurtPlayer(handleShoot->getInflictedDamage())) {
-                    gameStats.gameOver = true;
-                }*/
+                gameStats.gameOver = playerObjPointer->receiveDamage(handleShoot->getInflictedDamage());
                 objectsToDelete.push_back(handleShoot);
                 handleShoot = 0;
                 break;
@@ -827,6 +863,7 @@ void Game::handleCollisions() {
                 /* Zusammenstöße mit PowerUps
                  *      Der Spieler erhält zusatzfähigkeiten
                  */
+                ///@todo Soundevents erzeugen
                 PowerUp *handlePowerUp = dynamic_cast<PowerUp*> (handleEvent.causingObject);
                 playerObjPointer->setHealth(playerObjPointer->getHealth() + handlePowerUp->getHealthBonus());
                 playerObjPointer->increaseAmmunation(handlePowerUp->getAmmunationBonus());
@@ -837,6 +874,7 @@ void Game::handleCollisions() {
                 break;
             }
             default: {
+                ///@todo Boss und Plane
                 /* Zusammenstoß mit Spieler
                  *      nicht möglich
                  */
@@ -861,18 +899,17 @@ void Game::handleCollisions() {
                  *      Spieler springt auf Gegner (sonst siehe affectedObject==player)
                  * Der Gegner wird getötet
                  */
-                qDebug("Der Spieler tötet mich");
-                handleEnemy->setDeath(true);
+                if (handleEvent.direction == fromAbove) {
+                    handleEnemy->setDeath(true);
+                }
                 break;
             }
             case obstacle: {
                 /* Zusammenstoß mit Hindernis
                  *  Bewegungsabbruch, Positionskorrektur, neue Bewegungsrichtung
                  */
-                qDebug("I change my direction");
                 if (handleEvent.direction == fromAbove) {
                     //Fall wird beendet, X-Bewegung uneingeschränkt
-                    handleEnemy->setSpeedY(0);
                     overlap = (handleEvent.causingObject->getPosY() + handleEvent.causingObject->getHeight()) - handleEnemy->getPosY();
                     handleEnemy->setPosY(handleEnemy->getPosY() + overlap);
                 } else {
@@ -883,12 +920,10 @@ void Game::handleCollisions() {
                         //Gegner kommt von links
                         overlap = (handleEnemy->getPosX() + handleEnemy->getLength()) - handleEvent.causingObject->getPosX();
                         handleEnemy->setPosX(handleEnemy->getPosX() - overlap);
-                        qDebug("dreh nach rechts");
                     } else {
                         //Gegner kommt von rechts
                         overlap = (handleEvent.causingObject->getPosX() + handleEvent.causingObject->getLength()) - handleEnemy->getPosX();
                         handleEnemy->setPosX(handleEnemy->getPosX() + overlap);
-                        qDebug("dreh nach links");
                     }
                 }
                 break;
@@ -901,23 +936,20 @@ void Game::handleCollisions() {
                 handleShoot = dynamic_cast<Shoot*>(handleEvent.causingObject);
                 if (handleShoot->getOrigin() == player) {
                     //Schaden zufügen
-                    handleEnemy->setHealth(handleEnemy->getHealth() - handleShoot->getInflictedDamage());
+                    handleEnemy->receiveDamage(handleShoot->getInflictedDamage());
                     //Bierkrug zum löschen vormerken
                     objectsToDelete.push_back(handleShoot);
-                    //Im Falle des Todes
-                    if (handleEnemy->getHealth() < 0) {
-                        handleEnemy->setDeath(true);
-                    }
                 }
                 handleShoot = 0;
                 break;
             }
             default: {
-                /*Zusammenstoß mit Gegner, PowerUp
+                /*Zusammenstoß mit Gegner, PowerUp, Plane, BOSS
                  *      kein Effekt
                  */
             }
             }
+            handleEnemy = 0;
             break;
         }//end (case enemy)
 
@@ -927,16 +959,15 @@ void Game::handleCollisions() {
              *
              * default: Spieler, Gegner, PowerUps
              *      wird jeweils in der Situation Spieler/Gegner bearbeitet, bei PowerUps keinen effekt
+             * Bierkrug löschen, bei Kollision mit Hindernis
              */
-
-            qDebug("It is going to hurt");
-            //Bierkrug löschen, bei Kollision mit Hindernis
             if (handleEvent.causingObject->getType() == obstacle) {
                 objectsToDelete.push_back(dynamic_cast<Shoot*>(handleEvent.affectedObject));
             }
             break;
         }//end (case shot)
         default: {
+            ///@todo BOSS, Plane
             /*Zusammenstöße von Hindernis und PowerUps
              *      NICHT MÖGLICH!!!   da keine MovingObjects
              *
@@ -951,27 +982,61 @@ void Game::handleCollisions() {
  * @brief durchläuft die Liste audioStorage, zählt die Cooldowns runter
  *  Die Soundevents die noch laufen, werden an die Liste SoundEvents übergeben. Die fertigen werden gelöscht.
  */
-void Game::updateAudioLists() {
+void Game::updateAudio() {
+///@todo
+    for (std::list<GameObject*>::iterator it=worldObjects.begin(); it != worldObjects.end(); ++it) {
+        GameObject *handleObject =  (*it);
+        switch (handleObject->getType()) {
+        case enemy: {
+            float distance = static_cast<float> ((std::abs(playerObjPointer->getPosX() - handleObject->getPosX()) / sceneWidth));
+            audioStruct newAudio = {handleObject->getAudioID(), scene_enemy, distance};
+            audioevents.push_back(newAudio);
+        }
+        }
+    }
     for (std::list<audioCooldownstruct>::iterator it = audioStorage.begin(); it != audioStorage.end(); ++it) {
         if (it->cooldown > 0) {
             it->cooldown = it->cooldown - 1;
-            audioEvents.push_back(it->audioEvent);
+            audioevents.push_back(it->audioEvent);
         } else {
             audioStorage.erase(it);
         }
     }
 }
 
-
 /**
  * @brief Game::renderGraphics
  * Positionssaktualisierungen der Grafiken aller Beewglichen Objekte
  * @param objectList
  */
-void Game::renderGraphics(std::list<GameObject*> *objectList) {
+void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPointer) {
+    window->centerOn(playerObjPointer->getPosX() + 512 - 100 - 0.5 * playerObjPointer->getLength(), 384);
+    //Bewegunsparralaxe Positionsaktualisierung
+    (backgrounds[0]).setPos(((backgrounds[0]).x()) + ((playerPointer->getPosX() - (playerScale/2) - (playerPointer->x())) /2), 0);
+    (backgrounds[1]).setPos(((backgrounds[1]).x()) + ((playerPointer->getPosX() - (playerScale/2) - (playerPointer->x())) /2), 0);
+
+    //Wenn der Spieler aus einerm Hintergrundbild "rausläuft" wird die Position nachvorne verschoben
+    for(int i = 0; i<=3; i++) {
+        if(playerPointer->getPosX() - playerOffset >= static_cast<int>(backgrounds[i].x()+ 2560)) {
+               backgrounds[i].setPos(backgrounds[i].x() + 5120, 0);
+        }
+    }
+
+    //Positionsaktualisierungen aller Movingobjects
     for (std::list<GameObject*>::iterator it = objectList->begin(); it != objectList->end(); ++it) {
-        if(dynamic_cast<MovingObject*> (*it) != 0) {
-            (*it)->setPos((*it)->getPosX() - 0.5*(*it)->getLength(), yOffset -(*it)->getPosY() - (*it)->getHeight());
+        MovingObject *aktMovingObject = dynamic_cast<MovingObject*> (*it);
+        if(aktMovingObject != 0) {
+
+            if( (aktMovingObject->getSpeedX() > 0) && (aktMovingObject->getDirLastFrame() == false) ) {
+                aktMovingObject->flipHorizontal();
+                aktMovingObject->setDirLastFrame(true);
+            }
+            else if( (aktMovingObject->getSpeedX() < 0) && (aktMovingObject->getDirLastFrame() == true) ) {
+                aktMovingObject->flipHorizontal();
+                aktMovingObject->setDirLastFrame(false);
+            }
+
+            aktMovingObject->setPos((*it)->getPosX() - 0.5*aktMovingObject->getLength(), yOffset -aktMovingObject->getPosY() - aktMovingObject->getHeight());
         }
     }
 }
@@ -1020,7 +1085,7 @@ void Game::colTestLevel() {
  * Diese Funktion liest Level-Dateien aus und kommt mit wenig Parametern aus.
  * Der Player braucht posX und posY.
  * Enemies brauchen posX, posY und speedX.
- * Obstacles brauchen nur posX, posY ist immer null.
+ * Obstacles brauchen posX und posY.
  * Planes (Zwischenebenen) brauchen posX und posY.
  * PowerUps brauchen posX, posY und die jeweiligen Boni.
  * @author Simon
@@ -1045,39 +1110,66 @@ void Game::loadLevelFile(QString fileSpecifier) {
             // Trenne die aktuelle Zeile nach Komma getrennt auf
             QStringList strlist = line.split(",");
 
-            if (strlist.at(0) == "Player") {
-                qDebug() << "  Player-Eintrag gefunden.";
-                // Erstelle das Spieler-Objekt und setze den playerObjPointer
-                GameObject *playerObject = new Player(strlist.at(1).toInt(), strlist.at(2).toInt(), 0);
-                playerObjPointer = dynamic_cast<Player*>(playerObject);
-            }
+            try {
 
-            if (strlist.at(0) == "Enemy") {
-                qDebug() << "  Enemy-Eintrag gefunden.";
-                GameObject *enemyToAppend = new Enemy(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt());
-                levelSpawn.push_back(enemyToAppend);
-            }
+                if (strlist.at(0) == "Player") {
+                    if (strlist.length() != 3) {
+                        throw std::string("Ungültiger Player-Eintrag: ");
+                    } else {
+                        // Erstelle das Spieler-Objekt und setze den playerObjPointer
+                        qDebug() << "  Player-Eintrag gefunden.";
+                        GameObject *playerObject = new Player(strlist.at(1).toInt(), strlist.at(2).toInt(), 0);
+                        playerObjPointer = dynamic_cast<Player*>(playerObject);
+                    }
+                }
 
-            if (strlist.at(0) == "Obstacle") {
-                qDebug() << "  Obstacle-Eintrag gefunden.";
-                GameObject *obstacleToAppend = new GameObject(strlist.at(1).toInt(), 0, obstacle);
-                levelInitial.push_back(obstacleToAppend);
-            }
+                if (strlist.at(0) == "Enemy") {
+                    if (strlist.length() != 4) {
+                        throw std::string("Ungültiger Enemy-Eintrag:");
+                    } else {
+                        qDebug() << "  Enemy-Eintrag gefunden.";
+                        GameObject *enemyToAppend = new Enemy(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt());
+                        levelSpawn.push_back(enemyToAppend);
+                    }
+                }
 
-            if (strlist.at(0) == "Plane") {
-                qDebug() << "  Eintrag für eine Zwischenebene gefunden.";
-                GameObject *planeToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), plane);
-                levelInitial.push_back(planeToAppend);
-            }
+                if (strlist.at(0) == "Obstacle") {
+                    if (strlist.length() != 3) {
+                        throw std::string("  Ungültiger Obstacle-Eintrag:");
+                    } else {
+                        qDebug() << "  Obstacle-Eintrag gefunden.";
+                        GameObject *obstacleToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), obstacle);
+                        levelInitial.push_back(obstacleToAppend);
+                    }
+                }
 
-            if (strlist.at(0) == "PowerUp") {
-                qDebug() << "  PowerUp-Eintrag gefunden.";
-                GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), strlist.at(4).toInt(), strlist.at(5).toInt(), strlist.at(6).toInt());
-                levelInitial.push_back(powerUpToAppend);
-            }
+                if (strlist.at(0) == "Plane") {
+                    if (strlist.length() != 3) {
+                        throw std::string("Ungültiger Plane-Eintrag:");
+                    } else {
+                        qDebug() << "  Plane-Eintrag gefunden.";
+                        GameObject *planeToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), plane);
+                        levelInitial.push_back(planeToAppend);
+                    }
+                }
 
-            if (strlist.at(0) == "Boss") {
-                qDebug() << "  Boss-Eintrag gefunden.";
+                if (strlist.at(0) == "PowerUp") {
+                    if (strlist.length() != 7 ) {
+                        throw std::string("Ungültiger PowerUp-Eintrag:");
+                    } else {
+                        qDebug() << "  PowerUp-Eintrag gefunden.";
+                        GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), strlist.at(4).toInt(), strlist.at(5).toInt(), strlist.at(6).toInt());
+                        levelInitial.push_back(powerUpToAppend);
+                    }
+                }
+
+                if (strlist.at(0) == "Boss") {
+                    /// @todo try/catch für Bosseintrag sobald der Konstruktor steht.
+                    qDebug() << "  Boss-Eintrag gefunden.";
+                }
+            }
+            catch(std::string s) {
+                qDebug("%s %s", s.c_str(), line.toStdString().c_str());
             }
 
         } // end of while
@@ -1091,8 +1183,26 @@ void Game::loadLevelFile(QString fileSpecifier) {
 
 
 /**
+ * @brief Game::updateScore
+ * Aktualisiert die Score des Spielers. Diese Score wird von der Grafik
+ * während des Spiels ausgegeben und am Ende des Spiels in die Highscore
+ * aufgenommen.
+ * @author Simon
+ */
+void Game::updateScore() {
+    playerScore.distanceCovered = playerObjPointer->getPosX();
+    playerScore.enemiesKilled = playerObjPointer->getEnemiesKilled();
+    playerScore.alcoholPoints = playerObjPointer->getAlcoholLevel();
+    playerScore.name = "Horstl";
+}
+
+
+/**
  * @brief Game::updateHighScore
- * Diese Funktion liest und aktualisiert die Highscore des Spiels.
+ * Diese Funktion liest und aktualisiert die Highscore des Spiels. Als Parameter wird ein std::string mode erwartet.
+ * Ist der mode = "write", so wird die aktuelle Highscore unter Berücksichtigung der aktuellen playerScore neu geschrieben.
+ * Alle anderen Werte für mode lesen nur die alte Highscore und die des Spielers in die Liste ein, um sie z.B. im Highscore-Menü
+ * anzuzeigen.
  * Dazu wird versucht, die Datei "wiesnHighscore.txt" auszulesen. Ist dies nicht möglich,
  * so wurde das Spiel in dem aktuellen Verzeichnis noch nie gestartet.
  * Falls die Datei gefunden und gelesen werden kann, so wird jeder Highscore-Eintrag in die scoreList aufgenommen.
@@ -1100,8 +1210,9 @@ void Game::loadLevelFile(QString fileSpecifier) {
  * Wird für das aktuelle Spiel eine Score angelegt und in der scoreList gespeichert, so wird dieser Eintrag eingeordnet
  * und gegebenenfalls auch abgespeichert.
  */
-void Game::updateHighScore() {
-    // Alte Highscore einlesen
+void Game::updateHighScore(std::string mode) {
+    // scoreList leeren und alte Highscore einlesen
+    scoreList.clear();
     std::ifstream input("wiesnHighscore.txt");
     if (!input) {
         qDebug() << "Highscore-Datei nicht vorhanden";
@@ -1121,25 +1232,29 @@ void Game::updateHighScore() {
     // Datei schließen
     input.close();
 
-    // Neue Highscore schreiben
+    // Aktuelle Spielerscore hinzufügen und sortieren
+    scoreList.push_back(playerScore);
     scoreList.sort(compareScores());
-    std::ofstream ofs;
-    ofs.open("wiesnHighscore.txt", std::ofstream::out | std::ofstream::trunc);
 
-    int i = 0;
-    // Schreibe maximal die besten 10 Scores in die Highscore-Datei
-    while (!scoreList.empty() && (i < 10)) {
-        scoreStruct currentScore = *scoreList.begin();
-        scoreList.pop_front();
+    if (mode == "write") {
+        // Neue Highscore schreiben
+        std::ofstream ofs;
+        ofs.open("wiesnHighscore.txt", std::ofstream::out | std::ofstream::trunc);
 
-        // Highscore-Eintrag schreiben
-        ofs << currentScore.name.c_str() << "," << currentScore.alcoholPoints << "," << currentScore.distanceCovered << "," << currentScore.enemiesKilled << "\n";
-        i++;
+        int i = 0;
+        // Schreibe maximal die besten 10 Scores in die Highscore-Datei
+        while (!scoreList.empty() && (i < 10)) {
+            scoreStruct currentScore = *scoreList.begin();
+            scoreList.pop_front();
 
+            // Highscore-Eintrag schreiben
+            ofs << currentScore.name.c_str() << "," << currentScore.alcoholPoints << "," << currentScore.distanceCovered << "," << currentScore.enemiesKilled << "\n";
+            i++;
+        }
+        // Datei schließen, damit Änderungen gespeichert werden
+        ofs.close();
+        qDebug("Highscore geschrieben.");
     }
-    // Datei schließen, damit Änderungen gespeichert werden
-    ofs.close();
-    qDebug("Highscore geschrieben.");
 }
 
 

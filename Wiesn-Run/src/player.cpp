@@ -12,6 +12,8 @@ Player::Player(int posX, int posY, int speedX) : MovingObject(posX, posY, player
     immunityCooldown = 0;
     fireRate = 1 * frameRate;
     fireCooldown = 0;
+
+    enemiesKilled = 0;
 }
 
 Player::~Player() {
@@ -174,6 +176,14 @@ void Player::abortJump() {
 }
 
 /**
+ * @brief Player::getEnemiesKilled
+ * Übergibt die Zahl getöteter Gegner
+ */
+int Player::getEnemiesKilled() {
+    return enemiesKilled;
+}
+
+/**
  * @brief Player::update
  * führt die Bewegung des Spielers aus (über updatePosition) und verringert Cooldown-Variable
  * @author Johann
@@ -194,9 +204,6 @@ void Player::update() {
     } else {
         jumpState = false;
     }
-
-    //Grafik - Bewegung anzeigen
-    setPos(getPosX() - 0.5*getLength(), -getPosY() + 548);
 
     //Alkoholpegel Zeitabbau
     if (alcoholLevel > 0) {

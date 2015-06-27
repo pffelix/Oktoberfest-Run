@@ -3,6 +3,7 @@
 
 
 #include <list>
+#include <vector>
 
 #include "definitions.h"
 #include "gameobject.h"
@@ -41,7 +42,7 @@ struct collisionStruct {
  *
  * @lastChanges funtion handleCollisions hinzugefügt
  *
- * @author Simon, Johann
+ * @author Simon, Johann, Felix
  */
 class Game : QObject {
     //Q_OBJECT
@@ -71,16 +72,19 @@ private:
     void calculateMovement();
     void detectCollision(std::list<GameObject*> *objectsToCalculate);
     void handleCollisions();
-    void renderGraphics(std::list<GameObject *> *objectList);
+    void renderGraphics(std::list<GameObject *> *objectList, Player *playerPointer);
     void endGame();
-    void updateAudioLists();
+    void updateAudio();
+    bool hurtPlayer(int damage);
 
-    void updateHighScore();
+    void updateScore();
+    void updateHighScore(std::string mode);
 
     void colTestLevel();
     void loadLevelFile(QString fileSpecifier);
 
     void startNewGame();
+
 
     /// In der Welt befindliche Objekte
     std::list<GameObject*> worldObjects;
@@ -90,9 +94,10 @@ private:
     std::list<GameObject*> levelSpawn;
     /// Zu löschende Schüsse
     std::list<GameObject*> objectsToDelete;
-
-    /// Liste audioEvents mit allen im Step stattfindenden AudioStructs
-    std::list<struct audioStruct> audioEvents;
+    /// Audiocontrol Objekt zum Erzeugen der Soundausgabe
+    AudioControl *audioOutput;
+    /// Liste audioevents mit allen im Step stattfindenden AudioStructs
+    std::list<struct audioStruct> audioevents;
     /// Liste mit den Audioevents die einmal aufgerufen werden aber eine Längere Spielzeit haben
     std::list<struct audioCooldownstruct> audioStorage;
 
@@ -101,6 +106,7 @@ private:
     /// Distanz in der Gegner gespawnt werden
     int spawnDistance;
     std::list<struct scoreStruct> scoreList;
+    struct scoreStruct playerScore;
 
 
     int stepIntervall;
@@ -109,6 +115,9 @@ private:
     /// für das Ausgabefenster QGraphicsView
     QGraphicsScene * levelScene;
     QGraphicsView * window;
+
+    /// Liste aller Hintergrundbilder
+    std::vector<QGraphicsPixmapItem> backgrounds;
 
     /// aktueller Spielzustand (running, menuStart, menuEnd)
     gameState state = gameMenuStart;
@@ -119,19 +128,18 @@ private:
     std::chrono::high_resolution_clock::time_point letzterAufruf;
     /// Erstelle Input Objekt zum Aufzeichnen der Keyboard Inputs
     Input *keyInput = new Input();
-    /// Erstelle Audiocontrol Objekt zum Erzeugen der Soundausgabe
-    AudioControl *audioOutput = new AudioControl();
     /// Menüs
     Menu *menuStart;
     Menu *menuEnd;
     /// zur Unterscheidung und Identifizierung der Menü-Einträge
     enum menuIds {
-        menuId_StartGame, menuId_EndGame, menuId_Resume, menuId_Highscore, menuId_Credits, menuId_GotoStartMenu
+        menuId_NonClickable, menuId_StartGame, menuId_EndGame, menuId_Resume, menuId_Highscore, menuId_Credits, menuId_GotoStartMenu
     };
 
     /// stepCount wird mit jedem Step um ein erhöht
     /// Auslesen der vergangenen Zeit: stepCount * getStepIntervall()
     int stepCount = 0;
+    int audioIDs;
 };
 
 #endif // GAME_H

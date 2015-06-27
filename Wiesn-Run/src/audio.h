@@ -14,6 +14,7 @@
 #include <string>
 #include <QVector>
 
+
 /**
  * @brief  Audio-Klasse
  *         Die Audio-Klasse erzeugt Audioobjekte.
@@ -30,7 +31,7 @@ public:
     ~Audio();
 
     std::string getSource();
-    QVector<float> getSamples();
+    float getSample(int pos);
     int getSamplenbr();
     short getVolume();
     void setVolume(short volume_audio_obj);
@@ -47,10 +48,10 @@ private:
     /**
      * @brief  samples
      *         samples speichert die normalisierten samples des Audio
-     *         Objekts als QVektor.
+     *         Objekts als QVektor mit 32 bit float Werten.
      * @author  Felix Pfreundtner
      */
-    QVector<float> samples;
+    std::vector<float> samples;
     /**
      * @brief  samplenbr
      *         samplenbr speichert die Anzahl an Samples in der gesamten Audio Datei
@@ -67,9 +68,8 @@ private:
 
     void readSamples();
     qint16 to16bitSample(quint8 sample8bit);
-    void normalize();
-
+    void normalize();    
 protected:
 };
 
-#endif // INPUT_H
+#endif // AUDIO_H

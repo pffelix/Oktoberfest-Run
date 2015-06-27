@@ -19,15 +19,14 @@ class Input : public QObject {
 
 public:
     enum Keyaction{
-        Left = 0,
-        Right = 1,
-        Up = 2,
-        Down = 3,
-        Jump_Left = 4,
-        Jump_Right = 5,
-        Shoot = 6,
-        Exit = 7,
-        Enter = 8
+        Left,
+        Right,
+        Up,
+        Down,
+        Jump_Right,
+        Shoot,
+        Exit,
+        Enter,
     };
 
     Input();
