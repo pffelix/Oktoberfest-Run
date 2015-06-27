@@ -9,7 +9,7 @@
 AudioControl::AudioControl() {
 
     /// erstelle für jede objektgruppe "type" ein audio Objekt welches unter anderem die Samples beinhaltet
-    audioobjects.reserve(22);
+    audioobjects.reserve(23);
     audioobjects.insert(audioobjects.begin() + audioType::scene_flyingbeer, Audio("scene_flyingbeer")); // 16bit
 
     audioobjects.insert(audioobjects.begin() + audioType::scene_enemy_tourist, Audio("scene_enemy_tourist")); // 16bit
@@ -30,6 +30,8 @@ AudioControl::AudioControl() {
     audioobjects.insert(audioobjects.begin() + audioType::status_alcohol, Audio("status_alcohol")); // 16bit
     // source: http://soundbible.com/1612-Slow-HeartBeat.html
     audioobjects.insert(audioobjects.begin() + audioType::status_life, Audio("status_life")); // 16bit
+    http://soundbible.com/1707-Hearbeat-2.html
+    audioobjects.insert(audioobjects.begin() + audioType::status_lifecritical, Audio("status_lifecritical")); // 16bit
     //source: http://soundbible.com/1266-City-Ambiance.html
     audioobjects.insert(audioobjects.begin() + audioType::status_dead, Audio("status_dead")); // 16bit
     //source: http://www.arts.rpi.edu/public_html/ruiz/VES01/sebram/final/walk_crop.wav
