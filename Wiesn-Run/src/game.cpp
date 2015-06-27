@@ -889,26 +889,45 @@ void Game::updateAudio() {
         GameObject *handleObject =  (*it);
         switch (handleObject->getType()) {
         case enemy_tourist: {
+            if (handleObject->getAudioID() == 0) {
+                handleObject->setAudioID(audioIDs);
+                audioIDs = audioIDs + 1;
+            }
             float distance = static_cast<float> ((std::abs(playerObjPointer->getPosX() - handleObject->getPosX()) / sceneWidth));
             audioStruct newAudio = {handleObject->getAudioID(), scene_enemy_tourist, distance};
             audioevents.push_back(newAudio);
+            break;
         }
         case enemy_security: {
+            if (handleObject->getAudioID() == 0) {
+                handleObject->setAudioID(audioIDs);
+                audioIDs = audioIDs + 1;
+            }
             float distance = static_cast<float> ((std::abs(playerObjPointer->getPosX() - handleObject->getPosX()) / sceneWidth));
             audioStruct newAudio = {handleObject->getAudioID(), scene_enemy_security, distance};
             audioevents.push_back(newAudio);
+            break;
         }
         case BOSS: {
+            if (handleObject->getAudioID() == 0) {
+                handleObject->setAudioID(audioIDs);
+                audioIDs = audioIDs + 1;
+            }
             float distance = static_cast<float> ((std::abs(playerObjPointer->getPosX() - handleObject->getPosX()) / sceneWidth));
             audioStruct newAudio = {handleObject->getAudioID(), scene_enemy_boss, distance};
             audioevents.push_back(newAudio);
+            break;
 
         }
         case shot: {
+            if (handleObject->getAudioID() == 0) {
+                handleObject->setAudioID(audioIDs);
+                audioIDs = audioIDs + 1;
+            }
             float distance = static_cast<float> ((std::abs(playerObjPointer->getPosX() - handleObject->getPosX()) / sceneWidth));
             audioStruct newAudio = {handleObject->getAudioID(), scene_flyingbeer, distance};
             audioevents.push_back(newAudio);
-
+            break;
         }
         }
     }

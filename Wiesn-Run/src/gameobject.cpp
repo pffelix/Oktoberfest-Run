@@ -33,6 +33,7 @@ GameObject::GameObject(int posX, int posY, objectType type) {
     this->posX = posX;
     this->posY = posY;
     this->type = type;
+    audioID = 0;
 
     switch (type) {
     case obstacle: {

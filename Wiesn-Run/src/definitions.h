@@ -288,12 +288,14 @@ enum powerUpType {
  * @author Simon
  */
 struct stateStruct {
+    bool gameOver;
+    int actLevel;
+
     bool playerJumping;
     bool playerAttacking;
     bool playerRunning;
     bool playerThrowing;
     bool playerHit;
-    bool gameOver;
 
     bool enemyAttacking;
     bool enemyThrowing;
