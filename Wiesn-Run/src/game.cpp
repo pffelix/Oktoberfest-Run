@@ -1130,6 +1130,16 @@ void Game::loadLevelFile(QString fileSpecifier) {
                     }
                 }
 
+                if (strlist.at(0) == "Tourist") {
+                    if (strlist.length() != 4) {
+                        throw std::string("Ungültiger Tourist-Eintrag:");
+                    } else {
+                        qDebug() << "  Tourist-Eintrag gefunden.";
+                        GameObject *enemyToAppend = new Enemy(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt());
+                        levelSpawn.push_back(enemyToAppend);
+                    }
+                }
+
                 if (strlist.at(0) == "Enemy") {
                     if (strlist.length() != 4) {
                         throw std::string("Ungültiger Enemy-Eintrag:");
