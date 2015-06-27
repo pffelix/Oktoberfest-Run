@@ -102,7 +102,7 @@ GameObject::GameObject(int posX, int posY, objectType type) {
         break;
     }
     case BOSS: {
-/// BOSS definieren (Flo wegen Bild/Abmessungen fragen)
+/// @todo BOSS definieren (Flo wegen Bild/Abmessungen fragen)
         break;
     }
     };
