@@ -194,7 +194,7 @@ void Game::startNewGame() {
     // Szenen-Breite setzen
     sceneWidth = 1024;
     // audioIDs initialisieren
-    audioIDs = 0;
+    audioIDs = 1;
 
     // Zeiger auf Objekte aus levelInitial in worldObjects verlegen
     while (!(levelInitial.empty())) {
@@ -790,6 +790,7 @@ void Game::handleCollisions() {
              * default: Spieler
              */
             switch (handleEvent.causingObject->getType()) {
+            case plane:
             case obstacle: {
                 /* Zusammenstoß mit Hindernis
                  * Bewegungsabbruch, Positionskorrektur

@@ -53,6 +53,11 @@ const int playerSpeed = maxSpeed / 2;
 const int maxSpeedY = 3 * (playerScale / frameRate);
 
 /**
+ * @brief maximales Leben
+ */
+const int maxHealth = 5;
+
+/**
  * @brief Enumerator für den aktuellen Spielstatus
  * ähnlich zu einer StateMachine
  * wird in step() über switch abgefragt
@@ -69,7 +74,7 @@ enum gameState {
  * @author Johann
  */
 enum objectType {
-    player, enemy, obstacle, shot, powerUp, BOSS, plane
+    player, enemy_tourist, enemy_security, obstacle, shot, powerUp, BOSS, plane
 };
 
 /**
@@ -197,7 +202,7 @@ struct audioCooldownstruct {
  * @todo Diese Struktur ist vermutlich überflüssig.
  * @author Simon
  */
-/*struct stateStruct {
+struct stateStruct {
     bool playerJumping;
     bool playerAttacking;
     bool playerRunning;
@@ -212,7 +217,7 @@ struct audioCooldownstruct {
     bool beerCollected;
     bool chickenCollected;
 
-};*/
+};
 
 
 #endif // DEFINITIONS_H

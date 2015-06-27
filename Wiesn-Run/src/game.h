@@ -58,7 +58,7 @@ public:
     struct stateStruct gameStats;
     //Liste von Kollisionen
     std::list<struct collisionStruct> collisionsToHandle;
-    struct stateStruct states;
+    //struct stateStruct states;
     int start();
 
 protected:
