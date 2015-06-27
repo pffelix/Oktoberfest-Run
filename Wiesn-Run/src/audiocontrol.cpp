@@ -39,9 +39,13 @@ AudioControl::AudioControl() {
     blockcounter = 0;
     /// setzte Wartezeit von Portaudio auf 100 ms
     waitinms = 100;
-    /// initialisiere Abspielbibliothek PortAudio
-    //playinitializeerror = playInitialize();
-
+    /// setzte maximale Anzahl an Playevents auf 10
+    /// Wird der Wert höher gesetzt wird die Lautstärke geringer.
+    /// Wird der Wert geringer gesetzt steigt die Gefahr des Clippings des Ausgabesignals
+    /// Ein Normalisieren aller Ausgabeblöcke wäre möglich, würde jedoch 2D Audio nicht erlauben,
+    /// da auch die Dynamik zwischen zwei Blöcken normalisiert wird
+    /// -> Distanz- und somit Lautstärkeänderungen von Objekten werden mit normalisiert.
+    max_playevents = 10;
 
 }
 
@@ -89,8 +93,6 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
             if (newaudiostruct.id == pe->id) {
                 /// übernehmen die aktuellen Distanzwerte des neuen audiostructs und wandle sie in eine Volumen Information um (volume = 1 - distance).
                 pe->volume = 1.0f - newaudiostruct.distance;
-                /// erhöhe Abspielposition um Blocksize, da ein Step vergangen ist
-                //pe->position += BLOCKSIZE;
                 /// setzte playnext auf true, da das playstruct auch im nächsten Step abgespielt werden soll
                 pe->playnext = true;
                 /// setzte Variable nasidexistinpe auf true, da newaudiostruct bisher in playevents gefunden wurde
@@ -141,10 +143,6 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
  * @author  Felix Pfreundtner
  */
 void AudioControl::playInitialize(){
-    /// Erstelle Zeiger auf Stream pastream
-    PaStream *pastream;
-    /// Erstelle error Variable
-    PaError paerror;
     /// initialisiere Port Audio
     paerror = Pa_Initialize();
     if( paerror != paNoError ) {
@@ -158,7 +156,7 @@ void AudioControl::playInitialize(){
                                     paInt16,  /// setze Bittiefe der Audioausgabe 16 bit Integer
                                     SAMPLERATE, /// setze Samplerate der Audioausgabe zu 44100 Hz
                                     BLOCKSIZE, /// setze Anzahl an Samples per Bufferblock auf 1024
-                                    &AudioControl::patestCallback, /// verweise auf Callback Funktion
+                                    &AudioControl::staticpaCallback, /// verweise auf Static Callback Funktion
                                     this); /// übergebe User-Data
     if( paerror != paNoError ) {
         goto error;
@@ -198,24 +196,27 @@ error:
  * @param  Qlist audioevents
  * @author  Felix Pfreundtner
  */
-int AudioControl::myMemberpatestCallback( const void *inputBuffer, void *outputBuffer,
+int AudioControl::instancepaCallback( const void *inputBuffer, void *outputBuffer,
                            unsigned long framesPerBuffer,
                            const PaStreamCallbackTimeInfo* timeInfo,
                            PaStreamCallbackFlags statusFlags ) {
     /* Cast data passed through stream to our structure. */
-    /// erstelle data
+    /// erstelle Zeiger *out auf outputBuffer
     int *out = (int*)outputBuffer;
     /// kein Input aktiviert, verhindere Warnmeldung "unbenutzter Parameter inputBuffer"
     (void) inputBuffer;
+    /// keine timeInfo nötig, verhindere Warnmeldung "unbenutzter Parameter inputBuffer"
+    (void) timeInfo;
+    /// keine statusFlags nötig, verhindere Warnmeldung "unbenutzter Parameter statusFlags"
+    (void) statusFlags;
 
 
     for(unsigned int block_pos=0; block_pos<framesPerBuffer; block_pos++ ) {
 
-
         /// Mix Samples
         mixed_sample = 0;
         for (callback_pe = playevents.begin(); callback_pe != playevents.end(); callback_pe++) {
-            mixed_sample += callback_pe->objectref->getSample(callback_pe->position)*callback_pe->volume;
+            mixed_sample += callback_pe->objectref->getSample(callback_pe->position)*callback_pe->volume/max_playevents;
             callback_pe->position += 1;
         }
         // block[block_pos] = mixSample();
@@ -242,8 +243,17 @@ int AudioControl::myMemberpatestCallback( const void *inputBuffer, void *outputB
 /**
  * @brief  play
  *         play spielt alle in playevents gespeicherten playStructs ab.
- * @param  Qlist audioevents
  * @author  Felix Pfreundtner
  */
 void AudioControl::play(){
+}
+
+
+/**
+ * @brief  getPastream
+ *         getPastream gibt einen Zeiger auf den PortAudio Stream pastream zurück
+ * @author  Felix Pfreundtner
+ */
+PaStream* AudioControl::getPastream() {
+    return &pastream;
 }
