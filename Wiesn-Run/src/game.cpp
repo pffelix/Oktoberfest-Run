@@ -476,11 +476,13 @@ void Game::evaluateInput() {
 
     // Pfeil oben?
     if(keyInput->getKeyactions().contains(Input::Keyaction::Up)) {
-        playerObjPointer->startJump();
-        // Audioevent erzeugen
-        audioStruct playerAudio = {audioIDs, player_jump, 0};
-        audioevents.push_back(playerAudio);
-        audioIDs = audioIDs + 1;
+        if (!(playerObjPointer->inJump())) {
+            playerObjPointer->startJump();
+            // Audioevent erzeugen
+            audioStruct playerAudio = {audioIDs, player_jump, 0};
+            audioevents.push_back(playerAudio);
+            audioIDs = audioIDs + 1;
+        }
     }
 
     // Leertaste?
@@ -721,10 +723,9 @@ void Game::handleCollisions() {
                 case fromBelow: {
                     //Wegen Zusammenstoß wird ein Fall initiiert
                     playerObjPointer->abortJump();
-                    //Überlappung berechnen und Spieler nach obern versetzen
+                    //Überlappung berechnen und Spieler nach unten versetzen
                     overlap = (playerObjPointer->getPosY() + playerObjPointer->getHeight()) - handleEvent.causingObject->getPosY();
-                    playerObjPointer->setPosY(playerObjPointer->getPosY() + overlap);
-                    playerObjPointer->resetJumpState();
+                    playerObjPointer->setPosY(playerObjPointer->getPosY() - overlap);
                     break;
                 }
                 }
