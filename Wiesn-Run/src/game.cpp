@@ -500,7 +500,7 @@ void Game::calculateMovement() {
         if(aktMovingObject != 0) {
             aktMovingObject->update();          // Wenn der cast klappt, rufe update() auf.
             //falls es sich um einen Gegner handelt feuern
-            if (aktMovingObject->getType() == enemy){
+            if ((aktMovingObject->getType() == enemy_security) || (aktMovingObject->getType() = enemy_tourist)){
                 Enemy *aktEnemy = dynamic_cast<Enemy*> (aktMovingObject);
                 if (aktEnemy->getDeathCooldown() == 0) {
                     objectsToDelete.push_back(aktEnemy);
@@ -514,7 +514,7 @@ void Game::calculateMovement() {
                     if (aktEnemy->getSpeedX() == 0) {
                         direction = playerObjPointer->getPosX() - aktEnemy->getPosX();
                     } else {
-                        direction = playerObjPointer->getSpeedX();
+                        direction = aktEnemy->getSpeedX();
                     }
                     if (direction < 0) {
                         direction = -1;
@@ -835,7 +835,8 @@ void Game::handleCollisions() {
 
                 break;
             }
-            case enemy: {
+            case enemy_security:
+            case enemy_tourist: {
                 /* Zusammenstoß mit Gegener
                  *      Spieler läuft in Gegner oder Gegner fällt auf Spieler (sonst siehe affectedObject==enemy)
                  *      Dem Spieler wird Schaden zugefügt und er erhält einen kurzen immunitätsbonus, falls nicht schon vorhanden
@@ -887,7 +888,8 @@ void Game::handleCollisions() {
             break;
         } // end (case player)
 
-        case enemy: {
+        case enemy_security:
+        case enemy_tourist: {
             /*Zusammenstöße des Gegners
              *  mit Spieler, Hindernis, Schüssen
              *
@@ -965,13 +967,12 @@ void Game::handleCollisions() {
              *      wird jeweils in der Situation Spieler/Gegner bearbeitet, bei PowerUps keinen effekt
              * Bierkrug löschen, bei Kollision mit Hindernis
              */
-            if (handleEvent.causingObject->getType() == obstacle) {
+            if (handleEvent.causingObject->getType() == obstacle) || (handleEvent.causingObject->getType() == plane) {
                 objectsToDelete.push_back(dynamic_cast<Shoot*>(handleEvent.affectedObject));
             }
             break;
         }//end (case shot)
         default: {
-            ///@todo BOSS, Plane
             /*Zusammenstöße von Hindernis und PowerUps
              *      NICHT MÖGLICH!!!   da keine MovingObjects
              *
@@ -991,7 +992,8 @@ void Game::updateAudio() {
     for (std::list<GameObject*>::iterator it=worldObjects.begin(); it != worldObjects.end(); ++it) {
         GameObject *handleObject =  (*it);
         switch (handleObject->getType()) {
-        case enemy: {
+        case enemy_tourist:
+        case enemy_security: {
             float distance = static_cast<float> ((std::abs(playerObjPointer->getPosX() - handleObject->getPosX()) / sceneWidth));
             audioStruct newAudio = {handleObject->getAudioID(), scene_enemy, distance};
             audioevents.push_back(newAudio);
