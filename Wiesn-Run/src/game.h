@@ -118,8 +118,11 @@ private:
     QGraphicsScene * levelScene;
     QGraphicsView * window;
 
-    /// Liste aller Hintergrundbilder
+    /// Vector aller Hintergrundbilder
     std::vector<QGraphicsPixmapItem> backgrounds;
+
+    /// Vektor der die Darstellgung von Leben,Highscore und Pegel enhält
+    std::vector<QGraphicsTextItem> playerStats;
 
     /// aktueller Spielzustand (running, menuStart, menuEnd)
     gameState state = gameMenuStart;
