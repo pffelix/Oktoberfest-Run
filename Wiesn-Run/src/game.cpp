@@ -193,6 +193,8 @@ void Game::startNewGame() {
     spawnDistance = 1024;
     // Szenen-Breite setzen
     sceneWidth = 1024;
+    // audioIDs initialisieren
+    audioIDs = 1;
 
     // Zeiger auf Objekte aus levelInitial in worldObjects verlegen
     while (!(levelInitial.empty())) {
@@ -209,6 +211,7 @@ void Game::startNewGame() {
  * @brief Game::endGame
  */
 void Game::endGame() {
+    /// @todo Aufräumarbeiten
     // Highscore aktualisieren
     std::string mode = "write";
     updateHighScore(mode);
@@ -328,6 +331,9 @@ int Game::step() {
 
             appendWorldObjects(playerObjPointer);
             reduceWorldObjects(playerObjPointer);
+
+            //calculateAudio
+
             evaluateInput();
             worldObjects.sort(compareGameObjects());
             calculateMovement();
@@ -335,9 +341,9 @@ int Game::step() {
             detectCollision(&worldObjects);
             handleCollisions();
 
-            updateScore();
-
             renderGraphics(&worldObjects, playerObjPointer);
+
+            updateAudio();
 
             /// Mockup: add audioStruct player_jump to audioevents list
             audioStruct player_jump{1, audioType::player_jump, 0};
@@ -372,7 +378,7 @@ void Game::appendWorldObjects(Player *playerPointer) {
         if ( (currentObj->getPosX() - playerPointer->getPosX()) < spawnDistance ) {
             worldObjects.push_back(currentObj);
             levelSpawn.pop_front();
-            //Grafik - Gegner de Scene hinzufügen
+            //Grafik - Gegner der Scene hinzufügen
             levelScene->addItem(currentObj);
         } else {
             break;
@@ -439,6 +445,10 @@ void Game::evaluateInput() {
     // Pfeil rechts?
     if(keyInput->getKeyactions().contains(Input::Keyaction::Right)) {
         playerObjPointer->setSpeedX(playerSpeed);
+        // Audioevent erzeugen
+        audioStruct playerAudio = {audioIDs, player_walk, 0};
+        audioevents.push_back(playerAudio);
+        audioIDs = audioIDs + 1;
     } else {
         playerObjPointer->setSpeedX(0);
     }
@@ -446,14 +456,19 @@ void Game::evaluateInput() {
     // Pfeil oben?
     if(keyInput->getKeyactions().contains(Input::Keyaction::Up)) {
         playerObjPointer->startJump();
+        // Audioevent erzeugen
+        audioStruct playerAudio = {audioIDs, player_jump, 0};
+        audioevents.push_back(playerAudio);
+        audioIDs = audioIDs + 1;
     }
 
     // Leertaste?
     if(keyInput->getKeyactions().contains(Input::Keyaction::Shoot)) {
-        //Shoot *playerFire = new Shoot(playerObjPointer->getPosX(),playerObjPointer->getPosY(),1,player);
-        Shoot *playerFire = new Shoot(playerObjPointer->getPosX()+playerObjPointer->getLength()/2,playerObjPointer->getPosY(),1,player);
-        worldObjects.push_back(playerFire);
-        levelScene->addItem(playerFire);
+        if (playerObjPointer->getAmmunatiuon() > 0) {
+            Shoot *playerFire = new Shoot(playerObjPointer->getPosX()+playerObjPointer->getLength()/2,playerObjPointer->getPosY(),1,player);
+            worldObjects.push_back(playerFire);
+            levelScene->addItem(playerFire);
+        }
     }
 
     // Menü bei ESC
@@ -473,7 +488,7 @@ void Game::calculateMovement() {
     using namespace std;               // für std::list
 
     /// für qDebug (Rupert)
-    std::string objecttypes[] = {"Player", "Enemy ", "Obstac", "Shot  ", "PwrUp ", "BOSS  ", "Plane "};
+    std::string objecttypes[] = {"Player ", "Tourist ", "Securit", "Obstacl", "Plane  ", "Shot   ", "PowerUp", "Boss   "};
     qDebug("Object\tSize\tPosX\tPosY\tSpeed");
     int speedX=0,speedY=0;
 
@@ -486,7 +501,7 @@ void Game::calculateMovement() {
         if(aktMovingObject != 0) {
             aktMovingObject->update();          // Wenn der cast klappt, rufe update() auf.
             //falls es sich um einen Gegner handelt feuern
-            if (aktMovingObject->getType() == enemy){
+            if ((aktMovingObject->getType() == enemy_security) || (aktMovingObject->getType() == enemy_tourist)){
                 Enemy *aktEnemy = dynamic_cast<Enemy*> (aktMovingObject);
                 if (aktEnemy->getDeathCooldown() == 0) {
                     objectsToDelete.push_back(aktEnemy);
@@ -500,14 +515,14 @@ void Game::calculateMovement() {
                     if (aktEnemy->getSpeedX() == 0) {
                         direction = playerObjPointer->getPosX() - aktEnemy->getPosX();
                     } else {
-                        direction = playerObjPointer->getSpeedX();
+                        direction = aktEnemy->getSpeedX();
                     }
                     if (direction < 0) {
                         direction = -1;
                     } else {
                         direction = 1;
                     }
-                    enemyFire = new Shoot(aktEnemy->getPosX(), aktEnemy->getPosY(), direction, enemy);
+                    enemyFire = new Shoot(aktEnemy->getPosX(), aktEnemy->getPosY(), direction, aktEnemy->getType());
                     worldObjects.push_back(enemyFire);
                     levelScene->addItem(enemyFire);
                     enemyFire = 0;
@@ -524,8 +539,6 @@ void Game::calculateMovement() {
 
     }
 
-    //Grafik - sorgt dafür dass "window" auf den Spieler zentriert bleibt
-    window->centerOn(playerObjPointer->getPosX() + 512 - 100 - 0.5*playerObjPointer->getLength(), 384);
 }
 
 /**
@@ -578,7 +591,7 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
                 // Kollision feststellen: Dazu ist Überschneidung in X- und Y-Richtung nötig
 
                 // Überschneidung in X-Richtung
-                int overlapX = (causingObject->getPosX() + causingObject->getLength()) - affectedObject->getPosX();
+                int overlapX = (causingObject->getPosX() + (causingObject->getLength() / 2)) - (affectedObject->getPosX() - (affectedObject->getLength() / 2));
                 if (overlapX > 0) {
                     /* Objekte überschneiden sich (statisches links von beweglichem)
                      * Lage bezüglich Y-Richtung überprüfen
@@ -603,10 +616,8 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
                                 collisionStruct collision = {affectedObject, causingObject, fromBelow};
                                 collisionsToHandle.push_back(collision);
                             } else if ((affectedObject->getSpeedX() < 0) && (affectedObject->getSpeedY() > 0)) {
-                                //wenn sich das bewegende Objekt sowohl nach links alsauch nach oben bewegt erzeuge zwei Kollisionen
+                                //wenn sich das bewegende Objekt sowohl nach links alsauch nach oben
                                 collisionStruct collision = {affectedObject, causingObject, fromBelow};
-                                collisionsToHandle.push_back(collision);
-                                collision = {affectedObject, causingObject, fromRight};
                                 collisionsToHandle.push_back(collision);
                             } else {
                                 //wenn sich bewegendes Objekt nicht nach oben bewegt
@@ -675,7 +686,7 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
                 // Kollision feststellen: Dazu ist Überschneidung in X- und Y-Richtung nötig
 
                 // Überschneidung in X-Richtung
-                int overlapX = (affectedObject->getPosX() + affectedObject->getLength()) - causingObject->getPosX();
+                int overlapX = (affectedObject->getPosX() + (affectedObject->getLength() / 2)) - (causingObject->getPosX() - (causingObject->getLength() / 2));
                 if (overlapX > 0) {
                     /* Objekte überschneiden sich (statisches rechts von beweglichem)
                      * Lage bezüglich Y-Richtung überprüfen
@@ -700,10 +711,8 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
                                 collisionStruct collision = {affectedObject, causingObject, fromBelow};
                                 collisionsToHandle.push_back(collision);
                             } else if ((affectedObject->getSpeedX() > 0) && (affectedObject->getSpeedY() > 0)) {
-                                //wenn sich das bewegende Objekt sowohl nach rechts alsauch nach oben bewegt, erzeuge zwei Kollisionen
+                                //wenn sich das bewegende Objekt sowohl nach rechts alsauch nach oben bewegt
                                 collisionStruct collision = {affectedObject, causingObject, fromBelow};
-                                collisionsToHandle.push_back(collision);
-                                collision = {affectedObject, causingObject, fromLeft};
                                 collisionsToHandle.push_back(collision);
                             } else {
                                 //wenn sich bewegendes Objekt nicht nach oben bewegt
@@ -780,10 +789,9 @@ void Game::handleCollisions() {
              *  mit Hindernis, Gegner, Schüssen, PowerUps
              *
              * default: Spieler
-             *
-             * PowerUps FEHLT!!!!!
              */
             switch (handleEvent.causingObject->getType()) {
+            case plane:
             case obstacle: {
                 /* Zusammenstoß mit Hindernis
                  * Bewegungsabbruch, Positionskorrektur
@@ -794,7 +802,7 @@ void Game::handleCollisions() {
                     //Bewegung  in X-Richtungstoppen
                     playerObjPointer->setSpeedX(0);
                     //Überlappung berechnen und Spieler nach links versetzen
-                    overlap = (playerObjPointer->getPosX() + playerObjPointer->getLength()) - handleEvent.causingObject->getPosX();
+                    overlap = (playerObjPointer->getPosX() + (playerObjPointer->getLength() / 2)) - (handleEvent.causingObject->getPosX() - (handleEvent.causingObject->getLength() / 2));
                     playerObjPointer->setPosX(playerObjPointer->getPosX() - overlap);
                     break;
                 }
@@ -802,7 +810,7 @@ void Game::handleCollisions() {
                     //Bewegung in X-Richtung stoppen
                     playerObjPointer->setSpeedX(0);
                     //Überlappung berechnen und Spieler nach rechts versetzen
-                    overlap = (handleEvent.causingObject->getPosX() + handleEvent.causingObject->getLength()) - playerObjPointer->getPosX();
+                    overlap = (handleEvent.causingObject->getPosX() + (handleEvent.causingObject->getLength() / 2)) - (playerObjPointer->getPosX() - (playerObjPointer->getLength() / 2));
                     playerObjPointer->setPosX(handleEvent.causingObject->getPosX() + handleEvent.causingObject->getLength());
                     break;
                 }
@@ -828,24 +836,22 @@ void Game::handleCollisions() {
 
                 break;
             }
-            case enemy: {
+            case enemy_security:
+            case enemy_tourist: {
                 /* Zusammenstoß mit Gegener
                  *      Spieler läuft in Gegner oder Gegner fällt auf Spieler (sonst siehe affectedObject==enemy)
                  *      Dem Spieler wird Schaden zugefügt und er erhält einen kurzen immunitätsbonus, falls nicht schon vorhanden
                  */
 
-                qDebug("Spieler - Gegner:----wir berühren uns");
-
                 if (!(handleEvent.direction == fromAbove)) {
                     //Überprüfen ob dem Spieler Schaden zugefügt werden kann
                     if (!(playerObjPointer->getImmunityCooldown() > 0)) {
                         handleEnemy = dynamic_cast<Enemy*>(handleEvent.causingObject);
-                        //Stirbt der Spieler durch den zugefügten Schaden -> GameOver
-                        if (hurtPlayer(handleEnemy->getInflictedDamage())) {
-                            gameStats.gameOver = true;
-                        } else {
-                            //Immunitätsbonus einer haleben Sekunde
-                            playerObjPointer->setImmunityCooldown(10);
+                        if (!(handleEnemy->getDeath())) {
+                            //Stirbt der Spieler durch den zugefügten Schaden -> GameOver
+                            gameStats.gameOver = playerObjPointer->receiveDamage(handleEnemy->getInflictedDamage());
+                            //Immunitätsbonus einer halben Sekunde
+                            playerObjPointer->setImmunityCooldown(frameRate / 2);
                         }
                         handleEnemy = 0;
                     }
@@ -854,9 +860,7 @@ void Game::handleCollisions() {
             case shot: {
                 // Spieler kriegt Schaden, Bierkrug zum löschen vormerken, treffen mit eigenem Krug nicht möglich
                 handleShoot = dynamic_cast<Shoot*>(handleEvent.causingObject);
-                if (hurtPlayer(handleShoot->getInflictedDamage())) {
-                    gameStats.gameOver = true;
-                }
+                gameStats.gameOver = playerObjPointer->receiveDamage(handleShoot->getInflictedDamage());
                 objectsToDelete.push_back(handleShoot);
                 handleShoot = 0;
                 break;
@@ -865,6 +869,7 @@ void Game::handleCollisions() {
                 /* Zusammenstöße mit PowerUps
                  *      Der Spieler erhält zusatzfähigkeiten
                  */
+                ///@todo Soundevents erzeugen
                 PowerUp *handlePowerUp = dynamic_cast<PowerUp*> (handleEvent.causingObject);
                 playerObjPointer->setHealth(playerObjPointer->getHealth() + handlePowerUp->getHealthBonus());
                 playerObjPointer->increaseAmmunation(handlePowerUp->getAmmunationBonus());
@@ -875,6 +880,7 @@ void Game::handleCollisions() {
                 break;
             }
             default: {
+                ///@todo Boss und Plane
                 /* Zusammenstoß mit Spieler
                  *      nicht möglich
                  */
@@ -883,7 +889,8 @@ void Game::handleCollisions() {
             break;
         } // end (case player)
 
-        case enemy: {
+        case enemy_security:
+        case enemy_tourist: {
             /*Zusammenstöße des Gegners
              *  mit Spieler, Hindernis, Schüssen
              *
@@ -899,18 +906,17 @@ void Game::handleCollisions() {
                  *      Spieler springt auf Gegner (sonst siehe affectedObject==player)
                  * Der Gegner wird getötet
                  */
-                qDebug("Der Spieler tötet mich");
-                handleEnemy->setDeath(true);
+                if (handleEvent.direction == fromAbove) {
+                    handleEnemy->setDeath(true);
+                }
                 break;
             }
             case obstacle: {
                 /* Zusammenstoß mit Hindernis
                  *  Bewegungsabbruch, Positionskorrektur, neue Bewegungsrichtung
                  */
-                qDebug("I change my direction");
                 if (handleEvent.direction == fromAbove) {
                     //Fall wird beendet, X-Bewegung uneingeschränkt
-                    handleEnemy->setSpeedY(0);
                     overlap = (handleEvent.causingObject->getPosY() + handleEvent.causingObject->getHeight()) - handleEnemy->getPosY();
                     handleEnemy->setPosY(handleEnemy->getPosY() + overlap);
                 } else {
@@ -921,12 +927,10 @@ void Game::handleCollisions() {
                         //Gegner kommt von links
                         overlap = (handleEnemy->getPosX() + handleEnemy->getLength()) - handleEvent.causingObject->getPosX();
                         handleEnemy->setPosX(handleEnemy->getPosX() - overlap);
-                        qDebug("dreh nach rechts");
                     } else {
                         //Gegner kommt von rechts
                         overlap = (handleEvent.causingObject->getPosX() + handleEvent.causingObject->getLength()) - handleEnemy->getPosX();
                         handleEnemy->setPosX(handleEnemy->getPosX() + overlap);
-                        qDebug("dreh nach links");
                     }
                 }
                 break;
@@ -939,23 +943,20 @@ void Game::handleCollisions() {
                 handleShoot = dynamic_cast<Shoot*>(handleEvent.causingObject);
                 if (handleShoot->getOrigin() == player) {
                     //Schaden zufügen
-                    handleEnemy->setHealth(handleEnemy->getHealth() - handleShoot->getInflictedDamage());
+                    handleEnemy->receiveDamage(handleShoot->getInflictedDamage());
                     //Bierkrug zum löschen vormerken
                     objectsToDelete.push_back(handleShoot);
-                    //Im Falle des Todes
-                    if (handleEnemy->getHealth() < 0) {
-                        handleEnemy->setDeath(true);
-                    }
                 }
                 handleShoot = 0;
                 break;
             }
             default: {
-                /*Zusammenstoß mit Gegner, PowerUp
+                /*Zusammenstoß mit Gegner, PowerUp, Plane, BOSS
                  *      kein Effekt
                  */
             }
             }
+            handleEnemy = 0;
             break;
         }//end (case enemy)
 
@@ -965,11 +966,9 @@ void Game::handleCollisions() {
              *
              * default: Spieler, Gegner, PowerUps
              *      wird jeweils in der Situation Spieler/Gegner bearbeitet, bei PowerUps keinen effekt
+             * Bierkrug löschen, bei Kollision mit Hindernis
              */
-
-            qDebug("It is going to hurt");
-            //Bierkrug löschen, bei Kollision mit Hindernis
-            if (handleEvent.causingObject->getType() == obstacle) {
+            if ((handleEvent.causingObject->getType() == obstacle) || (handleEvent.causingObject->getType() == plane)){
                 objectsToDelete.push_back(dynamic_cast<Shoot*>(handleEvent.affectedObject));
             }
             break;
@@ -985,18 +984,32 @@ void Game::handleCollisions() {
     }
 }
 
-
 /**
- * @brief Fügt dem Spieler Schaden zu
- * @param Schaden
- * @return true Spieler ist gestorben
+ * @brief durchläuft die Liste audioStorage, zählt die Cooldowns runter
+ *  Die Soundevents die noch laufen, werden an die Liste SoundEvents übergeben. Die fertigen werden gelöscht.
  */
-bool Game::hurtPlayer(int damage) {
-    playerObjPointer->setHealth(playerObjPointer->getHealth() - damage);
-    return !(playerObjPointer->getHealth() > 0);
-
+void Game::updateAudio() {
+///@todo
+    for (std::list<GameObject*>::iterator it=worldObjects.begin(); it != worldObjects.end(); ++it) {
+        GameObject *handleObject =  (*it);
+        switch (handleObject->getType()) {
+        case enemy_tourist:
+        case enemy_security: {
+            float distance = static_cast<float> ((std::abs(playerObjPointer->getPosX() - handleObject->getPosX()) / sceneWidth));
+            audioStruct newAudio = {handleObject->getAudioID(), scene_enemy, distance};
+            audioevents.push_back(newAudio);
+        }
+        }
+    }
+    for (std::list<audioCooldownstruct>::iterator it = audioStorage.begin(); it != audioStorage.end(); ++it) {
+        if (it->cooldown > 0) {
+            it->cooldown = it->cooldown - 1;
+            audioevents.push_back(it->audioEvent);
+        } else {
+            audioStorage.erase(it);
+        }
+    }
 }
-
 
 /**
  * @brief Game::renderGraphics
@@ -1004,6 +1017,7 @@ bool Game::hurtPlayer(int damage) {
  * @param objectList
  */
 void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPointer) {
+    window->centerOn(playerObjPointer->getPosX() + 512 - 100 - 0.5 * playerObjPointer->getLength(), 384);
     //Bewegunsparralaxe Positionsaktualisierung
     (backgrounds[0]).setPos(((backgrounds[0]).x()) + ((playerPointer->getPosX() - (playerScale/2) - (playerPointer->x())) /2), 0);
     (backgrounds[1]).setPos(((backgrounds[1]).x()) + ((playerPointer->getPosX() - (playerScale/2) - (playerPointer->x())) /2), 0);
@@ -1105,6 +1119,16 @@ void Game::loadLevelFile(QString fileSpecifier) {
 
             try {
 
+                if (strlist.at(0) == "Levellänge") {
+                    if (strlist.length() != 2) {
+                        throw std::string("Ungültiger Eintrag für die Levellänge");
+                    } else {
+                        // Setze die Levellänge
+                        levelLength = strlist.at(1).toInt();
+                        qDebug() << "  Levellänge gesetzt.";
+                    }
+                }
+
                 if (strlist.at(0) == "Player") {
                     if (strlist.length() != 3) {
                         throw std::string("Ungültiger Player-Eintrag: ");
@@ -1116,12 +1140,22 @@ void Game::loadLevelFile(QString fileSpecifier) {
                     }
                 }
 
-                if (strlist.at(0) == "Enemy") {
+                if (strlist.at(0) == "Tourist") {
                     if (strlist.length() != 4) {
-                        throw std::string("Ungültiger Enemy-Eintrag:");
+                        throw std::string("Ungültiger Tourist-Eintrag:");
                     } else {
-                        qDebug() << "  Enemy-Eintrag gefunden.";
-                        GameObject *enemyToAppend = new Enemy(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt());
+                        qDebug() << "  Tourist-Eintrag gefunden.";
+                        GameObject *enemyToAppend = new Enemy(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), enemy_tourist);
+                        levelSpawn.push_back(enemyToAppend);
+                    }
+                }
+
+                if (strlist.at(0) == "Security") {
+                    if (strlist.length() != 3) {
+                        throw std::string("Ungültiger Security-Eintrag:");
+                    } else {
+                        qDebug() << "  Security-Eintrag gefunden.";
+                        GameObject *enemyToAppend = new Enemy(strlist.at(1).toInt(), strlist.at(2).toInt(), 0, enemy_security);
                         levelSpawn.push_back(enemyToAppend);
                     }
                 }
@@ -1254,4 +1288,3 @@ void Game::updateHighScore(std::string mode) {
 int Game::getStepIntervall() {
     return stepIntervall;
 }
-

@@ -11,7 +11,7 @@
  *
  * @todo Skalieren der Werte und fireCooldown erhöhen
  */
-Enemy::Enemy(int posX, int posY, int speedX) : MovingObject(posX, posY, enemy, speedX, -maxSpeedY) {
+Enemy::Enemy(int posX, int posY, int speedX, objectType enemy) : MovingObject(posX, posY, enemy, speedX, -maxSpeedY) {
     health = 1;
     ///Fire Cooldown für debug zwecke niedrig
     fireCooldown = 2;

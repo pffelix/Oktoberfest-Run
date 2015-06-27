@@ -58,7 +58,7 @@ public:
     struct stateStruct gameStats;
     //Liste von Kollisionen
     std::list<struct collisionStruct> collisionsToHandle;
-    struct stateStruct states;
+    //struct stateStruct states;
     int start();
 
 protected:
@@ -74,7 +74,7 @@ private:
     void handleCollisions();
     void renderGraphics(std::list<GameObject *> *objectList, Player *playerPointer);
     void endGame();
-
+    void updateAudio();
     bool hurtPlayer(int damage);
 
     void updateScore();
@@ -94,14 +94,17 @@ private:
     std::list<GameObject*> levelSpawn;
     /// Zu löschende Schüsse
     std::list<GameObject*> objectsToDelete;
-
     /// Audiocontrol Objekt zum Erzeugen der Soundausgabe
     AudioControl *audioOutput;
     /// Liste audioevents mit allen im Step stattfindenden AudioStructs
     std::list<struct audioStruct> audioevents;
+    /// Liste mit den Audioevents die einmal aufgerufen werden aber eine Längere Spielzeit haben
+    std::list<struct audioCooldownstruct> audioStorage;
 
     /// Breite der Szene
     int sceneWidth;
+    /// Länge des Levels
+    int levelLength;
     /// Distanz in der Gegner gespawnt werden
     int spawnDistance;
     std::list<struct scoreStruct> scoreList;
@@ -138,6 +141,7 @@ private:
     /// stepCount wird mit jedem Step um ein erhöht
     /// Auslesen der vergangenen Zeit: stepCount * getStepIntervall()
     int stepCount = 0;
+    int audioIDs;
 };
 
 #endif // GAME_H

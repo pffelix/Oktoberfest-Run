@@ -23,6 +23,9 @@ public:
     //Typen()
     objectType getType() const;
 
+    void setAudioID(int audioID);
+    int getAudioID() const;
+
 protected:
     //Position
     int posX;
@@ -34,6 +37,7 @@ private:
     int height;
     //Objecttyp
     objectType type;
+    int audioID;
 
 };
 

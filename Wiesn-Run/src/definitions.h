@@ -18,7 +18,7 @@
  * @brief Anzahl gameloop-Durchläufe pro Sekunde
  * wird in allen Klassen für die CooldownParameter benutzt
  */
-const int frameRate = 20;
+const int frameRate = 30;
 
 /**
  * @brief Skalierungsfaktor für die Breite des Spielerobjekts bei 1024 Bildschirmbreite:
@@ -53,6 +53,11 @@ const int playerSpeed = maxSpeed / 2;
 const int maxSpeedY = 3 * (playerScale / frameRate);
 
 /**
+ * @brief maximales Leben
+ */
+const int maxHealth = 5;
+
+/**
  * @brief Enumerator für den aktuellen Spielstatus
  * ähnlich zu einer StateMachine
  * wird in step() über switch abgefragt
@@ -69,7 +74,7 @@ enum gameState {
  * @author Johann
  */
 enum objectType {
-    player, enemy, obstacle, shot, powerUp, BOSS, plane
+    player, enemy_tourist, enemy_security, obstacle, plane, shot, powerUp, BOSS,
 };
 
 /**
@@ -94,6 +99,7 @@ struct scoreStruct {
     int enemiesKilled;
     int distanceCovered;
     int alcoholPoints;
+    int totalPoints;
 };
 
 
@@ -261,6 +267,14 @@ struct audioStruct {
     float distance;
 };
 
+
+/**
+ * @brief Struktur für audioevents mit ihrer abspielzeit als Cooldown
+ */
+struct audioCooldownstruct {
+    struct audioStruct audioEvent;
+    int cooldown;
+};
 
 /**
  * @brief Struktur für die States des Spiels
