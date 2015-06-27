@@ -18,15 +18,6 @@ GameObject::GameObject(int posX, int posY, int length, int height, objectType ty
     this->length = length;
     this->height = height;
     this->type = type;
-
-    /*
-    //Grafik - Plane Image initialisieren
-    /// @todo Das muss vermutlich entfernt werden
-     if(getType() == obstacle && getLength() == 2*playerScale) {
-        setPixmap(QPixmap(":/images/images/plane.png"));
-        setPos(getPosX() - getLength()*0.5, yOffset - getPosY() - getHeight());
-     }
-     */
 }
 
 GameObject::GameObject(int posX, int posY, objectType type) {

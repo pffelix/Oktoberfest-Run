@@ -12,13 +12,13 @@ LIBS += -L/usr/lib/x86_64-linux-gnu/libportaudiocpp.so -lportaudio
 
 win32 {
     # Windows 32 includes
-LIBS += "C:\Qt\Qt5.4.1\5.4\mingw491_32\bin\libportaudio-2.dll"
+LIBS += "C:\Qt\5.4\mingw491_32\bin\libportaudio-2.dll"
 
 }
 
 win64 {
     # Windows 32 includes
-LIBS += "C:\Qt\Qt5.4.1\5.4\mingw491_32\bin\libportaudio-2.dll"
+LIBS += "C:\Qt\5.4\mingw491_32\bin\libportaudio-2.dll"
 }
 
 
