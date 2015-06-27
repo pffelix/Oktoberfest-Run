@@ -128,6 +128,7 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
         }
     }
     playeventsnumber = playevents.size();
+
 }
 
 
@@ -213,9 +214,9 @@ int AudioControl::myMemberpatestCallback( const void *inputBuffer, void *outputB
 
         /// Mix Samples
         mixed_sample = 0;
-        for (std::list<playStruct>::iterator ps = playevents.begin(); ps != playevents.end(); ps++) {
-            mixed_sample += ps->objectref->getSample(ps->position);
-            ps->position += 1;
+        for (callback_pe = playevents.begin(); callback_pe != playevents.end(); callback_pe++) {
+            mixed_sample += callback_pe->objectref->getSample(callback_pe->position)*callback_pe->volume;
+            callback_pe->position += 1;
         }
         // block[block_pos] = mixSample();
         *out++ = mixed_sample;
