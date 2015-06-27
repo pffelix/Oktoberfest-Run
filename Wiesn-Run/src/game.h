@@ -19,6 +19,7 @@
 #include <QGraphicsPixmapItem>
 #include <chrono>
 #include "menu.h"
+#include "portaudio.h"
 
 /**
  * @brief Struktur für die Events
@@ -96,6 +97,8 @@ private:
     std::list<GameObject*> objectsToDelete;
     /// Audiocontrol Objekt zum Erzeugen der Soundausgabe
     AudioControl *audioOutput;
+    /// Error Variable von PortAudio
+    PaError paerror;
     /// Liste audioevents mit allen im Step stattfindenden AudioStructs
     std::list<struct audioStruct> audioevents;
     /// Liste mit den Audioevents die einmal aufgerufen werden aber eine Längere Spielzeit haben

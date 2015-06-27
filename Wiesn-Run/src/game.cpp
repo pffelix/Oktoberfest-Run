@@ -18,6 +18,7 @@
 
 
 
+
 /**
  * @brief Verglecht zwei GameObjects, bezüglich der X-Position
  * @param 1.Objekt
@@ -129,8 +130,9 @@ int Game::start() {
 
     /// Erstelle Audiocontrol Objekt zum Einlesen der Audiodatein und speichern der Ausgabeparameter
     audioOutput = new AudioControl;
-    /// Erstelle einen Thread der PortAudio initialisiert wird und in audioOutput gespeicherte Audiodaten abspielt
-    std::thread audiothread(&AudioControl::playInitialize, audioOutput);
+    /// Erstelle einen neuen Thread portaudiothread.
+    /// Initialisiere dort PortAudio und beginne eine Audioausgabe zu erzeugen.
+    std::thread portaudiothread(&AudioControl::playInitialize, audioOutput);
 
     ///@TODO flo: ka was das hier an der Stelle soll, habs mal auskommentiert
     //startNewGame();
@@ -230,12 +232,40 @@ void Game::startNewGame() {
 
 /**
  * @brief Game::endGame
+ * @ author: Felix Pfreundtner
  */
 void Game::endGame() {
     /// @todo Aufräumarbeiten
     // Highscore aktualisieren
     std::string mode = "write";
     updateHighScore(mode);
+
+    /// Stoppe die Portaudio Audio Wiedergabe
+    paerror = Pa_StopStream(audioOutput->getPastream());
+    if(paerror != paNoError) {
+        goto error;
+    }
+    /// Schließe den Portaudio Stream
+    paerror = Pa_CloseStream(audioOutput->getPastream());
+    if(paerror != paNoError) {
+        goto error;
+    }
+    /// Beende PortAudio
+    Pa_Terminate();
+
+    /// Lösche Objekt audioOutput
+    delete audioOutput;
+
+
+error:
+    Pa_Terminate();
+    fprintf( stderr, "Ein Meldung trat während der Benutzung der PortAudio Ausgabe auf\n" );
+    fprintf( stderr, "Error Nummer: %d\n", paerror );
+    fprintf( stderr, "Error Nachricht: %s\n", Pa_GetErrorText( paerror ) );
+
+    /// delete audio
+    ///
+
 }
 
 

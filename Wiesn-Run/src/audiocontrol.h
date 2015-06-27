@@ -50,6 +50,7 @@ public:
     ~AudioControl();
     void playInitialize();
     void update(std::list<struct audioStruct> *audioevents);
+    PaStream* getPastream();
 
     private:
     /**
@@ -88,6 +89,12 @@ public:
      * @author  Felix Pfreundtner
      */
     std::list<playStruct>::iterator callback_pe;
+    /**
+     * @brief  max_playevents
+     *         Maximum Number of Playevents without Clipping.
+     * @author  Felix Pfreundtner
+     */
+    int max_playevents;
     /** @brief  blockcontinue
      *         Audio Ausgabe blockcontinue mit gemischen Samples aller während der Programmlaufzeit abgespielten block's.
      * @author  Felix Pfreundtner
@@ -112,17 +119,27 @@ public:
      * @author  Felix Pfreundtner
      */
     int playeventsnumber;
-
-
+    /**
+     * @brief  pastream
+     *         Erstelle Zeiger auf PortAudio Stream pastream.
+     * @author  Felix Pfreundtner
+     */
+    PaStream *pastream;
+    /**
+     * @brief  paerror
+     *         Erstelle Variable um PortAudio Errors zu speichern.
+     * @author  Felix Pfreundtner
+     */
+    PaError paerror;
 
     // Instanzfunktion Callback des aktuellen AudioControl Objekts
-    int myMemberpatestCallback(const void *input, void *output,
+    int instancepaCallback(const void *input, void *output,
                                unsigned long frameCount,
                                const PaStreamCallbackTimeInfo* timeInfo,
                                PaStreamCallbackFlags statusFlags);
 
     // Statische Funktion Callback der AudioControl Klasse
-    static int patestCallback(
+    static int staticpaCallback(
                               const void *input, void *output,
                               unsigned long frameCount,
                               const PaStreamCallbackTimeInfo* timeInfo,
@@ -131,7 +148,7 @@ public:
     // gebe einen Function Pointer auf Instanz Callback Funktion zurück
     {
       return ((AudioControl*)userData)
-         ->myMemberpatestCallback(input, output, frameCount, timeInfo, statusFlags);
+         ->instancepaCallback(input, output, frameCount, timeInfo, statusFlags);
     }
 
     void play();
