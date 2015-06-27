@@ -148,6 +148,8 @@ private:
     /// Auslesen der vergangenen Zeit: stepCount * getStepIntervall()
     int stepCount = 0;
     int audioIDs;
+    audioCooldownStruct audioCooldown;
+    audioDistanceStruct audioDistance;
 };
 
 #endif // GAME_H

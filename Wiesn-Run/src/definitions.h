@@ -188,7 +188,7 @@ typedef struct {
     int background_level3 = 0;
     int background_startgame = 1000;
     int background_levelfinished = 2000;
-} audioCooldown;
+} audioCooldownStruct;
 
 /**
  * @brief Typdef Struct mit Konstanten für die Distance jedes Audiotypes
@@ -219,7 +219,7 @@ typedef struct {
     float background_startgame = 0.2;
     float background_levelfinished = 0.2;
 
-} audioDistance;
+} audioDistanceStruct;
 
 
 /**
