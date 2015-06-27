@@ -83,12 +83,16 @@ public:
      */
     float block[BLOCKSIZE];
     /**
-     * @brief  blockcontinue
+     * @brief  callback_pe
+     *         Iterator über Audioevents Liste in PortAudio Callback Funktion. Zur höheren Perfomance bereits hier deklariert.
+     * @author  Felix Pfreundtner
+     */
+    std::list<playStruct>::iterator callback_pe;
+    /** @brief  blockcontinue
      *         Audio Ausgabe blockcontinue mit gemischen Samples aller während der Programmlaufzeit abgespielten block's.
      * @author  Felix Pfreundtner
      */
     std::vector<float> blockcontinue;
-
     /**
      * @brief  blockcounter
      *         blockcounter zählt die bereits abgespielten Audio Ausgabe Blöcke.
@@ -100,7 +104,7 @@ public:
      *         mixed_sample beinhaltet das aktuell von mixSample() gemixte Sample aller audioEvents.
      * @author  Felix Pfreundtner
      */
-    int mixed_sample;
+    float mixed_sample;
     /**
      * @brief  playeventsnumber
      *         playeventsnumber beinhaltet die Anzahl an aktuelle abzuspielenden audioEvents.
