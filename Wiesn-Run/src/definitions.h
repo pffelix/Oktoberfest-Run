@@ -15,6 +15,16 @@
 #include <list>
 
 /**
+ * @brief Enumerator für den aktuellen Spielstatus
+ * ähnlich zu einer StateMachine
+ * wird in step() über switch abgefragt
+ * @author Rupert
+ */
+enum gameState {
+    gameIsRunning, gameMenuStart, gameMenuEnd
+};
+
+/**
  * @brief Anzahl gameloop-Durchläufe pro Sekunde
  * wird in allen Klassen für die CooldownParameter benutzt
  */
@@ -56,17 +66,6 @@ const int maxSpeedY = 3 * (playerScale / frameRate);
  * @brief maximales Leben
  */
 const int maxHealth = 5;
-
-/**
- * @brief Enumerator für den aktuellen Spielstatus
- * ähnlich zu einer StateMachine
- * wird in step() über switch abgefragt
- * @author Rupert
- */
-enum gameState {
-    gameIsRunning, gameMenuStart, gameMenuEnd
-};
-
 
 /**
  * @brief Enumerator für den Objekt-Typ

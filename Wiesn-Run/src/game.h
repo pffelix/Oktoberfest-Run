@@ -61,6 +61,8 @@ public:
     //struct stateStruct states;
     int start();
 
+    void setState(enum gameState newState);
+
 protected:
     void timerEvent(QTimerEvent *event);
 
@@ -142,9 +144,9 @@ private:
     /// zur Unterscheidung und Identifizierung der Menü-Einträge
     enum menuIds {
         menuId_NonClickable,
-        menuStartId_StartGame, menuStartId_EndGame, menuStartId_Credits,   // Startmenü
+        menuStartId_NewGame, menuStartId_EndGame, menuStartId_Credits,   // Startmenü
         menuCreditsId_Back, // Credits
-        menuLevelId_Level1, menuLevelId_Level2, menuLevelId_Level3, menuLevelId_Next,   // Levelauswahl
+        menuLevelId_Level1, menuLevelId_Level2, menuLevelId_Level3, menuLevelId_StartGame,   // Levelauswahl
         menuBreakId_Resume, menuBreakId_EndGame,    // Pause
         menuStatisticsId_Next,  // Statistik
         menuNameId_Next,        // Name eingeben
