@@ -195,7 +195,7 @@ void Game::startNewGame() {
     // Szenen-Breite setzen
     sceneWidth = 1024;
     // audioIDs initialisieren
-    audioIDs = 1;
+    audioIDs = 10;
 
     playerStats = std::vector<QGraphicsTextItem>(3);
 
@@ -506,11 +506,13 @@ void Game::evaluateInput() {
 
     // Pfeil oben?
     if(keyInput->getKeyactions().contains(Input::Keyaction::Up)) {
-        playerObjPointer->startJump();
-        // Audioevent erzeugen
-        audioStruct playerAudio = {audioIDs, player_jump, 0};
-        audioevents.push_back(playerAudio);
-        audioIDs = audioIDs + 1;
+        if (!(playerObjPointer->inJump())) {
+            playerObjPointer->startJump();
+            // Audioevent erzeugen
+            audioStruct playerAudio = {audioIDs, player_jump, 0};
+            audioevents.push_back(playerAudio);
+            audioIDs = audioIDs + 1;
+        }
     }
 
     // Leertaste?
@@ -751,10 +753,9 @@ void Game::handleCollisions() {
                 case fromBelow: {
                     //Wegen Zusammenstoß wird ein Fall initiiert
                     playerObjPointer->abortJump();
-                    //Überlappung berechnen und Spieler nach obern versetzen
+                    //Überlappung berechnen und Spieler nach unten versetzen
                     overlap = (playerObjPointer->getPosY() + playerObjPointer->getHeight()) - handleEvent.causingObject->getPosY();
-                    playerObjPointer->setPosY(playerObjPointer->getPosY() + overlap);
-                    playerObjPointer->resetJumpState();
+                    playerObjPointer->setPosY(playerObjPointer->getPosY() - overlap);
                     break;
                 }
                 }
@@ -914,18 +915,70 @@ void Game::handleCollisions() {
  *  Die Soundevents die noch laufen, werden an die Liste SoundEvents übergeben. Die fertigen werden gelöscht.
  */
 void Game::updateAudio() {
-///@todo
+
+    //Hintergrundmusik
+    int levelBackground [3] {background_level1, background_level2, background_level3};
+    audioStruct newAudio = {0, levelBackground[gameStats.actLevel], 0.5};
+    audioevents.push_back(newAudio);
+
+    //Warntöne Leben/Alcoholpegel
+    if (playerObjPointer->getHealth() < 2) {
+        newAudio = {1, status_life, 0};
+        audioevents.push_back(newAudio);
+    }
+    if (playerObjPointer->getAlcoholLevel() >maxAlcohol) {
+        newAudio = {2, status_alcohol, 0};
+        audioevents.push_back(newAudio);
+    }
+
+    // Alle Objekte durchlaufen und für die sich bewegenden die entsprechenden Sounds ausgeben
     for (std::list<GameObject*>::iterator it=worldObjects.begin(); it != worldObjects.end(); ++it) {
         GameObject *handleObject =  (*it);
         switch (handleObject->getType()) {
-        case enemy_tourist:
-        case enemy_security: {
+        case enemy_tourist: {
+            if (handleObject->getAudioID() == 0) {
+                handleObject->setAudioID(audioIDs);
+                audioIDs = audioIDs + 1;
+            }
             float distance = static_cast<float> ((std::abs(playerObjPointer->getPosX() - handleObject->getPosX()) / sceneWidth));
-            audioStruct newAudio = {handleObject->getAudioID(), scene_enemy_tourist, distance};
+            newAudio = {handleObject->getAudioID(), scene_enemy_tourist, distance};
             audioevents.push_back(newAudio);
+            break;
+        }
+        case enemy_security: {
+            if (handleObject->getAudioID() == 0) {
+                handleObject->setAudioID(audioIDs);
+                audioIDs = audioIDs + 1;
+            }
+            float distance = static_cast<float> ((std::abs(playerObjPointer->getPosX() - handleObject->getPosX()) / sceneWidth));
+            newAudio = {handleObject->getAudioID(), scene_enemy_security, distance};
+            audioevents.push_back(newAudio);
+            break;
+        }
+        case BOSS: {
+            if (handleObject->getAudioID() == 0) {
+                handleObject->setAudioID(audioIDs);
+                audioIDs = audioIDs + 1;
+            }
+            float distance = static_cast<float> ((std::abs(playerObjPointer->getPosX() - handleObject->getPosX()) / sceneWidth));
+            newAudio = {handleObject->getAudioID(), scene_enemy_boss, distance};
+            audioevents.push_back(newAudio);
+            break;
+
+        }
+        case shot: {
+            if (handleObject->getAudioID() == 0) {
+                handleObject->setAudioID(audioIDs);
+                audioIDs = audioIDs + 1;
+            }
+            float distance = static_cast<float> ((std::abs(playerObjPointer->getPosX() - handleObject->getPosX()) / sceneWidth));
+            newAudio = {handleObject->getAudioID(), scene_flyingbeer, distance};
+            audioevents.push_back(newAudio);
+            break;
         }
         }
     }
+
     for (std::list<audioCooldownstruct>::iterator it = audioStorage.begin(); it != audioStorage.end(); ++it) {
         if (it->cooldown > 0) {
             it->cooldown = it->cooldown - 1;

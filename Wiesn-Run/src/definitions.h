@@ -57,6 +57,7 @@ const int maxSpeedY = 2 * (playerScale / frameRate);
  * @brief maximales Leben
  */
 const int maxHealth = 5;
+const int maxAlcohol = 4500;
 
 /**
  * @brief Enumerator für den aktuellen Spielstatus
@@ -276,6 +277,10 @@ struct audioCooldownstruct {
     int cooldown;
 };
 
+enum powerUpType {
+    beer, food
+};
+
 /**
  * @brief Struktur für die States des Spiels
  * Sowohl Sound- als auch Grafik-Ausgabe erhalten aus den States Informationen darüber, was gerade im Spiel passiert,
@@ -284,12 +289,15 @@ struct audioCooldownstruct {
  * @author Simon
  */
 struct stateStruct {
+    bool gameOver;
+    int actLevel;
+    int audioID_Background;
+
     bool playerJumping;
     bool playerAttacking;
     bool playerRunning;
     bool playerThrowing;
     bool playerHit;
-    bool gameOver;
 
     bool enemyAttacking;
     bool enemyThrowing;
