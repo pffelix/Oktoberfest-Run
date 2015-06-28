@@ -774,6 +774,7 @@ void Game::handleCollisions() {
                     //Überlappung berechnen und Spieler nach unten versetzen
                     overlap = (playerObjPointer->getPosY() + playerObjPointer->getHeight()) - handleEvent.causingObject->getPosY();
                     playerObjPointer->setPosY(playerObjPointer->getPosY() - overlap);
+                    //AudioAusgabe bei zusammenstoß von unten
                     if (handleEvent.causingObject->getAudioID() == 0) {
                         //Audioevent
                         audioCooldownstruct newAudio;
@@ -798,7 +799,7 @@ void Game::handleCollisions() {
                 if (!(handleEvent.direction == fromAbove)) {
                     //Überprüfen ob dem Spieler Schaden zugefügt werden kann
                     if (!(playerObjPointer->getImmunityCooldown() > 0)) {
-                        handleEnemy = dynamic_cast<Enemy*>(handleEvent.causingObject);
+                        Enemy *handleEnemy = dynamic_cast<Enemy*>(handleEvent.causingObject);
                         if (!(handleEnemy->getDeath())) {
                             //Stirbt der Spieler durch den zugefügten Schaden -> GameOver
                             gameStats.gameOver = playerObjPointer->receiveDamage(handleEnemy->getInflictedDamage());
@@ -818,6 +819,13 @@ void Game::handleCollisions() {
                     newAudio.cooldown = audioCooldown.scene_collision_enemy;
                     audioStorage.push_back(newAudio);
                 }
+            }
+            case BOSS: {
+                /* Zusammenstoß mit Endgegner
+                 *
+                 */
+                Enemy *handleEnemy = dynamic_cast<Enemy*> (handleEvent.causingObject);
+                gameStats.gameOver = playerObjPointer->receiveDamage(handleEnemy->getInflictedDamage());
             }
             case shot: {
                 // Spieler kriegt Schaden, Bierkrug zum löschen vormerken, treffen mit eigenem Krug nicht möglich
@@ -851,7 +859,6 @@ void Game::handleCollisions() {
                 break;
             }
             default: {
-                ///@todo Boss
                 /* Zusammenstoß mit Spieler
                  *      nicht möglich
                  */

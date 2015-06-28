@@ -12,12 +12,26 @@
  * @todo Skalieren der Werte und fireCooldown erhöhen
  */
 Enemy::Enemy(int posX, int posY, int speedX, objectType enemy) : MovingObject(posX, posY, enemy, speedX, -maxSpeedY) {
-    health = 1;
-    ///Fire Cooldown für debug zwecke niedrig
-    fireCooldown = 2;
-    inflictedDamage = 1;
+   //Unterscheiden der verschiedenen Gegnerarten
+    switch (enemy) {
+    case BOSS: {
+        health = 5;
+        fireCooldown = frameRate;
+        break;
+    }
+    case enemy_tourist: {
+        health = 1;
+        fireCooldown = 2 * frameRate;
+        break;
+    }
+    case enemy_security: {
+        health = 1;
+        //bedeutet der Gegner kann nicht schießen
+        fireCooldown = -1;
+    }
+    }
     death = false;
-
+    inflictedDamage = 1;
     DeathCooldown = frameRate;
 
     /*
@@ -119,7 +133,7 @@ void Enemy::update() {
 
         if (fireCooldown == 0) {
             fireCooldown = fireRate;
-        } else {
+        } else if (fireCooldown > 0){
             fireCooldown = fireCooldown - 1;
         }
     }
