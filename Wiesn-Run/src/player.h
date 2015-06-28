@@ -26,6 +26,10 @@ public:
     void increaseAmmunation(int ammunationBonus);
     void decreaseAmmunation();
 
+    //Feuern
+    void setFireCooldown();
+    int getFireCooldown();
+
     //Schaden()
     int getInflictedDamage() const;
 

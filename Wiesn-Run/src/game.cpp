@@ -534,9 +534,10 @@ void Game::evaluateInput() {
 
     // Leertaste?
     if(keyInput->getKeyactions().contains(Input::Keyaction::Shoot)) {
-        if (playerObjPointer->getAmmunatiuon() > 0) {
+        if ((playerObjPointer->getAmmunatiuon() > 0) && (playerObjPointer->getFireCooldown() < 1)) {
             Shoot *playerFire = new Shoot(playerObjPointer->getPosX()+playerObjPointer->getLength()/2,playerObjPointer->getPosY(),1,player);
             playerObjPointer->decreaseAmmunation();
+            playerObjPointer->setFireCooldown();
             worldObjects.push_back(playerFire);
             levelScene->addItem(playerFire);
         }

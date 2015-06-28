@@ -11,7 +11,7 @@ Player::Player(int posX, int posY, int speedX) : MovingObject(posX, posY, player
     ammunation = 5;
     inflictedDamage = 1;
     immunityCooldown = 0;
-    fireRate = 1 * frameRate;
+    fireRate =  frameRate / 2;
     fireCooldown = 0;
 
     enemiesKilled = 0;
@@ -120,6 +120,18 @@ void Player::increaseAmmunation(int ammunationBonus) {
  */
 void Player::decreaseAmmunation() {
     ammunation = ammunation - 1;
+}
+
+void Player::setFireCooldown() {
+    fireCooldown = fireRate;
+}
+
+/**
+ * @brief Player::getFireCooldown
+ * @return verbleibende Zeit bs nächster schuss möglich ist
+ */
+int Player::getFireCooldown() {
+    return fireCooldown;
 }
 
 /**
