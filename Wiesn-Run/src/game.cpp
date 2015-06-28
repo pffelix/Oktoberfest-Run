@@ -261,41 +261,22 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
 
 /**
  * @brief Game::endGame
+<<<<<<< HEAD
  *        Diese Funktion löscht nicht mehr nötige Variablen und Objekte wenn vom Spiel in das Hauptmenü gewechselt wird.
  * @ author: Felix Pfreundtner
+=======
+ * @ author: Felix Pfreundtner, Johann
+>>>>>>> e751f156deb32302677aeec97f8bd31af9cfac4a
  */
 void Game::endGame() {
     /// @todo Aufräumarbeiten
     // Highscore aktualisieren
     std::string mode = "write";
     updateHighScore(mode);
-}
 
-
-/**
- * @brief Game::exitGame
- *        Diese Funktion löscht nicht mehr nötige Variablen und Objekte wenn das Spiel komplett beendet wird.
- * @ author: Felix Pfreundtner
- */
-void Game::exitGame() {
-
-    /// @todo Aufräumarbeiten
-    // Highscore aktualisieren
-    std::string mode = "write";
-    updateHighScore(mode);
-
-    /// Beende Audio Ausgabe und lösche Audiobezogene Variablen
-
-    /// rufe Desktrutor Objekt audioOutput auf
-    /// Beende Audioausgabe und lösche Objekt
-    delete audioOutput;
-
-
-    /// Leere Audio Listen
+    //Listen leeren
     audioevents.clear();
     audioStorage.clear();
-
-    //WorldObjects etc leeren
 
     while (!(worldObjects.empty())) {
         GameObject *handleObject = worldObjects.front();
@@ -318,6 +299,45 @@ void Game::exitGame() {
 }
 
 
+/**
+ * @brief Game::exitGame
+ *        Diese Funktion löscht nicht mehr nötige Variablen und Objekte wenn das Spiel komplett beendet wird.
+ * @ author: Felix Pfreundtner
+ */
+void Game::exitGame() {
+
+    /// @todo Aufräumarbeiten
+    // Highscore aktualisieren
+    std::string mode = "write";
+    updateHighScore(mode);
+
+    /// Beende Audio Ausgabe und lösche Audiobezogene Variablen
+
+    /// rufe Desktrutor Objekt audioOutput auf
+    /// Beende Audioausgabe und lösche Objekt
+    delete audioOutput;
+
+    /// Leere Audio Listen
+    audioevents.clear();
+    audioStorage.clear();
+
+    /// leere WorldObjects etc
+
+    while (!(worldObjects.empty())) {
+        GameObject *handleObject = worldObjects.front();
+        worldObjects.pop_front();
+        delete handleObject;
+    }
+    playerObjPointer = 0;
+
+    while (!(levelInitial.empty())) {
+        GameObject *handleObject = levelInitial.front();
+        worldObjects.pop_front();
+        delete handleObject;
+    }
+
+
+}
 
 /**
  * @brief Game-Loop
@@ -1119,6 +1139,11 @@ void Game::updateAudio() {
             newAudio = {handleObject->getAudioID(), scene_flyingbeer, distance};
             audioevents.push_back(newAudio);
             break;
+        }
+        default:{
+            /* nothing to do
+             * Im Fall von obstacle, plane, player, powerUp soll kein ton ausgegeben werden
+             */
         }
         }
     }
