@@ -10,9 +10,11 @@ AudioControl::AudioControl() {
 
     /// erstelle für jede objektgruppe "type" ein audio Objekt welches unter anderem die Samples beinhaltet
     audioobjects.reserve(23);
-    audioobjects.insert(audioobjects.begin() + audioType::scene_flyingbeer, Audio("scene_flyingbeer")); // 16bit
 
+    audioobjects.insert(audioobjects.begin() + audioType::scene_flyingbeer, Audio("scene_flyingbeer")); // 16bit
+    // http://www.freesound.org/people/Reitanna/sounds/241215/
     audioobjects.insert(audioobjects.begin() + audioType::scene_enemy_tourist, Audio("scene_enemy_tourist")); // 16bit
+
     audioobjects.insert(audioobjects.begin() + audioType::scene_enemy_security, Audio("scene_enemy_security")); // 16bit
     //source: http://soundbible.com/1501-Buzzer.html
     audioobjects.insert(audioobjects.begin() + audioType::scene_enemy_boss, Audio("scene_enemy_boss")); // 16bit
@@ -35,6 +37,7 @@ AudioControl::AudioControl() {
     //source: http://soundbible.com/1266-City-Ambiance.html
     audioobjects.insert(audioobjects.begin() + audioType::status_dead, Audio("status_dead")); // 16bit
     //source: http://www.arts.rpi.edu/public_html/ruiz/VES01/sebram/final/walk_crop.wav
+    // http://www.freesound.org/people/laiaoreka/sounds/233383/
     audioobjects.insert(audioobjects.begin() + audioType::player_walk, Audio("player_walk")); // 16bit
     //source: http://soundbible.com/1343-Jump.html
     audioobjects.insert(audioobjects.begin() + audioType::player_jump, Audio("player_jump")); // 16bit
@@ -261,7 +264,7 @@ int AudioControl::instancepaCallback( const void *inputBuffer, void *outputBuffe
                 callback_pe->position = callback_pe->position - callback_pe->audioobject->getSamplenumber();
             }
         }
-        /// Füge gemischtes Samples aller Audiovents dem PortAudio Outputbuffer hinzu
+        /// Füge gemischtes Sampls aller Audiovents dem PortAudio Outputbuffer hinzu
         *out++ = mixed_sample;
 
     }
