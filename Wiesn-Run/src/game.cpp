@@ -100,7 +100,7 @@ int Game::start() {
 
     // Menüs erstellen
     menuStart = new Menu(new std::string("Wiesn-Run"));
-    menuStart->addEntry("Neues Spiel",menuStartId_NewGame,true);    /// @todo Levelmenü
+    menuStart->addEntry("Neues Spiel",menuStartId_NewGame,true, gameMenuLevel);
     menuStart->addEntry("Spiel beenden", menuStartId_EndGame,true);
     menuStart->addEntry("Credits", menuStartId_Credits,true,gameMenuCredits);
     menuStart->displayInit();
@@ -120,12 +120,12 @@ int Game::start() {
     menuLevel->addEntry("Level 1",menuLevelId_Level1, true);
     menuLevel->addEntry("Level 2",menuLevelId_Level2, true);
     menuLevel->addEntry("Level 3",menuLevelId_Level3, true);
-    menuLevel->addEntry("Spiel starten",menuLevelId_StartGame, true);
+    //menuLevel->addEntry("Spiel starten",menuLevelId_StartGame, true);
     menuLevel->displayInit();
 
     menuBreak = new Menu(new std::string("Pause"));
     menuBreak->addEntry("weiterspielen",menuBreakId_Resume,true);
-    menuBreak->addEntry("Startmenü",menuBreakId_EndGame,true);
+    menuBreak->addEntry("Beenden",menuBreakId_EndGame,true);
     menuBreak->displayInit();
 
     menuStatistics = new Menu(new std::string("Punkte"));
@@ -361,8 +361,11 @@ int Game::step() {
                     case menuStartId_EndGame:
                         endGame();
                         exit(0);
-                    case menuStartId_NewGame:
-                        /// @todo Level
+                    case menuLevelId_Level1:
+                        startNewGame("level1_old.txt",1);
+                        setState(gameIsRunning);
+                        break;
+                    case menuLevelId_Level2:
                         startNewGame("level1.txt",1);
                         setState(gameIsRunning);
                         break;
@@ -372,7 +375,8 @@ int Game::step() {
                         break;
                     case menuBreakId_EndGame:
                         endGame();
-                        setState(gameMenuStart);
+                        exit(0); // umgeht Absturz
+                        //setState(gameMenuStart);
                         break;
                 }
             }
