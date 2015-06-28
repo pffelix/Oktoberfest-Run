@@ -1,5 +1,6 @@
 #ifndef AUDIOCONTROL_H
 #define AUDIOCONTROL_H
+#define _USE_MATH_DEFINES
 #define BLOCKSIZE (1024) /// Blockgröße eines Audio Ausgabe Blocks in Samples.
 #define SAMPLERATE (44100) ///Samplerate des Audio Ausgabe Signals.
 
@@ -11,6 +12,7 @@
 #include <QList>
 #include "definitions.h"
 #include <algorithm>
+#include <math.h>
 #include "portaudio.h"
 
 /**
@@ -40,7 +42,7 @@ public:
     } playStruct;
 
     enum statusFilter {
-        none,
+        no,
         alcohol,
         life,
         lifecritical
