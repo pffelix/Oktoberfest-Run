@@ -156,7 +156,7 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
 
 /**
  * @brief  playInitialize
- *         playInitialize initialisiert die Abspielbibliothek Portaudio
+ *         playInitialize initialisiert die Abspielbibliothek Portaudio, öffenet den PortAudio Stream pastream und startet eine Callback Audiowiedergabe
  * @param  Qlist audioevents
  * @author  Felix Pfreundtner
  */
@@ -185,20 +185,12 @@ void AudioControl::playInitialize(){
         goto error;
     }
 
-    /// Pausiere Funktion wenn Audiostream gerade aktiv ist
+    /// Pausiere Funktion wenn Audiostream gerade aktiv ist (Audiowiedergabe übernimmt Callback Funktion)
     while (Pa_IsStreamActive(pastream) == 1) {
         Pa_Sleep(waitinms);
     }
 
-    paerror = Pa_StopStream( pastream );
-    if( paerror != paNoError ) {
-        goto error;
-    }
-    paerror = Pa_CloseStream( pastream );
-    if( paerror != paNoError ) {
-        goto error;
-    }
-    Pa_Terminate();
+
 error:
     Pa_Terminate();
     fprintf( stderr, "Ein Meldung trat während der Benutzung der PortAudio Ausgabe auf\n" );
@@ -259,19 +251,35 @@ int AudioControl::instancepaCallback( const void *inputBuffer, void *outputBuffe
 
 
 /**
- * @brief  play
- *         play spielt alle in playevents gespeicherten playStructs ab.
+ * @brief  playTerminate
+ *         playTerminate stoppt die Portaudio Audiowiedergabe, beendedet den PortAudio Stream und beendet PortAudio
+ * @param  Qlist audioevents
  * @author  Felix Pfreundtner
  */
-void AudioControl::play(){
+void AudioControl::playTerminate() {
+
+/// Stoppe den Portaudio Stream
+paerror = Pa_StopStream(pastream);
+if(paerror != paNoError) {
+    goto error;
+}
+/// Schließe den Portaudio Stream
+
+paerror = Pa_CloseStream( pastream );
+if(paerror != paNoError) {
+    goto error;
+}
+
+/// Beende PortAudio
+Pa_Terminate();
+
+error:
+Pa_Terminate();
+fprintf( stderr, "Ein Meldung trat während der Benutzung der PortAudio Ausgabe auf\n" );
+fprintf( stderr, "Error Nummer: %d\n", paerror );
+fprintf( stderr, "Error Nachricht: %s\n", Pa_GetErrorText( paerror ) );
+
 }
 
 
-/**
- * @brief  getPastream
- *         getPastream gibt einen Zeiger auf den PortAudio Stream pastream zurück
- * @author  Felix Pfreundtner
- */
-PaStream* AudioControl::getPastream() {
-    return &pastream;
-}
+
