@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <math.h>
 #include "portaudio.h"
+#include <cmath>
 
 /**
  * @brief  AudioControl-Klasse
