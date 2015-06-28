@@ -496,9 +496,8 @@ void Game::evaluateInput() {
     if(keyInput->getKeyactions().contains(Input::Keyaction::Right)) {
         playerObjPointer->setSpeedX(playerSpeed);
         // Audioevent erzeugen
-        audioStruct playerAudio = {audioIDs, player_walk, 0};
+        audioStruct playerAudio = {9, player_walk, 0};
         audioevents.push_back(playerAudio);
-        audioIDs = audioIDs + 1;
     } else {
         playerObjPointer->setSpeedX(0);
     }
