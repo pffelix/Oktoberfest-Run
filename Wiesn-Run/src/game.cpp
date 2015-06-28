@@ -852,8 +852,17 @@ void Game::handleCollisions() {
                 playerObjPointer->setImmunityCooldown(handlePowerUp->getImmunityCooldownBonus());
                 playerObjPointer->increaseAlcoholLevel(handlePowerUp->getAlcoholLevelBonus());
                 //AudioEvent
-                ///@todo Hier Code einfügen
-
+                if (handlePowerUp->getPowerUPType() == food) {
+                    audioCooldownstruct newAudio;
+                    newAudio.audioEvent = {audioIDs, powerup_food, audioDistance.powerup_food};
+                    newAudio.cooldown = audioCooldown.powerup_food;
+                    audioStorage.push_back(newAudio);
+                } else {
+                    audioCooldownstruct newAudio;
+                    newAudio.audioEvent = {audioIDs, powerup_beer, audioDistance.powerup_beer};
+                    newAudio.cooldown = audioCooldown.powerup_beer;
+                    audioStorage.push_back(newAudio);
+                }
                 //PowerUp zum loeschen vormerken
                 objectsToDelete.push_back(handlePowerUp);
                 handlePowerUp = 0;
