@@ -813,10 +813,18 @@ void Game::handleCollisions() {
             }
             case BOSS: {
                 /* Zusammenstoß mit Endgegner
-                 *      Keine Tonausgabe wegen mehreren
                  */
                 handleEnemy = dynamic_cast<Enemy*> (handleEvent.causingObject);
-                gameStats.gameOver = playerObjPointer->receiveDamage(handleEnemy->getInflictedDamage());
+                if (!(playerObjPointer->getImmunityCooldown() > 0)) {
+                    gameStats.gameOver = playerObjPointer->receiveDamage(handleEnemy->getInflictedDamage());
+                    //Audioevent
+                    audioCooldownstruct newAudio;
+                    newAudio.audioEvent = {audioIDs, scene_collision_enemy, audioDistance.scene_collision_enemy};
+                    audioIDs = audioIDs + 1;
+                    newAudio.cooldown = audioCooldown.scene_collision_enemy;
+                    audioStorage.push_back(newAudio);
+
+                }
                 handleEnemy = 0;
             }
             case shot: {
