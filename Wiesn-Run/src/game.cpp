@@ -100,7 +100,7 @@ int Game::start() {
 
     // Menüs erstellen
     menuStart = new Menu(new std::string("Wiesn-Run"));
-    menuStart->addEntry("Neues Spiel",menuStartId_NewGame,true);    /// @todo Levelmenü
+    menuStart->addEntry("Neues Spiel",menuStartId_NewGame,true, gameMenuLevel);
     menuStart->addEntry("Spiel beenden", menuStartId_EndGame,true);
     menuStart->addEntry("Credits", menuStartId_Credits,true,gameMenuCredits);
     menuStart->displayInit();
@@ -120,12 +120,12 @@ int Game::start() {
     menuLevel->addEntry("Level 1",menuLevelId_Level1, true);
     menuLevel->addEntry("Level 2",menuLevelId_Level2, true);
     menuLevel->addEntry("Level 3",menuLevelId_Level3, true);
-    menuLevel->addEntry("Spiel starten",menuLevelId_StartGame, true);
+    //menuLevel->addEntry("Spiel starten",menuLevelId_StartGame, true);
     menuLevel->displayInit();
 
     menuBreak = new Menu(new std::string("Pause"));
     menuBreak->addEntry("weiterspielen",menuBreakId_Resume,true);
-    menuBreak->addEntry("Startmenü",menuBreakId_EndGame,true);
+    menuBreak->addEntry("Beenden",menuBreakId_EndGame,true);
     menuBreak->displayInit();
 
     menuStatistics = new Menu(new std::string("Punkte"));
@@ -323,10 +323,7 @@ int Game::step() {
     using namespace std::chrono;
 
     /// Tasten abfragen
-    bool upIsPressed = keyInput->getKeyactions().contains(Input::Keyaction::Up);
-    bool downIsPressed = keyInput->getKeyactions().contains(Input::Keyaction::Down);
-    bool enterIsPressed = keyInput->getKeyactions().contains(Input::Keyaction::Enter);
-    bool escIsPressed = keyInput->getKeyactions().contains(Input::Keyaction::Exit);
+    Input::Keyaction lastKey = keyInput->getAndDeleteLastKey();
 
     /// Zeit seit dem letzten Aufruf ausrechnen und ausgeben
 
@@ -337,20 +334,22 @@ int Game::step() {
     // falls Menü aktiv, Inputs verarbeiten, Grafik:
 
     if(aktMenu!=NULL) { // aktMenu ist nur NULL, wenn das Spiel gerade läuft
+
+
         aktMenu->displayUpdate();
         //MenüScene wird vom Anzeigewidget aufgerufen
         window->setScene(aktMenu->menuScene);
 
         // Up || Down?
-        if(upIsPressed) {
+        if(lastKey == Input::Keyaction::Up) {
             aktMenu->changeSelection(Menu::menuSelectionChange::up);
         }
-        if(downIsPressed) {
+        if(lastKey == Input::Keyaction::Down) {
             aktMenu->changeSelection(Menu::menuSelectionChange::down);
         }
 
         // Enter auswerten
-        if(enterIsPressed) {
+        if(lastKey == Input::Keyaction::Enter) {
 
             if(aktMenu->getSelection()->stateOnClick != noNextState) {  // Alle Einträge, auf die ein weiteres Menü folgt
 
@@ -361,8 +360,11 @@ int Game::step() {
                     case menuStartId_EndGame:
                         endGame();
                         exit(0);
-                    case menuStartId_NewGame:
-                        /// @todo Level
+                    case menuLevelId_Level1:
+                        startNewGame("level1_old.txt",1);
+                        setState(gameIsRunning);
+                        break;
+                    case menuLevelId_Level2:
                         startNewGame("level1.txt",1);
                         setState(gameIsRunning);
                         break;
@@ -372,6 +374,7 @@ int Game::step() {
                         break;
                     case menuBreakId_EndGame:
                         endGame();
+                        //exit(0); // umgeht Absturz
                         setState(gameMenuStart);
                         break;
                 }
@@ -381,7 +384,7 @@ int Game::step() {
     } else {    // gameIsRunning
 
         // Escape: Pause
-        if(escIsPressed) {
+        if(lastKey == Input::Keyaction::Exit) {
             setState(gameMenuBreak);
         }
         /// @todo Levelende hier abfragen

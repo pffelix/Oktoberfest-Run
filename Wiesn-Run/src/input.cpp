@@ -69,10 +69,12 @@ void Input::updateKeyactions() {
     }
     if(keyevents.contains(Qt::Key_Up)) {
             keyactions += Keyaction::Up;
+            lastKey = Keyaction::Up;
             qDebug("Up");
     }
     if(keyevents.contains(Qt::Key_Down)) {
             keyactions += Keyaction::Down;
+            lastKey = Keyaction::Down;
             qDebug("Down");
     }
 
@@ -86,10 +88,12 @@ void Input::updateKeyactions() {
     }
     if(keyevents.contains(Qt::Key_Escape)) {
             keyactions += Keyaction::Exit;
+            lastKey = Keyaction::Exit;
             qDebug("Exit");
     }
     if(keyevents.contains(Qt::Key_Enter) || keyevents.contains(Qt::Key_Return))  {
             keyactions += Keyaction::Enter;
+            lastKey = Keyaction::Enter;
             qDebug("Enter");
     }
 }
@@ -106,5 +110,17 @@ void Input::updateKeyactions() {
  */
 QSet<int> Input::getKeyactions() {
     return keyactions;
+}
+
+/**
+ * @brief gibt letzte gedrücke Taste zurück und löscht diese
+ * wird für Menüführung gebraucht, das Tasten nicht dauernd ausgewertet werden
+ * @return Taste
+ * @author Rupert
+ */
+Input::Keyaction Input::getAndDeleteLastKey() {
+    Keyaction tmp = lastKey;
+    lastKey = noKey;
+    return tmp;
 }
 
