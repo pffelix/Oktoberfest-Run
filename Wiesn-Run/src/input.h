@@ -19,6 +19,7 @@ class Input : public QObject {
 
 public:
     enum Keyaction{
+        noKey,  // Rupert
         Left,
         Right,
         Up,
@@ -32,6 +33,8 @@ public:
     Input();
     ~Input();
     QSet<int> getKeyactions();
+
+    Keyaction getAndDeleteLastKey();    // Rupert
 
 private:
     /**
@@ -49,6 +52,8 @@ private:
     QSet<int> keyactions;
 
     void updateKeyactions();
+
+    Keyaction lastKey;      // Rupert
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event);

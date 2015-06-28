@@ -323,10 +323,7 @@ int Game::step() {
     using namespace std::chrono;
 
     /// Tasten abfragen
-    bool upIsPressed = keyInput->getKeyactions().contains(Input::Keyaction::Up);
-    bool downIsPressed = keyInput->getKeyactions().contains(Input::Keyaction::Down);
-    bool enterIsPressed = keyInput->getKeyactions().contains(Input::Keyaction::Enter);
-    bool escIsPressed = keyInput->getKeyactions().contains(Input::Keyaction::Exit);
+    Input::Keyaction lastKey = keyInput->getAndDeleteLastKey();
 
     /// Zeit seit dem letzten Aufruf ausrechnen und ausgeben
 
@@ -337,20 +334,22 @@ int Game::step() {
     // falls Menü aktiv, Inputs verarbeiten, Grafik:
 
     if(aktMenu!=NULL) { // aktMenu ist nur NULL, wenn das Spiel gerade läuft
+
+
         aktMenu->displayUpdate();
         //MenüScene wird vom Anzeigewidget aufgerufen
         window->setScene(aktMenu->menuScene);
 
         // Up || Down?
-        if(upIsPressed) {
+        if(lastKey == Input::Keyaction::Up) {
             aktMenu->changeSelection(Menu::menuSelectionChange::up);
         }
-        if(downIsPressed) {
+        if(lastKey == Input::Keyaction::Down) {
             aktMenu->changeSelection(Menu::menuSelectionChange::down);
         }
 
         // Enter auswerten
-        if(enterIsPressed) {
+        if(lastKey == Input::Keyaction::Enter) {
 
             if(aktMenu->getSelection()->stateOnClick != noNextState) {  // Alle Einträge, auf die ein weiteres Menü folgt
 
@@ -375,8 +374,8 @@ int Game::step() {
                         break;
                     case menuBreakId_EndGame:
                         endGame();
-                        exit(0); // umgeht Absturz
-                        //setState(gameMenuStart);
+                        //exit(0); // umgeht Absturz
+                        setState(gameMenuStart);
                         break;
                 }
             }
@@ -385,7 +384,7 @@ int Game::step() {
     } else {    // gameIsRunning
 
         // Escape: Pause
-        if(escIsPressed) {
+        if(lastKey == Input::Keyaction::Exit) {
             setState(gameMenuBreak);
         }
         /// @todo Levelende hier abfragen
