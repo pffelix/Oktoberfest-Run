@@ -1135,6 +1135,11 @@ void Game::updateAudio() {
             audioevents.push_back(newAudio);
             break;
         }
+        default:{
+            /* nothing to do
+             * Im Fall von obstacle, plane, player, powerUp soll kein ton ausgegeben werden
+             */
+        }
         }
     }
 
