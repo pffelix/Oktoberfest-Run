@@ -425,8 +425,6 @@ int Game::step() {
 
         renderGraphics(&worldObjects, playerObjPointer);
 
-        // Audioevents Updaten und an die Liste audioevent übergeben
-        updateAudio();
 
 
         // Mockup: add audioStruct player_jump to audioevents list
@@ -439,6 +437,32 @@ int Game::step() {
 
 
         stepCount++;
+        if (stepCount > 2) {
+            setState(gameMenuBreak);
+        }
+    }
+    //Audio berechung
+    switch (state) {
+    case gameIsRunning: {
+        //Audio Berechnungen während das Spiel läuft
+        // Audioevents Updaten und an die Liste audioevent übergeben
+        updateAudio();
+    }
+    case gameMenuStart:
+    case gameMenuLevel:
+    case gameMenuBreak: {
+        //Audioevent für die Spiel-Menüs
+        audioStruct menuAudio = {1, background_menu, audioDistance.background_menu};
+        audioevents.push_back(menuAudio);
+    }
+    case gameMenuCredits:
+    case gameMenuStatisitcs:
+    case gameMenuName:
+    case gameMenuHighscore: {
+        // Audioevent für die Statistik-Menüs
+        audioStruct scoreAudio = {2, background_highscore, audioDistance.background_highscore};
+        audioevents.push_back(scoreAudio);
+    }
     }
 
     // Audio ausgabe außerhalb des If-Statements damit auch in den Menüs Musik ausgegben wird
