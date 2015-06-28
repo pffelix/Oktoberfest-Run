@@ -76,13 +76,6 @@ void Game::timerEvent(QTimerEvent *event)
     ///@todo return von step...
 }
 
-void Game::test() {
-    startNewGame();
-    setState(gameIsRunning);
-
-}
-
-
 /**
  * @brief Erstelle QApplication app mit QGraphicsView Widget window (Eventfilter installiert) und Zeiger input auf Input Objekt.
  * Um Funktionen der Tastatur Eingabe entwickeln zu können ist ein Qt Widget Fenster nötig.
@@ -103,6 +96,7 @@ int Game::start() {
 
     // Fundamentale stepSize setzen
     stepIntervall = 1000/frameRate;
+    //stepIntervall = 100; zum testen
 
     // Menüs erstellen
     menuStart = new Menu(new std::string("Wiesn-Run"));
@@ -131,7 +125,7 @@ int Game::start() {
 
     menuBreak = new Menu(new std::string("Pause"));
     menuBreak->addEntry("weiterspielen",menuBreakId_Resume,true);
-    menuBreak->addEntry("Startmenü",menuBreakId_EndGame,true,gameMenuStart);
+    menuBreak->addEntry("Startmenü",menuBreakId_EndGame,true);
     menuBreak->displayInit();
 
     menuStatistics = new Menu(new std::string("Punkte"));
@@ -185,7 +179,7 @@ int Game::start() {
  * lädt Leveldatei
  * füllt worldobjects
  */
-void Game::startNewGame() {
+void Game::startNewGame(QString levelFileName, int levelNum) {
 
 
     // alles alte leeren
@@ -198,9 +192,10 @@ void Game::startNewGame() {
 
 
     //level nummer speichern
-    gameStats.actLevel = 1;
+    gameStats.actLevel = levelNum;
     // Level festlegen, der geladen werden soll
-    QString fileSpecifier = ":/levelFiles/levelFiles/level1.txt";
+    QString fileSpecifier = ":/levelFiles/levelFiles/";
+    fileSpecifier.append(levelFileName);
     loadLevelFile(fileSpecifier);
 
     //Backgroundgrafiken initialisieren
@@ -364,24 +359,23 @@ int Game::step() {
             } else {    // alle Einträge, bei denen kein Menü folgt: Spiel starten/Beenden
                 switch(aktMenu->getSelection()->id) {
                     case menuStartId_EndGame:
+                        endGame();
                         exit(0);
                     case menuStartId_NewGame:
                         /// @todo Level
-                        startNewGame();
+                        startNewGame("level1.txt",1);
                         setState(gameIsRunning);
                         break;
                     case menuBreakId_Resume:
                         window->setScene(levelScene);
                         setState(gameIsRunning);
                         break;
+                    case menuBreakId_EndGame:
+                        endGame();
+                        setState(gameMenuStart);
+                        break;
                 }
             }
-            //aktMenu->getSelection()->handler();
-        }
-
-        // Escape: zurück zum Startmenü  (außer im MenuBreak)
-        if(escIsPressed && state!=gameMenuBreak) {
-            setState(gameMenuStart);
         }
 
     } else {    // gameIsRunning

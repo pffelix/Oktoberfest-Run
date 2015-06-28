@@ -86,7 +86,7 @@ private:
     void colTestLevel();
     void loadLevelFile(QString fileSpecifier);
 
-    void startNewGame();
+    void startNewGame(QString levelFileName, int levelNum);
 
 
     /// In der Welt befindliche Objekte
@@ -137,7 +137,6 @@ private:
     Input *keyInput = new Input();
 
 
-    void test();
     // Menüs
     enum gameState state = gameMenuStart;    /// aktueller Spielzustand
     Menu *aktMenu = menuStart;      /// aktuell aktives Menü, null während das Spiel läuft; wird in setState gesetzt
