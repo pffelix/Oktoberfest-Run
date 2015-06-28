@@ -295,11 +295,18 @@ error:
     /// delete audio
     ///
 
-    ///Audio Listen leeren
+
+}
+
+/**
+ * @brief Löscht die Elemente aus jeder Liste und gibt den Speicher der worldObjects wieder frei
+ *
+ * @author Johann
+ */
+void Game::clearLists() {
+    ///Listen leeren
     audioevents.clear();
     audioStorage.clear();
-
-    //WorldObjects etc leeren
 
     while (!(worldObjects.empty())) {
         GameObject *handleObject = worldObjects.front();
@@ -320,7 +327,6 @@ error:
         delete handleObject;
     }
 }
-
 
 /**
  * @brief Game-Loop
