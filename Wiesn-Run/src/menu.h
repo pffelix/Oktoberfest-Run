@@ -80,6 +80,8 @@ private:
     /// Zeiger auf String, in dem der Titel des Menüs steht
     std::string *title;
 
+    int selectFirstEntry();
+
 };
 
 #endif // MENU_H

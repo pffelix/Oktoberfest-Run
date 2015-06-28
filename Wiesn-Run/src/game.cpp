@@ -331,6 +331,7 @@ int Game::step() {
     bool upIsPressed = keyInput->getKeyactions().contains(Input::Keyaction::Up);
     bool downIsPressed = keyInput->getKeyactions().contains(Input::Keyaction::Down);
     bool enterIsPressed = keyInput->getKeyactions().contains(Input::Keyaction::Enter);
+    bool escIsPressed = keyInput->getKeyactions().contains(Input::Keyaction::Exit);
 
     /// Zeit seit dem letzten Aufruf ausrechnen und ausgeben
 
@@ -369,11 +370,27 @@ int Game::step() {
                         startNewGame();
                         setState(gameIsRunning);
                         break;
+                    case menuBreakId_Resume:
+                        window->setScene(levelScene);
+                        setState(gameIsRunning);
+                        break;
                 }
             }
             //aktMenu->getSelection()->handler();
         }
+
+        // Escape: zurück zum Startmenü  (außer im MenuBreak)
+        if(escIsPressed && state!=gameMenuBreak) {
+            setState(gameMenuStart);
+        }
+
     } else {    // gameIsRunning
+
+        // Escape: Pause
+        if(escIsPressed) {
+            setState(gameMenuBreak);
+        }
+        /// @todo Levelende hier abfragen
 
         worldObjects.sort(compareGameObjects());
         qDebug("---Nächster Zeitschritt---");
