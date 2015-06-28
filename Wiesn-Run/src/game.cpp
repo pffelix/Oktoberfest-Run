@@ -261,9 +261,45 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
 
 /**
  * @brief Game::endGame
- * @ author: Felix Pfreundtner
+ * @ author: Felix Pfreundtner, Johann
  */
 void Game::endGame() {
+    /// @todo Aufräumarbeiten
+    // Highscore aktualisieren
+    std::string mode = "write";
+    updateHighScore(mode);
+
+    //Listen leeren
+    audioevents.clear();
+    audioStorage.clear();
+
+    while (!(worldObjects.empty())) {
+        GameObject *handleObject = worldObjects.front();
+        worldObjects.pop_front();
+        delete handleObject;
+    }
+    playerObjPointer = 0;
+
+    while (!(levelInitial.empty())) {
+        GameObject *handleObject = levelInitial.front();
+        worldObjects.pop_front();
+        delete handleObject;
+    }
+
+    while (!(levelSpawn.empty())) {
+        GameObject *handleObject = levelSpawn.front();
+        worldObjects.pop_front();
+        delete handleObject;
+    }
+}
+
+
+/**
+ * @brief Game::exitGame
+ * @ author: Felix Pfreundtner
+ */
+void Game::exitGame() {
+
     /// @todo Aufräumarbeiten
     // Highscore aktualisieren
     std::string mode = "write";
@@ -296,36 +332,6 @@ error:
     ///
 
 
-}
-
-/**
- * @brief Löscht die Elemente aus jeder Liste und gibt den Speicher der worldObjects wieder frei
- *
- * @author Johann
- */
-void Game::clearLists() {
-    ///Listen leeren
-    audioevents.clear();
-    audioStorage.clear();
-
-    while (!(worldObjects.empty())) {
-        GameObject *handleObject = worldObjects.front();
-        worldObjects.pop_front();
-        delete handleObject;
-    }
-    playerObjPointer = 0;
-
-    while (!(levelInitial.empty())) {
-        GameObject *handleObject = levelInitial.front();
-        worldObjects.pop_front();
-        delete handleObject;
-    }
-
-    while (!(levelSpawn.empty())) {
-        GameObject *handleObject = levelSpawn.front();
-        worldObjects.pop_front();
-        delete handleObject;
-    }
 }
 
 /**

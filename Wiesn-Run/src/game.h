@@ -78,6 +78,8 @@ private:
     void renderGraphics(std::list<GameObject *> *objectList, Player *playerPointer);
     void endGame();
     void clearLists();
+
+    void exitGame();
     void updateAudio();
     bool hurtPlayer(int damage);
 
