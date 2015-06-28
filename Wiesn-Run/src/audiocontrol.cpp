@@ -57,13 +57,13 @@ AudioControl::AudioControl() {
     blockcounter = 0;
     /// setzte Wartezeit von Portaudio auf 100 ms
     waitinms = 100;
-    /// setzte maximale Anzahl an Playevents auf 10
+    /// setzte maximale Anzahl an Playevents auf 5
     /// Wird der Wert höher gesetzt wird die Lautstärke geringer.
     /// Wird der Wert geringer gesetzt steigt die Gefahr des Clippings des Ausgabesignals
     /// Ein Normalisieren aller Ausgabeblöcke wäre möglich, würde jedoch 2D Audio nicht erlauben,
     /// da auch die Dynamik zwischen zwei Blöcken normalisiert wird
     /// -> Distanz- und somit Lautstärkeänderungen von Objekten werden mit normalisiert.
-    max_playevents = 4;
+    max_playevents = 5;
 
 }
 
@@ -150,7 +150,7 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
             /// übernehmen die aktuellen Distanzwerte des neuen audiostructs und wandle sie in eine Volumen Information um (volume = 1 - distance).
             newplaystruct.volume = 1.0f - newaudiostruct.distance;
             /// speichere einen Zeiger auf das (Audio-)Objekt in audioobjects in newplaystruct
-            newplaystruct.objectref = &audioobjects[newaudiostruct.type];
+            newplaystruct.audioobject = &audioobjects[newaudiostruct.type];
             /// setzte Abspielposition auf 0 Samples (Beginne Abspielen)
             newplaystruct.position = 0;
             /// setzte playnext auf true, da das playstruct auch im nächsten Step abgespielt werden soll
@@ -247,25 +247,23 @@ int AudioControl::instancepaCallback( const void *inputBuffer, void *outputBuffe
 
     for(unsigned int block_pos=0; block_pos<framesPerBuffer; block_pos++ ) {
 
-        /// Mix Samples
+        /// Berechne Sample Ausgabe für aktuellen Block Zeitschritt aus Samples aller Audiovents
         mixed_sample = 0;
-        for (callback_pe = playevents.begin(); callback_pe != playevents.end(); callback_pe++) {
-            mixed_sample += callback_pe->objectref->getSample(callback_pe->position)*callback_pe->volume/max_playevents;
+        /// für alle aktuell abzuspielenden Audioevents
+        for (callback_pe = playevents.begin(); callback_pe != playevents.end(); callback_pe++) {    
+            /// mixed_sample = sample(aktuell Position Audioevent)*aktuelle_relative_lautstärke_audioevent/anzahl_maximaler_playevents
+            mixed_sample += callback_pe->audioobject->getSample(callback_pe->position) * callback_pe->volume / max_playevents;
+            /// erhöhe Abspielposition des aktuell iterierten Audiovents um ein Sample
             callback_pe->position += 1;
+            /// falls Samples Position des aktuell iterierten Audiovents Anzahl an Samples in Audioobject überschreitet
+            if (callback_pe->position >= callback_pe->audioobject->getSamplenumber()) {
+                /// Loope Audiosignal -> setzte Samples Position auf Anfang zurück (pos = position-samplenumber)
+                callback_pe->position = callback_pe->position - callback_pe->audioobject->getSamplenumber();
+            }
         }
-        // block[block_pos] = mixSample();
+        /// Füge gemischtes Samples aller Audiovents dem PortAudio Outputbuffer hinzu
         *out++ = mixed_sample;
 
-        //data->mono = audioobjects[0].getSample(i);
-        //*out++ = data->left_phase;  /* left */
-        //*out++ = data->right_phase;  /* right */
-        /* Generate simple sawtooth phaser that ranges between -1.0 and 1.0. */
-        //data->left_phase += 0.01f;
-        /* When signal reaches top, drop back down. */
-        //if( data->left_phase >= 1.0f ) data->left_phase -= 2.0f;
-        /* higher pitch so we can distinguish left and right. */
-        //data->right_phase += 0.03f;
-        //if( data->right_phase >= 1.0f ) data->right_phase -= 2.0f;
     }
     blockcounter += 1;
     //std::copy ( block, block + BLOCKSIZE, std::back_inserter ( blockcontinue ) );
