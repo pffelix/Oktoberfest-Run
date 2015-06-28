@@ -775,15 +775,12 @@ void Game::handleCollisions() {
                     overlap = (playerObjPointer->getPosY() + playerObjPointer->getHeight()) - handleEvent.causingObject->getPosY();
                     playerObjPointer->setPosY(playerObjPointer->getPosY() - overlap);
                     //AudioAusgabe bei zusammenstoß von unten
-                    if (handleEvent.causingObject->getAudioID() == 0) {
-                        //Audioevent
-                        audioCooldownstruct newAudio;
-                        handleEvent.causingObject->setAudioID(audioIDs);
-                        newAudio.audioEvent = {audioIDs, scene_collision_obstacle, audioDistance.scene_collision_obstacle};
-                        audioIDs = audioIDs + 1;
-                        newAudio.cooldown = audioCooldown.scene_collision_obstacle;
-                        audioStorage.push_back(newAudio);
-                    }
+                    //Audioevent
+                    audioCooldownstruct newAudio;
+                    newAudio.audioEvent = {audioIDs, scene_collision_obstacle, audioDistance.scene_collision_obstacle};
+                    audioIDs = audioIDs + 1;
+                    newAudio.cooldown = audioCooldown.scene_collision_obstacle;
+                    audioStorage.push_back(newAudio);
                     break;
                 }
                 }
@@ -799,33 +796,28 @@ void Game::handleCollisions() {
                 if (!(handleEvent.direction == fromAbove)) {
                     //Überprüfen ob dem Spieler Schaden zugefügt werden kann
                     if (!(playerObjPointer->getImmunityCooldown() > 0)) {
-                        Enemy *handleEnemy = dynamic_cast<Enemy*>(handleEvent.causingObject);
+                        handleEnemy = dynamic_cast<Enemy*>(handleEvent.causingObject);
                         if (!(handleEnemy->getDeath())) {
                             //Stirbt der Spieler durch den zugefügten Schaden -> GameOver
                             gameStats.gameOver = playerObjPointer->receiveDamage(handleEnemy->getInflictedDamage());
-                            //Immunitätsbonus einer halben Sekunde
-                            playerObjPointer->setImmunityCooldown(frameRate / 2);
+                            //Audioevent
+                            audioCooldownstruct newAudio;
+                            newAudio.audioEvent = {audioIDs, scene_collision_enemy, audioDistance.scene_collision_enemy};
+                            audioIDs = audioIDs + 1;
+                            newAudio.cooldown = audioCooldown.scene_collision_enemy;
+                            audioStorage.push_back(newAudio);
                         }
                         handleEnemy = 0;
                     }
                 }
-
-                if (handleEvent.causingObject->getAudioID() == 0) {
-                    //Audioevent
-                    audioCooldownstruct newAudio;
-                    handleEvent.causingObject->setAudioID(audioIDs);
-                    newAudio.audioEvent = {audioIDs, scene_collision_enemy, audioDistance.scene_collision_enemy};
-                    audioIDs = audioIDs + 1;
-                    newAudio.cooldown = audioCooldown.scene_collision_enemy;
-                    audioStorage.push_back(newAudio);
-                }
             }
             case BOSS: {
                 /* Zusammenstoß mit Endgegner
-                 *
+                 *      Keine Tonausgabe wegen mehreren
                  */
-                Enemy *handleEnemy = dynamic_cast<Enemy*> (handleEvent.causingObject);
+                handleEnemy = dynamic_cast<Enemy*> (handleEvent.causingObject);
                 gameStats.gameOver = playerObjPointer->receiveDamage(handleEnemy->getInflictedDamage());
+                handleEnemy = 0;
             }
             case shot: {
                 // Spieler kriegt Schaden, Bierkrug zum löschen vormerken, treffen mit eigenem Krug nicht möglich
@@ -848,12 +840,15 @@ void Game::handleCollisions() {
                 /* Zusammenstöße mit PowerUps
                  *      Der Spieler erhält zusatzfähigkeiten
                  */
-                ///@todo Soundevents erzeugen
                 PowerUp *handlePowerUp = dynamic_cast<PowerUp*> (handleEvent.causingObject);
                 playerObjPointer->setHealth(playerObjPointer->getHealth() + handlePowerUp->getHealthBonus());
                 playerObjPointer->increaseAmmunation(handlePowerUp->getAmmunationBonus());
                 playerObjPointer->setImmunityCooldown(handlePowerUp->getImmunityCooldownBonus());
                 playerObjPointer->increaseAlcoholLevel(handlePowerUp->getAlcoholLevelBonus());
+                //AudioEvent
+                ///@todo Hier Code einfügen
+
+                //PowerUp zum loeschen vormerken
                 objectsToDelete.push_back(handlePowerUp);
                 handlePowerUp = 0;
                 break;
@@ -885,10 +880,20 @@ void Game::handleCollisions() {
                  * Der Gegner wird getötet
                  */
                 if (handleEvent.direction == fromAbove) {
-                    handleEnemy->setDeath(true);
+                    if (handleEnemy->receiveDamage(playerObjPointer->getInflictedDamage())) {
+                        playerObjPointer->increaseEnemiesKilled();
+                        //Audioausgabe
+                        audioCooldownstruct newAudio;
+                        newAudio.audioEvent = {audioIDs, scene_collision_player, audioDistance.scene_collision_player};
+                        audioIDs = audioIDs + 1;
+                        newAudio.cooldown = audioCooldown.scene_collision_player;
+                        audioStorage.push_back(newAudio);
+
+                    }
                 }
                 break;
             }
+            case plane:
             case obstacle: {
                 /* Zusammenstoß mit Hindernis
                  *  Bewegungsabbruch, Positionskorrektur, neue Bewegungsrichtung
@@ -924,21 +929,19 @@ void Game::handleCollisions() {
                     handleEnemy->receiveDamage(handleShoot->getInflictedDamage());
                     //Bierkrug zum löschen vormerken
                     objectsToDelete.push_back(handleShoot);
-                }
-                handleShoot = 0;
-                if (handleEvent.causingObject->getAudioID() == 0) {
+
                     //Audioevent
                     audioCooldownstruct newAudio;
-                    handleEvent.causingObject->setAudioID(audioIDs);
                     newAudio.audioEvent = {audioIDs, scene_collision_flyingbeer, audioDistance.scene_collision_flyingbeer};
                     audioIDs = audioIDs + 1;
                     newAudio.cooldown = audioCooldown.scene_collision_flyingbeer;
                     audioStorage.push_back(newAudio);
                 }
+                handleShoot = 0;
                 break;
             }
             default: {
-                /*Zusammenstoß mit Gegner, PowerUp, Plane, BOSS
+                /*Zusammenstoß mit Gegner, PowerUp, BOSS
                  *      kein Effekt
                  */
             }
@@ -946,6 +949,34 @@ void Game::handleCollisions() {
             handleEnemy = 0;
             break;
         }//end (case enemy)
+
+        case BOSS: {
+            /*  Zusammenstöße des Endgegners.
+             * Nur interesant, wenn er mit shot zusammenstößt alles andere keine Wirkung
+             */
+            if (handleEvent.causingObject->getType() == shot) {
+                *handleEnemy = dynamic_cast<Enemy*> (handleEvent.affectedObject);
+                *handleShoot = dynamic_cast<Shoot*> (handleEvent.causingObject);
+                if (handleShoot->getOrigin() == player) {
+                    //Schaden zufügen
+                    if (handleEnemy->receiveDamage(handleShoot->getInflictedDamage())) {
+                        playerObjPointer->increaseEnemiesKilled();
+                    }
+                    //Bierkrug zum löschen vormerken
+                    objectsToDelete.push_back(handleShoot);
+
+                    //Audioevent
+                    audioCooldownstruct newAudio;
+                    newAudio.audioEvent = {audioIDs, scene_collision_flyingbeer, audioDistance.scene_collision_flyingbeer};
+                    audioIDs = audioIDs + 1;
+                    newAudio.cooldown = audioCooldown.scene_collision_flyingbeer;
+                    audioStorage.push_back(newAudio);
+                }
+                handleShoot = 0;
+                handleEnemy = 0;
+            }
+            break;
+        } // end (case BOSS)
 
         case shot: {
             /*Zusammenstöße des Bierkrugs
@@ -957,18 +988,17 @@ void Game::handleCollisions() {
              */
             if ((handleEvent.causingObject->getType() == obstacle) || (handleEvent.causingObject->getType() == plane)){
                 objectsToDelete.push_back(dynamic_cast<Shoot*>(handleEvent.affectedObject));
-                if (handleEvent.affectedObject->getAudioID() == 0) {
-                    //Audioevent
-                    audioCooldownstruct newAudio;
-                    handleEvent.affectedObject->setAudioID(audioIDs);
-                    newAudio.audioEvent = {audioIDs, scene_collision_flyingbeer, audioDistance.scene_collision_flyingbeer};
-                    audioIDs = audioIDs + 1;
-                    newAudio.cooldown = audioCooldown.scene_collision_flyingbeer;
-                    audioStorage.push_back(newAudio);
-                }
+
+                //Audioevent
+                audioCooldownstruct newAudio;
+                newAudio.audioEvent = {audioIDs, scene_collision_flyingbeer, audioDistance.scene_collision_flyingbeer};
+                audioIDs = audioIDs + 1;
+                newAudio.cooldown = audioCooldown.scene_collision_flyingbeer;
+                audioStorage.push_back(newAudio);
             }
             break;
         }//end (case shot)
+
         default: {
             /*Zusammenstöße von Hindernis und PowerUps
              *      NICHT MÖGLICH!!!   da keine MovingObjects

@@ -25,6 +25,9 @@ public:
     void increaseAmmunation(int ammunationBonus);   /// Schlechte Bezeichnung
     void decreaseAmmunation();      /// Schlechte Bezeichnung
 
+    //Schaden()
+    int getInflictedDamage() const;
+
     //Schadensimunität()
     int getImmunityCooldown() const;    /// Wird nicht benutzt 23.6
     void setImmunityCooldown(int remainingTime);
@@ -37,6 +40,7 @@ public:
 
     // Getötete Gegner
     int getEnemiesKilled();
+    void increaseEnemiesKilled();
 
     //update()
     virtual void update();
@@ -48,6 +52,8 @@ private:
     int alcoholLevel;
     //verbleibende Munition
     int ammunation;
+    //Schaden den der Spieler verursacht
+    int inflictedDamage;
     //Anzahl Frames Schadensimmunität (Unsterblichkeit)
     int immunityCooldown;
     //verbleibende Nachladezeit

@@ -8,7 +8,8 @@ Player::Player(int posX, int posY, int speedX) : MovingObject(posX, posY, player
     //Startpegel 5 alle 5 Sekunden wird eins abgebaut
     alcoholLevel = 5 * (5 * frameRate);
     jumpState = false;
-    ammunation = 0;
+    ammunation = 5;
+    inflictedDamage = 1;
     immunityCooldown = 0;
     fireRate = 1 * frameRate;
     fireCooldown = 0;
@@ -48,6 +49,7 @@ void Player::setHealth(int health) {
 bool Player::receiveDamage(int damage) {
     if (!(immunityCooldown > 0)) {
         health = health - damage;
+        immunityCooldown = frameRate;
     }
     return !(health > 0);
 }
@@ -121,6 +123,14 @@ void Player::decreaseAmmunation() {
 }
 
 /**
+ * @brief Player::getInflictedDamage
+ * @return Schaden den der Spieler zufügt
+ */
+int Player::getInflictedDamage() const {
+    return inflictedDamage;
+}
+
+/**
  * @brief Player::getImmunityCooldown
  * @return
  */
@@ -181,6 +191,13 @@ void Player::abortJump() {
  */
 int Player::getEnemiesKilled() {
     return enemiesKilled;
+}
+
+/**
+ * @brief Perhöht die Anzahl der getöteten Gegner um 1
+ */
+void Player::increaseEnemiesKilled() {
+    enemiesKilled = enemiesKilled + 1;
 }
 
 /**
