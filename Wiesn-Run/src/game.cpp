@@ -309,13 +309,13 @@ error:
     playerObjPointer = 0;
 
     while (!(levelInitial.empty())) {
-        GameObject *handleObject = worldObjects.front();
+        GameObject *handleObject = levelInitial.front();
         worldObjects.pop_front();
         delete handleObject;
     }
 
     while (!(levelSpawn.empty())) {
-        GameObject *handleObject = worldObjects.front();
+        GameObject *handleObject = levelSpawn.front();
         worldObjects.pop_front();
         delete handleObject;
     }
