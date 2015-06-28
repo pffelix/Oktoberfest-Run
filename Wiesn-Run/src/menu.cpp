@@ -72,16 +72,18 @@ int Menu::displayUpdate() {
  * @return 0 bei Erfolg
  * @author Rupert
  */
-int Menu::addEntry(std::string name, int id, bool clickable, void (*handlerFunction)()) {
+int Menu::addEntry(std::string name, int id, bool clickable, /*void (*handlerFunction)(), */ gameState stateOnClick) {
     // fehlerüberprüfung
-    if(handlerFunction==NULL) {
+    /*if(handlerFunction==NULL) {
         clickable = false;
-    }
+    }*/
     struct menuEntry *entry = new menuEntry;
     entry->id = id;
     entry->name = name;
     entry->position = numberOfEntrys;
     entry->isClickable = clickable;
+    entry->stateOnClick = stateOnClick;
+    //entry->handler = handlerFunction;
     numberOfEntrys++;
     menuEntrys.push_back(entry);
 

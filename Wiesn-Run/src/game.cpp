@@ -106,9 +106,9 @@ int Game::start() {
 
     // Menüs erstellen
     menuStart = new Menu(new std::string("Wiesn-Run"));
-    menuStart->addEntry("Neues Spiel",menuStartId_NewGame,true,{test});
+    menuStart->addEntry("Neues Spiel",menuStartId_NewGame,true);    /// @todo Levelmenü
     menuStart->addEntry("Spiel beenden", menuStartId_EndGame,true);
-    menuStart->addEntry("Credits", menuStartId_Credits,true);
+    menuStart->addEntry("Credits", menuStartId_Credits,true,gameMenuCredits);
     menuStart->displayInit();
 
     menuCredits = new Menu(new std::string("Credits"));
@@ -118,11 +118,11 @@ int Game::start() {
     menuCredits->addEntry("Felix:", menuId_NonClickable,false);
     menuCredits->addEntry("Flo:", menuId_NonClickable,false);
     menuCredits->addEntry("Johann:", menuId_NonClickable,false);
-    menuCredits->addEntry("zurück", menuCreditsId_Back,true);
+    menuCredits->addEntry("zurück", menuCreditsId_Back,true,gameMenuStart);
     menuCredits->displayInit();
 
     menuLevel = new Menu(new std::string("Levelauswahl"));
-    menuLevel->addEntry("zurück",menuLevelId_Back, true);
+    menuLevel->addEntry("zurück",menuLevelId_Back, true,gameMenuStart);
     menuLevel->addEntry("Level 1",menuLevelId_Level1, true);
     menuLevel->addEntry("Level 2",menuLevelId_Level2, true);
     menuLevel->addEntry("Level 3",menuLevelId_Level3, true);
@@ -131,19 +131,19 @@ int Game::start() {
 
     menuBreak = new Menu(new std::string("Pause"));
     menuBreak->addEntry("weiterspielen",menuBreakId_Resume,true);
-    menuBreak->addEntry("Startmenü",menuBreakId_EndGame,true);
+    menuBreak->addEntry("Startmenü",menuBreakId_EndGame,true,gameMenuStart);
     menuBreak->displayInit();
 
     menuStatistics = new Menu(new std::string("Punkte"));
-    menuStatistics->addEntry("weiter",menuStatisticsId_Next,true);
+    menuStatistics->addEntry("weiter",menuStatisticsId_Next,true,gameMenuName);
     menuStatistics->displayInit();
 
     menuName = new Menu(new std::string("Neme eingeben"));
-    menuName->addEntry("weiter",menuNameId_Next,true);
+    menuName->addEntry("weiter",menuNameId_Next,true,gameMenuHighscore);
     menuName->displayInit();
 
     menuHighscore = new Menu(new std::string("Highscores"));
-    menuHighscore->addEntry("weiter",menuHighscoreId_Next,true);
+    menuHighscore->addEntry("weiter",menuHighscoreId_Next,true,gameMenuStart);
     menuHighscore->displayInit();
 
     // QGraphicsScene der Level erstellen
@@ -327,6 +327,11 @@ error:
 int Game::step() {
     using namespace std::chrono;
 
+    /// Tasten abfragen
+    bool upIsPressed = keyInput->getKeyactions().contains(Input::Keyaction::Up);
+    bool downIsPressed = keyInput->getKeyactions().contains(Input::Keyaction::Down);
+    bool enterIsPressed = keyInput->getKeyactions().contains(Input::Keyaction::Enter);
+
     /// Zeit seit dem letzten Aufruf ausrechnen und ausgeben
 
     //high_resolution_clock::time_point akt = letzterAufruf;
@@ -334,107 +339,74 @@ int Game::step() {
     //qDebug("Game::step() | Vergangene Zeit seit letztem step(): %d ms", static_cast<int>(duration_cast<milliseconds>(letzterAufruf-akt).count()));
 
     // falls Menü aktiv, Inputs verarbeiten, Grafik:
-    qDebug("aktMenu: %d",aktMenu);
 
-    if(aktMenu!=NULL) {
-        qDebug("Name: %s",aktMenu->getTitle()->c_str());
-
+    if(aktMenu!=NULL) { // aktMenu ist nur NULL, wenn das Spiel gerade läuft
         aktMenu->displayUpdate();
         //MenüScene wird vom Anzeigewidget aufgerufen
         window->setScene(aktMenu->menuScene);
 
         // Up || Down?
-        if(keyInput->getKeyactions().contains(Input::Keyaction::Up)) {
+        if(upIsPressed) {
             aktMenu->changeSelection(Menu::menuSelectionChange::up);
         }
-        if(keyInput->getKeyactions().contains(Input::Keyaction::Down)) {
+        if(downIsPressed) {
             aktMenu->changeSelection(Menu::menuSelectionChange::down);
         }
 
         // Enter auswerten
-        if(keyInput->getKeyactions().contains(Input::Keyaction::Enter)) {
-            aktMenu->getSelection()->handler();
-        }
-    }
+        if(enterIsPressed) {
 
-    switch(state) {
-        case gameMenuStart:
-/*
-            // Enter?
-            if(keyInput->getKeyactions().contains(Input::Keyaction::Enter)) {
-                // Menüpunkt ausgewählt
-                switch(menuStart->getSelection()->id) {
+            if(aktMenu->getSelection()->stateOnClick != noNextState) {  // Alle Einträge, auf die ein weiteres Menü folgt
+
+                setState(aktMenu->getSelection()->stateOnClick);
+
+            } else {    // alle Einträge, bei denen kein Menü folgt: Spiel starten/Beenden
+                switch(aktMenu->getSelection()->id) {
+                    case menuStartId_EndGame:
+                        exit(0);
                     case menuStartId_NewGame:
+                        /// @todo Level
                         startNewGame();
                         setState(gameIsRunning);
                         break;
-                    case menuStartId_EndGame:
-                        qDebug("Spiel wurde vom Startmenü ordentlich beendet");
-                        exit(0);
-                        break;
                 }
-            }*/
+            }
+            //aktMenu->getSelection()->handler();
+        }
+    } else {    // gameIsRunning
 
+        worldObjects.sort(compareGameObjects());
+        qDebug("---Nächster Zeitschritt---");
 
+        appendWorldObjects(playerObjPointer);
+        reduceWorldObjects(playerObjPointer);
 
-            break;
-        case gameMenuLevel:
-            aktMenu = menuLevel;
-            break;
-        case gameMenuCredits:
-            aktMenu = menuCredits;
-            break;
-        case gameMenuBreak:
-            aktMenu = menuBreak;
-            break;
-        case gameMenuStatisitcs:
-            aktMenu = menuStatistics;
-            break;
-        case gameMenuName:
-            aktMenu = menuName;
-            break;
-        case gameMenuHighscore:
-            aktMenu = menuHighscore;
-            break;
+        //calculateAudio
 
-        case gameIsRunning:
-            // Menü bei ESC
-            /*if(keyInput->getKeyactions().contains(Input::Keyaction::Exit)) {
-                state = gameMenuEnd;
-            }*/
+        evaluateInput();
+        worldObjects.sort(compareGameObjects());
+        calculateMovement();
+        worldObjects.sort(compareGameObjects());
+        detectCollision(&worldObjects);
+        handleCollisions();
 
-            worldObjects.sort(compareGameObjects());
-            qDebug("---Nächster Zeitschritt---");
+        renderGraphics(&worldObjects, playerObjPointer);
 
-            appendWorldObjects(playerObjPointer);
-            reduceWorldObjects(playerObjPointer);
+        updateAudio();
 
-            //calculateAudio
+        // Mockup: add audioStruct player_jump to audioevents list
+        //audioStruct player_jump{1, audioType::background_level1, 0.6};
+        // Mockup: add audioStruct powerup_beer to audioevents list
+        //audioevents.push_back(player_jump);
+        //audioStruct scene_beer{2, audioType::background_level1, 0.6};
+        //audioevents.push_back(scene_beer);
+        // send filled audioevents list to AudioControl Object, which updates current Output Sounds
+        audioOutput->update(&audioevents);
+        /// delete List audioStruct elements in list and fill it in the next step again
+        audioevents.clear();
 
-            evaluateInput();
-            worldObjects.sort(compareGameObjects());
-            calculateMovement();
-            worldObjects.sort(compareGameObjects());
-            detectCollision(&worldObjects);
-            handleCollisions();
-
-            renderGraphics(&worldObjects, playerObjPointer);
-
-            updateAudio();
-
-            // Mockup: add audioStruct player_jump to audioevents list
-            //audioStruct player_jump{1, audioType::background_level1, 0.6};
-            // Mockup: add audioStruct powerup_beer to audioevents list
-            //audioevents.push_back(player_jump);
-            //audioStruct scene_beer{2, audioType::background_level1, 0.6};
-            //audioevents.push_back(scene_beer);
-            // send filled audioevents list to AudioControl Object, which updates current Output Sounds
-            audioOutput->update(&audioevents);
-            /// delete List audioStruct elements in list and fill it in the next step again
-            audioevents.clear();
-            break;
+        stepCount++;
     }
-    stepCount++;
     return 0;
 }
 
@@ -1382,6 +1354,10 @@ int Game::getStepIntervall() {
 void Game::setState(enum gameState newState) {
    state = newState;
     switch(state) {
+        case noNextState:
+            // darf eigentlich nicht vorkommen
+            qDebug("setState(): noNextState");
+            break;
         case gameIsRunning:
             aktMenu = NULL;
             break;
