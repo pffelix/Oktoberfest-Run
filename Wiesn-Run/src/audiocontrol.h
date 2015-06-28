@@ -23,12 +23,6 @@
 class AudioControl{
 
 public:
-    typedef struct
-    {
-        float mono;
-    }
-    paTestData;
-
     typedef struct {
         /// id des playstruct Objekts
         int id;
@@ -49,8 +43,8 @@ public:
     AudioControl();
     ~AudioControl();
     void playInitialize();
+    void playTerminate();
     void update(std::list<struct audioStruct> *audioevents);
-    PaStream* getPastream();
 
     private:
     /**
@@ -132,20 +126,21 @@ public:
      */
     PaError paerror;
 
-    // Instanzfunktion Callback des aktuellen AudioControl Objekts
+    /// Instanz Callbackfunktion (des von Game.cpp erstellten AudioControl Objekts audioOutput)
+    /// hier kann auf alle gesetzten Instanzvariablen zurückgegriffen werden.
     int instancepaCallback(const void *input, void *output,
                                unsigned long frameCount,
                                const PaStreamCallbackTimeInfo* timeInfo,
                                PaStreamCallbackFlags statusFlags);
 
-    // Statische Funktion Callback der AudioControl Klasse
+    /// Statische Callback Funktion der AudioControl Klasse
     static int staticpaCallback(
                               const void *input, void *output,
                               unsigned long frameCount,
                               const PaStreamCallbackTimeInfo* timeInfo,
                               PaStreamCallbackFlags statusFlags,
                               void *userData )
-    // gebe einen Function Pointer auf Instanz Callback Funktion zurück
+    /// gebe einen Function Pointer auf Instanz Callback Funktion zurück
     {
       return ((AudioControl*)userData)
          ->instancepaCallback(input, output, frameCount, timeInfo, statusFlags);

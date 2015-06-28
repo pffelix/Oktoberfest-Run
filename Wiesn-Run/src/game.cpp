@@ -261,7 +261,12 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
 
 /**
  * @brief Game::endGame
+<<<<<<< HEAD
+ *        Diese Funktion löscht nicht mehr nötige Variablen und Objekte wenn vom Spiel in das Hauptmenü gewechselt wird.
+ * @ author: Felix Pfreundtner
+=======
  * @ author: Felix Pfreundtner, Johann
+>>>>>>> e751f156deb32302677aeec97f8bd31af9cfac4a
  */
 void Game::endGame() {
     /// @todo Aufräumarbeiten
@@ -296,6 +301,7 @@ void Game::endGame() {
 
 /**
  * @brief Game::exitGame
+ *        Diese Funktion löscht nicht mehr nötige Variablen und Objekte wenn das Spiel komplett beendet wird.
  * @ author: Felix Pfreundtner
  */
 void Game::exitGame() {
@@ -305,31 +311,30 @@ void Game::exitGame() {
     std::string mode = "write";
     updateHighScore(mode);
 
-    /// Stoppe die Portaudio Audio Wiedergabe
-    paerror = Pa_StopStream(audioOutput->getPastream());
-    if(paerror != paNoError) {
-        goto error;
-    }
-    /// Schließe den Portaudio Stream
-    paerror = Pa_CloseStream(audioOutput->getPastream());
-    if(paerror != paNoError) {
-        goto error;
-    }
-    /// Beende PortAudio
-    Pa_Terminate();
+    /// Beende Audio Ausgabe und lösche Audiobezogene Variablen
 
-    /// Lösche Objekt audioOutput
+    /// rufe Desktrutor Objekt audioOutput auf
+    /// Beende Audioausgabe und lösche Objekt
     delete audioOutput;
 
+    /// Leere Audio Listen
+    audioevents.clear();
+    audioStorage.clear();
 
-error:
-    Pa_Terminate();
-    fprintf( stderr, "Ein Meldung trat während der Benutzung der PortAudio Ausgabe auf\n" );
-    fprintf( stderr, "Error Nummer: %d\n", paerror );
-    fprintf( stderr, "Error Nachricht: %s\n", Pa_GetErrorText( paerror ) );
+    /// leere WorldObjects etc
 
-    /// delete audio
-    ///
+    while (!(worldObjects.empty())) {
+        GameObject *handleObject = worldObjects.front();
+        worldObjects.pop_front();
+        delete handleObject;
+    }
+    playerObjPointer = 0;
+
+    while (!(levelInitial.empty())) {
+        GameObject *handleObject = levelInitial.front();
+        worldObjects.pop_front();
+        delete handleObject;
+    }
 
 
 }
@@ -394,7 +399,7 @@ int Game::step() {
             } else {    // alle Einträge, bei denen kein Menü folgt: Spiel starten/Beenden
                 switch(aktMenu->getSelection()->id) {
                     case menuStartId_EndGame:
-                        endGame();
+                        exitGame();
                         exit(0);
                     case menuLevelId_Level1:
                         startNewGame("level1_old.txt",1);
