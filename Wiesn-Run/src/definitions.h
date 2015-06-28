@@ -70,6 +70,7 @@ const int maxSpeedY = 2 * (playerScale / frameRate);
 const int maxHealth = 5;
 const int maxAlcohol = 4500;
 
+
 /**
  * @brief Enumerator für den Objekt-Typ
  * um welche Art von Objekt handelt es sich

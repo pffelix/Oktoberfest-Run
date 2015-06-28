@@ -129,9 +129,6 @@ private:
     /// Vektor der die Darstellgung von Leben,Highscore und Pegel enhält
     std::vector<QGraphicsTextItem> playerStats;
 
-    /// aktueller Spielzustand (running, menuStart, menuEnd)
-    gameState state = gameMenuStart;
-
     /// Zeiger auf QApplication
     QApplication *appPointer;
     /// für Zeitmessung
