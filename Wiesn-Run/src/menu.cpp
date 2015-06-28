@@ -86,8 +86,29 @@ int Menu::addEntry(std::string name, int id, bool clickable, /*void (*handlerFun
     //entry->handler = handlerFunction;
     numberOfEntrys++;
     menuEntrys.push_back(entry);
+    selectFirstEntry();
 
     return 0;
+}
+
+/**
+ * @brief aktiviert ersten klickbaren Eintrag
+ * @return int 0 bei Erfolg, -1 sonst
+ * @author Rupert
+ */
+int Menu::selectFirstEntry() {
+    int tmpPos = 0;
+    while (tmpPos < numberOfEntrys) {
+        menuEntry *entry = getEntry(tmpPos);
+        if(entry->isClickable) {
+            currentPosition = tmpPos;
+            return 0;
+        } else {
+            tmpPos++;
+        }
+    }
+    // keinen Eintrag gefunden
+    return -1;
 }
 
 /**
