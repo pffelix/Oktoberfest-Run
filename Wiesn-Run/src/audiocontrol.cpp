@@ -74,6 +74,26 @@ AudioControl::AudioControl() {
  * @author  Felix Pfreundtner
  */
 AudioControl::~AudioControl() {
+
+    /// Stoppe den Portaudio Stream
+    paerror = Pa_StopStream(pastream);
+    if(paerror != paNoError) {
+        goto error;
+    }
+    /// Schließe den Portaudio Stream
+    paerror = Pa_CloseStream( pastream );
+    if(paerror != paNoError) {
+        goto error;
+    }
+    /// Beende PortAudio
+    Pa_Terminate();
+
+    /// gebe PortAudio Status Meldung aus
+    error:
+    Pa_Terminate();
+    fprintf( stderr, "Ein Meldung trat während der Benutzung der PortAudio Ausgabe auf\n" );
+    fprintf( stderr, "Meldung Nummer: %d\n", paerror );
+    fprintf( stderr, "Meldung Nachricht: %s\n", Pa_GetErrorText( paerror ) );
 }
 
 /**
@@ -150,8 +170,6 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
     playeventsnumber = playevents.size();
 
 }
-
-
 
 
 /**
@@ -247,39 +265,5 @@ int AudioControl::instancepaCallback( const void *inputBuffer, void *outputBuffe
     //std::copy ( block, block + BLOCKSIZE, std::back_inserter ( blockcontinue ) );
     return 0;
 }
-
-
-
-/**
- * @brief  playTerminate
- *         playTerminate stoppt die Portaudio Audiowiedergabe, beendedet den PortAudio Stream und beendet PortAudio
- * @param  Qlist audioevents
- * @author  Felix Pfreundtner
- */
-void AudioControl::playTerminate() {
-
-/// Stoppe den Portaudio Stream
-paerror = Pa_StopStream(pastream);
-if(paerror != paNoError) {
-    goto error;
-}
-/// Schließe den Portaudio Stream
-
-paerror = Pa_CloseStream( pastream );
-if(paerror != paNoError) {
-    goto error;
-}
-
-/// Beende PortAudio
-Pa_Terminate();
-
-error:
-Pa_Terminate();
-fprintf( stderr, "Ein Meldung trat während der Benutzung der PortAudio Ausgabe auf\n" );
-fprintf( stderr, "Error Nummer: %d\n", paerror );
-fprintf( stderr, "Error Nachricht: %s\n", Pa_GetErrorText( paerror ) );
-
-}
-
 
 

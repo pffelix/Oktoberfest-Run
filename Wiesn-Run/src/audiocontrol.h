@@ -43,7 +43,6 @@ public:
     AudioControl();
     ~AudioControl();
     void playInitialize();
-    void playTerminate();
     void update(std::list<struct audioStruct> *audioevents);
 
     private:

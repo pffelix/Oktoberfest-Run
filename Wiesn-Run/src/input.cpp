@@ -113,8 +113,9 @@ QSet<int> Input::getKeyactions() {
 }
 
 /**
- * @brief gibt letzte gedrücke Taste zurück und löscht diese
- * wird für Menüführung gebraucht, das Tasten nicht dauernd ausgewertet werden
+ * @brief Input::getAndDeleteLastKey
+ *        Gibt letzte gedrücke Taste zurück und löscht diese
+ *        wird für die Menüführung gebraucht, da Tasten dort nicht dauernd ausgewertet werden sollen
  * @return Taste
  * @author Rupert
  */
