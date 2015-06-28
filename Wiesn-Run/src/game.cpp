@@ -128,15 +128,15 @@ int Game::start() {
     menuBreak->addEntry("Startmenü",menuBreakId_EndGame,true);
     menuBreak->displayInit();
 
-    menuStatistics = new Menu(new std::string("Punkte"));
+    menuStatistics = new Menu(new std::string("Punkte"), Menu::menuType::highscore);
     menuStatistics->addEntry("weiter",menuStatisticsId_Next,true,gameMenuName);
     menuStatistics->displayInit();
 
-    menuName = new Menu(new std::string("Neme eingeben"));
+    menuName = new Menu(new std::string("Neme eingeben"), Menu::menuType::highscore);
     menuName->addEntry("weiter",menuNameId_Next,true,gameMenuHighscore);
     menuName->displayInit();
 
-    menuHighscore = new Menu(new std::string("Highscores"));
+    menuHighscore = new Menu(new std::string("Highscores"), Menu::menuType::highscore);
     menuHighscore->addEntry("weiter",menuHighscoreId_Next,true,gameMenuStart);
     menuHighscore->displayInit();
 
@@ -364,7 +364,7 @@ int Game::step() {
             // Audioevent für die Statistik-Menüs
             audioStruct scoreAudio = {2, background_highscore, audioDistance.background_highscore};
             audioevents.push_back(scoreAudio);
-        } else {    // menuType::normal
+        } else {    // Menu::menuType::normal
             //Audioevent für die Spiel-Menüs
             audioStruct menuAudio = {1, background_menu, audioDistance.background_menu};
             audioevents.push_back(menuAudio);
