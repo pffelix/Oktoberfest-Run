@@ -77,23 +77,27 @@ AudioControl::~AudioControl() {
 
     /// Stoppe den Portaudio Stream
     paerror = Pa_StopStream(pastream);
-    if(paerror != paNoError) {
-        goto error;
+    if(paerror != paNoError && paerror != 0) {
+        fprintf(stderr, "Ein Error trat während der Benutzung der PortAudio Ausgabe auf\n" );
+        fprintf(stderr, "Error Nummer: %d\n", paerror);
+        fprintf(stderr, "Error Nachricht: %s\n", Pa_GetErrorText(paerror));
     }
     /// Schließe den Portaudio Stream
-    paerror = Pa_CloseStream( pastream );
-    if(paerror != paNoError) {
-        goto error;
+    paerror = Pa_CloseStream(pastream);
+    if(paerror != paNoError && paerror != 0) {
+        fprintf(stderr, "Ein Error trat während der Benutzung der PortAudio Ausgabe auf\n" );
+        fprintf(stderr, "Error Nummer: %d\n", paerror);
+        fprintf(stderr, "Error Nachricht: %s\n", Pa_GetErrorText(paerror));
     }
     /// Beende PortAudio
-    Pa_Terminate();
+    paerror = Pa_Terminate();
+    if(paerror != paNoError && paerror != 0) {
+        fprintf(stderr, "Ein Error trat während der Benutzung der PortAudio Ausgabe auf\n" );
+        fprintf(stderr, "Error Nummer: %d\n", paerror);
+        fprintf(stderr, "Error Nachricht: %s\n", Pa_GetErrorText(paerror));
+    }
 
-    /// gebe PortAudio Status Meldung aus
-    error:
-    Pa_Terminate();
-    fprintf( stderr, "Ein Meldung trat während der Benutzung der PortAudio Ausgabe auf\n" );
-    fprintf( stderr, "Meldung Nummer: %d\n", paerror );
-    fprintf( stderr, "Meldung Nachricht: %s\n", Pa_GetErrorText( paerror ) );
+
 }
 
 /**
@@ -181,11 +185,13 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
 void AudioControl::playInitialize(){
     /// initialisiere Port Audio
     paerror = Pa_Initialize();
-    if( paerror != paNoError ) {
-        goto error;
+    if(paerror != paNoError && paerror !=0) {
+       fprintf(stderr, "Ein Error trat während der Benutzung der PortAudio Ausgabe auf\n" );
+       fprintf(stderr, "Error Nummer: %d\n", paerror);
+       fprintf(stderr, "Error Nachricht: %s\n", Pa_GetErrorText(paerror));
     }
 
-    /// Öffene einen Ausgabe Stream
+    /// Öffene Ausgabe Stream pastream
     paerror = Pa_OpenDefaultStream (&pastream,
                                     0,          /// erstelle keine Eingangskänale
                                     2,          /// erstelle Mono Audio Ausgabe
@@ -194,13 +200,18 @@ void AudioControl::playInitialize(){
                                     BLOCKSIZE, /// setze Anzahl an Samples per Bufferblock auf 1024
                                     &AudioControl::staticpaCallback, /// verweise auf Static Callback Funktion
                                     this); /// übergebe User-Data
-    if( paerror != paNoError ) {
-        goto error;
+    if(paerror != paNoError && paerror != 0) {
+       fprintf(stderr, "Ein Error trat während der Benutzung der PortAudio Ausgabe auf\n" );
+       fprintf(stderr, "Error Nummer: %d\n", paerror);
+       fprintf(stderr, "Error Nachricht: %s\n", Pa_GetErrorText(paerror));
     }
 
-    paerror = Pa_StartStream( pastream );
-    if( paerror != paNoError ) {
-        goto error;
+    /// Starte PortAudio Stream pastream
+    paerror = Pa_StartStream(pastream);
+    if(paerror != paNoError && paerror != 0) {
+       fprintf(stderr, "Ein Error trat während der Benutzung der PortAudio Ausgabe auf\n" );
+       fprintf(stderr, "Error Nummer: %d\n", paerror);
+       fprintf(stderr, "Error Nachricht: %s\n", Pa_GetErrorText(paerror));
     }
 
     /// Pausiere Funktion wenn Audiostream gerade aktiv ist (Audiowiedergabe übernimmt Callback Funktion)
@@ -209,11 +220,6 @@ void AudioControl::playInitialize(){
     }
 
 
-error:
-    Pa_Terminate();
-    fprintf( stderr, "Ein Meldung trat während der Benutzung der PortAudio Ausgabe auf\n" );
-    fprintf( stderr, "Error Nummer: %d\n", paerror );
-    fprintf( stderr, "Error Nachricht: %s\n", Pa_GetErrorText( paerror ) );
 }
 
 
