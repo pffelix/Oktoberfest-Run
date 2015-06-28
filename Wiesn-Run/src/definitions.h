@@ -57,7 +57,6 @@ const int maxSpeed = 3 * (playerScale / frameRate) ;
 
 /// normale Player-Speed
 const int playerSpeed = maxSpeed + 1;
-//const int playerSpeed = maxSpeed / 2;
 
 /**
  * @brief Fall- / Sprunggeschwindigkeit
