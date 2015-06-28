@@ -261,6 +261,7 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
 
 /**
  * @brief Game::endGame
+ *        Diese Funktion löscht nicht mehr nötige Variablen und Objekte wenn vom Spiel in das Hauptmenü gewechselt wird.
  * @ author: Felix Pfreundtner
  */
 void Game::endGame() {
@@ -273,6 +274,7 @@ void Game::endGame() {
 
 /**
  * @brief Game::exitGame
+ *        Diese Funktion löscht nicht mehr nötige Variablen und Objekte wenn das Spiel komplett beendet wird.
  * @ author: Felix Pfreundtner
  */
 void Game::exitGame() {
@@ -396,7 +398,7 @@ int Game::step() {
             } else {    // alle Einträge, bei denen kein Menü folgt: Spiel starten/Beenden
                 switch(aktMenu->getSelection()->id) {
                     case menuStartId_EndGame:
-                        endGame();
+                        exitGame();
                         exit(0);
                     case menuLevelId_Level1:
                         startNewGame("level1_old.txt",1);
