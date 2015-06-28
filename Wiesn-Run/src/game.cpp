@@ -437,9 +437,6 @@ int Game::step() {
 
 
         stepCount++;
-        if (stepCount > 2) {
-            setState(gameMenuBreak);
-        }
     }
     //Audio berechung
     switch (state) {
