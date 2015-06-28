@@ -261,12 +261,8 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
 
 /**
  * @brief Game::endGame
-<<<<<<< HEAD
  *        Diese Funktion löscht nicht mehr nötige Variablen und Objekte wenn vom Spiel in das Hauptmenü gewechselt wird.
- * @ author: Felix Pfreundtner
-=======
- * @ author: Felix Pfreundtner, Johann
->>>>>>> e751f156deb32302677aeec97f8bd31af9cfac4a
+ * @ author: Felix, Johann
  */
 void Game::endGame() {
     /// @todo Aufräumarbeiten
@@ -302,7 +298,7 @@ void Game::endGame() {
 /**
  * @brief Game::exitGame
  *        Diese Funktion löscht nicht mehr nötige Variablen und Objekte wenn das Spiel komplett beendet wird.
- * @ author: Felix Pfreundtner
+ * @ author: Felix
  */
 void Game::exitGame() {
 
@@ -314,7 +310,7 @@ void Game::exitGame() {
     /// Beende Audio Ausgabe und lösche Audiobezogene Variablen
 
     /// rufe Desktrutor Objekt audioOutput auf
-    /// Beende Audioausgabe und lösche Objekt
+    /// Stoppe PortAudio Audioausgabe, Beende Portaudio Stream, Beende PortAudio und lösche Objekt audioOutput
     delete audioOutput;
 
     /// Leere Audio Listen
