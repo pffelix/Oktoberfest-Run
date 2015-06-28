@@ -6,9 +6,10 @@
  * @param Zeiger auf String mit Menu-Titel
  * @author Rupert
  */
-Menu::Menu(std::string *menuTitle)
+Menu::Menu(std::string *menuTitle, menuType type)
 {
     title = menuTitle;
+    this->type = type;
     this->addEntry(*menuTitle,0,false);
 }
 
@@ -19,6 +20,15 @@ Menu::Menu(std::string *menuTitle)
  */
 std::string *Menu::getTitle() {
     return title;
+}
+
+/**
+ * @brief gibt den Menü-Typ zurück
+ * @return enum menuType
+ * @author Rupert
+ */
+Menu::menuType Menu::getType() {
+    return type;
 }
 
 /**

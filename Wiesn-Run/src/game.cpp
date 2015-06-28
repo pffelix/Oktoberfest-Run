@@ -125,7 +125,7 @@ int Game::start() {
 
     menuBreak = new Menu(new std::string("Pause"));
     menuBreak->addEntry("weiterspielen",menuBreakId_Resume,true);
-    menuBreak->addEntry("Beenden",menuBreakId_EndGame,true);
+    menuBreak->addEntry("Startmenü",menuBreakId_EndGame,true);
     menuBreak->displayInit();
 
     menuStatistics = new Menu(new std::string("Punkte"));
@@ -359,6 +359,17 @@ int Game::step() {
         //MenüScene wird vom Anzeigewidget aufgerufen
         window->setScene(aktMenu->menuScene);
 
+        // Audio
+        if(aktMenu->getType() == Menu::menuType::highscore) {
+            // Audioevent für die Statistik-Menüs
+            audioStruct scoreAudio = {2, background_highscore, audioDistance.background_highscore};
+            audioevents.push_back(scoreAudio);
+        } else {    // menuType::normal
+            //Audioevent für die Spiel-Menüs
+            audioStruct menuAudio = {1, background_menu, audioDistance.background_menu};
+            audioevents.push_back(menuAudio);
+        }
+
         // Up || Down?
         if(lastKey == Input::Keyaction::Up) {
             aktMenu->changeSelection(Menu::menuSelectionChange::up);
@@ -393,7 +404,6 @@ int Game::step() {
                         break;
                     case menuBreakId_EndGame:
                         endGame();
-                        //exit(0); // umgeht Absturz
                         setState(gameMenuStart);
                         break;
                 }
@@ -414,7 +424,7 @@ int Game::step() {
         appendWorldObjects(playerObjPointer);
         reduceWorldObjects(playerObjPointer);
 
-        //calculateAudio
+        updateAudio();
 
         evaluateInput();
         worldObjects.sort(compareGameObjects());
@@ -441,34 +451,12 @@ int Game::step() {
             setState(gameMenuBreak);
         }
     }
-    //Audio berechung
-    switch (state) {
-    case gameIsRunning: {
-        //Audio Berechnungen während das Spiel läuft
-        // Audioevents Updaten und an die Liste audioevent übergeben
-        updateAudio();
-    }
-    case gameMenuStart:
-    case gameMenuLevel:
-    case gameMenuBreak: {
-        //Audioevent für die Spiel-Menüs
-        audioStruct menuAudio = {1, background_menu, audioDistance.background_menu};
-        audioevents.push_back(menuAudio);
-    }
-    case gameMenuCredits:
-    case gameMenuStatisitcs:
-    case gameMenuName:
-    case gameMenuHighscore: {
-        // Audioevent für die Statistik-Menüs
-        audioStruct scoreAudio = {2, background_highscore, audioDistance.background_highscore};
-        audioevents.push_back(scoreAudio);
-    }
-    }
 
     // Audio ausgabe außerhalb des If-Statements damit auch in den Menüs Musik ausgegben wird
     audioOutput->update(&audioevents);
     /// delete List audioStruct elements in list and fill it in the next step again
     audioevents.clear();
+
     return 0;
 }
 

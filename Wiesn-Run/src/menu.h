@@ -39,8 +39,16 @@ public:
         up, down, /*enter*/
     };
 
+    /// für verschiedene Menü-Typen (für Background-Musik)
+    enum menuType {
+        normal, highscore
+    };
 
-    Menu(std::string *menuTitle);
+
+    Menu(std::string *menuTitle, menuType type = normal);
+
+    /// gibt den Typ zurück
+    menuType getType();
 
     /// gibt den Titel zurück
     std::string *getTitle();
@@ -80,6 +88,9 @@ private:
 
     /// Zeiger auf String, in dem der Titel des Menüs steht
     std::string *title;
+
+    /// Menü-Typ
+    menuType type;
 
     int selectFirstEntry();
 
