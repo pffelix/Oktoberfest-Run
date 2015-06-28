@@ -268,6 +268,19 @@ void Game::endGame() {
     // Highscore aktualisieren
     std::string mode = "write";
     updateHighScore(mode);
+}
+
+
+/**
+ * @brief Game::exitGame
+ * @ author: Felix Pfreundtner
+ */
+void Game::exitGame() {
+
+    /// @todo Aufräumarbeiten
+    // Highscore aktualisieren
+    std::string mode = "write";
+    updateHighScore(mode);
 
     /// Stoppe die Portaudio Audio Wiedergabe
     paerror = Pa_StopStream(audioOutput->getPastream());
@@ -296,6 +309,7 @@ error:
     ///
 
 }
+
 
 
 /**
