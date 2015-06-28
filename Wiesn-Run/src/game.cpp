@@ -224,7 +224,7 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
     // Szenen-Breite setzen
     sceneWidth = 1024;
     // audioIDs initialisieren
-    audioIDs = 10;
+    audioIDs = 20;
 
     playerStats = std::vector<QGraphicsTextItem>(3);
 

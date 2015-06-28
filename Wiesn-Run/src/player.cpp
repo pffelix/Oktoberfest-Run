@@ -53,7 +53,7 @@ void Player::increaseHealth(int health) {
  * @return Lebenszustand des Spielers: true = tot
  */
 bool Player::receiveDamage(int damage) {
-    if (!(immunityCooldown > 0)) {
+    if (immunityCooldown == 0) {
         health = health - damage;
         immunityCooldown = frameRate;
     }
@@ -91,8 +91,9 @@ void Player::increaseAlcoholLevel(int additionalAlcohol) {
  *
  */
  void Player::decreaseAlcoholLevel(int decreaseLevel) {
-    if (alcoholLevel > 0) {
     alcoholLevel = alcoholLevel - decreaseLevel;
+    if (alcoholLevel < 0 ) {
+        alcoholLevel = 0;
     }
 }
 
@@ -234,14 +235,14 @@ void Player::update() {
         jumpState = false;
     }
 
-    //Alkoholpegel Zeitabbau
+    //Zeitlicher Abbau von Cooldowns
     if (alcoholLevel > 0) {
         alcoholLevel = alcoholLevel - 1;
     }
-    /* Cooldowns weiterzählen
-     * aktueller Stand: Werte nur interessant wenn > 0
-     * darum keine if-Abfragen
-     */
-    immunityCooldown = immunityCooldown - 1;
-    fireCooldown = fireCooldown - 1;
+    if (immunityCooldown > 0) {
+        immunityCooldown = immunityCooldown - 1;
+    }
+    if (fireCooldown > 0) {
+        fireCooldown = fireCooldown - 1;
+    }
 }
