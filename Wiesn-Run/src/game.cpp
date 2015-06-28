@@ -295,6 +295,30 @@ error:
     /// delete audio
     ///
 
+    ///Audio Listen leeren
+    audioevents.clear();
+    audioStorage.clear();
+
+    //WorldObjects etc leeren
+
+    while (!(worldObjects.empty())) {
+        GameObject *handleObject = worldObjects.front();
+        worldObjects.pop_front();
+        delete handleObject;
+    }
+    playerObjPointer = 0;
+
+    while (!(levelInitial.empty())) {
+        GameObject *handleObject = worldObjects.front();
+        worldObjects.pop_front();
+        delete handleObject;
+    }
+
+    while (!(levelSpawn.empty())) {
+        GameObject *handleObject = worldObjects.front();
+        worldObjects.pop_front();
+        delete handleObject;
+    }
 }
 
 
@@ -403,6 +427,7 @@ int Game::step() {
 
         renderGraphics(&worldObjects, playerObjPointer);
 
+        // Audioevents Updaten und an die Liste audioevent übergeben
         updateAudio();
 
 
@@ -507,7 +532,7 @@ void Game::evaluateInput() {
     if(keyInput->getKeyactions().contains(Input::Keyaction::Right)) {
         playerObjPointer->setSpeedX(playerSpeed);
         // Audioevent erzeugen
-        audioStruct playerAudio = {9, player_walk, 0};
+        audioStruct playerAudio = {19, player_walk, 0};
         audioevents.push_back(playerAudio);
     } else {
         playerObjPointer->setSpeedX(0);
@@ -1029,24 +1054,24 @@ void Game::updateAudio() {
 
     //Hintergrundmusik
     audioType levelBackground [3] {background_level1, background_level2, background_level3};
-    audioStruct newAudio = {0, levelBackground[gameStats.actLevel], 0.5};
+    audioStruct newAudio = {gameStats.actLevel, levelBackground[gameStats.actLevel], 0.5};
     audioevents.push_back(newAudio);
 
     //Warntöne Leben/Alcoholpegel
     switch (playerObjPointer->getHealth()) {
     case 1: {
-        newAudio = {5, status_lifecritical, audioDistance.status_lifecritical};
+        newAudio = {10, status_lifecritical, audioDistance.status_lifecritical};
         audioevents.push_back(newAudio);
         break;
     }
     case 2: {
-        newAudio = {6, status_life , audioDistance.status_life};
+        newAudio = {11, status_life , audioDistance.status_life};
         audioevents.push_back(newAudio);
         break;
     }
     }
     if (playerObjPointer->getAlcoholLevel() >maxAlcohol) {
-        newAudio = {2, status_alcohol, audioDistance.status_alcohol};
+        newAudio = {12, status_alcohol, audioDistance.status_alcohol};
         audioevents.push_back(newAudio);
     }
 
