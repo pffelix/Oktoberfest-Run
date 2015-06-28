@@ -293,6 +293,7 @@ void Game::endGame() {
         levelSpawn.pop_front();
         delete handleObject;
     }
+
 }
 
 
@@ -313,9 +314,8 @@ void Game::exitGame() {
     /// rufe Desktrutor Objekt audioOutput auf
     /// Beende Audioausgabe und lösche Objekt
     delete audioOutput;
-
-
 }
+
 
 /**
  * @brief Game-Loop
@@ -437,12 +437,14 @@ int Game::step() {
         //audioevents.push_back(scene_beer);
         // send filled audioevents list to AudioControl Object, which updates current Output Sounds
 
-        audioOutput->update(&audioevents);
-        /// delete List audioStruct elements in list and fill it in the next step again
-        audioevents.clear();
 
         stepCount++;
     }
+
+    // Audio ausgabe außerhalb des If-Statements damit auch in den Menüs Musik ausgegben wird
+    audioOutput->update(&audioevents);
+    /// delete List audioStruct elements in list and fill it in the next step again
+    audioevents.clear();
     return 0;
 }
 
