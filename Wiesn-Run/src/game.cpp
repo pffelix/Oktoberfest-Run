@@ -1143,6 +1143,7 @@ void Game::updateAudio() {
             audioevents.push_back(it->audioEvent);
         } else {
             audioStorage.erase(it);
+            it--;
         }
     }
 }

@@ -175,25 +175,25 @@ typedef struct {
     int scene_enemy_tourist = 0;
     int scene_enemy_security = 0;
     int scene_enemy_boss = 0;
-    int scene_collision_obstacle = 1000;
-    int scene_collision_enemy = 1000;
-    int scene_collision_player = 1000;
-    int scene_collision_flyingbeer = 1000;
-    int powerup_beer = 1000;
-    int powerup_food = 1000;
+    int scene_collision_obstacle = frameRate;
+    int scene_collision_enemy = frameRate;
+    int scene_collision_player = frameRate;
+    int scene_collision_flyingbeer = frameRate;
+    int powerup_beer = 10;
+    int powerup_food = 10;
     int status_alcohol = 0;
     int status_life = 0;
     int status_lifecritical = 0;
-    int status_dead = 2000;
+    int status_dead = 2 * frameRate;
     int player_walk = 0;
-    int player_jump = 2000;
+    int player_jump = 2 * frameRate;
     int background_menu = 0;
     int background_highscore = 0;
     int background_level1 = 0;
     int background_level2 = 0;
     int background_level3 = 0;
-    int background_startgame = 1000;
-    int background_levelfinished = 2000;
+    int background_startgame = frameRate;
+    int background_levelfinished = 2 * frameRate;
 } audioCooldownStruct;
 
 /**
