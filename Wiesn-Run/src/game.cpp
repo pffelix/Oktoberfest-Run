@@ -444,6 +444,7 @@ int Game::step() {
         //Audio Berechnungen während das Spiel läuft
         // Audioevents Updaten und an die Liste audioevent übergeben
         updateAudio();
+        break;
     }
     case gameMenuStart:
     case gameMenuLevel:
@@ -451,6 +452,7 @@ int Game::step() {
         //Audioevent für die Spiel-Menüs
         audioStruct menuAudio = {1, background_menu, audioDistance.background_menu};
         audioevents.push_back(menuAudio);
+        break;
     }
     case gameMenuCredits:
     case gameMenuStatisitcs:
@@ -459,6 +461,7 @@ int Game::step() {
         // Audioevent für die Statistik-Menüs
         audioStruct scoreAudio = {2, background_highscore, audioDistance.background_highscore};
         audioevents.push_back(scoreAudio);
+        break;
     }
     }
 
