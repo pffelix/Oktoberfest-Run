@@ -1,0 +1,108 @@
+﻿LevelDatei für den ersten Level
+
+Diese Datei kann nur von der Methode "loadLevelFile" ausgelesen werden.
+Zeilen, die mit einem Keyword beginnen, werden interpretiert. Alle anderen Zeilen werden ignoriert.
+
+
+Erläuterung
+------------
+# Spieler anlegen:
+# Player,posX,posY
+# Player,160,0
+# Größe: 60x120
+
+# Tourist anlegen:
+# Tourist,posX,posY,speedX
+# Tourist,300,0,-10
+# Größe: 60x120
+
+# Security anlegen:
+# Security,posX,posY
+# Security,300,0
+# Größe: 60:120
+
+# Obstacle anlegen:
+# Obstacle,posX,posY
+# Obstacle,200,0
+# Größe: 90x120
+
+# Plane anlegen:
+# Plane,posX,posY
+# Plane,400,100
+# Größe: 120x20
+
+# PowerUp anlegen:
+# PowerUp,posX,posY,healthBonus,alcoholLevelBonus,ammunitionBonus,immunityCooldownBonus
+# PowerUp,500,40,10,0,0,0
+# Größe: 40x40
+
+
+Level1: Weg zum Zelt (keine Gegner, nur Obstacles und PowerUps
+------------
+
+Player,130,0
+Levellänge,20000
+
+
+# Ubahn-Station: 0 bis 2000
+Obstacle,45,0
+Plane,60,140
+Plane,180,140
+Plane,300,140
+Plane,420,140
+Plane,540,140
+Plane,660,140
+Plane,780,140
+Plane,900,140
+Plane,1020,140
+Plane,1140,150
+Plane,1260,150
+Plane,1380,160
+Plane,1500,160
+Plane,1620,170
+Plane,1740,180
+Plane,1860,200
+Plane,1980,200
+
+#Beer
+PowerUp,300,0,0,1,1,0
+PowerUp,700,40,0,1,1,0
+PowerUp,900,120,0,1,1,0
+PowerUp,1300,0,0,1,1,0
+PowerUp,1700,140,0,1,1,0
+PowerUp,1900,0,0,1,1,0
+PowerUp,1900,60,0,1,1,0
+
+# Weg zum Zelt: 2000 bis 5000
+PowerUp,2000,0,0,1,1,0
+
+Plane,3000,140
+Tourist,3100,140,-20
+Plane,3120,140
+Plane,3240,140
+Security,3240,-10
+Plane,3360,140
+Plane,3240,300
+Plane,3360,300
+
+PowerUp,3000,40,0,1,1,0
+PowerUp,4000,120,0,1,1,0
+
+
+# Zelt: 5000
+
+PowerUp,5000,0,0,1,1,0
+PowerUp,5000,40,0,1,1,0
+PowerUp,5000,90,0,1,1,0
+PowerUp,5000,120,0,1,1,0
+
+Obstacle,5100,0
+Obstacle,5100,120
+Obstacle,5100,240
+Obstacle,5100,360
+
+Obstacle,6000,0
+Tourist,6300,0,-10
+Security,6400,0
+Obstacle,6800,0
+
