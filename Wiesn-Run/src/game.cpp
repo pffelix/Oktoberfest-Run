@@ -261,12 +261,8 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
 
 /**
  * @brief Game::endGame
-<<<<<<< HEAD
  *        Diese Funktion löscht nicht mehr nötige Variablen und Objekte wenn vom Spiel in das Hauptmenü gewechselt wird.
- * @ author: Felix Pfreundtner
-=======
  * @ author: Felix Pfreundtner, Johann
->>>>>>> e751f156deb32302677aeec97f8bd31af9cfac4a
  */
 void Game::endGame() {
     /// @todo Aufräumarbeiten
@@ -278,22 +274,23 @@ void Game::endGame() {
     audioevents.clear();
     audioStorage.clear();
 
+
+    playerObjPointer = 0;
     while (!(worldObjects.empty())) {
         GameObject *handleObject = worldObjects.front();
         worldObjects.pop_front();
         delete handleObject;
     }
-    playerObjPointer = 0;
 
     while (!(levelInitial.empty())) {
         GameObject *handleObject = levelInitial.front();
-        worldObjects.pop_front();
+        levelInitial.pop_front();
         delete handleObject;
     }
 
     while (!(levelSpawn.empty())) {
         GameObject *handleObject = levelSpawn.front();
-        worldObjects.pop_front();
+        levelSpawn.pop_front();
         delete handleObject;
     }
 }
@@ -316,25 +313,6 @@ void Game::exitGame() {
     /// rufe Desktrutor Objekt audioOutput auf
     /// Beende Audioausgabe und lösche Objekt
     delete audioOutput;
-
-    /// Leere Audio Listen
-    audioevents.clear();
-    audioStorage.clear();
-
-    /// leere WorldObjects etc
-
-    while (!(worldObjects.empty())) {
-        GameObject *handleObject = worldObjects.front();
-        worldObjects.pop_front();
-        delete handleObject;
-    }
-    playerObjPointer = 0;
-
-    while (!(levelInitial.empty())) {
-        GameObject *handleObject = levelInitial.front();
-        worldObjects.pop_front();
-        delete handleObject;
-    }
 
 
 }
@@ -1074,24 +1052,24 @@ void Game::updateAudio() {
 
     //Hintergrundmusik
     audioType levelBackground [3] {background_level1, background_level2, background_level3};
-    audioStruct newAudio = {gameStats.actLevel, levelBackground[gameStats.actLevel], 0.5};
+    audioStruct newAudio = {(10-gameStats.actLevel), levelBackground[gameStats.actLevel - 1], 0.5};
     audioevents.push_back(newAudio);
 
     //Warntöne Leben/Alcoholpegel
     switch (playerObjPointer->getHealth()) {
     case 1: {
-        newAudio = {10, status_lifecritical, audioDistance.status_lifecritical};
+        newAudio = {11, status_lifecritical, audioDistance.status_lifecritical};
         audioevents.push_back(newAudio);
         break;
     }
     case 2: {
-        newAudio = {11, status_life , audioDistance.status_life};
+        newAudio = {12, status_life , audioDistance.status_life};
         audioevents.push_back(newAudio);
         break;
     }
     }
     if (playerObjPointer->getAlcoholLevel() >maxAlcohol) {
-        newAudio = {12, status_alcohol, audioDistance.status_alcohol};
+        newAudio = {13, status_alcohol, audioDistance.status_alcohol};
         audioevents.push_back(newAudio);
     }
 
