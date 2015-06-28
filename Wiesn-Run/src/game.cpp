@@ -963,8 +963,8 @@ void Game::handleCollisions() {
              * Nur interesant, wenn er mit shot zusammenstößt alles andere keine Wirkung
              */
             if (handleEvent.causingObject->getType() == shot) {
-                *handleEnemy = dynamic_cast<Enemy*> (handleEvent.affectedObject);
-                *handleShoot = dynamic_cast<Shoot*> (handleEvent.causingObject);
+                handleEnemy = dynamic_cast<Enemy*> (handleEvent.affectedObject);
+                handleShoot = dynamic_cast<Shoot*> (handleEvent.causingObject);
                 if (handleShoot->getOrigin() == player) {
                     //Schaden zufügen
                     if (handleEnemy->receiveDamage(handleShoot->getInflictedDamage())) {
