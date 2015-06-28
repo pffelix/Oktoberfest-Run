@@ -21,7 +21,6 @@
  * @author Rupert
  */
 enum gameState {
-    noNextState,    // wird für Menü-Handling gebraucht
     gameIsRunning, gameMenuStart, gameMenuCredits, gameMenuLevel, gameMenuBreak, gameMenuStatisitcs, gameMenuName, gameMenuHighscore
 };
 

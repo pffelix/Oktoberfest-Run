@@ -30,6 +30,7 @@ public:
         int position;
         bool isClickable;   // für Highscore-Menü
         //void (*handler)();  // Zeiger auf Funktion (Handler für Enter)
+        bool menuOnEnter;
         gameState stateOnClick;
         QGraphicsTextItem showEntry;
     };
@@ -51,7 +52,7 @@ public:
     int displayUpdate();
 
     /// Neuen Eintrag hinzufügen (evtl private -> Einträge nur im Konstruktor erstellen -> unterschiedlich viele Argumente)
-    int addEntry(std::string name, int id, bool clickable=false,/* void (*handlerFunction)()=NULL,*/ gameState stateOnClick = noNextState);
+    int addEntry(std::string name, int id, bool clickable=false, gameState stateOnClick = (gameState)NULL);
 
     /// wird nach Tastendruck aufgerufen
     int changeSelection(menuSelectionChange changeType);

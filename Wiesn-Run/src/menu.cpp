@@ -59,7 +59,7 @@ int Menu::displayUpdate() {
         (*it)->showEntry.setFont(QFont("Times",50));
     }
 
-    //färbt die aktuelle Selektion Rot ein
+    // färbt die aktuelle Selektion Rot ein
     getSelection()->showEntry.setDefaultTextColor(Qt::red);
     getSelection()->showEntry.setFont(QFont("Times",60));
     return 0;
@@ -72,18 +72,20 @@ int Menu::displayUpdate() {
  * @return 0 bei Erfolg
  * @author Rupert
  */
-int Menu::addEntry(std::string name, int id, bool clickable, /*void (*handlerFunction)(), */ gameState stateOnClick) {
+int Menu::addEntry(std::string name, int id, bool clickable, gameState stateOnClick) {
     // fehlerüberprüfung
-    /*if(handlerFunction==NULL) {
-        clickable = false;
-    }*/
+
     struct menuEntry *entry = new menuEntry;
     entry->id = id;
     entry->name = name;
     entry->position = numberOfEntrys;
     entry->isClickable = clickable;
     entry->stateOnClick = stateOnClick;
-    //entry->handler = handlerFunction;
+    if(stateOnClick != (gameState)NULL) {
+        entry->menuOnEnter = true;
+    } else {
+        entry->menuOnEnter = false;
+    }
     numberOfEntrys++;
     menuEntrys.push_back(entry);
     selectFirstEntry();

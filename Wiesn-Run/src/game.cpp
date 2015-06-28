@@ -370,7 +370,7 @@ int Game::step() {
         // Enter auswerten
         if(lastKey == Input::Keyaction::Enter) {
 
-            if(aktMenu->getSelection()->stateOnClick != noNextState) {  // Alle Einträge, auf die ein weiteres Menü folgt
+            if(aktMenu->getSelection()->menuOnEnter) {  // Alle Einträge, auf die ein weiteres Menü folgt
 
                 setState(aktMenu->getSelection()->stateOnClick);
 
@@ -1482,10 +1482,6 @@ int Game::getStepIntervall() {
 void Game::setState(enum gameState newState) {
    state = newState;
     switch(state) {
-        case noNextState:
-            // darf eigentlich nicht vorkommen
-            qDebug("setState(): noNextState");
-            break;
         case gameIsRunning:
             aktMenu = NULL;
             break;
