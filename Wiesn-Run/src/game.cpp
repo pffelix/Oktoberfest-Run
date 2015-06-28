@@ -169,7 +169,7 @@ int Game::start() {
     Game::startTimer(stepIntervall);
 
     ///@todo hier wird das Startmenü übersprungen
-    // startNewGame();
+    //startNewGame("level1_old.txt",1);
     setState(gameMenuStart);
     return appPointer->exec();
 }
