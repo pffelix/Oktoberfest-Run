@@ -57,9 +57,8 @@ AudioControl::AudioControl() {
     //source: http://soundbible.com/1823-Winning-Triumphal-Fanfare.html
     audioobjects.insert(audioobjects.begin() + audioType::background_levelfinished, Audio("background_levelfinished")); // 16bit
 
-
-    /// fülle Block Ausgabe mit Nullen
-    std::fill_n(block, BLOCKSIZE, 0);
+    /// setzte Status Filter auf kein Filter
+    status_filter = statusFilter::none;
     /// setzte blockcounter auf 0 Blöcke
     blockcounter = 0;
     /// setzte Wartezeit von Portaudio auf 100 ms
@@ -103,8 +102,6 @@ AudioControl::~AudioControl() {
         fprintf(stderr, "Error Nummer: %d\n", paerror);
         fprintf(stderr, "Error Nachricht: %s\n", Pa_GetErrorText(paerror));
     }
-
-
 }
 
 /**
@@ -123,6 +120,8 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
     bool nasidexistinpe;
     /// erstelle einen Iterator für playevents Liste
     std::list<playStruct>::iterator pe;
+    /// intialsiere status_filter mit none (Annahme kein Audioevent mit type status_alcohol / status_life / status_lifecritical in audioevents Liste)
+    status_filter = statusFilter::none;
 
     /// initialisiere die Abspielinformation aller playstructs in playevents auf false (verhindere weiteres abspielen im nächsten Step)
     for (std::list<playStruct>::iterator pe = playevents.begin(); pe != playevents.end(); pe++) {
@@ -168,13 +167,32 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
         /// Lösche audioStruct aus audioevents Liste da alle Werte in playevents übernommen wurden
         audioevents->pop_front();
     }
-    /// lösche alle playstructs aus der events Liste welche im nächsten Step nicht mehr abgespielt werden sollen (playnext = false).
+    /// für alle Playevents in der playevents liste
     pe = playevents.begin();
     while(pe != playevents.end()) {
+
+        /// falls Playevent im nächsten Step nicht mehr abgespielt werden sollen (playnext = false).
         if(pe->playnext == false) {
+            /// lösche playevent aus playevents List
             pe = playevents.erase(pe);
         }
+        /// falls playevent im nächsten Step abgespielt werden soll
         else {
+            /// falls Type des aktuellen playevents status_alcohol ist
+            if (pe->type = status_alcohol) {
+                /// setze Alkohol Status auf aktiv
+                status_filter = statusFilter::alcohol;
+            }
+            /// falls Type des aktuellen playevents status_life ist
+            if (pe->type = status_life) {
+                /// setze Alkohol Status auf aktiv
+                status_filter = statusFilter::life;;
+            }
+            /// falls Type des aktuellen playevents status_lifecritical ist
+            if (pe->type = status_lifecritical) {
+                /// setze Alkohol Status auf aktiv
+                status_filter = statusFilter::lifecritical;
+            }
             pe++;
         }
     }
@@ -258,11 +276,29 @@ int AudioControl::instancepaCallback( const void *inputBuffer, void *outputBuffe
         mixed_sample = 0;
         /// für alle aktuell abzuspielenden Audioevents
         for (callback_pe = playevents.begin(); callback_pe != playevents.end(); callback_pe++) {    
+            /// wähle aktuell anzuwenden Filter aus
+            int a;
             /// mixed_sample = sample(aktuell Position Audioevent)*aktuelle_relative_lautstärke_audioevent/anzahl_maximaler_playevents
             mixed_sample += callback_pe->audioobject->getSample(callback_pe->position) * callback_pe->volume / max_playevents;
+            /// falls Samples Position des aktuell iterierten Audiovents Anzahl an Samples in Audioobject überschreitet
             /// erhöhe Abspielposition des aktuell iterierten Audiovents um ein Sample
             callback_pe->position += 1;
-            /// falls Samples Position des aktuell iterierten Audiovents Anzahl an Samples in Audioobject überschreitet
+            switch (status_filter)
+            {
+                /// kein Filter anwenden
+                case statusFilter::none:
+                    a = 1;
+                /// Alkohol Filter anwenden
+                case statusFilter::alcohol:
+                    a = 1;
+                /// Wenig Leben Filter anwenden
+                case statusFilter::life:
+                    a = 1;
+                /// Sehr wenig Leben Filter anwenden
+                case statusFilter::lifecritical:
+                    a = 1;
+            }
+
             if (callback_pe->position >= callback_pe->audioobject->getSamplenumber()) {
                 /// Loope Audiosignal -> setzte Samples Position auf Anfang zurück (pos = position-samplenumber)
                 callback_pe->position = callback_pe->position - callback_pe->audioobject->getSamplenumber();
