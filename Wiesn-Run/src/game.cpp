@@ -712,7 +712,6 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
  * Mögliche Objekte: Spieler(player), Gegner(enemy), Bierkrug(shot)
  * mögliche Kollision mit Spieler(player), Hindernis(obstacle), Gegner(enemy), Bierkrug(shot), Power-Up(powerUp)
  *
- * @todo Gamestats sktualisieren/Highscore!!
  * @author Johann (15.6.15)
  */
 void Game::handleCollisions() {
@@ -849,7 +848,7 @@ void Game::handleCollisions() {
                  *      Der Spieler erhält zusatzfähigkeiten
                  */
                 PowerUp *handlePowerUp = dynamic_cast<PowerUp*> (handleEvent.causingObject);
-                playerObjPointer->setHealth(playerObjPointer->getHealth() + handlePowerUp->getHealthBonus());
+                playerObjPointer->increaseHealth(handlePowerUp->getHealthBonus());
                 playerObjPointer->increaseAmmunation(handlePowerUp->getAmmunationBonus());
                 playerObjPointer->setImmunityCooldown(handlePowerUp->getImmunityCooldownBonus());
                 playerObjPointer->increaseAlcoholLevel(handlePowerUp->getAlcoholLevelBonus());
@@ -1021,6 +1020,8 @@ void Game::handleCollisions() {
 /**
  * @brief durchläuft die Liste audioStorage, zählt die Cooldowns runter
  *  Die Soundevents die noch laufen, werden an die Liste SoundEvents übergeben. Die fertigen werden gelöscht.
+ *
+ * @author Johann
  */
 void Game::updateAudio() {
 
@@ -1030,9 +1031,17 @@ void Game::updateAudio() {
     audioevents.push_back(newAudio);
 
     //Warntöne Leben/Alcoholpegel
-    if (playerObjPointer->getHealth() < 2) {
-        newAudio = {1, status_life, audioDistance.status_life};
+    switch (playerObjPointer->getHealth()) {
+    case 1: {
+        newAudio = {5, status_lifecritical, audioDistance.status_lifecritical};
         audioevents.push_back(newAudio);
+        break;
+    }
+    case 2: {
+        newAudio = {6, status_life , audioDistance.status_life};
+        audioevents.push_back(newAudio);
+        break;
+    }
     }
     if (playerObjPointer->getAlcoholLevel() >maxAlcohol) {
         newAudio = {2, status_alcohol, audioDistance.status_alcohol};

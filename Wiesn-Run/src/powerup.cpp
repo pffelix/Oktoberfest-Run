@@ -12,7 +12,7 @@
  * @param immunityCooldownBonus
  * @author Johann
  */
-PowerUp::PowerUp(int posX, int posY, int healthBonus, int alcoholLevelBonus, int ammunationBonus, int immunityCooldownBonus) : GameObject(posX, posY, powerUp) {
+PowerUp::PowerUp(int posX, int posY, int healthBonus, int alcoholLevelBonus, int ammunationBonus, int immunityCooldownBonus/*, powerUpType type*/) : GameObject(posX, posY, powerUp) {
     this->healthBonus = healthBonus;
     this->alcoholLevelBonus = alcoholLevelBonus;
     this->ammunationBonus = ammunationBonus;
@@ -58,5 +58,14 @@ int PowerUp::getHealthBonus() const {
  */
 int PowerUp::getImmunityCooldownBonus() const {
     return immunityCooldownBonus;
+}
+
+/**
+ * @brief PowerUp::getPowerUPType
+ * @return Art des powerups
+ * @author Johann
+ */
+powerUpType PowerUp::getPowerUPType() const {
+    return powType;
 }
 

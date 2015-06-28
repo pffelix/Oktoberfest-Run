@@ -41,6 +41,12 @@ int Player::getHealth() const{
 void Player::setHealth(int health) {
     this->health = health;
 }
+void Player::increaseHealth(int health) {
+    this->health = this->health + health;
+    if (this->health > maxHealth) {
+        this->health = maxHealth;
+    }
+}
 
 /**
  * @brief Player::receiveDamage
@@ -83,17 +89,11 @@ void Player::increaseAlcoholLevel(int additionalAlcohol) {
  * @param decreaseLevel
  * Wert um den der Pegel verringert wird
  *
- * @return
- * Gibt an Ob der Alkoholpegel  auf Null fällt
  */
-bool Player::decreaseAlcoholLevel(int decreaseLevel) {
-    alcoholLevel = alcoholLevel - (decreaseLevel * frameRate);
+ void Player::decreaseAlcoholLevel(int decreaseLevel) {
     if (alcoholLevel > 0) {
-        return false;
-    } else {
-        return true;
+    alcoholLevel = alcoholLevel - decreaseLevel;
     }
-    //Spiel ist zu Ende, wenn Alkoholpegel aufgebraucht
 }
 
 /**

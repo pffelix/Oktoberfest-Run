@@ -12,18 +12,19 @@ public:
 
     //Leben()
     int getHealth() const;
-    void setHealth(int health); /// Nur PowerUp
+    void setHealth(int health);
+    void increaseHealth (int health);
     bool receiveDamage(int damage);
 
     //Alcoholpegel()
-    int getAlcoholLevel() const;    /// Nötig für Score-Berechnung
-    void increaseAlcoholLevel(int additionalAlcohol);   /// Schlechte Bezeichnung
-    bool decreaseAlcoholLevel(int decreaseLevel);       /// Schlechte Bezeichnung
+    int getAlcoholLevel() const;
+    void increaseAlcoholLevel(int additionalAlcohol);
+    void decreaseAlcoholLevel(int decreaseLevel);
 
     //Munnition()
-    int getAmmunatiuon() const;     /// Wird nicht benutzt 23.6 bei implementierung Input(schießen)
-    void increaseAmmunation(int ammunationBonus);   /// Schlechte Bezeichnung
-    void decreaseAmmunation();      /// Schlechte Bezeichnung
+    int getAmmunatiuon() const;
+    void increaseAmmunation(int ammunationBonus);
+    void decreaseAmmunation();
 
     //Schaden()
     int getInflictedDamage() const;

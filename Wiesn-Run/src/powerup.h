@@ -14,7 +14,7 @@ public:
     /*
      * Konstruktor und Destruktor
      */
-    PowerUp(int posX, int posY, int healthBonus, int alcoholLevelBonus, int ammunationBonus, int immunityCooldownBonus);
+    PowerUp(int posX, int posY, int healthBonus, int alcoholLevelBonus, int ammunationBonus, int immunityCooldownBonus/*, powerUpType type*/);
     ~PowerUp();
 
     ///Get-Methoden für die Objekteigenschaften
@@ -22,6 +22,7 @@ public:
     int getAlcoholLevelBonus() const;
     int getAmmunationBonus() const;
     int getImmunityCooldownBonus() const;
+    powerUpType getPowerUPType() const;
 
 private:
     // Bonus auf Leben
