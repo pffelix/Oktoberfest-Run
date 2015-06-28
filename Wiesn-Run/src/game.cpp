@@ -224,7 +224,7 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
     // Szenen-Breite setzen
     sceneWidth = 1024;
     // audioIDs initialisieren
-    audioIDs = 10;
+    audioIDs = 20;
 
     playerStats = std::vector<QGraphicsTextItem>(3);
 
@@ -274,22 +274,23 @@ void Game::endGame() {
     audioevents.clear();
     audioStorage.clear();
 
+
+    playerObjPointer = 0;
     while (!(worldObjects.empty())) {
         GameObject *handleObject = worldObjects.front();
         worldObjects.pop_front();
         delete handleObject;
     }
-    playerObjPointer = 0;
 
     while (!(levelInitial.empty())) {
         GameObject *handleObject = levelInitial.front();
-        worldObjects.pop_front();
+        levelInitial.pop_front();
         delete handleObject;
     }
 
     while (!(levelSpawn.empty())) {
         GameObject *handleObject = levelSpawn.front();
-        worldObjects.pop_front();
+        levelSpawn.pop_front();
         delete handleObject;
     }
 }
@@ -312,25 +313,6 @@ void Game::exitGame() {
     /// rufe Desktrutor Objekt audioOutput auf
     /// Stoppe PortAudio Audioausgabe, Beende Portaudio Stream, Beende PortAudio und lösche Objekt audioOutput
     delete audioOutput;
-
-    /// Leere Audio Listen
-    audioevents.clear();
-    audioStorage.clear();
-
-    /// leere WorldObjects etc
-
-    while (!(worldObjects.empty())) {
-        GameObject *handleObject = worldObjects.front();
-        worldObjects.pop_front();
-        delete handleObject;
-    }
-    playerObjPointer = 0;
-
-    while (!(levelInitial.empty())) {
-        GameObject *handleObject = levelInitial.front();
-        worldObjects.pop_front();
-        delete handleObject;
-    }
 
 
 }
@@ -1070,24 +1052,24 @@ void Game::updateAudio() {
 
     //Hintergrundmusik
     audioType levelBackground [3] {background_level1, background_level2, background_level3};
-    audioStruct newAudio = {gameStats.actLevel, levelBackground[gameStats.actLevel], 0.5};
+    audioStruct newAudio = {(10-gameStats.actLevel), levelBackground[gameStats.actLevel - 1], 0.5};
     audioevents.push_back(newAudio);
 
     //Warntöne Leben/Alcoholpegel
     switch (playerObjPointer->getHealth()) {
     case 1: {
-        newAudio = {10, status_lifecritical, audioDistance.status_lifecritical};
+        newAudio = {11, status_lifecritical, audioDistance.status_lifecritical};
         audioevents.push_back(newAudio);
         break;
     }
     case 2: {
-        newAudio = {11, status_life , audioDistance.status_life};
+        newAudio = {12, status_life , audioDistance.status_life};
         audioevents.push_back(newAudio);
         break;
     }
     }
     if (playerObjPointer->getAlcoholLevel() >maxAlcohol) {
-        newAudio = {12, status_alcohol, audioDistance.status_alcohol};
+        newAudio = {13, status_alcohol, audioDistance.status_alcohol};
         audioevents.push_back(newAudio);
     }
 
