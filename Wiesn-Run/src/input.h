@@ -9,7 +9,7 @@
 
 /**
  * @brief  Input-Klasse
- *         Die Input-Klasse aktulisiert die für das Spiel relevanten Tastatureingaben.
+ *         Die Input-Klasse aktualisiert die für das Spiel relevanten Tastatureingaben.
  *         Eine Instanz dieser Klasse wir innerhalb der game.h angelegt.
  *         Die einzelnen Methoden werden in der input.cpp erklärt.
  * @author  Felix Pfreundtner
@@ -19,7 +19,7 @@ class Input : public QObject {
 
 public:
     enum Keyaction{
-        noKey,  // Rupert
+        noKey,
         Left,
         Right,
         Up,
@@ -33,8 +33,7 @@ public:
     Input();
     ~Input();
     QSet<int> getKeyactions();
-
-    Keyaction getAndDeleteLastKey();    // Rupert
+    Keyaction getAndDeleteLastKey();
 
 private:
     /**
