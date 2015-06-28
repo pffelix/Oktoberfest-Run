@@ -536,6 +536,7 @@ void Game::evaluateInput() {
     if(keyInput->getKeyactions().contains(Input::Keyaction::Shoot)) {
         if (playerObjPointer->getAmmunatiuon() > 0) {
             Shoot *playerFire = new Shoot(playerObjPointer->getPosX()+playerObjPointer->getLength()/2,playerObjPointer->getPosY(),1,player);
+            playerObjPointer->decreaseAmmunation();
             worldObjects.push_back(playerFire);
             levelScene->addItem(playerFire);
         }
@@ -832,15 +833,12 @@ void Game::handleCollisions() {
                 gameStats.gameOver = playerObjPointer->receiveDamage(handleShoot->getInflictedDamage());
                 objectsToDelete.push_back(handleShoot);
                 handleShoot = 0;
-                if (handleEvent.causingObject->getAudioID() == 0) {
-                    //Audioevent
-                    audioCooldownstruct newAudio;
-                    handleEvent.causingObject->setAudioID(audioIDs);
-                    newAudio.audioEvent = {audioIDs, scene_collision_flyingbeer, audioDistance.scene_collision_flyingbeer};
-                    audioIDs = audioIDs + 1;
-                    newAudio.cooldown = audioCooldown.scene_collision_flyingbeer;
-                    audioStorage.push_back(newAudio);
-                }
+                //Audioevent
+                audioCooldownstruct newAudio;
+                newAudio.audioEvent = {audioIDs, scene_collision_flyingbeer, audioDistance.scene_collision_flyingbeer};
+                audioIDs = audioIDs + 1;
+                newAudio.cooldown = audioCooldown.scene_collision_flyingbeer;
+                audioStorage.push_back(newAudio);
                 break;
             }
             case powerUp: {
