@@ -1160,6 +1160,7 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
     playerStats[0].setPlainText(QString("Gesundheit: " + QString::number(playerPointer->getHealth())));
     playerStats[1].setPlainText(QString("Alkoholpegel: " + QString::number(playerPointer->getAlcoholLevel())));
     playerStats[2].setPlainText(QString("Score: " + QString::number(playerScore.totalPoints)));
+    playerStats[3].setPlainText(QString("Munition: " + QString::number(playerPointer->getAmmunatiuon())));
 
     //Wenn der Spieler aus einerm Hintergrundbild "rausläuft" wird die Position nachvorne verschoben
     for(int i = 0; i<=3; i++) {
@@ -1174,8 +1175,8 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
         if(aktMovingObject != 0) {
 
             //if(dynamic_cast<Shoot*> (aktMovingObject) == 0 ) {
-            if( (aktMovingObject->getType() != shot && aktMovingObject->getType() != player)
-                 || (aktMovingObject->getType() == player && playerPointer->inJump() == false) ) {
+            if( (aktMovingObject->getType()) != shot) { //&& aktMovingObject->getType() != player)
+                 //|| (aktMovingObject->getType() == player && playerPointer->inJump() == false) ) {
                 //im letzten Frame vorwärst gelaufen?
                 if(aktMovingObject->getSpeedX() > 0 ) {
                     if(aktMovingObject->getFramesDirection() < 0) {
