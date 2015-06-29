@@ -424,6 +424,12 @@ int Game::step() {
         // send filled audioevents list to AudioControl Object, which updates current Output Sounds
 
 
+        // Level zu Ende?
+        if(playerObjPointer->getPosX() - playerScale >= levelLength) {
+            displayStatistics();
+            setState(gameMenuName);
+        }
+
         stepCount++;
     }
 
