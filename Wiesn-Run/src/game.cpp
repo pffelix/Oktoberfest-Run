@@ -235,10 +235,15 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
 
 /**
  * @brief Game::endGame
- *        Diese Funktion löscht nicht mehr nötige Variablen und Objekte wenn vom Spiel in das Hauptmenü gewechselt wird.
- * @ author: Felix, Johann, Simon
+ * Diese Funktion löscht nicht mehr nötige Variablen und Objekte wenn vom Spiel in das Statistikmenü gewechselt wird.
+ * es werden auch die Statistik und Highscoremenüs aktualisiert
+ * @ author: Felix, Johann
  */
 void Game::endGame() {
+
+    displayStatistics();
+    displayHighscore();
+
     /// @todo Aufräumarbeiten
     // Highscore aktualisieren
     updateHighScore("write");
@@ -361,6 +366,10 @@ int Game::step() {
                 case menuStartId_EndGame:
                     exitGame();
                     exit(0);
+                case menuLevelId_Demo:
+                    startNewGame("level_test.txt",0);
+                    setState(gameIsRunning);
+                    break;
                 case menuLevelId_Level1:
                     startNewGame("level1.txt",1);
                     setState(gameIsRunning);
@@ -378,13 +387,15 @@ int Game::step() {
                     setState(gameIsRunning);
                     break;
                 case menuBreakId_EndGame:
-                    endGame();
                     setState(gameMenuStart);
                     break;
                 case menuBreakId_EarlyEnd:
                     endGame();
+<<<<<<< HEAD
                     displayStatistics();
                     displayHighscore();
+=======
+>>>>>>> rupert
                     break;
             }
         }
@@ -429,8 +440,6 @@ int Game::step() {
 
         // Level zu Ende?
         if(playerObjPointer->getPosX() - playerScale >= levelLength) {
-            displayStatistics();
-            displayHighscore();
             endGame();
             setState(gameMenuName);
         }
@@ -1206,44 +1215,6 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
     window->centerOn(playerObjPointer->getPosX() + 512 - 100 - 0.5 * playerObjPointer->getLength(), 384);
 }
 
-
-
-
-void Game::colTestLevel() {
-    /// Skalierungsfaktor für Objekte im Spiel
-    int obs = 10;
-/*
-    // Erstelle statische Objekte
-    GameObject *obstackle1 = new GameObject(40*obs, 0*obs, 6*obs, 12*obs, obstacle);
-    GameObject *obstackle2 = new GameObject(60*obs, 0*obs, 6*obs, 12*obs, obstacle);
-    GameObject *obstackle3 = new GameObject(90*obs, 0*obs, 6*obs, 12*obs, obstacle);
-
-    // Erstelle PowerUp
-    GameObject *powerUp1 = new PowerUp(30*obs, 0*obs, 1,1,1,1);
-
-
-    // Füge statische Objekte der Liste levelInitial hinzu
-    levelInitial.push_back(powerUp1);
-    levelInitial.push_back(obstackle1);
-    levelInitial.push_back(obstackle2);
-    levelInitial.push_back(obstackle3);
-
-    // Erstelle Gegner
-    GameObject *enemy1 = new Enemy(46*obs, 1*obs, 1*obs);
-    GameObject *enemy2 = new Enemy(70*obs, 0*obs, -1*obs);
-
-    // Füge bewegliche Objekte in zugehörige liste
-    levelSpawn.push_back(enemy1);
-    levelSpawn.push_back(enemy2);
-*/
-    // Erstelle das Spieler-Objekt und setze den playerObjPointer
-    GameObject *playerObject = new Player(13*obs, 0*obs, 1*obs);
-
-    playerObjPointer = dynamic_cast<Player*>(playerObject);
-    playerObjPointer->startJump();
-}
-
-
 /**
  * @brief Game::loadLevelFile
  * @param fileSpecifier
@@ -1541,6 +1512,7 @@ void Game::menuInit() {
     menuCredits->displayInit();
 
     menuLevel = new Menu(new std::string("Wos mogst?"));
+    menuLevel->addEntry("Demolevel",menuLevelId_Demo, true);
     menuLevel->addEntry("Level 1",menuLevelId_Level1, true);
     menuLevel->addEntry("Level 2",menuLevelId_Level2, true);
     menuLevel->addEntry("Level 3",menuLevelId_Level3, true);
