@@ -1572,16 +1572,17 @@ void Game::menuInit() {
 void Game::displayStatistics() {
     using namespace std;    // für std::string
 
-    string name = "Name:";
+    string name = "Name: ";
     name.append(playerScore.name);
 
-    string enemies = "Tote Japaner:";
+    string enemies = "Verstorbene: ";
     enemies.append(to_string(playerScore.enemiesKilled));
 
-    string distanceAndAlk = "Strecke";
-    distanceAndAlk.append(to_string(playerScore.distanceCovered));
-    distanceAndAlk.append("Alk ");
-    distanceAndAlk.append(to_string(playerScore.alcoholPoints));
+    string distance = "glafne Meter: ";
+    distance.append(to_string(playerScore.distanceCovered));
+
+    string alk = "Promille: ";
+    alk.append(to_string(playerScore.alcoholPoints));
 
     string points = "Punkte:";
     points.append(to_string(playerScore.totalPoints));
@@ -1590,7 +1591,8 @@ void Game::displayStatistics() {
 
     menuStatistics->addEntry(name,menuId_NonClickable,false);
     menuStatistics->addEntry(enemies,menuId_NonClickable,false);
-    menuStatistics->addEntry(distanceAndAlk,menuId_NonClickable,false);
+    menuStatistics->addEntry(distance,menuId_NonClickable,false);
+    menuStatistics->addEntry(alk,menuId_NonClickable,false);
     menuStatistics->addEntry(points,menuId_NonClickable,false);
     menuStatistics->addEntry("weiter",menuStatisticsId_Next,true,gameMenuHighscore);
     menuStatistics->displayInit();
