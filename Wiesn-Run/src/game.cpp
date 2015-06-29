@@ -382,7 +382,7 @@ int Game::step() {
                     setState(gameMenuStart);
                     break;
                 case menuBreakId_EarlyEnd:
-                    endgame();
+                    endGame();
                     displayStatistics();
                     displayHighscore();
                     break;
