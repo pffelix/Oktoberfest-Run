@@ -111,10 +111,10 @@ enum collisionDirection {
  */
 struct scoreStruct {
     std::string name;
-    int enemiesKilled;
+    int totalPoints;
     int distanceCovered;
     int alcoholPoints;
-    int totalPoints;
+    int enemiesKilled;
 };
 
 

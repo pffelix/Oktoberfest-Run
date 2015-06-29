@@ -1430,8 +1430,8 @@ void Game::updateHighScore(std::string mode) {
         while (std::getline(input, line)) {
             QString qline = QString::fromStdString(line);
             QStringList strlist = qline.split(",");
-            if (strlist.length() == 4) {
-                scoreStruct currentScoreItem = {strlist.at(0).toStdString(), strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt()};
+            if (strlist.length() == 5) {
+                scoreStruct currentScoreItem = {strlist.at(0).toStdString(), strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), strlist.at(4).toInt()};
                 scoreList.push_back(currentScoreItem);
             }
         }
@@ -1455,7 +1455,7 @@ void Game::updateHighScore(std::string mode) {
             scoreList.pop_front();
 
             // Highscore-Eintrag schreiben
-            ofs << currentScore.name.c_str() << "," << currentScore.alcoholPoints << "," << currentScore.distanceCovered << "," << currentScore.enemiesKilled << "\n";
+            ofs << currentScore.name.c_str() << "," << currentScore.totalPoints << "," << currentScore.distanceCovered << "," << currentScore.alcoholPoints << "," << currentScore.enemiesKilled << "\n";
             i++;
         }
         // Datei schließen, damit Änderungen gespeichert werden
