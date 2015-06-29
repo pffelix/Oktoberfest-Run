@@ -48,7 +48,7 @@ Erläuterung
 
 
 Player,130,0
-Levellänge,20000
+Levellänge,8000
 
 # Springen mit Obstacles vorführen
 Obstacle,400,0
@@ -90,3 +90,5 @@ Bier,6400,160
 Hendl,6800,60
 
 Hendl,7000,60
+
+# Ende bei 8000
