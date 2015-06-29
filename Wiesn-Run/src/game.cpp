@@ -195,7 +195,7 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
     // audioIDs initialisieren
     audioIDs = 20;
 
-    playerStats = std::vector<QGraphicsTextItem>(5);
+    playerStats = std::vector<QGraphicsTextItem>(4);
 
     playerStats[0].setPlainText(QString("Gesundheit: " + QString::number(playerObjPointer->getHealth())));
     playerStats[0].setPos(playerObjPointer->getPosX()-95, 30);

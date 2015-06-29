@@ -66,7 +66,7 @@ GameObject::GameObject(int posX, int posY, objectType type) {
         this->height = playerScale * 2;
 
         //Grafik - Enemy wird initialisiert
-        setPixmap(QPixmap(":/images/images/enemy1.png"));
+        setPixmap(QPixmap(":/images/images/tourist1.png"));
         setPos(getPosX() - 0.5*getLength(), yOffset - getPosY() - getHeight());
         qDebug("   Tourist erstellt");
         break;
@@ -75,9 +75,10 @@ GameObject::GameObject(int posX, int posY, objectType type) {
         // Verhältnis 1:2
         this->length = playerScale;
         this->height = playerScale * 2;
-        qDebug("   Security erstellt");
 
-        /// @todo Grafik für die Security
+        setPixmap(QPixmap(":/images/images/security.png"));
+        setPos(getPosX() - 0.5*getLength(), yOffset - getPosY() - getHeight());
+        qDebug("   Security erstellt");
         break;
 
     }
@@ -87,7 +88,7 @@ GameObject::GameObject(int posX, int posY, objectType type) {
         this->height = this->length;
 
         //Grafik - powerup Grafik initialisieren
-        setPixmap(QPixmap(":/images/images/powerup.png"));
+        setPixmap(QPixmap(":/images/images/hendl.png"));
         setPos(getPosX() - getLength()*0.5, yOffset - getPosY() - getHeight());
         qDebug("   PowerUp erstellt");
         break;
@@ -106,6 +107,9 @@ GameObject::GameObject(int posX, int posY, objectType type) {
     case BOSS: {
         this->length = 2 * playerScale;
         this->length = 4 * playerScale;
+
+        setPixmap(QPixmap(":/images/images/boss.png"));
+        setPos(getPosX() - getLength()*0.5, yOffset - getPosY() - getHeight());
         qDebug("   Boss erstellt");
         break;
     }
