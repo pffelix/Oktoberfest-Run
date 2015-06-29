@@ -101,26 +101,22 @@ int Game::start() {
     // Menüs erstellen
     menuStart = new Menu(new std::string("Wiesn-Run"));
     menuStart->addEntry("Neues Spiel",menuStartId_NewGame,true, gameMenuLevel);
-    menuStart->addEntry("Spiel beenden", menuStartId_EndGame,true);
     menuStart->addEntry("Credits", menuStartId_Credits,true,gameMenuCredits);
+    menuStart->addEntry("Spiel beenden", menuStartId_EndGame,true);
     menuStart->displayInit();
 
     menuCredits = new Menu(new std::string("Credits"));
-    menuCredits->addEntry("Entwickler:", menuId_NonClickable,false);
-    menuCredits->addEntry("Simon:", menuId_NonClickable,false);
-    menuCredits->addEntry("Rupert:", menuId_NonClickable,false);
-    menuCredits->addEntry("Felix:", menuId_NonClickable,false);
-    menuCredits->addEntry("Flo:", menuId_NonClickable,false);
-    menuCredits->addEntry("Johann:", menuId_NonClickable,false);
+    menuCredits->addEntry("Grundkurs C++", menuId_NonClickable,false);
+    menuCredits->addEntry("Simon, Rupert, Felix,", menuId_NonClickable,false);
+    menuCredits->addEntry("Flo, Johann", menuId_NonClickable,false);
     menuCredits->addEntry("zurück", menuCreditsId_Back,true,gameMenuStart);
     menuCredits->displayInit();
 
     menuLevel = new Menu(new std::string("Levelauswahl"));
-    menuLevel->addEntry("zurück",menuLevelId_Back, true,gameMenuStart);
     menuLevel->addEntry("Level 1",menuLevelId_Level1, true);
     menuLevel->addEntry("Level 2",menuLevelId_Level2, true);
     menuLevel->addEntry("Level 3",menuLevelId_Level3, true);
-    //menuLevel->addEntry("Spiel starten",menuLevelId_StartGame, true);
+    menuLevel->addEntry("zurück",menuLevelId_Back, true,gameMenuStart);
     menuLevel->displayInit();
 
     menuBreak = new Menu(new std::string("Pause"));
@@ -169,7 +165,7 @@ int Game::start() {
     Game::startTimer(stepIntervall);
 
     ///@todo hier wird das Startmenü übersprungen
-    // startNewGame();
+    //startNewGame("level1_old.txt",1);
     setState(gameMenuStart);
     return appPointer->exec();
 }
