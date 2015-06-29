@@ -49,10 +49,13 @@ Erläuterung
 Levellänge,20000
 Player,130,0
 
+
+# Springen mit Obstacles vorführen
 Obstacle,400,0
 
 Obstacle,800,0
 
+# Laufen über zusammenhängende Planes, langsames Hochspringen
 Obstacle,2000,0
 
 Plane,2300,140
@@ -73,3 +76,16 @@ Plane,4640,220
 Plane,4800,220
 
 Plane,5000,140
+
+# Powerups vorführen
+Bier,6000,60
+
+Bier,6100,60
+
+Bier,6200,60
+
+Obstacle,6400,0
+Bier,6400,160
+
+Hendl,6800,60
+Hendl,7000,60
