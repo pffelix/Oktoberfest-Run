@@ -390,6 +390,7 @@ int Game::step() {
                     break;
                 case menuBreakId_EarlyEnd:
                     endGame();
+
                     break;
             }
         }
@@ -1227,7 +1228,7 @@ void Game::loadLevelFile(QString fileSpecifier) {
         qDebug() << "Datei konnte nicht geöffnet werden!";
     } else {
         // Die Datei wurde erfolgreich geöffnet
-        // Die Listen werden geleert
+        // Die Liste wird geleert
         levelSpawn.clear();
 
         qDebug() << "Lese levelFile mit vorgesetzten Parametern aus:";
