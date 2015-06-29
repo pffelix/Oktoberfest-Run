@@ -98,11 +98,11 @@ void MovingObject::swapImage()
     switch (getType()) {
     case enemy_tourist: {
         if(imageState == true) {
-            setPixmap(QPixmap(":/images/images/enemy2.png"));
+            setPixmap(QPixmap(":/images/images/tourist2.png"));
             imageState = false;
         }
         else {
-            setPixmap(QPixmap(":/images/images/enemy1.png"));
+            setPixmap(QPixmap(":/images/images/tourist1.png"));
             imageState = true;
         }
         break;
