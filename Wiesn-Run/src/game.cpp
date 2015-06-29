@@ -1392,7 +1392,7 @@ void Game::loadLevelFile(QString fileSpecifier) {
                 }
 
                 if (strlist.at(0) == "Boss") {
-                    if (strlist.length() != 3) {
+                    if (strlist.length() != 4) {
                         throw std::string("Ungültiger Boss-Eintrag:");
                     } else {
                         qDebug() << "  Boss-Eintrag gefunden.";
