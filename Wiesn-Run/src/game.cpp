@@ -382,7 +382,9 @@ int Game::step() {
                     setState(gameMenuStart);
                     break;
                 case menuBreakId_EarlyEnd:
+                    endgame();
                     displayStatistics();
+                    displayHighscore();
                     break;
             }
         }
@@ -428,6 +430,8 @@ int Game::step() {
         // Level zu Ende?
         if(playerObjPointer->getPosX() - playerScale >= levelLength) {
             displayStatistics();
+            displayHighscore();
+            endGame();
             setState(gameMenuName);
         }
 
@@ -1563,23 +1567,24 @@ void Game::menuInit() {
 }
 
 /**
- * @brief zeigt die Statistiken an
+ * @brief füllt das Statistik-Menü
  * löscht das Statistik-Menü und füllt es mit aktuellen Werten
  * @author Rupert
  */
 void Game::displayStatistics() {
     using namespace std;    // für std::string
 
-    string name = "Name:";
+    string name = "Name: ";
     name.append(playerScore.name);
 
-    string enemies = "Tote Japaner:";
+    string enemies = "Verstorbene: ";
     enemies.append(to_string(playerScore.enemiesKilled));
 
-    string distanceAndAlk = "Strecke";
-    distanceAndAlk.append(to_string(playerScore.distanceCovered));
-    distanceAndAlk.append("Alk ");
-    distanceAndAlk.append(to_string(playerScore.alcoholPoints));
+    string distance = "glafne Meter: ";
+    distance.append(to_string(playerScore.distanceCovered));
+
+    string alk = "Promille: ";
+    alk.append(to_string(playerScore.alcoholPoints));
 
     string points = "Punkte:";
     points.append(to_string(playerScore.totalPoints));
@@ -1588,9 +1593,41 @@ void Game::displayStatistics() {
 
     menuStatistics->addEntry(name,menuId_NonClickable,false);
     menuStatistics->addEntry(enemies,menuId_NonClickable,false);
-    menuStatistics->addEntry(distanceAndAlk,menuId_NonClickable,false);
+    menuStatistics->addEntry(distance,menuId_NonClickable,false);
+    menuStatistics->addEntry(alk,menuId_NonClickable,false);
     menuStatistics->addEntry(points,menuId_NonClickable,false);
     menuStatistics->addEntry("weiter",menuStatisticsId_Next,true,gameMenuHighscore);
     menuStatistics->displayInit();
 }
 
+
+/**
+ * @brief füllt das Highscore Menü
+ * löscht das Highscore-Menü und füllt es mit aktuellen Werten
+ * @author Rupert
+ */
+void Game::displayHighscore() {
+    using namespace std;
+
+    menuHighscore->clear();
+
+
+    updateHighScore("listefüllen");
+    int scoreCount = 0;
+    for(std::list<scoreStruct>::iterator it = scoreList.begin(); it != scoreList.end(); ++it) {
+        if(scoreCount > 4) break;
+
+        scoreStruct score = *it;
+        string scoreStr = score.name;
+        scoreStr.append(": \t");
+        scoreStr.append(to_string(score.totalPoints));
+
+        menuHighscore->addEntry(scoreStr,menuId_NonClickable);
+
+        scoreCount++;
+
+    }
+
+    menuHighscore->addEntry("weida",menuHighscoreId_Next,true,gameMenuStart);
+    menuHighscore->displayInit();
+}
