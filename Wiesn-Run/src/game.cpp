@@ -41,7 +41,7 @@ struct compareGameObjects {
  */
 struct compareScores {
     bool operator()(scoreStruct scoreA, scoreStruct scoreB) {
-        return (scoreA.enemiesKilled + scoreA.distanceCovered + scoreA.alcoholPoints) > (scoreB.enemiesKilled + scoreB.distanceCovered + scoreB.alcoholPoints);
+        return (scoreA.totalPoints > scoreB.totalPoints);
     }
 };
 
