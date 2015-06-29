@@ -310,6 +310,7 @@ int Game::step() {
 
     /// Tasten abfragen
     Input::Keyaction lastKey = keyInput->getAndDeleteLastKey();
+    Menu *aktStepMenu = aktMenu;
 
     /// Zeit seit dem letzten Aufruf ausrechnen und ausgeben
 
@@ -319,15 +320,15 @@ int Game::step() {
 
     // falls Menü aktiv, Inputs verarbeiten, Grafik:
 
-    if(aktMenu!=NULL) { // aktMenu ist nur NULL, wenn das Spiel gerade läuft
+    if(aktStepMenu!=NULL) { // aktMenu ist nur NULL, wenn das Spiel gerade läuft
 
 
-        aktMenu->displayUpdate();
+        aktStepMenu->displayUpdate();
         //MenüScene wird vom Anzeigewidget aufgerufen
-        window->setScene(aktMenu->menuScene);
+        window->setScene(aktStepMenu->menuScene);
 
         // Audio
-        if(aktMenu->getType() == Menu::menuType::highscore) {
+        if(aktStepMenu->getType() == Menu::menuType::highscore) {
             // Audioevent für die Statistik-Menüs
             audioStruct scoreAudio = {2, background_highscore, audioDistance.background_highscore};
             audioevents.push_back(scoreAudio);
@@ -339,41 +340,44 @@ int Game::step() {
 
         // Up || Down?
         if(lastKey == Input::Keyaction::Up) {
-            aktMenu->changeSelection(Menu::menuSelectionChange::up);
+            aktStepMenu->changeSelection(Menu::menuSelectionChange::up);
         }
         if(lastKey == Input::Keyaction::Down) {
-            aktMenu->changeSelection(Menu::menuSelectionChange::down);
+            aktStepMenu->changeSelection(Menu::menuSelectionChange::down);
         }
 
         // Enter auswerten
         if(lastKey == Input::Keyaction::Enter) {
 
-            if(aktMenu->getSelection()->menuOnEnter) {  // Alle Einträge, auf die ein weiteres Menü folgt
+            if(aktStepMenu->getSelection()->menuOnEnter) {  // Alle Einträge, auf die ein weiteres Menü folgt
 
-                setState(aktMenu->getSelection()->stateOnClick);
+                setState(aktStepMenu->getSelection()->stateOnClick);
 
-            } else {    // alle Einträge, bei denen kein Menü folgt: Spiel starten/Beenden
-                switch(aktMenu->getSelection()->id) {
-                    case menuStartId_EndGame:
-                        exitGame();
-                        exit(0);
-                    case menuLevelId_Level1:
-                        startNewGame("level1_old.txt",1);
-                        setState(gameIsRunning);
-                        break;
-                    case menuLevelId_Level2:
-                        startNewGame("level1.txt",1);
-                        setState(gameIsRunning);
-                        break;
-                    case menuBreakId_Resume:
-                        window->setScene(levelScene);
-                        setState(gameIsRunning);
-                        break;
-                    case menuBreakId_EndGame:
-                        endGame();
-                        setState(gameMenuStart);
-                        break;
-                }
+            }
+            // Zusatzaufgaben, die in den Menüs ausgeführt werden
+            switch(aktStepMenu->getSelection()->id) {
+                case menuStartId_EndGame:
+                    exitGame();
+                    exit(0);
+                case menuLevelId_Level1:
+                    startNewGame("level1_old.txt",1);
+                    setState(gameIsRunning);
+                    break;
+                case menuLevelId_Level2:
+                    startNewGame("level1.txt",1);
+                    setState(gameIsRunning);
+                    break;
+                case menuBreakId_Resume:
+                    window->setScene(levelScene);
+                    setState(gameIsRunning);
+                    break;
+                case menuBreakId_EndGame:
+                    endGame();
+                    setState(gameMenuStart);
+                    break;
+                case menuBreakId_EarlyEnd:
+                    displayStatistics();
+                    break;
             }
         }
 
@@ -1507,7 +1511,7 @@ void Game::menuInit() {
     menuBreak->addEntry("Startmenü",menuBreakId_EndGame,true);
     menuBreak->displayInit();
 
-    menuStatistics = new Menu(new std::string("Punkte"), Menu::menuType::highscore);
+    menuStatistics = new Menu(new std::string("Spielstatistik"), Menu::menuType::highscore);
     menuStatistics->addEntry("weiter",menuStatisticsId_Next,true,gameMenuHighscore);
     menuStatistics->displayInit();
 
@@ -1527,24 +1531,26 @@ void Game::menuInit() {
  */
 void Game::displayStatistics() {
     using namespace std;    // für std::string
-    string name = "Name:";
-    string enemies = "Tote Japaner:";
-    string distance = "Strecke";
-    string alk = "Alk:";
-    string points = "Punkte:";
 
+    string name = "Name:";
     name.append(playerScore.name);
+
+    string enemies = "Tote Japaner:";
     enemies.append(to_string(playerScore.enemiesKilled));
-    distance.append(to_string(playerScore.distanceCovered));
-    alk.append(to_string(playerScore.alcoholPoints));
+
+    string distanceAndAlk = "Strecke";
+    distanceAndAlk.append(to_string(playerScore.distanceCovered));
+    distanceAndAlk.append("Alk ");
+    distanceAndAlk.append(to_string(playerScore.alcoholPoints));
+
+    string points = "Punkte:";
     points.append(to_string(playerScore.totalPoints));
 
     menuStatistics->clear();
 
     menuStatistics->addEntry(name,menuId_NonClickable,false);
     menuStatistics->addEntry(enemies,menuId_NonClickable,false);
-    menuStatistics->addEntry(distance,menuId_NonClickable,false);
-    menuStatistics->addEntry(alk,menuId_NonClickable,false);
+    menuStatistics->addEntry(distanceAndAlk,menuId_NonClickable,false);
     menuStatistics->addEntry(points,menuId_NonClickable,false);
     menuStatistics->addEntry("weiter",menuStatisticsId_Next,true,gameMenuHighscore);
     menuStatistics->displayInit();
