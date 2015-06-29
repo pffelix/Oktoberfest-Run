@@ -77,18 +77,23 @@ void Game::timerEvent(QTimerEvent *event)
 }
 
 /**
- * @brief Erstelle QApplication app mit QGraphicsView Widget window (Eventfilter installiert) und Zeiger input auf Input Objekt.
+ * @brief Die Startfunktion, erstellt Fenster und Menüs, wird von main() aufgerufen
+ * Grafik und Inputs (Flo,Felix):
+ * Erstelle QApplication app mit QGraphicsView Widget window (Eventfilter installiert) und Zeiger input auf Input Objekt.
  * Um Funktionen der Tastatur Eingabe entwickeln zu können ist ein Qt Widget Fenster nötig.
  * Auf dem Widget wird ein Eventfilter installiert welcher kontinuierlich Tastureingaben mitloggt.
  * Die Eingaben werden in dem Objekt der Input Klasse gespeichert und können über getKeyactions() abgerufen werden.
  *
+ * Logik (Rupert):
  * Außerdem wird ein Timer gestartet, der in jedem Intervall timerEvent(...) aufruft, wo dann step() aufgerufen wird.
  * Das ist dann unsere Game-Loop. Der Timer funktioniert auch bei 5ms Intervall noch genau.
+ * Menüs (Rupert):
+ * Alle Menüs werden angelegt
  *
- * Hier müssen auch die Sachen rein, die einmahlig beim Starten ausgeführt werden sollen
- * - alles laden, Fenster anzeigen
+ * gameState wird auf gameMenuStart gesetzt, dh das Spiel startet im Startmenü
+ *
  * @return Rückgabewert von app.exec()
- * @author Felix, Rupert, Flo, Simon
+ * @author Rupert
  */
 int Game::start() {
     qDebug("Game::start()");
@@ -296,7 +301,7 @@ void Game::endGame() {
 /**
  * @brief Game::exitGame
  *        Diese Funktion löscht nicht mehr nötige Variablen und Objekte wenn das Spiel komplett beendet wird.
- * @ author: Felix
+ * @author: Felix
  */
 void Game::exitGame() {
 
