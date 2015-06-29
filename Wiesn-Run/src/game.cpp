@@ -105,7 +105,7 @@ int Game::start() {
     menuStart->addEntry("Spiel beenden", menuStartId_EndGame,true);
     menuStart->displayInit();
 
-    menuCredits = new Menu(new std::string("Credits"));
+    menuCredits = new Menu(new std::string("Credits"), Menu::menuType::highscore);
     menuCredits->addEntry("Grundkurs C++", menuId_NonClickable,false);
     menuCredits->addEntry("Simon, Rupert, Felix,", menuId_NonClickable,false);
     menuCredits->addEntry("Flo, Johann", menuId_NonClickable,false);
