@@ -79,7 +79,8 @@ int Player::getAlcoholLevel() const {
  */
 void Player::increaseAlcoholLevel(int additionalAlcohol) {
     //MaximalWerte
-    alcoholLevel = alcoholLevel + (additionalAlcohol * frameRate);
+    // Multiplikation mit Framerate herausgenommen, einfach Alkoholplus hinzufügen
+    alcoholLevel = alcoholLevel + (additionalAlcohol);
 }
 
 /**

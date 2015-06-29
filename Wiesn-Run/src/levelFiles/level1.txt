@@ -74,3 +74,7 @@ Obstacle,3800,0
 
 Obstacle,4100,0
 
+Hendl,5000,60
+
+Bier,5500,60
+

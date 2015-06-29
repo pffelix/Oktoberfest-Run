@@ -395,11 +395,11 @@ int Game::step() {
                         setState(gameIsRunning);
                         break;
                     case menuLevelId_Level2:
-                        startNewGame("level2.txt",1);
+                        startNewGame("level2.txt",2);
                         setState(gameIsRunning);
                         break;
                     case menuLevelId_Level3:
-                        startNewGame("level3.txt",1);
+                        startNewGame("level3.txt",3);
                         setState(gameIsRunning);
                         break;
                     case menuBreakId_Resume:
@@ -1361,7 +1361,7 @@ void Game::loadLevelFile(QString fileSpecifier) {
                         throw std::string("Ungültiger Bier-Eintrag:");
                     } else {
                         qDebug() << "  Bier-Eintrag gefunden.";
-                        GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), 1, 400, 1, 0);
+                        GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), beerHealth, beerAlcohol, beerAmmo, 0);
                         levelInitial.push_back(powerUpToAppend);
                     }
                 }
@@ -1371,7 +1371,7 @@ void Game::loadLevelFile(QString fileSpecifier) {
                         throw std::string("Ungültiger Hendl-Eintrag:");
                     } else {
                         qDebug() << "  Hendl-Eintrag gefunden.";
-                        GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), 1, 0, 0, 0);
+                        GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), hendlHealth, 0, 0, 0);
                         levelInitial.push_back(powerUpToAppend);
                     }
                 }

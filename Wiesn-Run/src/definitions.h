@@ -69,6 +69,15 @@ const int maxHealth = 5;
 const int maxAlcohol = 4500;
 
 /**
+ * @brief PowerUp-Konstanten
+ * Hier werden die Konstanten gesetzt, die beim Einsammeln eines PowerUps hinzugefügt werden
+ */
+const int beerAlcohol = 400;
+const int beerHealth = 1;
+const int beerAmmo = 1;
+const int hendlHealth = 1;
+
+/**
  * @brief Enumerator für den Objekt-Typ
  * um welche Art von Objekt handelt es sich
  * @author Johann
