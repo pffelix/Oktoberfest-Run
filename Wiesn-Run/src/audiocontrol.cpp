@@ -69,7 +69,7 @@ AudioControl::AudioControl() {
     /// Ein Normalisieren aller Ausgabeblöcke wäre möglich, würde jedoch 2D Audio nicht erlauben,
     /// da auch die Dynamik zwischen zwei Blöcken normalisiert wird
     /// -> Distanz- und somit Lautstärkeänderungen von Objekten werden mit normalisiert.
-    max_playevents = 6;
+    max_playevents = 10;
 
 }
 
@@ -283,16 +283,18 @@ int AudioControl::instancepaCallback( const void *inputBuffer, void *outputBuffe
             /// mixed:sample_keinfilter = sample(aktuell Position Audioevent)*aktuelle_relative_lautstärke_audioevent/anzahl_maximaler_playevents
             mixed_sample += callback_pe->audioobject->getSample(callback_pe->position) * callback_pe->volume / max_playevents;
             /// wähle aktuell anzuwenden Filter aus
+            /// erhöhe Abspielposition des aktuell iterierten Audiovents um ein Sample
+            callback_pe->position += 1;
+            /**
             switch (status_filter) {
                 /// kein Filter anwenden
-                case statusFilter::no:
-                    /// erhöhe Abspielposition des aktuell iterierten Audiovents um ein Sample
-                    callback_pe->position += 1;
+                case 9:
+
                     break;
 
                 /// Alkohol Filter anwenden
                 /// Verzögere das Audiosignal im Zeitbereich um 1 Sample in jedem Schritt
-                case statusFilter::alcohol:
+                case 10:
                     /// falls Blockposition gerade ist
                     if(block_pos % 2 == 0) {
                         /// erhöhe Abspielposition des aktuell iterierten Audiovents um ein Sample
@@ -304,7 +306,7 @@ int AudioControl::instancepaCallback( const void *inputBuffer, void *outputBuffe
                 /// Schwanke die Lautstärke im Zeitbereich mit 1Hz Cosinus Schwingung
                 /// mixed_sample = mixed:sample_keinfilter * 1Hz_Lautstärke_Cosinus_Filter
                 /// 1Hz_Lautstärke_Cosinus_Filter = Betrag [cos(2 * pi * 1 / 44100 * (Anzahl bisher abgespielte Blöcke * 1024 + Position im Callback Block))]
-                case statusFilter::life:
+                case 11:
                     mixed_sample += mixed_sample*std::abs(std::cos(2 * M_PI * 1 /44100 *(blockcounter * BLOCKSIZE + block_pos)));
                     /// erhöhe Abspielposition des aktuell iterierten Audiovents um ein Sample
                     callback_pe->position += 1;
@@ -314,12 +316,13 @@ int AudioControl::instancepaCallback( const void *inputBuffer, void *outputBuffe
                 /// Schwanke die Lautstärke im Zeitbereich mit 5Hz Cosinus Schwingung
                 /// mixed_sample = mixed:sample_keinfilter * 5Hz_Lautstärke_Cosinus_Filter
                 /// 5Hz_Lautstärke_Cosinus_Filter = |cos(2 * pi * 0 / 44100 * (Anzahl bereitsabgespielte Blöcke * 1024 + aktuelle Position Callback Block))|
-                case statusFilter::lifecritical:
+                case 12:
                     mixed_sample += mixed_sample * std::cos(2 * M_PI * 5 /44100 *(blockcounter * BLOCKSIZE + block_pos));
                     /// erhöhe Abspielposition des aktuell iterierten Audiovents um ein Sample
                     callback_pe->position += 1;
                     break;
             }
+             */
             /// falls Samples Position des aktuell iterierten Audiovents Anzahl an Samples in Audioobject überschreitet
             if (callback_pe->position >= callback_pe->audioobject->getSamplenumber()) {
                 /// Loope Audiosignal -> setzte Samples Position auf Anfang zurück (pos = position-samplenumber)

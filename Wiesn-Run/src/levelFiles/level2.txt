@@ -107,7 +107,5 @@ Obstacle,5100,240
 Obstacle,5100,360
 
 Obstacle,6000,0
-Tourist,6300,0,-10
-Security,6400,0
-Obstacle,6800,0
+
 
