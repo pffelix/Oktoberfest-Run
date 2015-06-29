@@ -46,9 +46,9 @@ Erläuterung
 # Beliebiges Powerup anlegen:
 # PowerUp,posX,posY,health,alcohol,ammo,immunityCooldown
 
-Levellänge,20000
-Player,130,0
 
+Player,130,0
+Levellänge,20000
 
 # Springen mit Obstacles vorführen
 Obstacle,400,0

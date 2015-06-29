@@ -391,11 +391,7 @@ int Game::step() {
                     break;
                 case menuBreakId_EarlyEnd:
                     endGame();
-<<<<<<< HEAD
-                    displayStatistics();
-                    displayHighscore();
-=======
->>>>>>> rupert
+
                     break;
             }
         }
