@@ -41,7 +41,7 @@ struct compareGameObjects {
  */
 struct compareScores {
     bool operator()(scoreStruct scoreA, scoreStruct scoreB) {
-        return (scoreA.enemiesKilled + scoreA.distanceCovered + scoreA.alcoholPoints) > (scoreB.enemiesKilled + scoreB.distanceCovered + scoreB.alcoholPoints);
+        return (scoreA.totalPoints > scoreB.totalPoints);
     }
 };
 
@@ -77,18 +77,23 @@ void Game::timerEvent(QTimerEvent *event)
 }
 
 /**
- * @brief Erstelle QApplication app mit QGraphicsView Widget window (Eventfilter installiert) und Zeiger input auf Input Objekt.
+ * @brief Die Startfunktion, erstellt Fenster und Menüs, wird von main() aufgerufen
+ * Grafik und Inputs (Flo,Felix):
+ * Erstelle QApplication app mit QGraphicsView Widget window (Eventfilter installiert) und Zeiger input auf Input Objekt.
  * Um Funktionen der Tastatur Eingabe entwickeln zu können ist ein Qt Widget Fenster nötig.
  * Auf dem Widget wird ein Eventfilter installiert welcher kontinuierlich Tastureingaben mitloggt.
  * Die Eingaben werden in dem Objekt der Input Klasse gespeichert und können über getKeyactions() abgerufen werden.
  *
+ * Logik (Rupert):
  * Außerdem wird ein Timer gestartet, der in jedem Intervall timerEvent(...) aufruft, wo dann step() aufgerufen wird.
  * Das ist dann unsere Game-Loop. Der Timer funktioniert auch bei 5ms Intervall noch genau.
+ * Menüs (Rupert):
+ * Alle Menüs werden angelegt
  *
- * Hier müssen auch die Sachen rein, die einmahlig beim Starten ausgeführt werden sollen
- * - alles laden, Fenster anzeigen
+ * gameState wird auf gameMenuStart gesetzt, dh das Spiel startet im Startmenü
+ *
  * @return Rückgabewert von app.exec()
- * @author Felix, Rupert, Flo, Simon
+ * @author Rupert
  */
 int Game::start() {
     qDebug("Game::start()");
@@ -99,46 +104,7 @@ int Game::start() {
     //stepIntervall = 100; zum testen
 
     // Menüs erstellen
-    menuStart = new Menu(new std::string("Wiesn-Run"));
-    menuStart->addEntry("Neues Spiel",menuStartId_NewGame,true, gameMenuLevel);
-    menuStart->addEntry("Spiel beenden", menuStartId_EndGame,true);
-    menuStart->addEntry("Credits", menuStartId_Credits,true,gameMenuCredits);
-    menuStart->displayInit();
-
-    menuCredits = new Menu(new std::string("Credits"));
-    menuCredits->addEntry("Entwickler:", menuId_NonClickable,false);
-    menuCredits->addEntry("Simon:", menuId_NonClickable,false);
-    menuCredits->addEntry("Rupert:", menuId_NonClickable,false);
-    menuCredits->addEntry("Felix:", menuId_NonClickable,false);
-    menuCredits->addEntry("Flo:", menuId_NonClickable,false);
-    menuCredits->addEntry("Johann:", menuId_NonClickable,false);
-    menuCredits->addEntry("zurück", menuCreditsId_Back,true,gameMenuStart);
-    menuCredits->displayInit();
-
-    menuLevel = new Menu(new std::string("Levelauswahl"));
-    menuLevel->addEntry("zurück",menuLevelId_Back, true,gameMenuStart);
-    menuLevel->addEntry("Level 1",menuLevelId_Level1, true);
-    menuLevel->addEntry("Level 2",menuLevelId_Level2, true);
-    menuLevel->addEntry("Level 3",menuLevelId_Level3, true);
-    //menuLevel->addEntry("Spiel starten",menuLevelId_StartGame, true);
-    menuLevel->displayInit();
-
-    menuBreak = new Menu(new std::string("Pause"));
-    menuBreak->addEntry("weiterspielen",menuBreakId_Resume,true);
-    menuBreak->addEntry("Startmenü",menuBreakId_EndGame,true);
-    menuBreak->displayInit();
-
-    menuStatistics = new Menu(new std::string("Punkte"), Menu::menuType::highscore);
-    menuStatistics->addEntry("weiter",menuStatisticsId_Next,true,gameMenuName);
-    menuStatistics->displayInit();
-
-    menuName = new Menu(new std::string("Neme eingeben"), Menu::menuType::highscore);
-    menuName->addEntry("weiter",menuNameId_Next,true,gameMenuHighscore);
-    menuName->displayInit();
-
-    menuHighscore = new Menu(new std::string("Highscores"), Menu::menuType::highscore);
-    menuHighscore->addEntry("weiter",menuHighscoreId_Next,true,gameMenuStart);
-    menuHighscore->displayInit();
+    menuInit();
 
     // QGraphicsScene der Level erstellen
     levelScene = new QGraphicsScene;
@@ -169,7 +135,8 @@ int Game::start() {
     Game::startTimer(stepIntervall);
 
     ///@todo hier wird das Startmenü übersprungen
-    // startNewGame();
+    //startNewGame("level1_old.txt",1);
+    //setState(gameMenuStart);
     setState(gameMenuStart);
     return appPointer->exec();
 }
@@ -226,7 +193,7 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
     // audioIDs initialisieren
     audioIDs = 20;
 
-    playerStats = std::vector<QGraphicsTextItem>(3);
+    playerStats = std::vector<QGraphicsTextItem>(5);
 
     playerStats[0].setPlainText(QString("Gesundheit: " + QString::number(playerObjPointer->getHealth())));
     playerStats[0].setPos(playerObjPointer->getPosX()-95, 30);
@@ -236,39 +203,49 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
     playerStats[1].setParentItem(&playerStats[0]);
     playerStats[1].setPlainText(QString("Alkoholpegel: " + QString::number(playerObjPointer->getAlcoholLevel())));
     playerStats[1].setPos(0, 50);
-    playerStats[1].setDefaultTextColor(Qt::darkGreen);
+    playerStats[1].setDefaultTextColor(Qt::black);
     playerStats[1].setFont(QFont("Times",25));
 
     playerStats[2].setParentItem(&playerStats[0]);
     playerStats[2].setPlainText(QString("Score: " + QString::number(playerScore.totalPoints)));
-    playerStats[2].setPos(650, 0);
+    playerStats[2].setPos(670, 0);
     playerStats[2].setDefaultTextColor(Qt::yellow);
     playerStats[2].setFont(QFont("Times",35));
+
+    playerStats[3].setParentItem(&playerStats[0]);
+    playerStats[3].setPlainText(QString("Munition: " + QString::number(playerObjPointer->getAmmunatiuon())));
+    playerStats[3].setPos(0, 100);
+    playerStats[3].setDefaultTextColor(Qt::darkGreen);
+    playerStats[3].setFont(QFont("Times",25));
 
     levelScene->addItem(&playerStats[0]);
 
 
     // Zeiger auf Objekte aus levelInitial in worldObjects verlegen
-    while (!(levelInitial.empty())) {
-        GameObject *currentObject = *levelInitial.begin();
-        worldObjects.push_back(currentObject);
-        levelInitial.pop_front();
-        //Grafik
-        levelScene->addItem(currentObject);
-    }
+    /// @todo Theoretisch brauchen wir levelIntial nicht mehr, die Frage ist, ob die Grafik da mitmacht.
+//    while (!(levelInitial.empty())) {
+//        GameObject *currentObject = *levelInitial.begin();
+//        worldObjects.push_back(currentObject);
+//        levelInitial.pop_front();
+//        //Grafik
+//        levelScene->addItem(currentObject);
+//    }
 }
 
 
 /**
  * @brief Game::endGame
- *        Diese Funktion löscht nicht mehr nötige Variablen und Objekte wenn vom Spiel in das Hauptmenü gewechselt wird.
+ * Diese Funktion löscht nicht mehr nötige Variablen und Objekte wenn vom Spiel in das Statistikmenü gewechselt wird.
+ * es werden auch die Statistik und Highscoremenüs aktualisiert
  * @ author: Felix, Johann
  */
 void Game::endGame() {
+
+    displayStatistics();
+
     /// @todo Aufräumarbeiten
     // Highscore aktualisieren
-    std::string mode = "write";
-    updateHighScore(mode);
+    updateHighScore("write");
 
     //Listen leeren
     audioevents.clear();
@@ -293,14 +270,13 @@ void Game::endGame() {
         levelSpawn.pop_front();
         delete handleObject;
     }
-
 }
 
 
 /**
  * @brief Game::exitGame
  *        Diese Funktion löscht nicht mehr nötige Variablen und Objekte wenn das Spiel komplett beendet wird.
- * @ author: Felix
+ * @author: Felix
  */
 void Game::exitGame() {
 
@@ -343,6 +319,7 @@ int Game::step() {
 
     /// Tasten abfragen
     Input::Keyaction lastKey = keyInput->getAndDeleteLastKey();
+    Menu *aktStepMenu = aktMenu;
 
     /// Zeit seit dem letzten Aufruf ausrechnen und ausgeben
 
@@ -352,15 +329,15 @@ int Game::step() {
 
     // falls Menü aktiv, Inputs verarbeiten, Grafik:
 
-    if(aktMenu!=NULL) { // aktMenu ist nur NULL, wenn das Spiel gerade läuft
+    if(aktStepMenu!=NULL) { // aktMenu ist nur NULL, wenn das Spiel gerade läuft
 
 
-        aktMenu->displayUpdate();
+        aktStepMenu->displayUpdate();
         //MenüScene wird vom Anzeigewidget aufgerufen
-        window->setScene(aktMenu->menuScene);
+        window->setScene(aktStepMenu->menuScene);
 
         // Audio
-        if(aktMenu->getType() == Menu::menuType::highscore) {
+        if(aktStepMenu->getType() == Menu::menuType::highscore) {
             // Audioevent für die Statistik-Menüs
             audioStruct scoreAudio = {2, background_highscore, audioDistance.background_highscore};
             audioevents.push_back(scoreAudio);
@@ -372,41 +349,49 @@ int Game::step() {
 
         // Up || Down?
         if(lastKey == Input::Keyaction::Up) {
-            aktMenu->changeSelection(Menu::menuSelectionChange::up);
+            aktStepMenu->changeSelection(Menu::menuSelectionChange::up);
         }
         if(lastKey == Input::Keyaction::Down) {
-            aktMenu->changeSelection(Menu::menuSelectionChange::down);
+            aktStepMenu->changeSelection(Menu::menuSelectionChange::down);
         }
 
         // Enter auswerten
         if(lastKey == Input::Keyaction::Enter) {
+            if(aktStepMenu->getSelection()->menuOnEnter) {  // Alle Einträge, auf die ein weiteres Menü folgt
+                setState(aktStepMenu->getSelection()->stateOnClick);
+            }
+            // Zusatzaufgaben, die in den Menüs ausgeführt werden
+            switch(aktStepMenu->getSelection()->id) {
+                case menuStartId_EndGame:
+                    exitGame();
+                    exit(0);
+                case menuLevelId_Demo:
+                    startNewGame("level_test.txt",0);
+                    setState(gameIsRunning);
+                    break;
+                case menuLevelId_Level1:
+                    startNewGame("level1.txt",1);
+                    setState(gameIsRunning);
+                    break;
+                case menuLevelId_Level2:
+                    startNewGame("level2.txt",2);
+                    setState(gameIsRunning);
+                    break;
+                case menuLevelId_Level3:
+                    startNewGame("level3.txt",3);
+                    setState(gameIsRunning);
+                    break;
+                case menuBreakId_Resume:
+                    window->setScene(levelScene);
+                    setState(gameIsRunning);
+                    break;
+                case menuBreakId_EndGame:
+                    setState(gameMenuStart);
+                    break;
+                case menuBreakId_EarlyEnd:
+                    endGame();
 
-            if(aktMenu->getSelection()->menuOnEnter) {  // Alle Einträge, auf die ein weiteres Menü folgt
-
-                setState(aktMenu->getSelection()->stateOnClick);
-
-            } else {    // alle Einträge, bei denen kein Menü folgt: Spiel starten/Beenden
-                switch(aktMenu->getSelection()->id) {
-                    case menuStartId_EndGame:
-                        exitGame();
-                        exit(0);
-                    case menuLevelId_Level1:
-                        startNewGame("level1_old.txt",1);
-                        setState(gameIsRunning);
-                        break;
-                    case menuLevelId_Level2:
-                        startNewGame("level1.txt",1);
-                        setState(gameIsRunning);
-                        break;
-                    case menuBreakId_Resume:
-                        window->setScene(levelScene);
-                        setState(gameIsRunning);
-                        break;
-                    case menuBreakId_EndGame:
-                        endGame();
-                        setState(gameMenuStart);
-                        break;
-                }
+                    break;
             }
         }
 
@@ -433,6 +418,8 @@ int Game::step() {
         detectCollision(&worldObjects);
         handleCollisions();
 
+        updateScore();
+
         renderGraphics(&worldObjects, playerObjPointer);
 
 
@@ -445,6 +432,12 @@ int Game::step() {
         //audioevents.push_back(scene_beer);
         // send filled audioevents list to AudioControl Object, which updates current Output Sounds
 
+
+        // Level zu Ende?
+        if(playerObjPointer->getPosX() - playerScale >= levelLength) {
+            endGame();
+            setState(gameMenuName);
+        }
 
         stepCount++;
     }
@@ -570,12 +563,6 @@ void Game::evaluateInput() {
             levelScene->addItem(playerFire);
         }
     }
-
-    /* passiert in step()
-    // Menü bei ESC
-    if(keyInput->getKeyactions().contains(Input::Keyaction::Exit)) {
-        state = menuBreak;
-    }*/
 }
 
 /**
@@ -589,7 +576,7 @@ void Game::calculateMovement() {
     using namespace std;               // für std::list
 
     /// für qDebug (Rupert)
-    std::string objecttypes[] = {"Player ", "Tourist ", "Securit", "Obstacl", "Plane  ", "Shot   ", "PowerUp", "Boss   "};
+    std::string objecttypes[] = {"Player ", "Tourist", "Securit", "Obstacl", "Plane  ", "Shot   ", "PowerUp", "Boss   "};
     qDebug("Object\tSize\tPosX\tPosY\tSpeed");
     int speedX=0,speedY=0;
 
@@ -781,11 +768,11 @@ void Game::handleCollisions() {
                     break;
                 }
                 case fromRight: {
-                    //Bewegung in X-Richtung stoppen
-                    playerObjPointer->setSpeedX(0);
-                    //Überlappung berechnen und Spieler nach rechts versetzen
-                    overlap = (handleEvent.causingObject->getPosX() + (handleEvent.causingObject->getLength() / 2)) - (playerObjPointer->getPosX() - (playerObjPointer->getLength() / 2));
-                    playerObjPointer->setPosX(handleEvent.causingObject->getPosX() + handleEvent.causingObject->getLength());
+//                    //Bewegung in X-Richtung stoppen
+//                    playerObjPointer->setSpeedX(0);
+//                    //Überlappung berechnen und Spieler nach rechts versetzen
+//                    overlap = (handleEvent.causingObject->getPosX() + (handleEvent.causingObject->getLength() / 2)) - (playerObjPointer->getPosX() - (playerObjPointer->getLength() / 2));
+//                    playerObjPointer->setPosX(handleEvent.causingObject->getPosX() + handleEvent.causingObject->getLength());
                     break;
                 }
                 case fromAbove: {
@@ -1164,8 +1151,10 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
     (backgrounds[0]).setPos(((backgrounds[0]).x()) + ((playerPointer->getPosX() - (playerScale/2) - (playerPointer->x())) /2), 0);
     (backgrounds[1]).setPos(((backgrounds[1]).x()) + ((playerPointer->getPosX() - (playerScale/2) - (playerPointer->x())) /2), 0);
 
-    //Leben,Pegel,Highscore bleiben auf die View zentriert
+    //Leben,Pegel,Munition,Highscore bleiben auf die View zentriert
     playerStats[0].setPos( playerStats[0].x() + (playerPointer->getPosX() - (playerScale/2) - playerPointer->x()), playerStats[0].y());
+
+    //Leben,Highscore,Pegel,Munition wird aktualisiert
     playerStats[0].setPlainText(QString("Gesundheit: " + QString::number(playerPointer->getHealth())));
     playerStats[1].setPlainText(QString("Alkoholpegel: " + QString::number(playerPointer->getAlcoholLevel())));
     playerStats[2].setPlainText(QString("Score: " + QString::number(playerScore.totalPoints)));
@@ -1183,7 +1172,8 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
         if(aktMovingObject != 0) {
 
             //if(dynamic_cast<Shoot*> (aktMovingObject) == 0 ) {
-              if(aktMovingObject->getType() != shot) {
+            if( (aktMovingObject->getType() != shot && aktMovingObject->getType() != player)
+                 || (aktMovingObject->getType() == player && playerPointer->inJump() == false) ) {
                 //im letzten Frame vorwärst gelaufen?
                 if(aktMovingObject->getSpeedX() > 0 ) {
                     if(aktMovingObject->getFramesDirection() < 0) {
@@ -1220,44 +1210,6 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
     window->centerOn(playerObjPointer->getPosX() + 512 - 100 - 0.5 * playerObjPointer->getLength(), 384);
 }
 
-
-
-
-void Game::colTestLevel() {
-    /// Skalierungsfaktor für Objekte im Spiel
-    int obs = 10;
-/*
-    // Erstelle statische Objekte
-    GameObject *obstackle1 = new GameObject(40*obs, 0*obs, 6*obs, 12*obs, obstacle);
-    GameObject *obstackle2 = new GameObject(60*obs, 0*obs, 6*obs, 12*obs, obstacle);
-    GameObject *obstackle3 = new GameObject(90*obs, 0*obs, 6*obs, 12*obs, obstacle);
-
-    // Erstelle PowerUp
-    GameObject *powerUp1 = new PowerUp(30*obs, 0*obs, 1,1,1,1);
-
-
-    // Füge statische Objekte der Liste levelInitial hinzu
-    levelInitial.push_back(powerUp1);
-    levelInitial.push_back(obstackle1);
-    levelInitial.push_back(obstackle2);
-    levelInitial.push_back(obstackle3);
-
-    // Erstelle Gegner
-    GameObject *enemy1 = new Enemy(46*obs, 1*obs, 1*obs);
-    GameObject *enemy2 = new Enemy(70*obs, 0*obs, -1*obs);
-
-    // Füge bewegliche Objekte in zugehörige liste
-    levelSpawn.push_back(enemy1);
-    levelSpawn.push_back(enemy2);
-*/
-    // Erstelle das Spieler-Objekt und setze den playerObjPointer
-    GameObject *playerObject = new Player(13*obs, 0*obs, 1*obs);
-
-    playerObjPointer = dynamic_cast<Player*>(playerObject);
-    playerObjPointer->startJump();
-}
-
-
 /**
  * @brief Game::loadLevelFile
  * @param fileSpecifier
@@ -1276,8 +1228,7 @@ void Game::loadLevelFile(QString fileSpecifier) {
         qDebug() << "Datei konnte nicht geöffnet werden!";
     } else {
         // Die Datei wurde erfolgreich geöffnet
-        // Die Listen werden geleert
-        levelInitial.clear();
+        // Die Liste wird geleert
         levelSpawn.clear();
 
         qDebug() << "Lese levelFile mit vorgesetzten Parametern aus:";
@@ -1338,7 +1289,7 @@ void Game::loadLevelFile(QString fileSpecifier) {
                     } else {
                         qDebug() << "  Obstacle-Eintrag gefunden.";
                         GameObject *obstacleToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), obstacle);
-                        levelInitial.push_back(obstacleToAppend);
+                        levelSpawn.push_back(obstacleToAppend);
                     }
                 }
 
@@ -1348,7 +1299,27 @@ void Game::loadLevelFile(QString fileSpecifier) {
                     } else {
                         qDebug() << "  Plane-Eintrag gefunden.";
                         GameObject *planeToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), plane);
-                        levelInitial.push_back(planeToAppend);
+                        levelSpawn.push_back(planeToAppend);
+                    }
+                }
+
+                if (strlist.at(0) == "Bier") {
+                    if (strlist.length() != 3 ) {
+                        throw std::string("Ungültiger Bier-Eintrag:");
+                    } else {
+                        qDebug() << "  Bier-Eintrag gefunden.";
+                        GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), beerHealth, beerAlcohol, beerAmmo, 0);
+                        levelSpawn.push_back(powerUpToAppend);
+                    }
+                }
+
+                if (strlist.at(0) == "Hendl") {
+                    if (strlist.length() != 3 ) {
+                        throw std::string("Ungültiger Hendl-Eintrag:");
+                    } else {
+                        qDebug() << "  Hendl-Eintrag gefunden.";
+                        GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), hendlHealth, hendlAlcoholMalus, 0, 0);
+                        levelSpawn.push_back(powerUpToAppend);
                     }
                 }
 
@@ -1358,13 +1329,18 @@ void Game::loadLevelFile(QString fileSpecifier) {
                     } else {
                         qDebug() << "  PowerUp-Eintrag gefunden.";
                         GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), strlist.at(4).toInt(), strlist.at(5).toInt(), strlist.at(6).toInt());
-                        levelInitial.push_back(powerUpToAppend);
+                        levelSpawn.push_back(powerUpToAppend);
                     }
                 }
 
                 if (strlist.at(0) == "Boss") {
-                    /// @todo try/catch für Bosseintrag sobald der Konstruktor steht.
-                    qDebug() << "  Boss-Eintrag gefunden.";
+                    if (strlist.length() != 4) {
+                        throw std::string("Ungültiger Boss-Eintrag:");
+                    } else {
+                        qDebug() << "  Boss-Eintrag gefunden.";
+                        GameObject *enemyToAppend = new Enemy(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), BOSS);
+                        levelSpawn.push_back(enemyToAppend);
+                    }
                 }
             }
             catch(std::string s) {
@@ -1373,7 +1349,6 @@ void Game::loadLevelFile(QString fileSpecifier) {
 
         } // end of while
 
-        levelInitial.sort(compareGameObjects());
         levelSpawn.sort(compareGameObjects());
 
         qDebug() << "Auslesen des levelFile beendet.";
@@ -1391,7 +1366,8 @@ void Game::loadLevelFile(QString fileSpecifier) {
 void Game::updateScore() {
     playerScore.distanceCovered = playerObjPointer->getPosX();
     playerScore.enemiesKilled = playerObjPointer->getEnemiesKilled();
-    playerScore.alcoholPoints = playerObjPointer->getAlcoholLevel();
+    playerScore.alcoholPoints = playerScore.alcoholPoints + (playerObjPointer->getAlcoholLevel() / 100);
+    playerScore.totalPoints = playerScore.distanceCovered + playerScore.enemiesKilled + playerScore.alcoholPoints;
     playerScore.name = "Horstl";
 }
 
@@ -1422,8 +1398,8 @@ void Game::updateHighScore(std::string mode) {
         while (std::getline(input, line)) {
             QString qline = QString::fromStdString(line);
             QStringList strlist = qline.split(",");
-            if (strlist.length() == 4) {
-                scoreStruct currentScoreItem = {strlist.at(0).toStdString(), strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt()};
+            if (strlist.length() == 5) {
+                scoreStruct currentScoreItem = {strlist.at(0).toStdString(), strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), strlist.at(4).toInt()};
                 scoreList.push_back(currentScoreItem);
             }
         }
@@ -1447,7 +1423,7 @@ void Game::updateHighScore(std::string mode) {
             scoreList.pop_front();
 
             // Highscore-Eintrag schreiben
-            ofs << currentScore.name.c_str() << "," << currentScore.alcoholPoints << "," << currentScore.distanceCovered << "," << currentScore.enemiesKilled << "\n";
+            ofs << currentScore.name.c_str() << "," << currentScore.totalPoints << "," << currentScore.distanceCovered << "," << currentScore.alcoholPoints << "," << currentScore.enemiesKilled << "\n";
             i++;
         }
         // Datei schließen, damit Änderungen gespeichert werden
@@ -1498,4 +1474,115 @@ void Game::setState(enum gameState newState) {
             aktMenu = menuHighscore;
             break;
     }
+}
+
+/**
+ * @brief Initialisierung der Menüs
+ * wird in start() aufgerufen
+ * Logik:
+ *  Startmenü
+ *      Credits
+ *  Levelauswahl
+ *  spielen...
+ *      Pause
+ *  Name eingeben
+ *  Spielstatistik
+ *  Highscore
+ *  Von vorne
+ *
+ * @author Rupert
+ */
+void Game::menuInit() {
+    menuStart = new Menu(new std::string("Wiesn-Run"));
+    menuStart->addEntry("Pack ma's!",menuStartId_NewGame,true, gameMenuLevel);
+    menuStart->addEntry("Mia san Mia", menuStartId_Credits,true,gameMenuCredits);
+    menuStart->addEntry("Pfiat di!", menuStartId_EndGame,true);
+    menuStart->displayInit();
+
+    menuCredits = new Menu(new std::string("Credits"), Menu::menuType::highscore);
+    menuCredits->addEntry("Grundkurs C++", menuId_NonClickable,false);
+    menuCredits->addEntry("da Simon, da Rupi, da Felix,", menuId_NonClickable,false);
+    menuCredits->addEntry("da Flo und da Johann", menuId_NonClickable,false);
+    menuCredits->addEntry("weg do!", menuCreditsId_Back,true,gameMenuStart);
+    menuCredits->displayInit();
+
+    menuLevel = new Menu(new std::string("Wos mogst?"));
+    menuLevel->addEntry("Demolevel",menuLevelId_Demo, true);
+    menuLevel->addEntry("Level 1",menuLevelId_Level1, true);
+    menuLevel->addEntry("Level 2",menuLevelId_Level2, true);
+    menuLevel->addEntry("Level 3",menuLevelId_Level3, true);
+    menuLevel->addEntry("naaa..",menuLevelId_Back, true,gameMenuStart);
+    menuLevel->displayInit();
+
+    menuBreak = new Menu(new std::string("Brotzeit!"));
+    menuBreak->addEntry("weida",menuBreakId_Resume,true);
+    menuBreak->addEntry("koa Lust mehr",menuBreakId_EarlyEnd, true,gameMenuName);
+    menuBreak->addEntry("vo vorn!",menuBreakId_EndGame,true);
+    menuBreak->displayInit();
+
+    menuStatistics = new Menu(new std::string("Boah!"), Menu::menuType::highscore);
+    menuStatistics->addEntry("weida",menuStatisticsId_Next,true,gameMenuHighscore);
+    menuStatistics->displayInit();
+
+    menuName = new Menu(new std::string("Wia hoaßt du?"), Menu::menuType::highscore);
+    menuName->addEntry("weida",menuNameId_Next,true,gameMenuStatisitcs);
+    menuName->displayInit();
+
+    menuHighscore = new Menu(new std::string("Highscores"), Menu::menuType::highscore);
+    menuHighscore->addEntry("weida",menuHighscoreId_Next,true,gameMenuStart);
+    menuHighscore->displayInit();
+}
+
+/**
+ * @brief füllt das Statistik- und HighscoreMenü
+ * löscht das Statistik- und Highscore-Menü und füllt es mit aktuellen Werten
+ * @author Rupert
+ */
+void Game::displayStatistics() {
+    using namespace std;    // für std::string
+
+    // Statistik Menü
+    menuStatistics->clear();
+
+    string name = "Name: ";
+    name.append(playerScore.name);
+    string enemies = "Verstorbene: ";
+    enemies.append(to_string(playerScore.enemiesKilled));
+    string distance = "glafne Meter: ";
+    distance.append(to_string(playerScore.distanceCovered));
+    string alk = "Promille: ";
+    alk.append(to_string(playerScore.alcoholPoints));
+    string points = "Punkte:";
+    points.append(to_string(playerScore.totalPoints));
+
+    menuStatistics->addEntry(name,menuId_NonClickable,false);
+    menuStatistics->addEntry(enemies,menuId_NonClickable,false);
+    menuStatistics->addEntry(distance,menuId_NonClickable,false);
+    menuStatistics->addEntry(alk,menuId_NonClickable,false);
+    menuStatistics->addEntry(points,menuId_NonClickable,false);
+    menuStatistics->addEntry("weiter",menuStatisticsId_Next,true,gameMenuHighscore);
+    menuStatistics->displayInit();
+
+    // Highscore-Menü
+    menuHighscore->clear();
+
+    updateHighScore("listefüllen");
+    int scoreCount = 0;
+    for(std::list<scoreStruct>::iterator it = scoreList.begin(); it != scoreList.end(); ++it) {
+        if(scoreCount > 4) break;
+
+        scoreStruct score = *it;
+        string scoreStr = score.name;
+        scoreStr.append(": \t");
+        scoreStr.append(to_string(score.totalPoints));
+
+        menuHighscore->addEntry(scoreStr,menuId_NonClickable);
+
+        scoreCount++;
+
+    }
+
+    menuHighscore->addEntry("weida",menuHighscoreId_Next,true,gameMenuStart);
+    menuHighscore->displayInit();
+
 }

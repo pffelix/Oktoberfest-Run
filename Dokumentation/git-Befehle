@@ -70,3 +70,20 @@ git push origin --delete gameLogik
 git checkout xyz
 get rebase origin/master
 
+
+###########################
+### ssh
+###########################
+
+ssh-keygen -t rsa -C "email-adresse"
+
+cat ~/.ssh/id_rsa.pub
+
+# key in gitlab in ssh-keys im profil kopieren
+
+
+# Adresse ändern:
+git remote set-url origin git@gitlab.ldv.ei.tum.de:cpp-gk15/gruppe1_hauptprojekt.git
+
+# enjoy!
+

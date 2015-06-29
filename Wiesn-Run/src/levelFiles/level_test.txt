@@ -1,4 +1,4 @@
-LevelDatei für den ersten Level
+LevelDatei für den Demolevel
 
 Diese Datei kann nur von der Methode "loadLevelFile" ausgelesen werden.
 Zeilen, die mit einem Keyword beginnen, werden interpretiert. Alle anderen Zeilen werden ignoriert.
@@ -12,13 +12,18 @@ Erläuterung
 
 # Tourist anlegen:
 # Tourist,posX,posY,speedX
-# Tourist,300,0,-10
+# Tourist,300,0,-4
 # Größe: 60x120
 
 # Security anlegen:
 # Security,posX,posY
 # Security,300,0
 # Größe: 60:120
+
+# Boss anlegen:
+# Boss,posX,posY,speedX
+# Boss,300,0,0
+# Größe: 120:240
 
 # Obstacle anlegen:
 # Obstacle,posX,posY
@@ -41,43 +46,49 @@ Erläuterung
 # Beliebiges Powerup anlegen:
 # PowerUp,posX,posY,health,alcohol,ammo,immunityCooldown
 
-Level1: Weg zum Zelt (keine Gegner, nur Obstacles und PowerUps
-------------
 
 Player,130,0
-Levellänge,20000
+Levellänge,8000
 
+# Springen mit Obstacles vorführen
 Obstacle,400,0
 
 Obstacle,800,0
 
-Plane,1450,150
-Plane,1570,150
-Plane,1690,150
+# Laufen über zusammenhängende Planes, langsames Hochspringen
+Obstacle,2000,0
 
-Plane,1860,170
-Plane,1980,170
-Plane,2100,150
-Plane,2220,150
-Plane,2340,150
-Plane,2460,150
-Plane,2580,170
-Plane,2700,170
-Plane,2820,170
-Plane,2940,170
-Obstacle,2940,190
-Plane,3060,170
-Plane,3280,170
-Plane,3400,170
+Plane,2300,140
+Plane,2420,140
+Plane,2540,140
 
-Obstacle,3800,0
+Plane,3500,140
+Plane,3620,140
+Plane,3740,160
+Plane,3860,160
+Plane,3980,180
+Plane,4100,180
+Plane,4220,200
+Plane,4400,200
+Plane,4520,220
+Plane,4640,220
 
-Obstacle,4100,0
+Plane,4800,220
 
-Bier,5000,60
-Bier,5200,60
-Bier,5400,60
-Hendl,5500,60
+Plane,5000,140
 
+# Powerups vorführen
+Bier,6000,60
 
+Bier,6100,60
 
+Bier,6200,60
+
+Obstacle,6400,0
+Bier,6400,160
+
+Hendl,6800,60
+
+Hendl,7000,60
+
+# Ende bei 8000

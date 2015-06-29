@@ -1,4 +1,4 @@
-﻿LevelDatei für den ersten Level
+﻿LevelDatei für den zweiten Level
 
 Diese Datei kann nur von der Methode "loadLevelFile" ausgelesen werden.
 Zeilen, die mit einem Keyword beginnen, werden interpretiert. Alle anderen Zeilen werden ignoriert.
@@ -31,13 +31,18 @@ Erläuterung
 # Plane,400,100
 # Größe: 120x20
 
-# PowerUp anlegen:
-# PowerUp,posX,posY,healthBonus,alcoholLevelBonus,ammunitionBonus,immunityCooldownBonus
-# PowerUp,500,40,10,0,0,0
-# Größe: 40x40
+# Bier-Powerup anlegen:
+# Bier,posX,posY
+# Bier,300,60
 
+# Hendl-Powerup anlegen:
+# Hendl,posX,posY
+# Hendl,300,60
 
-Level1: Weg zum Zelt (keine Gegner, nur Obstacles und PowerUps
+# Beliebiges Powerup anlegen:
+# PowerUp,posX,posY,health,alcohol,ammo,immunityCooldown
+
+Level2: Im Zelt
 ------------
 
 Player,130,0

@@ -47,6 +47,9 @@ public:
 
     Menu(std::string *menuTitle, menuType type = normal);
 
+    /// löscht alle Einträge bis auf den ersten
+    void clear();
+
     /// gibt den Typ zurück
     menuType getType();
 

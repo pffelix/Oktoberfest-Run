@@ -142,6 +142,9 @@ private:
 
 
     // Menüs
+    void menuInit();    /// Initialisiert Menüs
+    void displayStatistics();
+
     enum gameState state = gameMenuStart;    /// aktueller Spielzustand
     Menu *aktMenu = menuStart;      /// aktuell aktives Menü, null während das Spiel läuft; wird in setState gesetzt
 
@@ -157,8 +160,8 @@ private:
         menuId_NonClickable,
         menuStartId_NewGame, menuStartId_EndGame, menuStartId_Credits,   // Startmenü
         menuCreditsId_Back, // Credits
-        menuLevelId_Back, menuLevelId_Level1, menuLevelId_Level2, menuLevelId_Level3, menuLevelId_StartGame,   // Levelauswahl
-        menuBreakId_Resume, menuBreakId_EndGame,    // Pause
+        menuLevelId_Back, menuLevelId_Demo, menuLevelId_Level1, menuLevelId_Level2, menuLevelId_Level3, menuLevelId_StartGame,   // Levelauswahl
+        menuBreakId_Resume, menuBreakId_EarlyEnd, menuBreakId_EndGame,    // Pause
         menuStatisticsId_Next,  // Statistik
         menuNameId_Next,        // Name eingeben
         menuHighscoreId_Next   // Highscoretabelle
