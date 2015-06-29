@@ -236,13 +236,12 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
 /**
  * @brief Game::endGame
  *        Diese Funktion löscht nicht mehr nötige Variablen und Objekte wenn vom Spiel in das Hauptmenü gewechselt wird.
- * @ author: Felix, Johann
+ * @ author: Felix, Johann, Simon
  */
 void Game::endGame() {
     /// @todo Aufräumarbeiten
     // Highscore aktualisieren
-    std::string mode = "write";
-    updateHighScore(mode);
+    updateHighScore("write");
 
     //Listen leeren
     audioevents.clear();
@@ -267,7 +266,6 @@ void Game::endGame() {
         levelSpawn.pop_front();
         delete handleObject;
     }
-
 }
 
 
