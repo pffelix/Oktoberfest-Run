@@ -243,7 +243,7 @@ void Player::update() {
 
     //Zeitlicher Abbau von Cooldowns
     if (alcoholLevel > 0) {
-        alcoholLevel = alcoholLevel - 1;
+        alcoholLevel = alcoholLevel - (minusAlcoholPerSecond / frameRate);
     }
     if (immunityCooldown > 0) {
         immunityCooldown = immunityCooldown - 1;
