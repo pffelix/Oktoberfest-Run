@@ -1,5 +1,6 @@
 #ifndef AUDIOCONTROL_H
 #define AUDIOCONTROL_H
+#define _USE_MATH_DEFINES
 #define BLOCKSIZE (1024) /// Blockgröße eines Audio Ausgabe Blocks in Samples.
 #define SAMPLERATE (44100) ///Samplerate des Audio Ausgabe Signals.
 
@@ -11,7 +12,9 @@
 #include <QList>
 #include "definitions.h"
 #include <algorithm>
+#include <math.h>
 #include "portaudio.h"
+#include <cmath>
 
 /**
  * @brief  AudioControl-Klasse
@@ -24,11 +27,11 @@ class AudioControl{
 
 public:
     typedef struct {
-        /// id des playstruct Objekts
+        /// id des playStruct
         int id;
-        /// type der playstruct Objektgruppe
+        /// type des playStruct
         audioType type;
-        /// Lautstärke des playstruct
+        /// Lautstärke des playStruct
         float volume;
         /// variable welche angibt ob sound im moment abgespielt wird
         bool playnext;
@@ -39,6 +42,12 @@ public:
 
     } playStruct;
 
+    enum statusFilter {
+        no,
+        alcohol,
+        life,
+        lifecritical
+    };
 
     AudioControl();
     ~AudioControl();
@@ -70,12 +79,6 @@ public:
      * @author  Felix Pfreundtner
      */
     PaError playinitializeerror;
-    /**
-     * @brief  blockoutput
-     *         Audio Ausgabe Block mit gemischen Samples aller im moment abgespielten Audiostructs.
-     * @author  Felix Pfreundtner
-     */
-    float block[BLOCKSIZE];
     /**
      * @brief  callback_pe
      *         Iterator über Audioevents Liste in PortAudio Callback Funktion. Zur höheren Perfomance bereits hier deklariert.
@@ -124,6 +127,17 @@ public:
      * @author  Felix Pfreundtner
      */
     PaError paerror;
+    /**
+     * @brief  status_alcohol_active
+     *         Erstelle Variable welche den aktuellen Filterstatus angibt
+     *         wenn kein Audioevent in der audiovents List den Type status_alcohol hat -> enum none-> 0.
+     *         wenn mindestens ein Audioevent in der audiovents List den Type status_alcohol hat -> enum alcohol-> 1.
+     *         wenn mindestens ein Audioevent in der audiovents List den Type status_life hat -> enum alcohol-> 2.
+     *         wenn mindestens ein Audioevent in der audiovents List den Type status_lifecritical hat -> enum alcohol-> 3.
+
+     * @author  Felix Pfreundtner
+     */
+    int status_filter;
 
     /// Instanz Callbackfunktion (des von Game.cpp erstellten AudioControl Objekts audioOutput)
     /// hier kann auf alle gesetzten Instanzvariablen zurückgegriffen werden.

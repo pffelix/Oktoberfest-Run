@@ -114,10 +114,11 @@ QSet<int> Input::getKeyactions() {
 
 /**
  * @brief Input::getAndDeleteLastKey
- *        Gibt letzte gedrücke Taste zurück und löscht diese
- *        wird für die Menüführung gebraucht, da Tasten dort nicht dauernd ausgewertet werden sollen
- * @return Taste
- * @author Rupert
+ *        Gibt letzte gedrücke Taste zurück und löscht diese.
+ *        Wird für die Menüführung gebraucht, da ein dauerhaftes Auswerten der Tasten dort zu Sprüngen
+ *        beim Auswählen der Menü Einträge führt.
+ * @return Enum Keyaction
+ * @author Rupert, Felix
  */
 Input::Keyaction Input::getAndDeleteLastKey() {
     Keyaction tmp = lastKey;

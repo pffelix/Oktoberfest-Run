@@ -219,7 +219,9 @@ void Audio::normalize() {
     }
     // normalisiere den QVector samples auf maximale signed Integer 16bit Grenzen
     // iteriere über alle Samples in samples
-    for (int pos = 0; pos < samples.size(); pos++) {
-        samples[pos] = samples[pos] / maxabs * 32767;
+    if (maxabs != 0) {
+        for (int pos = 0; pos < samples.size(); pos++) {
+            samples[pos] = samples[pos] / maxabs * 32767;
+        }
     }
 }

@@ -20,6 +20,7 @@
 #include <chrono>
 #include "menu.h"
 #include "portaudio.h"
+using namespace std;
 
 /**
  * @brief Struktur für die Events
