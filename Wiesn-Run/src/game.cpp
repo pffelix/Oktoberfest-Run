@@ -596,7 +596,7 @@ void Game::calculateMovement() {
     using namespace std;               // für std::list
 
     /// für qDebug (Rupert)
-    std::string objecttypes[] = {"Player ", "Tourist ", "Securit", "Obstacl", "Plane  ", "Shot   ", "PowerUp", "Boss   "};
+    std::string objecttypes[] = {"Player ", "Tourist", "Securit", "Obstacl", "Plane  ", "Shot   ", "PowerUp", "Boss   "};
     qDebug("Object\tSize\tPosX\tPosY\tSpeed");
     int speedX=0,speedY=0;
 
