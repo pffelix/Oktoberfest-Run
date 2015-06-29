@@ -1164,8 +1164,10 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
     (backgrounds[0]).setPos(((backgrounds[0]).x()) + ((playerPointer->getPosX() - (playerScale/2) - (playerPointer->x())) /2), 0);
     (backgrounds[1]).setPos(((backgrounds[1]).x()) + ((playerPointer->getPosX() - (playerScale/2) - (playerPointer->x())) /2), 0);
 
-    //Leben,Pegel,Highscore bleiben auf die View zentriert
+    //Leben,Pegel,Munition,Highscore bleiben auf die View zentriert
     playerStats[0].setPos( playerStats[0].x() + (playerPointer->getPosX() - (playerScale/2) - playerPointer->x()), playerStats[0].y());
+
+    //Leben,Highscore,Pegel,Munition wird aktualisiert
     playerStats[0].setPlainText(QString("Gesundheit: " + QString::number(playerPointer->getHealth())));
     playerStats[1].setPlainText(QString("Alkoholpegel: " + QString::number(playerPointer->getAlcoholLevel())));
     playerStats[2].setPlainText(QString("Score: " + QString::number(playerScore.totalPoints)));
@@ -1183,7 +1185,8 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
         if(aktMovingObject != 0) {
 
             //if(dynamic_cast<Shoot*> (aktMovingObject) == 0 ) {
-              if(aktMovingObject->getType() != shot) {
+            if( (aktMovingObject->getType() != shot && aktMovingObject->getType() != player)
+                 || (aktMovingObject->getType() == player && playerPointer->inJump() == false) ) {
                 //im letzten Frame vorwärst gelaufen?
                 if(aktMovingObject->getSpeedX() > 0 ) {
                     if(aktMovingObject->getFramesDirection() < 0) {
