@@ -1396,7 +1396,8 @@ void Game::loadLevelFile(QString fileSpecifier) {
 void Game::updateScore() {
     playerScore.distanceCovered = playerObjPointer->getPosX();
     playerScore.enemiesKilled = playerObjPointer->getEnemiesKilled();
-    playerScore.alcoholPoints = playerObjPointer->getAlcoholLevel();
+    playerScore.alcoholPoints = playerScore.alcoholPoints + (playerObjPointer->getAlcoholLevel() / 100);
+    playerScore.totalPoints = playerScore.distanceCovered + playerScore.enemiesKilled + playerScore.alcoholPoints;
     playerScore.name = "Horstl";
 }
 
