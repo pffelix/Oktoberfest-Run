@@ -142,6 +142,8 @@ private:
 
 
     // Menüs
+    void menuInit();    /// Initialisiert Menüs
+
     enum gameState state = gameMenuStart;    /// aktueller Spielzustand
     Menu *aktMenu = menuStart;      /// aktuell aktives Menü, null während das Spiel läuft; wird in setState gesetzt
 
