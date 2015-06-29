@@ -391,11 +391,15 @@ int Game::step() {
                         exitGame();
                         exit(0);
                     case menuLevelId_Level1:
-                        startNewGame("level1_old.txt",1);
+                        startNewGame("level1.txt",1);
                         setState(gameIsRunning);
                         break;
                     case menuLevelId_Level2:
-                        startNewGame("level1.txt",1);
+                        startNewGame("level2.txt",1);
+                        setState(gameIsRunning);
+                        break;
+                    case menuLevelId_Level3:
+                        startNewGame("level3.txt",1);
                         setState(gameIsRunning);
                         break;
                     case menuBreakId_Resume:
