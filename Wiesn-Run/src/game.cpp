@@ -226,7 +226,7 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
     // audioIDs initialisieren
     audioIDs = 20;
 
-    playerStats = std::vector<QGraphicsTextItem>(3);
+    playerStats = std::vector<QGraphicsTextItem>(5);
 
     playerStats[0].setPlainText(QString("Gesundheit: " + QString::number(playerObjPointer->getHealth())));
     playerStats[0].setPos(playerObjPointer->getPosX()-95, 30);
@@ -236,14 +236,20 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
     playerStats[1].setParentItem(&playerStats[0]);
     playerStats[1].setPlainText(QString("Alkoholpegel: " + QString::number(playerObjPointer->getAlcoholLevel())));
     playerStats[1].setPos(0, 50);
-    playerStats[1].setDefaultTextColor(Qt::darkGreen);
+    playerStats[1].setDefaultTextColor(Qt::black);
     playerStats[1].setFont(QFont("Times",25));
 
     playerStats[2].setParentItem(&playerStats[0]);
     playerStats[2].setPlainText(QString("Score: " + QString::number(playerScore.totalPoints)));
-    playerStats[2].setPos(650, 0);
+    playerStats[2].setPos(670, 0);
     playerStats[2].setDefaultTextColor(Qt::yellow);
     playerStats[2].setFont(QFont("Times",35));
+
+    playerStats[3].setParentItem(&playerStats[0]);
+    playerStats[3].setPlainText(QString("Munition: " + QString::number(playerObjPointer->getAmmunatiuon())));
+    playerStats[3].setPos(0, 100);
+    playerStats[3].setDefaultTextColor(Qt::darkGreen);
+    playerStats[3].setFont(QFont("Times",25));
 
     levelScene->addItem(&playerStats[0]);
 
