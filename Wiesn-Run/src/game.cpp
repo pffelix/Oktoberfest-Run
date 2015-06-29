@@ -1352,6 +1352,16 @@ void Game::loadLevelFile(QString fileSpecifier) {
                     }
                 }
 
+                if (strlist.at(0) == "Bier") {
+                    if (strlist.length() != 3 ) {
+                        throw std::string("Ungültiger Bier-Eintrag:");
+                    } else {
+                        qDebug() << "  Bier-Eintrag gefunden.";
+                        GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), 1, 400, 1, 0);
+                        levelInitial.push_back(powerUpToAppend);
+                    }
+                }
+
                 if (strlist.at(0) == "PowerUp") {
                     if (strlist.length() != 7 ) {
                         throw std::string("Ungültiger PowerUp-Eintrag:");
