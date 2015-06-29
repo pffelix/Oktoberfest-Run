@@ -301,7 +301,7 @@ int AudioControl::instancepaCallback( const void *inputBuffer, void *outputBuffe
                 /// mixed_sample = mixed:sample_keinfilter * 1Hz_Lautstärke_Cosinus_Filter
                 /// 1Hz_Lautstärke_Cosinus_Filter = Betrag [cos(2 * pi * 0 / 44100 * (Anzahl bisher abgespielte Blöcke * 1024 + Position im Callback Block))]
                 case statusFilter::life:
-                    mixed_sample += mixed_sample*std::abs(std::cos(2 * M_PI/44100 *(blockcounter * BLOCKSIZE + block_pos)));
+                    mixed_sample += mixed_sample*std::abs(std::cos(2 * M_PI * 0 /44100 *(blockcounter * BLOCKSIZE + block_pos)));
                     /// erhöhe Abspielposition des aktuell iterierten Audiovents um ein Sample
                     callback_pe->position += 1;
 
@@ -310,7 +310,7 @@ int AudioControl::instancepaCallback( const void *inputBuffer, void *outputBuffe
                 /// mixed_sample = mixed:sample_keinfilter * 5Hz_Lautstärke_Cosinus_Filter
                 /// 5Hz_Lautstärke_Cosinus_Filter = |cos(2 * pi * 0 / 44100 * (Anzahl bereitsabgespielte Blöcke * 1024 + aktuelle Position Callback Block))|
                 case statusFilter::lifecritical:
-                    mixed_sample += mixed_sample * std::cos(2 * M_PI/44100 *(blockcounter * BLOCKSIZE + block_pos));
+                    mixed_sample += mixed_sample * std::cos(2 * M_PI * 0 /44100 *(blockcounter * BLOCKSIZE + block_pos));
                     /// erhöhe Abspielposition des aktuell iterierten Audiovents um ein Sample
                     callback_pe->position += 1;
             }
