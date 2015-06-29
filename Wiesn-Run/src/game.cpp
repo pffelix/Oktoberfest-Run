@@ -393,11 +393,15 @@ int Game::step() {
                         exitGame();
                         exit(0);
                     case menuLevelId_Level1:
-                        startNewGame("level1_old.txt",1);
+                        startNewGame("level1.txt",1);
                         setState(gameIsRunning);
                         break;
                     case menuLevelId_Level2:
-                        startNewGame("level1.txt",1);
+                        startNewGame("level2.txt",2);
+                        setState(gameIsRunning);
+                        break;
+                    case menuLevelId_Level3:
+                        startNewGame("level3.txt",3);
                         setState(gameIsRunning);
                         break;
                     case menuBreakId_Resume:
@@ -1354,6 +1358,26 @@ void Game::loadLevelFile(QString fileSpecifier) {
                         qDebug() << "  Plane-Eintrag gefunden.";
                         GameObject *planeToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), plane);
                         levelInitial.push_back(planeToAppend);
+                    }
+                }
+
+                if (strlist.at(0) == "Bier") {
+                    if (strlist.length() != 3 ) {
+                        throw std::string("Ungültiger Bier-Eintrag:");
+                    } else {
+                        qDebug() << "  Bier-Eintrag gefunden.";
+                        GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), beerHealth, beerAlcohol, beerAmmo, 0);
+                        levelInitial.push_back(powerUpToAppend);
+                    }
+                }
+
+                if (strlist.at(0) == "Hendl") {
+                    if (strlist.length() != 3 ) {
+                        throw std::string("Ungültiger Hendl-Eintrag:");
+                    } else {
+                        qDebug() << "  Hendl-Eintrag gefunden.";
+                        GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), hendlHealth, 0, 0, 0);
+                        levelInitial.push_back(powerUpToAppend);
                     }
                 }
 
