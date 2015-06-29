@@ -261,11 +261,11 @@ void Game::endGame() {
         delete handleObject;
     }
 
-    while (!(levelInitial.empty())) {
+    /*while (!(levelInitial.empty())) {
         GameObject *handleObject = levelInitial.front();
         levelInitial.pop_front();
         delete handleObject;
-    }
+    }*/
 
     while (!(levelSpawn.empty())) {
         GameObject *handleObject = levelSpawn.front();

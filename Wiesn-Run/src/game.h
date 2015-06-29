@@ -96,7 +96,7 @@ private:
     /// In der Welt befindliche Objekte
     std::list<GameObject*> worldObjects;
     /// Statische Objekte, die zu Anfang gespawnt werden
-    std::list<GameObject*> levelInitial;
+    //std::list<GameObject*> levelInitial;
     /// Objekte die zur Laufzeit dynamisch gespawnt werden
     std::list<GameObject*> levelSpawn;
     /// Zu löschende Schüsse
