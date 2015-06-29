@@ -84,7 +84,7 @@ Bier,6100,60
 
 Bier,6200,60
 
-Obstacle,6400,0
+#Obstacle,6400,0
 Bier,6400,160
 
 Hendl,6800,60
