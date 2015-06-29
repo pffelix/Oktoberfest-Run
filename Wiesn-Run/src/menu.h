@@ -30,6 +30,7 @@ public:
         int position;
         bool isClickable;   // für Highscore-Menü
         //void (*handler)();  // Zeiger auf Funktion (Handler für Enter)
+        bool menuOnEnter;
         gameState stateOnClick;
         QGraphicsTextItem showEntry;
     };
@@ -38,8 +39,16 @@ public:
         up, down, /*enter*/
     };
 
+    /// für verschiedene Menü-Typen (für Background-Musik)
+    enum menuType {
+        normal, highscore
+    };
 
-    Menu(std::string *menuTitle);
+
+    Menu(std::string *menuTitle, menuType type = normal);
+
+    /// gibt den Typ zurück
+    menuType getType();
 
     /// gibt den Titel zurück
     std::string *getTitle();
@@ -51,7 +60,7 @@ public:
     int displayUpdate();
 
     /// Neuen Eintrag hinzufügen (evtl private -> Einträge nur im Konstruktor erstellen -> unterschiedlich viele Argumente)
-    int addEntry(std::string name, int id, bool clickable=false,/* void (*handlerFunction)()=NULL,*/ gameState stateOnClick = noNextState);
+    int addEntry(std::string name, int id, bool clickable=false, gameState stateOnClick = (gameState)NULL);
 
     /// wird nach Tastendruck aufgerufen
     int changeSelection(menuSelectionChange changeType);
@@ -79,6 +88,9 @@ private:
 
     /// Zeiger auf String, in dem der Titel des Menüs steht
     std::string *title;
+
+    /// Menü-Typ
+    menuType type;
 
     int selectFirstEntry();
 
