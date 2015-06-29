@@ -411,6 +411,8 @@ int Game::step() {
         detectCollision(&worldObjects);
         handleCollisions();
 
+        updateScore();
+
         renderGraphics(&worldObjects, playerObjPointer);
 
 
