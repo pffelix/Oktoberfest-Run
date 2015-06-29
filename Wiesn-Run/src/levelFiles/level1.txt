@@ -74,7 +74,10 @@ Obstacle,3800,0
 
 Obstacle,4100,0
 
-Hendl,5000,60
+Bier,5000,60
+Bier,5200,60
+Bier,5400,60
+Hendl,5500,60
 
-Bier,5500,60
+
 

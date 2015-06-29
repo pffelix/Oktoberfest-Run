@@ -72,20 +72,25 @@ int Player::getAlcoholLevel() const {
 
 /**
  * @brief Player::increaseAlcoholLevel
- * AlkoholPegel wird erhöht.
+ * AlkoholPegel wird verändert. Durch einen negativen Wert im Argument wird der Pegel gesenkt
  *
  * @param additionalAlcohol
  * Wert um den erhöht wird
  */
 void Player::increaseAlcoholLevel(int additionalAlcohol) {
-    //MaximalWerte
-    // Multiplikation mit Framerate herausgenommen, einfach Alkoholplus hinzufügen
-    alcoholLevel = alcoholLevel + (additionalAlcohol);
+    // Erhöhe bzw. Senke den Alkoholstand, verhindere jedoch, dass er unter Null fällt
+    if ((alcoholLevel + additionalAlcohol) <= 0) {
+        alcoholLevel = 0;
+    } else {
+        alcoholLevel = alcoholLevel + (additionalAlcohol);
+    }
+
 }
 
 /**
  * @brief Player::decreaseAlcoholLevel
  * verringert den Pegel des Spielers
+ * @todo Überflüssig, da nie aufgerufen. Auch wenn der Name es nicht vermuten lässt: increaseAlcoholLevel kann den Level auch verringern und wird benutzt.
  *
  * @param decreaseLevel
  * Wert um den der Pegel verringert wird

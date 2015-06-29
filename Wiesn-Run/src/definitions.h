@@ -76,6 +76,7 @@ const int beerAlcohol = 400;
 const int beerHealth = 1;
 const int beerAmmo = 1;
 const int hendlHealth = 1;
+const int hendlAlcoholMalus = -500;
 
 /**
  * @brief Enumerator für den Objekt-Typ

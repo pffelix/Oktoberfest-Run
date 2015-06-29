@@ -787,11 +787,11 @@ void Game::handleCollisions() {
                     break;
                 }
                 case fromRight: {
-                    //Bewegung in X-Richtung stoppen
-                    playerObjPointer->setSpeedX(0);
-                    //Überlappung berechnen und Spieler nach rechts versetzen
-                    overlap = (handleEvent.causingObject->getPosX() + (handleEvent.causingObject->getLength() / 2)) - (playerObjPointer->getPosX() - (playerObjPointer->getLength() / 2));
-                    playerObjPointer->setPosX(handleEvent.causingObject->getPosX() + handleEvent.causingObject->getLength());
+//                    //Bewegung in X-Richtung stoppen
+//                    playerObjPointer->setSpeedX(0);
+//                    //Überlappung berechnen und Spieler nach rechts versetzen
+//                    overlap = (handleEvent.causingObject->getPosX() + (handleEvent.causingObject->getLength() / 2)) - (playerObjPointer->getPosX() - (playerObjPointer->getLength() / 2));
+//                    playerObjPointer->setPosX(handleEvent.causingObject->getPosX() + handleEvent.causingObject->getLength());
                     break;
                 }
                 case fromAbove: {
@@ -1376,7 +1376,7 @@ void Game::loadLevelFile(QString fileSpecifier) {
                         throw std::string("Ungültiger Hendl-Eintrag:");
                     } else {
                         qDebug() << "  Hendl-Eintrag gefunden.";
-                        GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), hendlHealth, 0, 0, 0);
+                        GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), hendlHealth, hendlAlcoholMalus, 0, 0);
                         levelInitial.push_back(powerUpToAppend);
                     }
                 }
