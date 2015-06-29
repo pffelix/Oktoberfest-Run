@@ -48,7 +48,7 @@ int Menu::displayInit() {
     for(std::list<menuEntry*>::iterator it = menuEntrys.begin(); it != menuEntrys.end(); ++it) {
         //QGraphicsTextItem  * showEntry = new QGraphicsTextItem;
         (*it)->showEntry.setPlainText(QString::fromStdString((*it)->name));
-        (*it)->showEntry.setPos(320,300 + 80*(*it)->position );
+        (*it)->showEntry.setPos(200,140 + 80*(*it)->position );
         (*it)->showEntry.setDefaultTextColor(Qt::blue);
         (*it)->showEntry.setFont(QFont("Times",50));
         menuScene->addItem(&(*it)->showEntry);
