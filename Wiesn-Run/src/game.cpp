@@ -242,7 +242,6 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
 void Game::endGame() {
 
     displayStatistics();
-    displayHighscore();
 
     /// @todo Aufräumarbeiten
     // Highscore aktualisieren
@@ -1539,29 +1538,26 @@ void Game::menuInit() {
 }
 
 /**
- * @brief füllt das Statistik-Menü
- * löscht das Statistik-Menü und füllt es mit aktuellen Werten
+ * @brief füllt das Statistik- und HighscoreMenü
+ * löscht das Statistik- und Highscore-Menü und füllt es mit aktuellen Werten
  * @author Rupert
  */
 void Game::displayStatistics() {
     using namespace std;    // für std::string
 
+    // Statistik Menü
+    menuStatistics->clear();
+
     string name = "Name: ";
     name.append(playerScore.name);
-
     string enemies = "Verstorbene: ";
     enemies.append(to_string(playerScore.enemiesKilled));
-
     string distance = "glafne Meter: ";
     distance.append(to_string(playerScore.distanceCovered));
-
     string alk = "Promille: ";
     alk.append(to_string(playerScore.alcoholPoints));
-
     string points = "Punkte:";
     points.append(to_string(playerScore.totalPoints));
-
-    menuStatistics->clear();
 
     menuStatistics->addEntry(name,menuId_NonClickable,false);
     menuStatistics->addEntry(enemies,menuId_NonClickable,false);
@@ -1570,19 +1566,9 @@ void Game::displayStatistics() {
     menuStatistics->addEntry(points,menuId_NonClickable,false);
     menuStatistics->addEntry("weiter",menuStatisticsId_Next,true,gameMenuHighscore);
     menuStatistics->displayInit();
-}
 
-
-/**
- * @brief füllt das Highscore Menü
- * löscht das Highscore-Menü und füllt es mit aktuellen Werten
- * @author Rupert
- */
-void Game::displayHighscore() {
-    using namespace std;
-
+    // Highscore-Menü
     menuHighscore->clear();
-
 
     updateHighScore("listefüllen");
     int scoreCount = 0;
@@ -1602,4 +1588,5 @@ void Game::displayHighscore() {
 
     menuHighscore->addEntry("weida",menuHighscoreId_Next,true,gameMenuStart);
     menuHighscore->displayInit();
+
 }
