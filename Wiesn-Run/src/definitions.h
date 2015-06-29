@@ -31,6 +31,11 @@ enum gameState {
 const int frameRate = 30;
 
 /**
+ * @brief Alkohol, der pro Sekunde abgebaut wird
+ */
+const int minusAlcoholPerSecond = 30;
+
+/**
  * @brief Skalierungsfaktor für die Breite des Spielerobjekts bei 1024 Bildschirmbreite:
  *                 Breite:Höhe
  * Spieler, Gegner:     1:2

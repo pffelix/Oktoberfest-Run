@@ -222,13 +222,14 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
 
 
     // Zeiger auf Objekte aus levelInitial in worldObjects verlegen
-    while (!(levelInitial.empty())) {
-        GameObject *currentObject = *levelInitial.begin();
-        worldObjects.push_back(currentObject);
-        levelInitial.pop_front();
-        //Grafik
-        levelScene->addItem(currentObject);
-    }
+    /// @todo Theoretisch brauchen wir levelIntial nicht mehr, die Frage ist, ob die Grafik da mitmacht.
+//    while (!(levelInitial.empty())) {
+//        GameObject *currentObject = *levelInitial.begin();
+//        worldObjects.push_back(currentObject);
+//        levelInitial.pop_front();
+//        //Grafik
+//        levelScene->addItem(currentObject);
+//    }
 }
 
 
@@ -567,7 +568,7 @@ void Game::calculateMovement() {
     using namespace std;               // für std::list
 
     /// für qDebug (Rupert)
-    std::string objecttypes[] = {"Player ", "Tourist ", "Securit", "Obstacl", "Plane  ", "Shot   ", "PowerUp", "Boss   "};
+    std::string objecttypes[] = {"Player ", "Tourist", "Securit", "Obstacl", "Plane  ", "Shot   ", "PowerUp", "Boss   "};
     qDebug("Object\tSize\tPosX\tPosY\tSpeed");
     int speedX=0,speedY=0;
 
@@ -1258,7 +1259,6 @@ void Game::loadLevelFile(QString fileSpecifier) {
     } else {
         // Die Datei wurde erfolgreich geöffnet
         // Die Listen werden geleert
-        levelInitial.clear();
         levelSpawn.clear();
 
         qDebug() << "Lese levelFile mit vorgesetzten Parametern aus:";
@@ -1319,7 +1319,7 @@ void Game::loadLevelFile(QString fileSpecifier) {
                     } else {
                         qDebug() << "  Obstacle-Eintrag gefunden.";
                         GameObject *obstacleToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), obstacle);
-                        levelInitial.push_back(obstacleToAppend);
+                        levelSpawn.push_back(obstacleToAppend);
                     }
                 }
 
@@ -1329,7 +1329,7 @@ void Game::loadLevelFile(QString fileSpecifier) {
                     } else {
                         qDebug() << "  Plane-Eintrag gefunden.";
                         GameObject *planeToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), plane);
-                        levelInitial.push_back(planeToAppend);
+                        levelSpawn.push_back(planeToAppend);
                     }
                 }
 
@@ -1339,7 +1339,7 @@ void Game::loadLevelFile(QString fileSpecifier) {
                     } else {
                         qDebug() << "  Bier-Eintrag gefunden.";
                         GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), beerHealth, beerAlcohol, beerAmmo, 0);
-                        levelInitial.push_back(powerUpToAppend);
+                        levelSpawn.push_back(powerUpToAppend);
                     }
                 }
 
@@ -1349,7 +1349,7 @@ void Game::loadLevelFile(QString fileSpecifier) {
                     } else {
                         qDebug() << "  Hendl-Eintrag gefunden.";
                         GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), hendlHealth, hendlAlcoholMalus, 0, 0);
-                        levelInitial.push_back(powerUpToAppend);
+                        levelSpawn.push_back(powerUpToAppend);
                     }
                 }
 
@@ -1359,13 +1359,18 @@ void Game::loadLevelFile(QString fileSpecifier) {
                     } else {
                         qDebug() << "  PowerUp-Eintrag gefunden.";
                         GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), strlist.at(4).toInt(), strlist.at(5).toInt(), strlist.at(6).toInt());
-                        levelInitial.push_back(powerUpToAppend);
+                        levelSpawn.push_back(powerUpToAppend);
                     }
                 }
 
                 if (strlist.at(0) == "Boss") {
-                    /// @todo try/catch für Bosseintrag sobald der Konstruktor steht.
-                    qDebug() << "  Boss-Eintrag gefunden.";
+                    if (strlist.length() != 4) {
+                        throw std::string("Ungültiger Boss-Eintrag:");
+                    } else {
+                        qDebug() << "  Boss-Eintrag gefunden.";
+                        GameObject *enemyToAppend = new Enemy(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), BOSS);
+                        levelSpawn.push_back(enemyToAppend);
+                    }
                 }
             }
             catch(std::string s) {
@@ -1374,7 +1379,6 @@ void Game::loadLevelFile(QString fileSpecifier) {
 
         } // end of while
 
-        levelInitial.sort(compareGameObjects());
         levelSpawn.sort(compareGameObjects());
 
         qDebug() << "Auslesen des levelFile beendet.";
