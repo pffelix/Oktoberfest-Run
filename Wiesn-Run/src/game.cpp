@@ -1521,41 +1521,41 @@ void Game::setState(enum gameState newState) {
  */
 void Game::menuInit() {
     menuStart = new Menu(new std::string("Wiesn-Run"));
-    menuStart->addEntry("Neues Spiel",menuStartId_NewGame,true, gameMenuLevel);
-    menuStart->addEntry("Credits", menuStartId_Credits,true,gameMenuCredits);
-    menuStart->addEntry("Spiel beenden", menuStartId_EndGame,true);
+    menuStart->addEntry("Pack ma's!",menuStartId_NewGame,true, gameMenuLevel);
+    menuStart->addEntry("Mia san Mia", menuStartId_Credits,true,gameMenuCredits);
+    menuStart->addEntry("Pfiat di!", menuStartId_EndGame,true);
     menuStart->displayInit();
 
     menuCredits = new Menu(new std::string("Credits"), Menu::menuType::highscore);
     menuCredits->addEntry("Grundkurs C++", menuId_NonClickable,false);
-    menuCredits->addEntry("Simon, Rupert, Felix,", menuId_NonClickable,false);
-    menuCredits->addEntry("Flo, Johann", menuId_NonClickable,false);
-    menuCredits->addEntry("zurück", menuCreditsId_Back,true,gameMenuStart);
+    menuCredits->addEntry("da Simon, da Rupi, da Felix,", menuId_NonClickable,false);
+    menuCredits->addEntry("da Flo und da Johann", menuId_NonClickable,false);
+    menuCredits->addEntry("weg do!", menuCreditsId_Back,true,gameMenuStart);
     menuCredits->displayInit();
 
-    menuLevel = new Menu(new std::string("Levelauswahl"));
+    menuLevel = new Menu(new std::string("Wos mogst?"));
     menuLevel->addEntry("Level 1",menuLevelId_Level1, true);
     menuLevel->addEntry("Level 2",menuLevelId_Level2, true);
     menuLevel->addEntry("Level 3",menuLevelId_Level3, true);
-    menuLevel->addEntry("zurück",menuLevelId_Back, true,gameMenuStart);
+    menuLevel->addEntry("naaa..",menuLevelId_Back, true,gameMenuStart);
     menuLevel->displayInit();
 
-    menuBreak = new Menu(new std::string("Pause"));
-    menuBreak->addEntry("weiterspielen",menuBreakId_Resume,true);
-    menuBreak->addEntry("keine Lust mehr",menuBreakId_EarlyEnd, true,gameMenuName);
-    menuBreak->addEntry("Startmenü",menuBreakId_EndGame,true);
+    menuBreak = new Menu(new std::string("Brotzeit!"));
+    menuBreak->addEntry("weida",menuBreakId_Resume,true);
+    menuBreak->addEntry("koa Lust mehr",menuBreakId_EarlyEnd, true,gameMenuName);
+    menuBreak->addEntry("vo vorn!",menuBreakId_EndGame,true);
     menuBreak->displayInit();
 
-    menuStatistics = new Menu(new std::string("Spielstatistik"), Menu::menuType::highscore);
-    menuStatistics->addEntry("weiter",menuStatisticsId_Next,true,gameMenuHighscore);
+    menuStatistics = new Menu(new std::string("Boah!"), Menu::menuType::highscore);
+    menuStatistics->addEntry("weida",menuStatisticsId_Next,true,gameMenuHighscore);
     menuStatistics->displayInit();
 
-    menuName = new Menu(new std::string("Name eingeben"), Menu::menuType::highscore);
-    menuName->addEntry("weiter",menuNameId_Next,true,gameMenuStatisitcs);
+    menuName = new Menu(new std::string("Wia hoaßt du?"), Menu::menuType::highscore);
+    menuName->addEntry("weida",menuNameId_Next,true,gameMenuStatisitcs);
     menuName->displayInit();
 
     menuHighscore = new Menu(new std::string("Highscores"), Menu::menuType::highscore);
-    menuHighscore->addEntry("weiter",menuHighscoreId_Next,true,gameMenuStart);
+    menuHighscore->addEntry("weida",menuHighscoreId_Next,true,gameMenuStart);
     menuHighscore->displayInit();
 }
 
