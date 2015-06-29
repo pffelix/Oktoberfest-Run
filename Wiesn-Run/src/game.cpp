@@ -1517,3 +1517,9 @@ void Game::menuInit() {
     menuHighscore->addEntry("weiter",menuHighscoreId_Next,true,gameMenuStart);
     menuHighscore->displayInit();
 }
+
+/*
+void Game::displayStatistics() {
+
+}
+*/
