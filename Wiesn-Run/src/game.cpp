@@ -136,6 +136,7 @@ int Game::start() {
 
     ///@todo hier wird das Startmenü übersprungen
     //startNewGame("level1_old.txt",1);
+    //setState(gameMenuStart);
     setState(gameMenuStart);
     return appPointer->exec();
 }
@@ -1472,8 +1473,8 @@ void Game::setState(enum gameState newState) {
  *  Levelauswahl
  *  spielen...
  *      Pause
- *  Spielstatistik
  *  Name eingeben
+ *  Spielstatistik
  *  Highscore
  *  Von vorne
  *
@@ -1502,15 +1503,16 @@ void Game::menuInit() {
 
     menuBreak = new Menu(new std::string("Pause"));
     menuBreak->addEntry("weiterspielen",menuBreakId_Resume,true);
+    menuBreak->addEntry("keine Lust mehr",menuBreakId_EarlyEnd, true,gameMenuName);
     menuBreak->addEntry("Startmenü",menuBreakId_EndGame,true);
     menuBreak->displayInit();
 
     menuStatistics = new Menu(new std::string("Punkte"), Menu::menuType::highscore);
-    menuStatistics->addEntry("weiter",menuStatisticsId_Next,true,gameMenuName);
+    menuStatistics->addEntry("weiter",menuStatisticsId_Next,true,gameMenuHighscore);
     menuStatistics->displayInit();
 
-    menuName = new Menu(new std::string("Neme eingeben"), Menu::menuType::highscore);
-    menuName->addEntry("weiter",menuNameId_Next,true,gameMenuHighscore);
+    menuName = new Menu(new std::string("Name eingeben"), Menu::menuType::highscore);
+    menuName->addEntry("weiter",menuNameId_Next,true,gameMenuStatisitcs);
     menuName->displayInit();
 
     menuHighscore = new Menu(new std::string("Highscores"), Menu::menuType::highscore);
@@ -1518,8 +1520,33 @@ void Game::menuInit() {
     menuHighscore->displayInit();
 }
 
-/*
+/**
+ * @brief zeigt die Statistiken an
+ * löscht das Statistik-Menü und füllt es mit aktuellen Werten
+ * @author Rupert
+ */
 void Game::displayStatistics() {
+    using namespace std;    // für std::string
+    string name = "Name:";
+    string enemies = "Tote Japaner:";
+    string distance = "Strecke";
+    string alk = "Alk:";
+    string points = "Punkte:";
 
+    name.append(playerScore.name);
+    enemies.append(to_string(playerScore.enemiesKilled));
+    distance.append(to_string(playerScore.distanceCovered));
+    alk.append(to_string(playerScore.alcoholPoints));
+    points.append(to_string(playerScore.totalPoints));
+
+    menuStatistics->clear();
+
+    menuStatistics->addEntry(name,menuId_NonClickable,false);
+    menuStatistics->addEntry(enemies,menuId_NonClickable,false);
+    menuStatistics->addEntry(distance,menuId_NonClickable,false);
+    menuStatistics->addEntry(alk,menuId_NonClickable,false);
+    menuStatistics->addEntry(points,menuId_NonClickable,false);
+    menuStatistics->addEntry("weiter",menuStatisticsId_Next,true,gameMenuHighscore);
+    menuStatistics->displayInit();
 }
-*/
+

@@ -19,11 +19,12 @@ Menu::Menu(std::string *menuTitle, menuType type)
  * wird für Statistik und Highscore benötigt
  */
 void Menu::clear() {
-    // jeden Menüeintrag löschen und Speicher freigeben
+    // jeden Menüeintrag außer den ersten löschen und Speicher freigeben
     while(menuEntrys.size() > 1) {
-        menuEntry entry = menuEntrys.pop_back();
-        delete entry;
+        menuEntrys.pop_back();
     }
+    numberOfEntrys = 1;
+    selectFirstEntry();
 }
 
 /**
