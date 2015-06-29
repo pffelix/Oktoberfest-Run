@@ -77,18 +77,23 @@ void Game::timerEvent(QTimerEvent *event)
 }
 
 /**
- * @brief Erstelle QApplication app mit QGraphicsView Widget window (Eventfilter installiert) und Zeiger input auf Input Objekt.
+ * @brief Die Startfunktion, erstellt Fenster und Menüs, wird von main() aufgerufen
+ * Grafik und Inputs (Flo,Felix):
+ * Erstelle QApplication app mit QGraphicsView Widget window (Eventfilter installiert) und Zeiger input auf Input Objekt.
  * Um Funktionen der Tastatur Eingabe entwickeln zu können ist ein Qt Widget Fenster nötig.
  * Auf dem Widget wird ein Eventfilter installiert welcher kontinuierlich Tastureingaben mitloggt.
  * Die Eingaben werden in dem Objekt der Input Klasse gespeichert und können über getKeyactions() abgerufen werden.
  *
+ * Logik (Rupert):
  * Außerdem wird ein Timer gestartet, der in jedem Intervall timerEvent(...) aufruft, wo dann step() aufgerufen wird.
  * Das ist dann unsere Game-Loop. Der Timer funktioniert auch bei 5ms Intervall noch genau.
+ * Menüs (Rupert):
+ * Alle Menüs werden angelegt
  *
- * Hier müssen auch die Sachen rein, die einmahlig beim Starten ausgeführt werden sollen
- * - alles laden, Fenster anzeigen
+ * gameState wird auf gameMenuStart gesetzt, dh das Spiel startet im Startmenü
+ *
  * @return Rückgabewert von app.exec()
- * @author Felix, Rupert, Flo, Simon
+ * @author Rupert
  */
 int Game::start() {
     qDebug("Game::start()");
@@ -99,42 +104,7 @@ int Game::start() {
     //stepIntervall = 100; zum testen
 
     // Menüs erstellen
-    menuStart = new Menu(new std::string("Wiesn-Run"));
-    menuStart->addEntry("Neues Spiel",menuStartId_NewGame,true, gameMenuLevel);
-    menuStart->addEntry("Credits", menuStartId_Credits,true,gameMenuCredits);
-    menuStart->addEntry("Spiel beenden", menuStartId_EndGame,true);
-    menuStart->displayInit();
-
-    menuCredits = new Menu(new std::string("Credits"));
-    menuCredits->addEntry("Grundkurs C++", menuId_NonClickable,false);
-    menuCredits->addEntry("Simon, Rupert, Felix,", menuId_NonClickable,false);
-    menuCredits->addEntry("Flo, Johann", menuId_NonClickable,false);
-    menuCredits->addEntry("zurück", menuCreditsId_Back,true,gameMenuStart);
-    menuCredits->displayInit();
-
-    menuLevel = new Menu(new std::string("Levelauswahl"));
-    menuLevel->addEntry("Level 1",menuLevelId_Level1, true);
-    menuLevel->addEntry("Level 2",menuLevelId_Level2, true);
-    menuLevel->addEntry("Level 3",menuLevelId_Level3, true);
-    menuLevel->addEntry("zurück",menuLevelId_Back, true,gameMenuStart);
-    menuLevel->displayInit();
-
-    menuBreak = new Menu(new std::string("Pause"));
-    menuBreak->addEntry("weiterspielen",menuBreakId_Resume,true);
-    menuBreak->addEntry("Startmenü",menuBreakId_EndGame,true);
-    menuBreak->displayInit();
-
-    menuStatistics = new Menu(new std::string("Punkte"), Menu::menuType::highscore);
-    menuStatistics->addEntry("weiter",menuStatisticsId_Next,true,gameMenuName);
-    menuStatistics->displayInit();
-
-    menuName = new Menu(new std::string("Neme eingeben"), Menu::menuType::highscore);
-    menuName->addEntry("weiter",menuNameId_Next,true,gameMenuHighscore);
-    menuName->displayInit();
-
-    menuHighscore = new Menu(new std::string("Highscores"), Menu::menuType::highscore);
-    menuHighscore->addEntry("weiter",menuHighscoreId_Next,true,gameMenuStart);
-    menuHighscore->displayInit();
+    menuInit();
 
     // QGraphicsScene der Level erstellen
     levelScene = new QGraphicsScene;
@@ -166,6 +136,7 @@ int Game::start() {
 
     ///@todo hier wird das Startmenü übersprungen
     //startNewGame("level1_old.txt",1);
+    //setState(gameMenuStart);
     setState(gameMenuStart);
     return appPointer->exec();
 }
@@ -302,7 +273,7 @@ void Game::endGame() {
 /**
  * @brief Game::exitGame
  *        Diese Funktion löscht nicht mehr nötige Variablen und Objekte wenn das Spiel komplett beendet wird.
- * @ author: Felix
+ * @author: Felix
  */
 void Game::exitGame() {
 
@@ -345,6 +316,7 @@ int Game::step() {
 
     /// Tasten abfragen
     Input::Keyaction lastKey = keyInput->getAndDeleteLastKey();
+    Menu *aktStepMenu = aktMenu;
 
     /// Zeit seit dem letzten Aufruf ausrechnen und ausgeben
 
@@ -354,15 +326,15 @@ int Game::step() {
 
     // falls Menü aktiv, Inputs verarbeiten, Grafik:
 
-    if(aktMenu!=NULL) { // aktMenu ist nur NULL, wenn das Spiel gerade läuft
+    if(aktStepMenu!=NULL) { // aktMenu ist nur NULL, wenn das Spiel gerade läuft
 
 
-        aktMenu->displayUpdate();
+        aktStepMenu->displayUpdate();
         //MenüScene wird vom Anzeigewidget aufgerufen
-        window->setScene(aktMenu->menuScene);
+        window->setScene(aktStepMenu->menuScene);
 
         // Audio
-        if(aktMenu->getType() == Menu::menuType::highscore) {
+        if(aktStepMenu->getType() == Menu::menuType::highscore) {
             // Audioevent für die Statistik-Menüs
             audioStruct scoreAudio = {2, background_highscore, audioDistance.background_highscore};
             audioevents.push_back(scoreAudio);
@@ -374,45 +346,45 @@ int Game::step() {
 
         // Up || Down?
         if(lastKey == Input::Keyaction::Up) {
-            aktMenu->changeSelection(Menu::menuSelectionChange::up);
+            aktStepMenu->changeSelection(Menu::menuSelectionChange::up);
         }
         if(lastKey == Input::Keyaction::Down) {
-            aktMenu->changeSelection(Menu::menuSelectionChange::down);
+            aktStepMenu->changeSelection(Menu::menuSelectionChange::down);
         }
 
         // Enter auswerten
         if(lastKey == Input::Keyaction::Enter) {
-
-            if(aktMenu->getSelection()->menuOnEnter) {  // Alle Einträge, auf die ein weiteres Menü folgt
-
-                setState(aktMenu->getSelection()->stateOnClick);
-
-            } else {    // alle Einträge, bei denen kein Menü folgt: Spiel starten/Beenden
-                switch(aktMenu->getSelection()->id) {
-                    case menuStartId_EndGame:
-                        exitGame();
-                        exit(0);
-                    case menuLevelId_Level1:
-                        startNewGame("level1.txt",1);
-                        setState(gameIsRunning);
-                        break;
-                    case menuLevelId_Level2:
-                        startNewGame("level2.txt",2);
-                        setState(gameIsRunning);
-                        break;
-                    case menuLevelId_Level3:
-                        startNewGame("level3.txt",3);
-                        setState(gameIsRunning);
-                        break;
-                    case menuBreakId_Resume:
-                        window->setScene(levelScene);
-                        setState(gameIsRunning);
-                        break;
-                    case menuBreakId_EndGame:
-                        endGame();
-                        setState(gameMenuStart);
-                        break;
-                }
+            if(aktStepMenu->getSelection()->menuOnEnter) {  // Alle Einträge, auf die ein weiteres Menü folgt
+                setState(aktStepMenu->getSelection()->stateOnClick);
+            }
+            // Zusatzaufgaben, die in den Menüs ausgeführt werden
+            switch(aktStepMenu->getSelection()->id) {
+                case menuStartId_EndGame:
+                    exitGame();
+                    exit(0);
+                case menuLevelId_Level1:
+                    startNewGame("level1.txt",1);
+                    setState(gameIsRunning);
+                    break;
+                case menuLevelId_Level2:
+                    startNewGame("level2.txt",2);
+                    setState(gameIsRunning);
+                    break;
+                case menuLevelId_Level3:
+                    startNewGame("level3.txt",3);
+                    setState(gameIsRunning);
+                    break;
+                case menuBreakId_Resume:
+                    window->setScene(levelScene);
+                    setState(gameIsRunning);
+                    break;
+                case menuBreakId_EndGame:
+                    endGame();
+                    setState(gameMenuStart);
+                    break;
+                case menuBreakId_EarlyEnd:
+                    displayStatistics();
+                    break;
             }
         }
 
@@ -576,12 +548,6 @@ void Game::evaluateInput() {
             levelScene->addItem(playerFire);
         }
     }
-
-    /* passiert in step()
-    // Menü bei ESC
-    if(keyInput->getKeyactions().contains(Input::Keyaction::Exit)) {
-        state = menuBreak;
-    }*/
 }
 
 /**
@@ -1528,3 +1494,92 @@ void Game::setState(enum gameState newState) {
             break;
     }
 }
+
+/**
+ * @brief Initialisierung der Menüs
+ * wird in start() aufgerufen
+ * Logik:
+ *  Startmenü
+ *      Credits
+ *  Levelauswahl
+ *  spielen...
+ *      Pause
+ *  Name eingeben
+ *  Spielstatistik
+ *  Highscore
+ *  Von vorne
+ *
+ * @author Rupert
+ */
+void Game::menuInit() {
+    menuStart = new Menu(new std::string("Wiesn-Run"));
+    menuStart->addEntry("Neues Spiel",menuStartId_NewGame,true, gameMenuLevel);
+    menuStart->addEntry("Credits", menuStartId_Credits,true,gameMenuCredits);
+    menuStart->addEntry("Spiel beenden", menuStartId_EndGame,true);
+    menuStart->displayInit();
+
+    menuCredits = new Menu(new std::string("Credits"), Menu::menuType::highscore);
+    menuCredits->addEntry("Grundkurs C++", menuId_NonClickable,false);
+    menuCredits->addEntry("Simon, Rupert, Felix,", menuId_NonClickable,false);
+    menuCredits->addEntry("Flo, Johann", menuId_NonClickable,false);
+    menuCredits->addEntry("zurück", menuCreditsId_Back,true,gameMenuStart);
+    menuCredits->displayInit();
+
+    menuLevel = new Menu(new std::string("Levelauswahl"));
+    menuLevel->addEntry("Level 1",menuLevelId_Level1, true);
+    menuLevel->addEntry("Level 2",menuLevelId_Level2, true);
+    menuLevel->addEntry("Level 3",menuLevelId_Level3, true);
+    menuLevel->addEntry("zurück",menuLevelId_Back, true,gameMenuStart);
+    menuLevel->displayInit();
+
+    menuBreak = new Menu(new std::string("Pause"));
+    menuBreak->addEntry("weiterspielen",menuBreakId_Resume,true);
+    menuBreak->addEntry("keine Lust mehr",menuBreakId_EarlyEnd, true,gameMenuName);
+    menuBreak->addEntry("Startmenü",menuBreakId_EndGame,true);
+    menuBreak->displayInit();
+
+    menuStatistics = new Menu(new std::string("Spielstatistik"), Menu::menuType::highscore);
+    menuStatistics->addEntry("weiter",menuStatisticsId_Next,true,gameMenuHighscore);
+    menuStatistics->displayInit();
+
+    menuName = new Menu(new std::string("Name eingeben"), Menu::menuType::highscore);
+    menuName->addEntry("weiter",menuNameId_Next,true,gameMenuStatisitcs);
+    menuName->displayInit();
+
+    menuHighscore = new Menu(new std::string("Highscores"), Menu::menuType::highscore);
+    menuHighscore->addEntry("weiter",menuHighscoreId_Next,true,gameMenuStart);
+    menuHighscore->displayInit();
+}
+
+/**
+ * @brief zeigt die Statistiken an
+ * löscht das Statistik-Menü und füllt es mit aktuellen Werten
+ * @author Rupert
+ */
+void Game::displayStatistics() {
+    using namespace std;    // für std::string
+
+    string name = "Name:";
+    name.append(playerScore.name);
+
+    string enemies = "Tote Japaner:";
+    enemies.append(to_string(playerScore.enemiesKilled));
+
+    string distanceAndAlk = "Strecke";
+    distanceAndAlk.append(to_string(playerScore.distanceCovered));
+    distanceAndAlk.append("Alk ");
+    distanceAndAlk.append(to_string(playerScore.alcoholPoints));
+
+    string points = "Punkte:";
+    points.append(to_string(playerScore.totalPoints));
+
+    menuStatistics->clear();
+
+    menuStatistics->addEntry(name,menuId_NonClickable,false);
+    menuStatistics->addEntry(enemies,menuId_NonClickable,false);
+    menuStatistics->addEntry(distanceAndAlk,menuId_NonClickable,false);
+    menuStatistics->addEntry(points,menuId_NonClickable,false);
+    menuStatistics->addEntry("weiter",menuStatisticsId_Next,true,gameMenuHighscore);
+    menuStatistics->displayInit();
+}
+

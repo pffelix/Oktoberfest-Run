@@ -14,6 +14,20 @@ Menu::Menu(std::string *menuTitle, menuType type)
 }
 
 /**
+ * @brief entfernt alle Einträge aus dem Menü
+ * Titel wird danach wieder hinzugefügt
+ * wird für Statistik und Highscore benötigt
+ */
+void Menu::clear() {
+    // jeden Menüeintrag außer den ersten löschen und Speicher freigeben
+    while(menuEntrys.size() > 1) {
+        menuEntrys.pop_back();
+    }
+    numberOfEntrys = 1;
+    selectFirstEntry();
+}
+
+/**
  * @brief gibt den Menü-Titel zurück
  * @return Zeiger auf String
  * @author Rupert
@@ -200,3 +214,4 @@ struct Menu::menuEntry *Menu::getEntry(int position) {
     qDebug("ERROR | Menu::getEntry(): menuEntry not found");
     return NULL;
 }
+
