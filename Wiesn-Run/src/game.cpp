@@ -1136,7 +1136,12 @@ void Game::updateAudio() {
         }
         }
     }
+    // Zeit seit dem letzten aufruf messen
+    chrono::high_resolution_clock::time_point lastStep = thisStep;
+    thisStep = chrono::high_resolution_clock::now();
+    //chrono::duration<int> difference = thisStep - lastStep;
 
+    // Cooldown audios weiterzählen und bei ablauf löschen
     for (std::list<audioCooldownstruct>::iterator it = audioStorage.begin(); it != audioStorage.end(); ++it) {
         if (it->cooldown > 0) {
             it->cooldown = it->cooldown - 1;

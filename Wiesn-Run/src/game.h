@@ -169,6 +169,7 @@ private:
     int audioIDs;
     audioCooldownStruct audioCooldown;
     audioDistanceStruct audioDistance;
+    chrono::high_resolution_clock::time_point thisStep;
 };
 
 #endif // GAME_H
