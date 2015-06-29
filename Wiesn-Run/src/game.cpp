@@ -384,7 +384,9 @@ int Game::step() {
                     setState(gameMenuStart);
                     break;
                 case menuBreakId_EarlyEnd:
+                    endgame();
                     displayStatistics();
+                    displayHighscore();
                     break;
             }
         }
@@ -430,6 +432,8 @@ int Game::step() {
         // Level zu Ende?
         if(playerObjPointer->getPosX() - playerScale >= levelLength) {
             displayStatistics();
+            displayHighscore();
+            endGame();
             setState(gameMenuName);
         }
 
