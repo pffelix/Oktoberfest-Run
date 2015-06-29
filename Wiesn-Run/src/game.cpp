@@ -1565,7 +1565,7 @@ void Game::menuInit() {
 }
 
 /**
- * @brief zeigt die Statistiken an
+ * @brief füllt das Statistik-Menü
  * löscht das Statistik-Menü und füllt es mit aktuellen Werten
  * @author Rupert
  */
@@ -1598,3 +1598,34 @@ void Game::displayStatistics() {
     menuStatistics->displayInit();
 }
 
+
+/**
+ * @brief füllt das Highscore Menü
+ * löscht das Highscore-Menü und füllt es mit aktuellen Werten
+ * @author Rupert
+ */
+void Game::displayHighscore() {
+    using namespace std;
+
+    menuHighscore->clear();
+
+
+    updateHighScore("listefüllen");
+    int scoreCount = 0;
+    for(std::list<scoreStruct>::iterator it = scoreList.begin(); it != scoreList.end(); ++it) {
+        if(scoreCount > 4) break;
+
+        scoreStruct score = *it;
+        string scoreStr = score.name;
+        scoreStr.append(": \t");
+        scoreStr.append(to_string(score.totalPoints));
+
+        menuHighscore->addEntry(scoreStr,menuId_NonClickable);
+
+        scoreCount++;
+
+    }
+
+    menuHighscore->addEntry("weida",menuHighscoreId_Next,true,gameMenuStart);
+    menuHighscore->displayInit();
+}
