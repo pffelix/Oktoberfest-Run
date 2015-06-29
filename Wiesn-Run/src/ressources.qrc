@@ -18,5 +18,7 @@
         <file>levelFiles/level1.txt</file>
         <file>levelFiles/level1_old.txt</file>
         <file>levelFiles/level2.txt</file>
+        <file>levelFiles/level3.txt</file>
+        <file>levelFiles/level_test.txt</file>
     </qresource>
 </RCC>

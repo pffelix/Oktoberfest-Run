@@ -1,4 +1,4 @@
-LevelDatei für den ersten Level
+LevelDatei für den dritten Level
 
 Diese Datei kann nur von der Methode "loadLevelFile" ausgelesen werden.
 Zeilen, die mit einem Keyword beginnen, werden interpretiert. Alle anderen Zeilen werden ignoriert.
@@ -41,40 +41,10 @@ Erläuterung
 # Beliebiges Powerup anlegen:
 # PowerUp,posX,posY,health,alcohol,ammo,immunityCooldown
 
-Level1: Weg zum Zelt (keine Gegner, nur Obstacles und PowerUps
+Level3: Käfer-Zelt
 ------------
 
 Player,130,0
 Levellänge,20000
 
 Obstacle,400,0
-
-Obstacle,800,0
-
-Plane,1450,150
-Plane,1570,150
-Plane,1690,150
-
-Plane,1860,170
-Plane,1980,170
-Plane,2100,150
-Plane,2220,150
-Plane,2340,150
-Plane,2460,150
-Plane,2580,170
-Plane,2700,170
-Plane,2820,170
-Plane,2940,170
-Obstacle,2940,190
-Plane,3060,170
-Plane,3280,170
-Plane,3400,170
-
-Obstacle,3800,0
-
-Obstacle,4100,0
-
-Hendl,5000,60
-
-Bier,5500,60
-
