@@ -1392,8 +1392,13 @@ void Game::loadLevelFile(QString fileSpecifier) {
                 }
 
                 if (strlist.at(0) == "Boss") {
-                    /// @todo try/catch für Bosseintrag sobald der Konstruktor steht.
-                    qDebug() << "  Boss-Eintrag gefunden.";
+                    if (strlist.length() != 3) {
+                        throw std::string("Ungültiger Boss-Eintrag:");
+                    } else {
+                        qDebug() << "  Boss-Eintrag gefunden.";
+                        GameObject *enemyToAppend = new Enemy(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), BOSS);
+                        levelSpawn.push_back(enemyToAppend);
+                    }
                 }
             }
             catch(std::string s) {

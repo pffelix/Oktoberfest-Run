@@ -72,6 +72,12 @@ GameObject::GameObject(int posX, int posY, objectType type) {
         break;
     }
     case enemy_security: {
+        // Verhältnis 1:2
+        this->length = playerScale;
+        this->height = playerScale * 2;
+
+        /// @todo Grafik für die Security
+        break;
 
     }
     case powerUp: {
