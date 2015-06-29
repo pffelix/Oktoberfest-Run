@@ -130,14 +130,16 @@ int Game::start() {
 
 
 
-    // Timer installieren
-    qDebug("Starte Timer mit 500msec-Intervall");
-    Game::startTimer(stepIntervall);
-
     ///@todo hier wird das Startmenü übersprungen
     //startNewGame("level1_old.txt",1);
     //setState(gameMenuStart);
     setState(gameMenuStart);
+
+
+    // Timer installieren
+    qDebug("Starte Timer mit 500msec-Intervall");
+    Game::startTimer(stepIntervall);
+
     return appPointer->exec();
 }
 
