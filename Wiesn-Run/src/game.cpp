@@ -531,19 +531,6 @@ void Game::appendWorldObjects(Player *playerPointer) {
  */
 void Game::reduceWorldObjects(Player *playerPointer) {
 
-    while (!(worldObjects.empty())) {
-        GameObject *currentObj = *worldObjects.begin();
-        if ((playerPointer->getPosX() - currentObj->getPosX()) > spawnDistance) {
-            worldObjects.pop_front();
-            //Grafik - Objekte aus der Scene löschen
-            levelScene->removeItem(currentObj);
-
-            delete currentObj;
-        } else {
-            break;
-        }
-    }
-
     //Entferne die Bierkrüge die an Wände oder Gegner, etc. gestoßen sind.
     objectsToDelete.sort(compareGameObjects());
     while (!(objectsToDelete.empty())) {
@@ -556,13 +543,41 @@ void Game::reduceWorldObjects(Player *playerPointer) {
         if (*it == currentObject) {
             worldObjects.erase(it);
             objectsToDelete.pop_front();
-
             //Grafik - Bierkrüge löschen
             levelScene->removeItem(currentObject);
-
+            //Speicher freigeben
             delete currentObject;
         }
     }
+
+    //Entferne die Objekte die sich links vom Bildschirm befinden
+    while (!(worldObjects.empty())) {
+        GameObject *currentObj = *worldObjects.begin();
+        if ((playerPointer->getPosX() - currentObj->getPosX()) > spawnDistance) {
+            worldObjects.pop_front();
+            //Grafik - Objekte aus der Scene löschen
+            levelScene->removeItem(currentObj);
+            //Speicher freigeben
+            delete currentObj;
+        } else {
+            break;
+        }
+    }
+
+    //Entferne die Objekte, die sich rechts aus dem Bildschirm entfernen
+    while (!(worldObjects.empty())) {
+        GameObject *currentObj = worldObjects.back();
+        if ((currentObj->getPosX() - playerObjPointer->getPosX()) > (spawnDistance + 1)) {
+            worldObjects.pop_back();
+            //Grafik - Objekte aus der Scene löschen
+            levelScene->removeItem(currentObj);
+            //Speicher freigeben
+            delete currentObj;
+        } else {
+            break;
+        }
+    }
+
 }
 
 /**
