@@ -1578,7 +1578,7 @@ void Game::menuInit() {
     menuStart->addEntry("Pfiat di!", menuStartId_EndGame,true);
     menuStart->displayInit();
 
-    menuCredits = new Menu(new std::string("Credits"), Menu::menuType::highscore);
+    menuCredits = new Menu(new std::string("Credits"));
     menuCredits->addEntry("Grundkurs C++", menuId_NonClickable,false);
     menuCredits->addEntry("da Simon, da Rupi, da Felix,", menuId_NonClickable,false);
     menuCredits->addEntry("da Flo und da Johann", menuId_NonClickable,false);
