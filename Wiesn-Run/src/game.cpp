@@ -156,7 +156,7 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
 
 
     // alles alte leeren
-    levelScene->clear();
+   levelScene->clear();
     worldObjects.clear();
 
     //Levelscene einstellen
