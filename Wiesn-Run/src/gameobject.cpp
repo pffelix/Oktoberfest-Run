@@ -33,8 +33,8 @@ GameObject::GameObject(int posX, int posY, objectType type) {
         this->height = playerScale * 2;
 
         //Grafik - Obstacle Images initialisieren
-        setPixmap(QPixmap(":/images/images/obstacle.png"));
-        setPos(getPosX() - 0.5*getLength(), yOffset - getPosY() - getHeight());
+        setPixmap(QPixmap(":/images/images/barrel.png"));
+        setPos(getPosX() - 0.5*getLength(), yOffset - getPosY() - getHeight()-7);
         qDebug("   Obstacle erstellt");
         break;
     }
