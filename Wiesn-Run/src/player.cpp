@@ -178,7 +178,7 @@ void Player::startJump() {
     //
     if (!(jumpState)) {
         jumpState = true;
-        jumpCooldown = frameRate;
+        jumpCooldown = 2 * frameRate / 3;
         setSpeedY(maxSpeedY);
     }
 }

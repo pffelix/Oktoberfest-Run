@@ -66,7 +66,7 @@ const int playerSpeed = maxSpeed + 1;
 /**
  * @brief Fall- / Sprunggeschwindigkeit
  */
-const int maxSpeedY = maxSpeed;
+const int maxSpeedY = 3 * maxSpeed / 2;
 
 /**
  * @brief maximales Leben
