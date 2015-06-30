@@ -32,13 +32,13 @@ bool Input::eventFilter(QObject *obj, QEvent *event) {
     if(event->type() == QEvent::KeyPress && ((QKeyEvent*)event)->isAutoRepeat() == false) {
         //qDebug("key pressed");
         keyevents += ((QKeyEvent*)event)->key();
-        updateKeyactions();
+        updateKeys();
         return true;
     }
     else if(event->type() == QEvent::KeyRelease && ((QKeyEvent*)event)->isAutoRepeat() == false) {
         //qDebug("key released");
         keyevents -= ((QKeyEvent*)event)->key();
-        updateKeyactions();
+        updateKeys();
         return true;
         }
     else {
@@ -47,7 +47,7 @@ bool Input::eventFilter(QObject *obj, QEvent *event) {
 }
 
 /**
- * @brief  Input::updateKeyactions
+ * @brief  Input::updateKeys
  *         updateKeyactions berechnet aus allen in keyevents gespeicherten Tastatureingaben
  *         die für das Spiel relevanten Kombinationen und speichert diese in keyactions.
  *         Jede Aktionen ist im QSet keyactions als Integer gespeichert, welche über die enumeration Keyaction adressiert wird.
@@ -57,8 +57,9 @@ bool Input::eventFilter(QObject *obj, QEvent *event) {
  *         gehörige integer ID im QSet keyactions hinzugefügt.
  * @author  Felix Pfreundtner
  */
-void Input::updateKeyactions() {
+void Input::updateKeys() {
     keyactions.clear();
+    /// update Keyactions
     if(keyevents.contains(Qt::Key_Left)) {
             keyactions += Keyaction::Left;
             qDebug("Left");
@@ -69,12 +70,12 @@ void Input::updateKeyactions() {
     }
     if(keyevents.contains(Qt::Key_Up)) {
             keyactions += Keyaction::Up;
-            lastKey = Keyaction::Up;
+            lastKeyaction = Keyaction::Up;
             qDebug("Up");
     }
     if(keyevents.contains(Qt::Key_Down)) {
             keyactions += Keyaction::Down;
-            lastKey = Keyaction::Down;
+            lastKeyaction = Keyaction::Down;
             qDebug("Down");
     }
 
@@ -88,21 +89,23 @@ void Input::updateKeyactions() {
     }
     if(keyevents.contains(Qt::Key_Escape)) {
             keyactions += Keyaction::Exit;
-            lastKey = Keyaction::Exit;
+            lastKeyaction = Keyaction::Exit;
             qDebug("Exit");
     }
     if(keyevents.contains(Qt::Key_Enter) || keyevents.contains(Qt::Key_Return))  {
             keyactions += Keyaction::Enter;
-            lastKey = Keyaction::Enter;
+            lastKeyaction = Keyaction::Enter;
             qDebug("Enter");
     }
+    /// update Keyletters
+
 }
 
 /**
  * @brief  Input::getKeyactions
  *         getKeyactions gibt bei Aufruf die Instanzvariable keyactions zurück.
- *         Jede Tastaturkombination besitzt eine Integer ID welche im QSet keyactions gespeichert ist.
- *         Die IDs sind über die Enumeration Input::Keyaction mit lesbaren Spielbefehlen verknüpft.
+ *         Jeder Tastaturkombination wird eine Integer ID zugeordnet welche im QSet keyactions gespeichert ist.
+ *         Über die Enumeration Input::Keyaction ist jeder Spielbefehl mit dem zugehörigen Indize in keyactions verknüft.
  *         Möchte man nun bespielsweise abfragen ob der Spieler im Moment schießt so überprüft man:
  *         input->getKeyactions().contains(Input::Keyaction::Shoot) == True.
  * @return Instanzvariable keyactions
@@ -113,16 +116,44 @@ QSet<int> Input::getKeyactions() {
 }
 
 /**
- * @brief Input::getAndDeleteLastKey
- *        Gibt letzte gedrücke Taste zurück und löscht diese.
+ * @brief  Input::getKeyletters
+ *         getKeyletters gibt bei Aufruf die Instanzvariable keyletters zurück.
+ *         Jeder Buchststaben Taste wird ein String Buchstaben zugeordner, welcher im QSet keyletters gespeichert ist.
+ *         Über die Enumeration Input::Keyletter ist jeder Buchstabe mit dem zugehörigen Indize in keyletters verknüft.
+ *         Möchte man nun bespielsweise abfragen ob der Spieler im Moment die "a" Taste drückt so überprüft man:
+ *         input->getKeyletters().contains(Input::Keyaction::Shoot) == True.
+ * @return Instanzvariable keyactions
+ * @author Felix Pfreundtner
+ */
+QSet<QString> Input::getKeyletters() {
+    return keyletters;
+}
+
+/**
+ * @brief Input::getLastKeyaction
+ *        Gibt letzte gedrücke Keyaction Taste zurück und setzt die Variable lastKeyaction auf noKeyaction.
  *        Wird für die Menüführung gebraucht, da ein dauerhaftes Auswerten der Tasten dort zu Sprüngen
  *        beim Auswählen der Menü Einträge führt.
  * @return Enum Keyaction
  * @author Rupert, Felix
  */
-Input::Keyaction Input::getAndDeleteLastKey() {
-    Keyaction tmp = lastKey;
-    lastKey = noKey;
-    return tmp;
+Input::Keyaction Input::getLastKeyaction() {
+    Keyaction lastKeyaction_return = lastKeyaction;
+    lastKeyaction = noKeyaction;
+    return lastKeyaction_return;
 }
+
+/**
+ * @brief Input::getLastKeyletter
+ *        Gibt letzte gedrücke Keyletter Taste zurück und setzt die Variable lastKeyletter auf noKeyletter.
+ *        Verwendung findet die Funktion beim Eingabe des Highscore Namens.
+ * @return Enum Keyletter
+ * @author Felix
+ */
+Input::Keyletter Input::getLastKeyletter() {
+    Keyletter lastKeyletter_return = lastKeyletter;
+    lastKeyletter = noKeyletter;
+    return lastKeyletter_return;
+}
+
 

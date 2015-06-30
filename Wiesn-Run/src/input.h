@@ -5,6 +5,7 @@
 #include <QSet>
 #include <QObject>
 #include <QEvent>
+#include <QString>
 #include <QKeyEvent>
 
 /**
@@ -19,7 +20,7 @@ class Input : public QObject {
 
 public:
     enum Keyaction{
-        noKey,
+        noKeyaction,
         Left,
         Right,
         Up,
@@ -30,10 +31,43 @@ public:
         Enter,
     };
 
+    enum Keyletter{
+        noKeyletter,
+        a,
+        b,
+        c,
+        d,
+        e,
+        f,
+        g,
+        h,
+        i,
+        j,
+        k,
+        l,
+        m,
+        n,
+        o,
+        p,
+        q,
+        r,
+        s,
+        t,
+        u,
+        v,
+        w,
+        x,
+        y,
+        z,
+    };
+
+
     Input();
     ~Input();
     QSet<int> getKeyactions();
-    Keyaction getAndDeleteLastKey();
+    QSet<QString> getKeyletters();
+    Keyaction getLastKeyaction();
+    Keyletter getLastKeyletter();
 
 private:
     /**
@@ -49,10 +83,19 @@ private:
      * @author  Felix Pfreundtner
      */
     QSet<int> keyactions;
+    /**
+     * @brief  keyletters
+     *         Die Variable keyletters speichert die die Buchstababen als "strings" aller im Moment
+     *         gepressten Buchstaben Tasten.
+     * @author  Felix Pfreundtner
+     */
+    QSet<QString> keyletters;
+    Keyaction lastKeyaction;
+    Keyletter lastKeyletter;
 
-    void updateKeyactions();
+    void updateKeys();
 
-    Keyaction lastKey;      // Rupert
+
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event);

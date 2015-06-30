@@ -324,7 +324,7 @@ int Game::step() {
     using namespace std::chrono;
 
     /// Tasten abfragen
-    Input::Keyaction lastKey = keyInput->getAndDeleteLastKey();
+    Input::Keyaction lastKey = keyInput->getLastKeyaction();
     Menu *aktStepMenu = aktMenu;
 
     /// Zeit seit dem letzten Aufruf ausrechnen und ausgeben
