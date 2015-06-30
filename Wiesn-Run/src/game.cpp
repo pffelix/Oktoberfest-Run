@@ -1264,8 +1264,8 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
         if(aktMovingObject != 0) {
 
             //if(dynamic_cast<Shoot*> (aktMovingObject) == 0 ) {
-            if( (aktMovingObject->getType()) != shot) { //&& aktMovingObject->getType() != player)
-                 //|| (aktMovingObject->getType() == player && playerPointer->inJump() == false) ) {
+            if( (aktMovingObject->getType() != shot && aktMovingObject->getType() != player)
+                 || (aktMovingObject->getType() == player && playerPointer->inJump() == false) ) {
                 //im letzten Frame vorwärst gelaufen?
                 if(aktMovingObject->getSpeedX() > 0 ) {
                     if(aktMovingObject->getFramesDirection() < 0) {
