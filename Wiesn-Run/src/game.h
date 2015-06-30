@@ -113,7 +113,7 @@ private:
     /// Breite der Szene
     int sceneWidth;
     /// Länge des Levels
-    int levelLength;
+    int levelLength = 0;
     /// Distanz in der Gegner gespawnt werden
     int spawnDistance;
     std::list<struct scoreStruct> scoreList;
@@ -174,6 +174,9 @@ private:
     audioCooldownStruct audioCooldown;
     audioDistanceStruct audioDistance;
     chrono::high_resolution_clock::time_point thisStep;
+
+    /// Namen:
+    const std::string bavarianNames[208] = {"Ade", " Ali", " Loi", " Alosius", "Anderl", " Andi", " Ande", "Bäda", "Bare", "Bartl", "Baste", " Bastia", " Bast(l", "", "Bene/", " Benny", "Bep", " Beppa", " Beppe", " Bepperl", "Berne", " Hardl", "Ber", " Bert", " Berti", "Bini", "Blase", "Chris", " Christl", " Christ", "Christà", "Dam", "Dama", "Douma", "Doilfa", " Doilferl", "Don", " Dona", " Doner", " Dan", " Dannerl", "Donisl", "Ed", " Ederl", "Ferdl", "Fest", " Fesl", "Fidl", "Fips", "Flore", "Fonse", " Fone", "Franze", " Franzl", "Fre", " Fredl", "Fridl", "Fritz", "Girgl", "Gog", " Gog", " Gode", " Gottl", "Gore", "Grisch", " Grisse", "Guste", " Gustl", " Guste", "Hans", " Hanse", " Hans", " Hanse", " Hann", " Haan", " Hannas", "Hart", " Harte", "Hausl", "Heini", "Hias", "Irgei", "Jacher", " Jaherl", "Jack", " Joc", " Jock", " Jockei", "Kar", " Karle", "Kaschb", " Koschba", "Kone/", " Kon", "Korbe", " Korw", " Kurwe", "Laure", "Len", " Lenze", " Lenze", "Le", " Poldi", "Loi", " Lois", " Loise/", " Loise", " Lui", " Luis", " Luisele", "Lug", " Lugge", " Wickerl", "Lugge", "Maiche", "Mane", "Marine", " Nuss", " Mareale", "Mart", " Masch", " Madd", " Maschde", " Mart", " Mort", " Mäa", " Märt", "Mat", " Mat", " Matte", " Matze", "Ma", " Max", " Maxl", "Michl", " Miche", " Müche", " Mih", " Müh", " Misch", " Michei", "Muck", "Naze", " Naa", " Nadsl", "Nic", " Nicke", " Nickl", "Polde", " Poidl", "Quire", " Quirl", "Reine", "Remme", "Rude", " Rudi", " Rul", "Rups", "Schoasch", " Schorschl", " Schor", " Schosc", " Schoo", " Schos", " Schurli", "Sepp", " Seppe", " Sepp", " Sepper", " Seppei", "Siege", " Siggi", "Simmal", "Stachus", "Steffl", " Steffe", " Stefferl", "Stoff", " Stoff", " Stofferl", "Ton", " Tona", " Tonerl", "Vale", "Veit", " Veit", "Vere", " Verl", "Vie", " Vinz", "Voitl", "Was", " Waste", " Wastl", "Wic", " Wiggl", " Wigge", " Wigger", " Wack", "Woife", " Woifer", " Wolle", "Xandi", "Xar", " Xavi", " Xaver", " Xide", "Zenz"};
 };
 
 #endif // GAME_H

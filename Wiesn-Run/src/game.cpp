@@ -1251,7 +1251,7 @@ void Game::loadLevelFile(QString fileSpecifier) {
                     } else {
                         // Setze die Levellänge
                         levelLength = strlist.at(1).toInt();
-                        qDebug() << "  Levellänge gesetzt.";
+                        qDebug("Levellänge gesetzt: %d",levelLength);
                     }
                 }
 
