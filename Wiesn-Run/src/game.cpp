@@ -909,9 +909,9 @@ void Game::handleCollisions() {
                             gameStats.gameOver = playerObjPointer->receiveDamage(handleEnemy->getInflictedDamage());
                             //Audioevent
                             audioCooldownstruct newAudio;
-                            newAudio.audioEvent = {audioIDs, scene_collision_enemy, audioDistance.scene_collision_enemy};
+                            newAudio.audioEvent = {audioIDs, scene_collision_player, audioDistance.scene_collision_player};
                             audioIDs = audioIDs + 1;
-                            newAudio.cooldown = audioCooldown.scene_collision_enemy;
+                            newAudio.cooldown = audioCooldown.scene_collision_player;
                             audioStorage.push_back(newAudio);
                         }
                         handleEnemy = 0;
