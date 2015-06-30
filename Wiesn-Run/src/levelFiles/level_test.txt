@@ -48,7 +48,7 @@ Erläuterung
 
 
 Player,130,0
-Levellänge,10000
+Levellänge,11000
 
 # Springen mit Obstacles vorführen
 Obstacle,400,0
@@ -87,18 +87,20 @@ Hendl,6800,60
 Hendl,7000,60
 
 #Enemys
-Security,7320,0 
+Security,8420,0 
 
-Obstacle,8000,0
-Plane, 8140, 180
-Plane, 8260, 180
-Plane, 8380, 160
-Plane, 8500, 160
-Plane, 8620, 120
-Plane, 8740, 120
+Obstacle,8700,0
+Plane, 8840, 180
+Plane, 8960, 180
+Plane, 9080, 160
+Plane, 9200, 160
+Plane, 9320, 160
+Plane, 9500, 160
+Plane, 9620, 120
+Plane, 9740, 120
 
-Obstacle,8740,0
-Tourist,9360,0,0
+Obstacle,9740,0
+Tourist,10360,0,0
 
 
-# Ende bei 10000
+# Ende bei 11000
