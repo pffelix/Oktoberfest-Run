@@ -338,7 +338,10 @@ int Game::step() {
     if(aktStepMenu!=NULL) { // aktMenu ist nur NULL, wenn das Spiel gerade läuft
 
 
+        //AudioEvent falls level begonnen wird
+        audioCooldownstruct backgroundLevel;
         aktStepMenu->displayUpdate();
+
         //MenüScene wird vom Anzeigewidget aufgerufen
         window->setScene(aktStepMenu->menuScene);
 
@@ -440,9 +443,45 @@ int Game::step() {
 
 
         // Level zu Ende?
-        if ((playerObjPointer->getPosX() - playerScale >= levelLength) || (gameStats.gameOver)) {
+        if (playerObjPointer->getPosX() - playerScale >= levelLength) {
             endGame();
             setState(gameMenuName);
+            // Erfolgreich Schriftzug einfügen
+
+            // Sound für erfolgreichen abschluss spielen
+            audioCooldownstruct newAudio;
+            newAudio.audioEvent = {4, background_levelfinished, audioDistance.background_levelfinished};
+            newAudio.cooldown = audioCooldown.background_levelfinished;
+            chrono::high_resolution_clock::time_point previous = chrono::high_resolution_clock::now();
+            while ( newAudio.cooldown > chrono::duration<int>(0)) {
+                audioevents.push_back(newAudio.audioEvent);
+                audioOutput->update(&audioevents);
+                audioevents.clear();
+                chrono::high_resolution_clock::time_point actual = chrono::high_resolution_clock::now();
+                newAudio.cooldown = newAudio.cooldown - chrono::duration_cast<std::chrono::milliseconds> (actual - previous);
+                previous = actual;
+            }
+        }
+
+        // Gegner tot?
+        if (gameStats.gameOver) {
+            endGame();
+            setState(gameMenuName);
+            // GameOver schriftzug einfügen
+
+            //Audio event wenn der Gegner stirbt
+            audioCooldownstruct newAudio;
+            newAudio.audioEvent = {4, status_dead, audioDistance.status_dead};
+            newAudio.cooldown = audioCooldown.status_dead;
+            chrono::high_resolution_clock::time_point previous = chrono::high_resolution_clock::now();
+            while ( newAudio.cooldown > chrono::duration<int>(0)) {
+                audioevents.push_back(newAudio.audioEvent);
+                audioOutput->update(&audioevents);
+                audioevents.clear();
+                chrono::high_resolution_clock::time_point actual = chrono::high_resolution_clock::now();
+                newAudio.cooldown = newAudio.cooldown - chrono::duration_cast<std::chrono::milliseconds> (actual - previous);
+                previous = actual;
+            }
         }
 
         stepCount++;
@@ -539,9 +578,11 @@ void Game::evaluateInput() {
     // Pfeil rechts?
     if(keyInput->getKeyactions().contains(Input::Keyaction::Right)) {
         playerObjPointer->setSpeedX(playerSpeed);
-        // Audioevent erzeugen
-        audioStruct playerAudio = {19, player_walk, 0};
-        audioevents.push_back(playerAudio);
+        if (!(playerObjPointer->inJump())) {
+            // Audioevent erzeugen
+            audioStruct playerAudio = {19, player_walk, 0};
+            audioevents.push_back(playerAudio);
+        }
     } else {
         playerObjPointer->setSpeedX(0);
     }
