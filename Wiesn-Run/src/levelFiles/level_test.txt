@@ -48,7 +48,7 @@ Erläuterung
 
 
 Player,130,0
-Levellänge,8000
+Levellänge,10000
 
 # Springen mit Obstacles vorführen
 Obstacle,400,0
@@ -78,17 +78,27 @@ Plane,4800,220
 Plane,5000,140
 
 # Powerups vorführen
-Bier,6000,60
-
-Bier,6100,60
-
-Bier,6200,60
+Bier,5800,40
 
 #Obstacle,6400,0
-Bier,6400,160
 
 Hendl,6800,60
 
 Hendl,7000,60
 
-# Ende bei 8000
+#Enemys
+Security,7320,0 
+
+Obstacle,8000,0
+Plane, 8140, 180
+Plane, 8260, 180
+Plane, 8380, 160
+Plane, 8500, 160
+Plane, 8620, 120
+Plane, 8740, 120
+
+Obstacle,8740,0
+Tourist,9360,0,0
+
+
+# Ende bei 10000
