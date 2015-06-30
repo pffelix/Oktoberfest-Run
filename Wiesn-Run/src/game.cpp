@@ -987,7 +987,7 @@ void Game::handleCollisions() {
                  *      Spieler springt auf Gegner (sonst siehe affectedObject==player)
                  * Der Gegner wird getötet
                  */
-                if (handleEvent.direction == fromAbove) {
+                if (handleEvent.direction == fromBelow) {
                     if (handleEnemy->receiveDamage(playerObjPointer->getInflictedDamage())) {
                         playerObjPointer->increaseEnemiesKilled();
                         //Audioausgabe
