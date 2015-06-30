@@ -438,6 +438,8 @@ QSet<int> Input::getKeyactions() {
  *         input->getKeyletters().find(Input::Keyletter::a) != getKeyletters().end().
  *         Möchte man abfragen ob der Spieler im Moment die "A" Taste drückt so überprüft man:
  *         input->getKeyletters().find(Input::Keyletter::A) != getKeyletters().end().
+ *         Ist die Taste gedrückt so kann aus dem Enum Keyletter über eine Typenumwandlung der Char berechnet werden:
+ *         'a' = (char)Keyletter::a
  * @return Std::Set Instanzvariable keyactions
  * @author Felix Pfreundtner
  */
@@ -447,7 +449,7 @@ std::set<char> Input::getKeyletters() {
 
 /**
  * @brief Input::getLastKeyaction
- *        Gibt letzte gedrücke Spielaktion zurück und setzt die Variable lastKeyaction auf noKeyaction.
+ *        Gibt letzte gedrücke Spielaktion als Enum Keyaction zurück und setzt die Variable lastKeyaction auf noKeyaction.
  *        Wird für die Menüführung gebraucht, da ein dauerhaftes Auswerten der Tasten dort zu Sprüngen
  *        beim Auswählen der Menü Einträge führt.
  * @return Enum Keyaction
@@ -461,7 +463,9 @@ Input::Keyaction Input::getLastKeyaction() {
 
 /**
  * @brief Input::getLastKeyletter
- *        Gibt letzten gedrücken Buchstaben zurück und setzt die Variable lastKeyletter auf noKeyletter.
+ *        Gibt letzten gedrücken Buchstaben als enum Keyletter zurück und setzt die Variable lastKeyletter auf noKeyletter.
+ *        Wurde eine Taste gedrückt (lastKeyletter_return != noKeyletter) so kann aus dem Enum Keyletter über eine Typenumwandlung der zugehörige Char berechnet werden:
+ *         a = (char)lastKeyletter_return
  *        Verwendung findet die Funktion beim Eingabe des Highscore Namens.
  * @return Enum Keyletter
  * @author Felix
