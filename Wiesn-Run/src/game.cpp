@@ -506,6 +506,9 @@ int Game::step() {
  * @author Simon
  */
 void Game::appendWorldObjects(Player *playerPointer) {
+    //Grafik - der Spieler wird vor der aktualisierung der Worldobjects entfernt
+    levelScene->removeItem(playerObjPointer);
+
     while (!(levelSpawn.empty())) {
         GameObject *currentObj = *levelSpawn.begin();
         if ( (currentObj->getPosX() - playerPointer->getPosX()) < spawnDistance ) {
@@ -517,6 +520,8 @@ void Game::appendWorldObjects(Player *playerPointer) {
             break;
         }
     }
+    //Grafik - der Spieler wird wieder hinzugefügt damit er immer das Grafikelement an vorderster Stelle ist
+    levelScene->addItem(playerPointer);
 }
 
 

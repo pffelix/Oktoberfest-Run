@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/images">
-        <file>images/obstacle.png</file>
         <file>images/plane.png</file>
         <file>images/menubackground.png</file>
         <file>images/bg_lev1_1.png</file>
@@ -15,6 +14,7 @@
         <file>images/security.png</file>
         <file>images/tourist1.png</file>
         <file>images/tourist2.png</file>
+        <file>images/barrel.png</file>
     </qresource>
     <qresource prefix="/levelFiles">
         <file>levelFiles/level1.txt</file>
