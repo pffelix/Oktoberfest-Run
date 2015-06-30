@@ -411,7 +411,7 @@ int Game::step() {
         appendWorldObjects(playerObjPointer);
         reduceWorldObjects(playerObjPointer);
 
-        //updateAudio();
+        updateAudio();
 
         evaluateInput();
         worldObjects.sort(compareGameObjects());
@@ -1133,13 +1133,12 @@ void Game::updateAudio() {
     chrono::duration<int, milli> difference = chrono::duration_cast<std::chrono::milliseconds> (thisStep - lastStep);
 
     // Cooldown audios weiterzählen und bei ablauf löschen
-    for (std::list<audioCooldownstruct>::iterator it = audioStorage.begin(); it != audioStorage.end(); ++it) {
+    for (std::list<audioCooldownstruct>::iterator it = audioStorage.begin(); it != audioStorage.end(); it++) {
         if (it->cooldown > chrono::duration<int>(0)) {
             it->cooldown = it->cooldown - difference;
             audioevents.push_back(it->audioEvent);
         } else {
-            audioStorage.erase(it);
-            it--;
+            it = audioStorage.erase(it);
         }
     }
 }
