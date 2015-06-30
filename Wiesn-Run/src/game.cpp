@@ -924,9 +924,9 @@ void Game::handleCollisions() {
                     gameStats.gameOver = playerObjPointer->receiveDamage(handleEnemy->getInflictedDamage());
                     //Audioevent
                     audioCooldownstruct newAudio;
-                    newAudio.audioEvent = {audioIDs, scene_collision_enemy, audioDistance.scene_collision_enemy};
+                    newAudio.audioEvent = {audioIDs, scene_collision_player, audioDistance.scene_collision_player};
                     audioIDs = audioIDs + 1;
-                    newAudio.cooldown = audioCooldown.scene_collision_enemy;
+                    newAudio.cooldown = audioCooldown.scene_collision_player;
                     audioStorage.push_back(newAudio);
 
                 }
@@ -936,10 +936,18 @@ void Game::handleCollisions() {
             case shot: {
                 // Spieler kriegt Schaden, Bierkrug zum löschen vormerken, treffen mit eigenem Krug nicht möglich
                 handleShoot = dynamic_cast<Shoot*>(handleEvent.causingObject);
+                if (!(playerObjPointer->getImmunityCooldown())) {
+                    //Audioevent Schaden Spieler
+                    audioCooldownstruct newAudio;
+                    newAudio.audioEvent = {audioIDs, scene_collision_player, audioDistance.scene_collision_player};
+                    audioIDs = audioIDs + 1;
+                    newAudio.cooldown = audioCooldown.scene_collision_player;
+                    audioStorage.push_back(newAudio);
+                }
                 gameStats.gameOver = playerObjPointer->receiveDamage(handleShoot->getInflictedDamage());
                 objectsToDelete.push_back(handleShoot);
                 handleShoot = 0;
-                //Audioevent
+                //Audioevent Krug zerbricht
                 audioCooldownstruct newAudio;
                 newAudio.audioEvent = {audioIDs, scene_collision_flyingbeer, audioDistance.scene_collision_flyingbeer};
                 audioIDs = audioIDs + 1;
@@ -1006,9 +1014,9 @@ void Game::handleCollisions() {
                         playerObjPointer->increaseEnemiesKilled();
                         //Audioausgabe
                         audioCooldownstruct newAudio;
-                        newAudio.audioEvent = {audioIDs, scene_collision_player, audioDistance.scene_collision_player};
+                        newAudio.audioEvent = {audioIDs, scene_collision_enemy, audioDistance.scene_collision_enemy};
                         audioIDs = audioIDs + 1;
-                        newAudio.cooldown = audioCooldown.scene_collision_player;
+                        newAudio.cooldown = audioCooldown.scene_collision_enemy;
                         audioStorage.push_back(newAudio);
 
                     }
@@ -1049,14 +1057,20 @@ void Game::handleCollisions() {
                 if (handleShoot->getOrigin() == player) {
                     //Schaden zufügen
                     handleEnemy->receiveDamage(handleShoot->getInflictedDamage());
+                    playerObjPointer->increaseEnemiesKilled();
                     //Bierkrug zum löschen vormerken
                     objectsToDelete.push_back(handleShoot);
 
-                    //Audioevent
+                    //Audioevent Krug zerbricht
                     audioCooldownstruct newAudio;
                     newAudio.audioEvent = {audioIDs, scene_collision_flyingbeer, audioDistance.scene_collision_flyingbeer};
                     audioIDs = audioIDs + 1;
                     newAudio.cooldown = audioCooldown.scene_collision_flyingbeer;
+                    audioStorage.push_back(newAudio);
+                    //Audioausgabe Schaden an Gegner
+                    newAudio.audioEvent = {audioIDs, scene_collision_enemy, audioDistance.scene_collision_enemy};
+                    audioIDs = audioIDs + 1;
+                    newAudio.cooldown = audioCooldown.scene_collision_enemy;
                     audioStorage.push_back(newAudio);
                 }
                 handleShoot = 0;
