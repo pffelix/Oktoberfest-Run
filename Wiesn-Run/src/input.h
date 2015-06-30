@@ -30,7 +30,6 @@ public:
         Shoot,
         Exit,
         Enter,
-        Delete,
     };
 
     enum Keyletter{
@@ -87,6 +86,7 @@ public:
         X = (int)'X',
         Y = (int)'Y',
         Z = (int)'Z',
+        Backspace = (int)'\b',
     };
 
     Input();
