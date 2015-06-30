@@ -30,6 +30,7 @@ public:
         Shoot,
         Exit,
         Enter,
+        Delete,
     };
 
     enum Keyletter{
