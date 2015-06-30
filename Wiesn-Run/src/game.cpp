@@ -1377,7 +1377,7 @@ void Game::loadLevelFile(QString fileSpecifier) {
                         throw std::string("Ungültiger Bier-Eintrag:");
                     } else {
                         qDebug() << "  Bier-Eintrag gefunden.";
-                        GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), beerHealth, beerAlcohol, beerAmmo, 0);
+                        GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), beerHealth, beerAlcohol, beerAmmo, 0, beer);
                         levelSpawn.push_back(powerUpToAppend);
                     }
                 }
@@ -1387,7 +1387,7 @@ void Game::loadLevelFile(QString fileSpecifier) {
                         throw std::string("Ungültiger Hendl-Eintrag:");
                     } else {
                         qDebug() << "  Hendl-Eintrag gefunden.";
-                        GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), hendlHealth, hendlAlcoholMalus, 0, 0);
+                        GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), hendlHealth, hendlAlcoholMalus, 0, 0, food);
                         levelSpawn.push_back(powerUpToAppend);
                     }
                 }
@@ -1397,7 +1397,7 @@ void Game::loadLevelFile(QString fileSpecifier) {
                         throw std::string("Ungültiger PowerUp-Eintrag:");
                     } else {
                         qDebug() << "  PowerUp-Eintrag gefunden.";
-                        GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), strlist.at(4).toInt(), strlist.at(5).toInt(), strlist.at(6).toInt());
+                        GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), strlist.at(4).toInt(), strlist.at(5).toInt(), strlist.at(6).toInt(), food);
                         levelSpawn.push_back(powerUpToAppend);
                     }
                 }
