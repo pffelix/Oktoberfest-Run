@@ -28,7 +28,7 @@ AudioControl::AudioControl() {
     audioobjects.insert(audioobjects.begin() + audioType::scene_collision_flyingbeer, Audio("scene_collision_flyingbeer")); // 16bit
     //source: http://www.freesound.org/people/edhutschek/sounds/215634/
     audioobjects.insert(audioobjects.begin() + audioType::powerup_beer, Audio("powerup_beer")); // 16bit
-    //source: http://www.freesound.org/people/Agaxly/sounds/194463/
+    //source: https://www.freesound.org/people/bassboybg/sounds/264544/
     audioobjects.insert(audioobjects.begin() + audioType::powerup_food, Audio("powerup_food")); // 16bit
     //source: http://www.freesound.org/people/afleetingspeck/sounds/151180/
     audioobjects.insert(audioobjects.begin() + audioType::status_alcohol, Audio("status_alcohol")); // 16bit
