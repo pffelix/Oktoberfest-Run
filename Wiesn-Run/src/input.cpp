@@ -422,7 +422,7 @@ void Input::updateKeys() {
  *         Über die Enumeration Input::Keyaction ist jeder Spielbefehl mit dem zugehörigen Indize in keyactions verknüft.
  *         Möchte man nun bespielsweise abfragen ob der Spieler im Moment schießt so überprüft man:
  *         input->getKeyactions().contains(Input::Keyaction::Shoot) == True.
- * @return Instanzvariable keyactions
+ * @return QSet Instanzvariable keyactions
  * @author Felix Pfreundtner
  */
 QSet<int> Input::getKeyactions() {
@@ -435,8 +435,8 @@ QSet<int> Input::getKeyactions() {
  *         Jeder Buchststaben Taste wird ein String Buchstaben zugeordnet, welcher im QSet keyletters gespeichert ist.
  *         Über die Enumeration Input::Keyletter ist jeder Buchstabe mit dem zugehörigen Indize in keyletters verknüft.
  *         Möchte man nun bespielsweise abfragen ob der Spieler im Moment die "a" Taste drückt so überprüft man:
- *         input->getKeyletters().contains(Input::Keyaction::Shoot) == True.
- * @return Instanzvariable keyactions
+ *         input->getKeyletters().find(Input::Keyaction::Shoot) != getKeyletters().end().
+ * @return Std::Set Instanzvariable keyactions
  * @author Felix Pfreundtner
  */
 std::set<char> Input::getKeyletters() {
