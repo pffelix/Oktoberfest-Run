@@ -110,6 +110,12 @@ int Game::start() {
     // Menüs erstellen
     menuInit();
 
+    /// Erstelle Audiocontrol Objekt zum Einlesen der Audiodatein und speichern der Ausgabeparameter
+    audioOutput = new AudioControl;
+    /// Erstelle einen neuen Thread portaudiothread.
+    /// Initialisiere dort PortAudio und beginne eine Audioausgabe zu erzeugen.
+    std::thread portaudiothread(&AudioControl::playInitialize, audioOutput);
+
     // QGraphicsScene der Level erstellen
     levelScene = new QGraphicsScene;
 
@@ -118,21 +124,13 @@ int Game::start() {
     window->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     window->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     window->setFixedSize(1024,768);
-    window->setWindowTitle(QApplication::translate("Game Widget", "Game Widget (Input Test)"));
+    window->setWindowTitle(QApplication::translate("Game Widget", "Wiesn - Run"));
     window->setEnabled(false);
     window->show();
     qDebug("initialize window");
 
     /// Installiere Event Filter zum Loggen der Keyboard Eingabe
     window->installEventFilter(keyInput);
-
-    /// Erstelle Audiocontrol Objekt zum Einlesen der Audiodatein und speichern der Ausgabeparameter
-    audioOutput = new AudioControl;
-    /// Erstelle einen neuen Thread portaudiothread.
-    /// Initialisiere dort PortAudio und beginne eine Audioausgabe zu erzeugen.
-    std::thread portaudiothread(&AudioControl::playInitialize, audioOutput);
-
-
 
     ///@todo hier wird das Startmenü übersprungen
     //startNewGame("level1_old.txt",1);
