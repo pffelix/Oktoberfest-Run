@@ -311,22 +311,12 @@ enum powerUpType {
  * @author Simon
  */
 struct stateStruct {
-    bool gameOver;
-    int actLevel;
-    int audioID_Background;
+    bool gameOver = false;
+    int actLevel = 0;
+    int audioID_Background = 0;
 
-    bool playerJumping;
-    bool playerAttacking;
-    bool playerRunning;
-    bool playerThrowing;
-    bool playerHit;
-
-    bool enemyAttacking;
-    bool enemyThrowing;
-    bool enemyDead;
-
-    bool beerCollected;
-    bool chickenCollected;
+    bool beerCollected = 0;
+    bool chickenCollected = 0;
 
 };
 

@@ -21,7 +21,7 @@ Enemy::Enemy(int posX, int posY, int speedX, objectType enemy) : MovingObject(po
     }
     case enemy_tourist: {
         health = 1;
-        fireCooldown = 2 * frameRate;
+        fireCooldown = 4 * frameRate;
         break;
     }
     case enemy_security: {

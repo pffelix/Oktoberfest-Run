@@ -440,7 +440,7 @@ int Game::step() {
 
 
         // Level zu Ende?
-        if(playerObjPointer->getPosX() - playerScale >= levelLength) {
+        if ((playerObjPointer->getPosX() - playerScale >= levelLength) || (gameStats.gameOver)) {
             endGame();
             setState(gameMenuName);
         }
