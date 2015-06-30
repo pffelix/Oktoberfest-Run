@@ -10,7 +10,7 @@ AudioControl::AudioControl() {
 
     /// erstelle für jede objektgruppe "type" ein audio Objekt welches unter anderem die Samples beinhaltet
     audioobjects.reserve(23);
-    //source: created by Felix with Synthesizer
+    //source: http://soundbible.com/1247-Wind.html
     audioobjects.insert(audioobjects.begin() + audioType::scene_flyingbeer, Audio("scene_flyingbeer")); // 16bit
     //source: http://www.freesound.org/people/Reitanna/sounds/241215/
     audioobjects.insert(audioobjects.begin() + audioType::scene_enemy_tourist, Audio("scene_enemy_tourist")); // 16bit
@@ -69,7 +69,7 @@ AudioControl::AudioControl() {
     /// Ein Normalisieren aller Ausgabeblöcke wäre möglich, würde jedoch 2D Audio nicht erlauben,
     /// da auch die Dynamik zwischen zwei Blöcken normalisiert wird
     /// -> Distanz- und somit Lautstärkeänderungen von Objekten werden mit normalisiert.
-    max_playevents = 10;
+    max_playevents = 6;
 
 }
 
