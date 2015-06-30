@@ -580,6 +580,7 @@ void Game::reduceWorldObjects(Player *playerPointer) {
 
 }
 
+
 /**
  * @brief Checkt welche Tasten für die Spielkontrolle gedrückt sind
  * mögliche Tasten:
@@ -626,6 +627,7 @@ void Game::evaluateInput() {
         }
     }
 }
+
 
 /**
  * @brief Geht die worldObjects durch und aktualisiert bei jedem die Position,
@@ -677,6 +679,9 @@ void Game::calculateMovement() {
                     levelScene->addItem(enemyFire);
                     enemyFire = 0;
                 }
+                if (((aktEnemy->getPosX() - playerObjPointer->getPosX()) == sceneWidth) && aktEnemy->getSpeedX() > 0) {
+                    aktEnemy->setSpeedX(-aktEnemy->getSpeedX());
+                }
                 aktEnemy = 0;
             }
             speedX = aktMovingObject->getSpeedX();
@@ -690,6 +695,7 @@ void Game::calculateMovement() {
     }
 
 }
+
 
 /**
  * @brief Game::detectCollision
@@ -783,7 +789,6 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
         } // Ende der if-Abfrage bzgl. des erfolgreichen Downcasts
     } // Ende der for-Schleife über die objectsToCalculate
 } // function
-
 
 /**
  * @brief Kollisionen in der Liste collisionsToHandle werden der Reihe nach aus Sicht des affectedObjects bearbeitet.
