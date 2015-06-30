@@ -67,7 +67,7 @@ GameObject::GameObject(int posX, int posY, objectType type) {
 
         //Grafik - Enemy wird initialisiert
         setPixmap(QPixmap(":/images/images/tourist1.png"));
-        setPos(getPosX() - 0.5*getLength(), yOffset - getPosY() - getHeight());
+        setPos(getPosX() - 0.5*getLength() -15, yOffset - getPosY() - getHeight());
         qDebug("   Tourist erstellt");
         break;
     }
@@ -102,11 +102,11 @@ GameObject::GameObject(int posX, int posY, objectType type) {
         break;
     }
     case BOSS: {
-        this->length = 2 * playerScale;
+        this->length = 3 * playerScale;
         this->length = 4 * playerScale;
 
         setPixmap(QPixmap(":/images/images/boss.png"));
-        setPos(getPosX() - getLength()*0.5, yOffset - getPosY() - getHeight());
+        setPos(getPosX() - getLength()*0.5 -10, yOffset - getPosY() - getHeight());
         qDebug("   Boss erstellt");
         break;
     }
