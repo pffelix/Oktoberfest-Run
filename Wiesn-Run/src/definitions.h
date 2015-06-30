@@ -138,9 +138,9 @@ enum audioType {
     scene_enemy_boss,
     /// Kollision mit Hinderniss aufgetreten: wird einmal gesendet wenn eine Kollision mit einem Hindernis auftritt (cooldown)
     scene_collision_obstacle,
-    /// Kollision mit Gegner aufgetreten (Schaden): wird einmal gesendet wenn eine Kollision mit einem Gegner auftritt (cooldown)
+    /// Gegner hat Schaden am Spieler bezweckt: wird einmal gesendet wenn Schaden auftritt (cooldown)
     scene_collision_enemy,
-    /// Kollision mit Gegner aufgetreten (Besiegt): wird einmal gesendet wenn eine Kollision mit einem Gegner auftritt (cooldown)
+    /// Spieler hat Schaden am Gegener bezweckt: wird einmal gesendet wenn Schaden auftritt (cooldown)
     scene_collision_player,
     /// Kollision mit geworfenen Bier aufgetreten: wird einmal gesendet wenn eine Kollision mit einem geworfenen Bier auftritt (cooldown)
     scene_collision_flyingbeer,
@@ -191,7 +191,7 @@ typedef struct {
     std::chrono::duration<int, std::milli> scene_enemy_boss = std::chrono::milliseconds(0);
     std::chrono::duration<int, std::milli> scene_collision_obstacle = std::chrono::milliseconds(200);
     std::chrono::duration<int, std::milli> scene_collision_enemy = std::chrono::milliseconds(899);
-    std::chrono::duration<int, std::milli> scene_collision_player = std::chrono::milliseconds(2989);
+    std::chrono::duration<int, std::milli> scene_collision_player = std::chrono::milliseconds(1989);
     std::chrono::duration<int, std::milli> scene_collision_flyingbeer = std::chrono::milliseconds(1211);
     std::chrono::duration<int, std::milli> powerup_beer = std::chrono::milliseconds(2989);
     std::chrono::duration<int, std::milli> powerup_food = std::chrono::milliseconds(3989);
