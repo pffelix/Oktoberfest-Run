@@ -98,6 +98,10 @@ void Game::timerEvent(QTimerEvent *event)
 int Game::start() {
     qDebug("Game::start()");
 
+    // Zufall initialisieren
+    srand(time(NULL));
+
+
 
     // Fundamentale stepSize setzen
     stepIntervall = 1000/frameRate;
@@ -1252,7 +1256,7 @@ void Game::loadLevelFile(QString fileSpecifier) {
                     } else {
                         // Setze die Levellänge
                         levelLength = strlist.at(1).toInt();
-                        qDebug() << "  Levellänge gesetzt.";
+                        qDebug("Levellänge gesetzt: %d",levelLength);
                     }
                 }
 
@@ -1545,6 +1549,20 @@ void Game::menuInit() {
 void Game::displayStatistics() {
     using namespace std;    // für std::string
 
+    // Namen Menü
+    const string bavarianNames[208] = {"Ade", " Ali", " Loi", " Alosius", "Anderl", " Andi", " Ande", "Bäda", "Bare", "Bartl", "Baste", " Bastia", " Bast(l", "", "Bene/", " Benny", "Bep", " Beppa", " Beppe", " Bepperl", "Berne", " Hardl", "Ber", " Bert", " Berti", "Bini", "Blase", "Chris", " Christl", " Christ", "Christà", "Dam", "Dama", "Douma", "Doilfa", " Doilferl", "Don", " Dona", " Doner", " Dan", " Dannerl", "Donisl", "Ed", " Ederl", "Ferdl", "Fest", " Fesl", "Fidl", "Fips", "Flore", "Fonse", " Fone", "Franze", " Franzl", "Fre", " Fredl", "Fridl", "Fritz", "Girgl", "Gog", " Gog", " Gode", " Gottl", "Gore", "Grisch", " Grisse", "Guste", " Gustl", " Guste", "Hans", " Hanse", " Hans", " Hanse", " Hann", " Haan", " Hannas", "Hart", " Harte", "Hausl", "Heini", "Hias", "Irgei", "Jacher", " Jaherl", "Jack", " Joc", " Jock", " Jockei", "Kar", " Karle", "Kaschb", " Koschba", "Kone/", " Kon", "Korbe", " Korw", " Kurwe", "Laure", "Len", " Lenze", " Lenze", "Le", " Poldi", "Loi", " Lois", " Loise/", " Loise", " Lui", " Luis", " Luisele", "Lug", " Lugge", " Wickerl", "Lugge", "Maiche", "Mane", "Marine", " Nuss", " Mareale", "Mart", " Masch", " Madd", " Maschde", " Mart", " Mort", " Mäa", " Märt", "Mat", " Mat", " Matte", " Matze", "Ma", " Max", " Maxl", "Michl", " Miche", " Müche", " Mih", " Müh", " Misch", " Michei", "Muck", "Naze", " Naa", " Nadsl", "Nic", " Nicke", " Nickl", "Polde", " Poidl", "Quire", " Quirl", "Reine", "Remme", "Rude", " Rudi", " Rul", "Rups", "Schoasch", " Schorschl", " Schor", " Schosc", " Schoo", " Schos", " Schurli", "Sepp", " Seppe", " Sepp", " Sepper", " Seppei", "Siege", " Siggi", "Simmal", "Stachus", "Steffl", " Steffe", " Stefferl", "Stoff", " Stoff", " Stofferl", "Ton", " Tona", " Tonerl", "Vale", "Veit", " Veit", "Vere", " Verl", "Vie", " Vinz", "Voitl", "Was", " Waste", " Wastl", "Wic", " Wiggl", " Wigge", " Wigger", " Wack", "Woife", " Woifer", " Wolle", "Xandi", "Xar", " Xavi", " Xaver", " Xide", "Zenz"};
+    //std::string bavarianNames[10] = {"Ade", "Loisl", "Anderl", "Bäda", "Bertl", "Wickerl", "Beppi", "Hias", "Xaver", "Miche"};
+
+    int nameMax = 208;  //10;
+    int nameIndex = rand() % nameMax;
+
+    menuName->clear();
+    menuName->addEntry(bavarianNames[nameIndex],menuId_NonClickable);
+    menuName->addEntry("weida",menuNameId_Next,true,gameMenuStatisitcs);
+    menuName->displayInit();
+
+    playerScore.name = bavarianNames[nameIndex];
+
     // Statistik Menü
     menuStatistics->clear();
 
@@ -1564,7 +1582,7 @@ void Game::displayStatistics() {
     menuStatistics->addEntry(distance,menuId_NonClickable,false);
     menuStatistics->addEntry(alk,menuId_NonClickable,false);
     menuStatistics->addEntry(points,menuId_NonClickable,false);
-    menuStatistics->addEntry("weiter",menuStatisticsId_Next,true,gameMenuHighscore);
+    menuStatistics->addEntry("weida",menuStatisticsId_Next,true,gameMenuHighscore);
     menuStatistics->displayInit();
 
     // Highscore-Menü
