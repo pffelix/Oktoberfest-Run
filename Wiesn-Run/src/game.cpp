@@ -399,8 +399,22 @@ int Game::step() {
                     break;
                 case menuBreakId_EarlyEnd:
                     endGame();
-
                     break;
+            }
+        }
+        // Namenseingabe
+        if(aktStepMenu==menuName) {
+            Input::Keyletter key = keyInput->getLastKeyletter();
+            if(key!=0) { // Nur wenn Taste gedrückt wurde, Menü neuschreiben
+                menuName->clear();
+                std::string name = playerScore.name;
+                char letter = static_cast<char>(key);
+                name.push_back(letter);
+                playerScore.name = name;
+
+                menuName->addEntry(name,menuId_NonClickable);
+                menuName->addEntry("Weida",menuNameId_Next,true,gameMenuStatisitcs);
+                menuName->displayInit();
             }
         }
 
@@ -946,11 +960,13 @@ void Game::handleCollisions() {
                 if (handlePowerUp->getPowerUPType() == food) {
                     audioCooldownstruct newAudio;
                     newAudio.audioEvent = {audioIDs, powerup_food, audioDistance.powerup_food};
+                    audioIDs = audioIDs + 1;
                     newAudio.cooldown = audioCooldown.powerup_food;
                     audioStorage.push_back(newAudio);
                 } else {
                     audioCooldownstruct newAudio;
                     newAudio.audioEvent = {audioIDs, powerup_beer, audioDistance.powerup_beer};
+                    audioIDs = audioIDs + 1;
                     newAudio.cooldown = audioCooldown.powerup_beer;
                     audioStorage.push_back(newAudio);
                 }
@@ -985,7 +1001,7 @@ void Game::handleCollisions() {
                  *      Spieler springt auf Gegner (sonst siehe affectedObject==player)
                  * Der Gegner wird getötet
                  */
-                if (handleEvent.direction == fromAbove) {
+                if (handleEvent.direction == fromBelow) {
                     if (handleEnemy->receiveDamage(playerObjPointer->getInflictedDamage())) {
                         playerObjPointer->increaseEnemiesKilled();
                         //Audioausgabe
@@ -1576,7 +1592,7 @@ void Game::menuInit() {
     menuStart->addEntry("Pfiat di!", menuStartId_EndGame,true);
     menuStart->displayInit();
 
-    menuCredits = new Menu(new std::string("Credits"), Menu::menuType::highscore);
+    menuCredits = new Menu(new std::string("Credits"));
     menuCredits->addEntry("Grundkurs C++", menuId_NonClickable,false);
     menuCredits->addEntry("da Simon, da Rupi, da Felix,", menuId_NonClickable,false);
     menuCredits->addEntry("da Flo und da Johann", menuId_NonClickable,false);
