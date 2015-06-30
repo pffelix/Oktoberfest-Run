@@ -827,11 +827,13 @@ void Game::handleCollisions() {
                  */
                 switch (handleEvent.direction) {
                 case fromLeft: {
-                    //Bewegung  in X-Richtungstoppen
-                    playerObjPointer->setSpeedX(0);
-                    //Überlappung berechnen und Spieler nach links versetzen
-                    overlap = (playerObjPointer->getPosX() + (playerObjPointer->getLength() / 2)) - (handleEvent.causingObject->getPosX() - (handleEvent.causingObject->getLength() / 2));
-                    playerObjPointer->setPosX(playerObjPointer->getPosX() - overlap);
+                    if (!((handleEvent.causingObject->getType() == plane) && (playerObjPointer->getPosY() > handleEvent.causingObject->getPosY()))){
+                        //Bewegung  in X-Richtungstoppen
+                        playerObjPointer->setSpeedX(0);
+                        //Überlappung berechnen und Spieler nach links versetzen
+                        overlap = (playerObjPointer->getPosX() + (playerObjPointer->getLength() / 2)) - (handleEvent.causingObject->getPosX() - (handleEvent.causingObject->getLength() / 2));
+                        playerObjPointer->setPosX(playerObjPointer->getPosX() - overlap);
+                    }
                     break;
                 }
                 case fromRight: {
@@ -1290,6 +1292,7 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
  * PowerUps brauchen posX, posY und die jeweiligen Boni.
  * @author Simon
  */
+
 void Game::loadLevelFile(QString fileSpecifier) {
     // Spezifizierte Datei öffnen
     QFile levelFile(fileSpecifier);
