@@ -29,7 +29,7 @@ public:
         Shoot,
         Exit,
         Enter,
-    };
+    } ;
 
     enum Keyletter{
         noKeyletter,
@@ -59,8 +59,33 @@ public:
         x,
         y,
         z,
+        A,
+        B,
+        C,
+        D,
+        E,
+        F,
+        G,
+        H,
+        I,
+        J,
+        K,
+        L,
+        M,
+        N,
+        O,
+        P,
+        Q,
+        R,
+        S,
+        T,
+        U,
+        V,
+        W,
+        X,
+        Y,
+        Z,
     };
-
 
     Input();
     ~Input();
@@ -90,7 +115,17 @@ private:
      * @author  Felix Pfreundtner
      */
     QSet<QString> keyletters;
+    /**
+     * @brief  lastKeyaction
+     *         Die Variable lastKeyaction speichert die letzte gedrückte Tastenkombination als Enum Keyaction
+     * @author  Felix Pfreundtner
+     */
     Keyaction lastKeyaction;
+    /**
+     * @brief  lastKeyletter
+     *         Die Variable lastKeyletter speichert den letzten gedrückten Buchstaben als Enum Keyletter
+     * @author  Felix Pfreundtner
+     */
     Keyletter lastKeyletter;
 
     void updateKeys();
