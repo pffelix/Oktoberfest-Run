@@ -113,7 +113,7 @@ private:
     /// Breite der Szene
     int sceneWidth;
     /// Länge des Levels
-    int levelLength;
+    int levelLength = 0;
     /// Distanz in der Gegner gespawnt werden
     int spawnDistance;
     std::list<struct scoreStruct> scoreList;

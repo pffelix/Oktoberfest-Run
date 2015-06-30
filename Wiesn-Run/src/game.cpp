@@ -411,7 +411,7 @@ int Game::step() {
         appendWorldObjects(playerObjPointer);
         reduceWorldObjects(playerObjPointer);
 
-        updateAudio();
+        //updateAudio();
 
         evaluateInput();
         worldObjects.sort(compareGameObjects());
@@ -826,6 +826,7 @@ void Game::handleCollisions() {
                             audioStorage.push_back(newAudio);
                         }
                         handleEnemy = 0;
+                        break;
                     }
                 }
             }
@@ -844,6 +845,7 @@ void Game::handleCollisions() {
 
                 }
                 handleEnemy = 0;
+                break;
             }
             case shot: {
                 // Spieler kriegt Schaden, Bierkrug zum löschen vormerken, treffen mit eigenem Krug nicht möglich
