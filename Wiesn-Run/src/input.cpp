@@ -97,11 +97,6 @@ void Input::updateKeys() {
             lastKeyaction = Keyaction::Enter;
             qDebug("Enter");
     }
-    if(keyevents.contains(Qt::Key_Backspace))  {
-            keyactions += Keyaction::Delete;
-            lastKeyaction = Keyaction::Delete;
-            qDebug("Delete");
-    }
 
     /// update für die Tastatureingabe relevante Tasten(-kombinationen)
     keyletters.clear();
@@ -417,7 +412,11 @@ void Input::updateKeys() {
             qDebug("z");
         }
     }
-
+    if(keyevents.contains(Qt::Key_Backspace))  {
+            keyletters.insert((char)Keyletter::Backspace);
+            lastKeyletter = Keyletter::Backspace;
+            qDebug("Backspace");
+    }
 }
 
 /**

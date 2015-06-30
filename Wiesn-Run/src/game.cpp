@@ -409,7 +409,12 @@ int Game::step() {
                 menuName->clear();
                 std::string name = playerScore.name;
                 char letter = static_cast<char>(key);
-                name.push_back(letter);
+
+                if(letter=='\b' && name.length()>0) {  // Backspace
+                    name.pop_back();    // Zeichen löschen
+                } else {
+                    name.push_back(letter);
+                }
                 playerScore.name = name;
 
                 menuName->addEntry(name,menuId_NonClickable);
