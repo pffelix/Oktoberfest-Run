@@ -941,11 +941,13 @@ void Game::handleCollisions() {
                 if (handlePowerUp->getPowerUPType() == food) {
                     audioCooldownstruct newAudio;
                     newAudio.audioEvent = {audioIDs, powerup_food, audioDistance.powerup_food};
+                    audioIDs = audioIDs + 1;
                     newAudio.cooldown = audioCooldown.powerup_food;
                     audioStorage.push_back(newAudio);
                 } else {
                     audioCooldownstruct newAudio;
                     newAudio.audioEvent = {audioIDs, powerup_beer, audioDistance.powerup_beer};
+                    audioIDs = audioIDs + 1;
                     newAudio.cooldown = audioCooldown.powerup_beer;
                     audioStorage.push_back(newAudio);
                 }
