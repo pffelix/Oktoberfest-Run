@@ -58,8 +58,8 @@ bool Input::eventFilter(QObject *obj, QEvent *event) {
  * @author  Felix Pfreundtner
  */
 void Input::updateKeys() {
+    /// update alle für das Gameplay relevante Tasten(-kombinationen)
     keyactions.clear();
-    /// update Keyactions
     if(keyevents.contains(Qt::Key_Left)) {
             keyactions += Keyaction::Left;
             qDebug("Left");
@@ -97,13 +97,30 @@ void Input::updateKeys() {
             lastKeyaction = Keyaction::Enter;
             qDebug("Enter");
     }
-    /// update Keyletters
+
+    /// update für die Tastatureingabe relevante Tasten(-kombinationen)
+    keyletters.clear();
+    if(keyevents.contains(Qt::Key_A)) {
+        if(keyevents.contains(Qt::Key_Shift)) {
+            keyletters.insert((char)Keyletter::A);
+            lastKeyletter = Keyletter::A;
+            qDebug("A");
+        }
+        else {
+            keyletters.insert((char)Keyletter::a);
+            lastKeyletter = Keyletter::a;
+            qDebug("a");
+        }
+
+    }
+
+
 
 }
 
 /**
  * @brief  Input::getKeyactions
- *         getKeyactions gibt bei Aufruf die Instanzvariable keyactions zurück.
+ *         getKeyactions gibt bei Aufruf das QSet keyactions zurück, welches alle im Moment gedrückten Spielaktionen als Enum beinhaltet.
  *         Jeder Tastaturkombination wird eine Integer ID zugeordnet welche im QSet keyactions gespeichert ist.
  *         Über die Enumeration Input::Keyaction ist jeder Spielbefehl mit dem zugehörigen Indize in keyactions verknüft.
  *         Möchte man nun bespielsweise abfragen ob der Spieler im Moment schießt so überprüft man:
@@ -117,21 +134,21 @@ QSet<int> Input::getKeyactions() {
 
 /**
  * @brief  Input::getKeyletters
- *         getKeyletters gibt bei Aufruf die Instanzvariable keyletters zurück.
- *         Jeder Buchststaben Taste wird ein String Buchstaben zugeordner, welcher im QSet keyletters gespeichert ist.
+ *         getKeyletters gibt bei Aufruf das QSet keyletters zurück, welches alle im Moment gedrückten Buchstaben als Enum beinhaltet.
+ *         Jeder Buchststaben Taste wird ein String Buchstaben zugeordnet, welcher im QSet keyletters gespeichert ist.
  *         Über die Enumeration Input::Keyletter ist jeder Buchstabe mit dem zugehörigen Indize in keyletters verknüft.
  *         Möchte man nun bespielsweise abfragen ob der Spieler im Moment die "a" Taste drückt so überprüft man:
  *         input->getKeyletters().contains(Input::Keyaction::Shoot) == True.
  * @return Instanzvariable keyactions
  * @author Felix Pfreundtner
  */
-QSet<QString> Input::getKeyletters() {
+std::set<char> Input::getKeyletters() {
     return keyletters;
 }
 
 /**
  * @brief Input::getLastKeyaction
- *        Gibt letzte gedrücke Keyaction Taste zurück und setzt die Variable lastKeyaction auf noKeyaction.
+ *        Gibt letzte gedrücke Spielaktion zurück und setzt die Variable lastKeyaction auf noKeyaction.
  *        Wird für die Menüführung gebraucht, da ein dauerhaftes Auswerten der Tasten dort zu Sprüngen
  *        beim Auswählen der Menü Einträge führt.
  * @return Enum Keyaction
@@ -145,7 +162,7 @@ Input::Keyaction Input::getLastKeyaction() {
 
 /**
  * @brief Input::getLastKeyletter
- *        Gibt letzte gedrücke Keyletter Taste zurück und setzt die Variable lastKeyletter auf noKeyletter.
+ *        Gibt letzten gedrücken Buchstaben zurück und setzt die Variable lastKeyletter auf noKeyletter.
  *        Verwendung findet die Funktion beim Eingabe des Highscore Namens.
  * @return Enum Keyletter
  * @author Felix

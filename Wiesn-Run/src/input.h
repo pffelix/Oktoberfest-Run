@@ -5,7 +5,8 @@
 #include <QSet>
 #include <QObject>
 #include <QEvent>
-#include <QString>
+#include <QChar>
+#include <set>
 #include <QKeyEvent>
 
 /**
@@ -29,68 +30,68 @@ public:
         Shoot,
         Exit,
         Enter,
-    } ;
+    };
 
     enum Keyletter{
         noKeyletter,
-        a,
-        b,
-        c,
-        d,
-        e,
-        f,
-        g,
-        h,
-        i,
-        j,
-        k,
-        l,
-        m,
-        n,
-        o,
-        p,
-        q,
-        r,
-        s,
-        t,
-        u,
-        v,
-        w,
-        x,
-        y,
-        z,
-        A,
-        B,
-        C,
-        D,
-        E,
-        F,
-        G,
-        H,
-        I,
-        J,
-        K,
-        L,
-        M,
-        N,
-        O,
-        P,
-        Q,
-        R,
-        S,
-        T,
-        U,
-        V,
-        W,
-        X,
-        Y,
-        Z,
+        a = (int)'a',
+        b = (int)'b',
+        c = (int)'c',
+        d = (int)'d',
+        e = (int)'e',
+        f = (int)'f',
+        g = (int)'g',
+        h = (int)'h',
+        i = (int)'i',
+        j = (int)'f',
+        k = (int)'k',
+        l = (int)'l',
+        m = (int)'m',
+        n = (int)'n',
+        o = (int)'o',
+        p = (int)'p',
+        q = (int)'q',
+        r = (int)'r',
+        s = (int)'s',
+        t = (int)'t',
+        u = (int)'u',
+        v = (int)'v',
+        w = (int)'w',
+        x = (int)'x',
+        y = (int)'y',
+        z = (int)'z',
+        A = (int)'A',
+        B = (int)'B',
+        C = (int)'C',
+        D = (int)'D',
+        E = (int)'E',
+        F = (int)'F',
+        G = (int)'G',
+        H = (int)'G',
+        I = (int)'I',
+        J = (int)'J',
+        K = (int)'K',
+        L = (int)'L',
+        M = (int)'M',
+        N = (int)'N',
+        O = (int)'O',
+        P = (int)'P',
+        Q = (int)'Q',
+        R = (int)'R',
+        S = (int)'S',
+        T = (int)'T',
+        U = (int)'U',
+        V = (int)'V',
+        W = (int)'W',
+        X = (int)'X',
+        Y = (int)'Y',
+        Z = (int)'Z',
     };
 
     Input();
     ~Input();
     QSet<int> getKeyactions();
-    QSet<QString> getKeyletters();
+    std::set<char> getKeyletters();
     Keyaction getLastKeyaction();
     Keyletter getLastKeyletter();
 
@@ -114,7 +115,7 @@ private:
      *         gepressten Buchstaben Tasten.
      * @author  Felix Pfreundtner
      */
-    QSet<QString> keyletters;
+    std::set<char> keyletters;
     /**
      * @brief  lastKeyaction
      *         Die Variable lastKeyaction speichert die letzte gedrückte Tastenkombination als Enum Keyaction
