@@ -471,7 +471,7 @@ Input::Keyaction Input::getLastKeyaction() {
  *        Gibt letzten gedrücken Buchstaben als enum Keyletter zurück und setzt die Variable lastKeyletter auf noKeyletter.
  *        Wurde eine Taste gedrückt (lastKeyletter_return != noKeyletter) so kann aus dem Enum Keyletter über eine Typenumwandlung der zugehörige Char berechnet werden:
  *         a = (char)lastKeyletter_return
- *        Verwendung findet die Funktion beim Eingabe des Highscore Namens.
+ *        Verwendung findet die Funktion bei der Eingabe des Highscore Namens.
  * @return Enum Keyletter
  * @author Felix
  */
