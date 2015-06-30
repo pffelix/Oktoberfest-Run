@@ -399,8 +399,22 @@ int Game::step() {
                     break;
                 case menuBreakId_EarlyEnd:
                     endGame();
-
                     break;
+            }
+        }
+        // Namenseingabe
+        if(aktStepMenu==menuName) {
+            Input::Keyletter key = keyInput->getLastKeyletter();
+            if(key!=0) { // Nur wenn Taste gedrückt wurde, Menü neuschreiben
+                menuName->clear();
+                std::string name = playerScore.name;
+                char letter = static_cast<char>(key);
+                name.push_back(letter);
+                playerScore.name = name;
+
+                menuName->addEntry(name,menuId_NonClickable);
+                menuName->addEntry("Weida",menuNameId_Next,true,gameMenuStatisitcs);
+                menuName->displayInit();
             }
         }
 
