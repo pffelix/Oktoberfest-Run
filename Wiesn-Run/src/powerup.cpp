@@ -1,4 +1,5 @@
 #include "powerup.h"
+#include <qdebug.h>
 
 /**
  * @brief Konstruktor
@@ -18,6 +19,15 @@ PowerUp::PowerUp(int posX, int posY, int healthBonus, int alcoholLevelBonus, int
     this->ammunationBonus = ammunationBonus;
     this->immunityCooldownBonus = immunityCooldownBonus;
     powType = type;
+
+    //Grafik - powerup Grafik initialisieren
+    if(type == food) {
+        setPixmap(QPixmap(":/images/images/hendl.png"));
+    }
+    else {
+        setPixmap(QPixmap(":/images/images/beer.png"));
+    }
+    setPos(getPosX() - getLength()*0.5, yOffset - getPosY() - getHeight());
 }
 
 /**

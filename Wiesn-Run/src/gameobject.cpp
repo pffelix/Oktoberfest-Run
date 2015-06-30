@@ -87,9 +87,6 @@ GameObject::GameObject(int posX, int posY, objectType type) {
         this->length = playerScale * (2.0 / 3.0);
         this->height = this->length;
 
-        //Grafik - powerup Grafik initialisieren
-        setPixmap(QPixmap(":/images/images/hendl.png"));
-        setPos(getPosX() - getLength()*0.5, yOffset - getPosY() - getHeight());
         qDebug("   PowerUp erstellt");
         break;
     }
@@ -99,7 +96,7 @@ GameObject::GameObject(int posX, int posY, objectType type) {
         this->height = playerScale * (2.0 / 3.0);
 
         //Grafik - Attackgrafik initialisieren
-        setPixmap(QPixmap(":/images/images/attack.png"));
+        setPixmap(QPixmap(":/images/images/beer.png"));
         setPos(getPosX() - getLength()*0.5, yOffset - getPosY() - getHeight());
         qDebug("   Shot erstellt");
         break;

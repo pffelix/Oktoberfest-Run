@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/images">
         <file>images/obstacle.png</file>
-        <file>images/attack.png</file>
         <file>images/plane.png</file>
         <file>images/menubackground.png</file>
         <file>images/bg_lev1_1.png</file>
