@@ -197,9 +197,9 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
         }
     }
     playeventsnumber = playevents.size();
-    qDebug() << QString("Filter Status: ") << QString::number(status_filter);
+    //qDebug() << QString("Filter Status: ") << QString::number(status_filter);
     for (pe = playevents.begin(); pe != playevents.end(); pe++) {
-        qDebug() << QString("Audio played: ") << QString::fromStdString(pe->audioobject->getSource());
+        //qDebug() << QString("Audio played: ") << QString::fromStdString(pe->audioobject->getSource());
     }
 }
 
