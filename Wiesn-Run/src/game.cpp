@@ -267,7 +267,7 @@ void Game::endGame() {
 
     /// @todo Aufräumarbeiten
     // Highscore aktualisieren
-    updateHighScore("write");
+    //updateHighScore("write");
 
     //Listen leeren
     audioevents.clear();
@@ -303,9 +303,9 @@ void Game::endGame() {
 void Game::exitGame() {
 
     /// @todo Aufräumarbeiten
-    // Highscore aktualisieren
-    std::string mode = "write";
-    updateHighScore(mode);
+    // Highscore aktualisieren nicht nötig, da in Endgame gemacht
+    //std::string mode = "write";
+    //updateHighScore(mode);
 
     /// Beende Audio Ausgabe und lösche Audiobezogene Variablen
 
@@ -1543,12 +1543,16 @@ void Game::updateHighScore(std::string mode) {
     // Datei schließen
     input.close();
 
-    // Aktuelle Spielerscore hinzufügen und sortieren
-    scoreList.push_back(playerScore);
+    // Score sortieren
     scoreList.sort(compareScores());
 
     if (mode == "write") {
         // Neue Highscore schreiben
+
+        // Aktuelle Spielerscore hinzufügen und sortieren
+        scoreList.push_back(playerScore);
+        scoreList.sort(compareScores());
+
         std::ofstream ofs;
         ofs.open("wiesnHighscore.txt", std::ofstream::out | std::ofstream::trunc);
 
@@ -1703,7 +1707,7 @@ void Game::displayStatistics() {
     // Highscore-Menü
     menuHighscore->clear();
 
-    updateHighScore("listefüllen");
+    updateHighScore("write");
     int scoreCount = 0;
     for(std::list<scoreStruct>::iterator it = scoreList.begin(); it != scoreList.end(); ++it) {
         if(scoreCount > 4) break;
