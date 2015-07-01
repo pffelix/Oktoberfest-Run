@@ -110,6 +110,12 @@ int Game::start() {
     // Menüs erstellen
     menuInit();
 
+    /// Erstelle Audiocontrol Objekt zum Einlesen der Audiodatein und speichern der Ausgabeparameter
+    audioOutput = new AudioControl;
+    /// Erstelle einen neuen Thread portaudiothread.
+    /// Initialisiere dort PortAudio und beginne eine Audioausgabe zu erzeugen.
+    std::thread portaudiothread(&AudioControl::playInitialize, audioOutput);
+
     // QGraphicsScene der Level erstellen
     levelScene = new QGraphicsScene;
 
@@ -118,21 +124,13 @@ int Game::start() {
     window->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     window->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     window->setFixedSize(1024,768);
-    window->setWindowTitle(QApplication::translate("Game Widget", "Game Widget (Input Test)"));
+    window->setWindowTitle(QApplication::translate("Game Widget", "Wiesn - Run"));
     window->setEnabled(false);
     window->show();
     qDebug("initialize window");
 
     /// Installiere Event Filter zum Loggen der Keyboard Eingabe
     window->installEventFilter(keyInput);
-
-    /// Erstelle Audiocontrol Objekt zum Einlesen der Audiodatein und speichern der Ausgabeparameter
-    audioOutput = new AudioControl;
-    /// Erstelle einen neuen Thread portaudiothread.
-    /// Initialisiere dort PortAudio und beginne eine Audioausgabe zu erzeugen.
-    std::thread portaudiothread(&AudioControl::playInitialize, audioOutput);
-
-
 
     ///@todo hier wird das Startmenü übersprungen
     //startNewGame("level1_old.txt",1);
@@ -911,9 +909,9 @@ void Game::handleCollisions() {
                             gameStats.gameOver = playerObjPointer->receiveDamage(handleEnemy->getInflictedDamage());
                             //Audioevent
                             audioCooldownstruct newAudio;
-                            newAudio.audioEvent = {audioIDs, scene_collision_enemy, audioDistance.scene_collision_enemy};
+                            newAudio.audioEvent = {audioIDs, scene_collision_player, audioDistance.scene_collision_player};
                             audioIDs = audioIDs + 1;
-                            newAudio.cooldown = audioCooldown.scene_collision_enemy;
+                            newAudio.cooldown = audioCooldown.scene_collision_player;
                             audioStorage.push_back(newAudio);
                         }
                         //Referenz löschen
@@ -1484,7 +1482,7 @@ void Game::updateScore() {
     playerScore.enemiesKilled = playerObjPointer->getEnemiesKilled();
     playerScore.alcoholPoints = playerScore.alcoholPoints + (playerObjPointer->getAlcoholLevel() / 100);
     playerScore.totalPoints = playerScore.distanceCovered + playerScore.enemiesKilled + playerScore.alcoholPoints;
-    playerScore.name = "Horstl";
+//    playerScore.name = "Horstl";
 }
 
 
@@ -1617,7 +1615,8 @@ void Game::menuInit() {
 
     menuCredits = new Menu(new std::string("Credits"));
     menuCredits->addEntry("Grundkurs C++", menuId_NonClickable,false);
-    menuCredits->addEntry("da Simon, da Rupi, da Felix,", menuId_NonClickable,false);
+    menuCredits->addEntry("da Simon, da Rupi,", menuId_NonClickable,false);
+    menuCredits->addEntry("da Felix,", menuId_NonClickable,false);
     menuCredits->addEntry("da Flo und da Johann", menuId_NonClickable,false);
     menuCredits->addEntry("weg do!", menuCreditsId_Back,true,gameMenuStart);
     menuCredits->displayInit();
