@@ -267,7 +267,7 @@ void Game::endGame() {
 
     /// @todo Aufräumarbeiten
     // Highscore aktualisieren
-    //updateHighScore("write");
+    updateHighScore("write");
 
     //Listen leeren
     audioevents.clear();
@@ -1707,7 +1707,7 @@ void Game::displayStatistics() {
     // Highscore-Menü
     menuHighscore->clear();
 
-    updateHighScore("write");
+    updateHighScore("listefüllen");
     int scoreCount = 0;
     for(std::list<scoreStruct>::iterator it = scoreList.begin(); it != scoreList.end(); ++it) {
         if(scoreCount > 4) break;
