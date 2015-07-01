@@ -1,0 +1,106 @@
+﻿LevelDatei für den Demolevel
+
+Diese Datei kann nur von der Methode "loadLevelFile" ausgelesen werden.
+Zeilen, die mit einem Keyword beginnen, werden interpretiert. Alle anderen Zeilen werden ignoriert.
+
+Erläuterung
+------------
+# Spieler anlegen:
+# Player,posX,posY
+# Player,160,0
+# Größe: 60x120
+
+# Tourist anlegen:
+# Tourist,posX,posY,speedX
+# Tourist,300,0,-4
+# Größe: 60x120
+
+# Security anlegen:
+# Security,posX,posY
+# Security,300,0
+# Größe: 60:120
+
+# Boss anlegen:
+# Boss,posX,posY,speedX
+# Boss,300,0,0
+# Größe: 120:240
+
+# Obstacle anlegen:
+# Obstacle,posX,posY
+# Obstacle,200,0
+# Größe: 90x120
+
+# Plane anlegen:
+# Plane,posX,posY
+# Plane,400,100
+# Größe: 120x20
+
+# Bier-Powerup anlegen:
+# Bier,posX,posY
+# Bier,300,60
+
+# Hendl-Powerup anlegen:
+# Hendl,posX,posY
+# Hendl,300,60
+
+# Beliebiges Powerup anlegen:
+# PowerUp,posX,posY,health,alcohol,ammo,immunityCooldown
+
+
+Player,130,0
+Levellänge,11000
+
+# Springen mit Obstacles vorführen
+Obstacle,400,0
+
+Obstacle,800,0
+
+# Laufen über zusammenhängende Planes, langsames Hochspringen
+Obstacle,2000,0
+
+Plane,2300,140
+Plane,2420,140
+Plane,2540,140
+
+Plane,3500,140
+Plane,3620,140
+Plane,3740,160
+Plane,3860,160
+Plane,3980,180
+Plane,4100,180
+Plane,4220,200
+Plane,4400,200
+Plane,4520,220
+Plane,4640,220
+
+Plane,4800,220
+
+Plane,5000,140
+
+# Powerups vorführen
+Bier,5800,40
+
+#Obstacle,6400,0
+
+Hendl,6800,60
+
+Hendl,7000,60
+
+#Enemys
+Security,8420,0 
+
+Obstacle,8700,0
+Plane, 8840, 180
+Plane, 8960, 180
+Plane, 9080, 160
+Plane, 9200, 160
+Plane, 9320, 160
+Plane, 9500, 160
+Plane, 9620, 120
+Plane, 9740, 120
+
+Obstacle,9740,0
+Tourist,10360,0,0
+
+
+# Ende bei 11000

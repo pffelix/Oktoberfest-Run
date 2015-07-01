@@ -1,4 +1,4 @@
-LevelDatei für den dritten Level
+﻿LevelDatei für den dritten Level
 
 Diese Datei kann nur von der Methode "loadLevelFile" ausgelesen werden.
 Zeilen, die mit einem Keyword beginnen, werden interpretiert. Alle anderen Zeilen werden ignoriert.
@@ -12,13 +12,18 @@ Erläuterung
 
 # Tourist anlegen:
 # Tourist,posX,posY,speedX
-# Tourist,300,0,-10
+# Tourist,300,0,-4
 # Größe: 60x120
 
 # Security anlegen:
 # Security,posX,posY
 # Security,300,0
 # Größe: 60:120
+
+# Boss anlegen:
+# Boss,posX,posY,speedX
+# Boss,300,0,0
+# Größe: 120:240
 
 # Obstacle anlegen:
 # Obstacle,posX,posY
@@ -45,6 +50,19 @@ Level3: Käfer-Zelt
 ------------
 
 Player,130,0
-Levellänge,20000
+Levellänge,3000
 
 Obstacle,400,0
+#Tourist,600,0,-4
+Obstacle,800,0
+
+Obstacle,1000,0
+#Security,1200,0
+Obstacle,1400,0
+
+Obstacle,1600,0
+#Boss,1800,0,0
+Obstacle,2000,0
+
+Obstacle,2900,0
+

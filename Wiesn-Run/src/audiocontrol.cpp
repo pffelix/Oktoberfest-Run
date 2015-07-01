@@ -10,7 +10,7 @@ AudioControl::AudioControl() {
 
     /// erstelle für jede objektgruppe "type" ein audio Objekt welches unter anderem die Samples beinhaltet
     audioobjects.reserve(23);
-    //source: created by Felix with Synthesizer
+    //source: http://soundbible.com/1247-Wind.html
     audioobjects.insert(audioobjects.begin() + audioType::scene_flyingbeer, Audio("scene_flyingbeer")); // 16bit
     //source: http://www.freesound.org/people/Reitanna/sounds/241215/
     audioobjects.insert(audioobjects.begin() + audioType::scene_enemy_tourist, Audio("scene_enemy_tourist")); // 16bit
@@ -20,15 +20,15 @@ AudioControl::AudioControl() {
     audioobjects.insert(audioobjects.begin() + audioType::scene_enemy_boss, Audio("scene_enemy_boss")); // 16bit
     //source: http://soundbible.com/1522-Balloon-Popping.html
     audioobjects.insert(audioobjects.begin() + audioType::scene_collision_obstacle, Audio("scene_collision_obstacle")); // 16bit
-    //source: http://www.freesound.org/people/thecheeseman/sounds/44430/
-    audioobjects.insert(audioobjects.begin() + audioType::scene_collision_enemy, Audio("scene_collision_enemy")); // 16bit
     //source: http://www.freesound.org/people/qubodup/sounds/169725/
+    audioobjects.insert(audioobjects.begin() + audioType::scene_collision_enemy, Audio("scene_collision_enemy")); // 16bit
+    //source: http://www.freesound.org/people/thecheeseman/sounds/44430/
     audioobjects.insert(audioobjects.begin() + audioType::scene_collision_player, Audio("scene_collision_player")); // 16bit
     //source: http://helios.augustana.edu/~dr/105/wav/glasbk.wav
     audioobjects.insert(audioobjects.begin() + audioType::scene_collision_flyingbeer, Audio("scene_collision_flyingbeer")); // 16bit
     //source: http://www.freesound.org/people/edhutschek/sounds/215634/
     audioobjects.insert(audioobjects.begin() + audioType::powerup_beer, Audio("powerup_beer")); // 16bit
-    //source: http://www.freesound.org/people/Agaxly/sounds/194463/
+    //source: https://www.freesound.org/people/bassboybg/sounds/264544/
     audioobjects.insert(audioobjects.begin() + audioType::powerup_food, Audio("powerup_food")); // 16bit
     //source: http://www.freesound.org/people/afleetingspeck/sounds/151180/
     audioobjects.insert(audioobjects.begin() + audioType::status_alcohol, Audio("status_alcohol")); // 16bit
@@ -197,9 +197,9 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
         }
     }
     playeventsnumber = playevents.size();
-    qDebug() << QString("Filter Status: ") << QString::number(status_filter);
+    //qDebug() << QString("Filter Status: ") << QString::number(status_filter);
     for (pe = playevents.begin(); pe != playevents.end(); pe++) {
-        qDebug() << QString("Audio played: ") << QString::fromStdString(pe->audioobject->getSource());
+        //qDebug() << QString("Audio played: ") << QString::fromStdString(pe->audioobject->getSource());
     }
 }
 
@@ -283,16 +283,18 @@ int AudioControl::instancepaCallback( const void *inputBuffer, void *outputBuffe
             /// mixed:sample_keinfilter = sample(aktuell Position Audioevent)*aktuelle_relative_lautstärke_audioevent/anzahl_maximaler_playevents
             mixed_sample += callback_pe->audioobject->getSample(callback_pe->position) * callback_pe->volume / max_playevents;
             /// wähle aktuell anzuwenden Filter aus
+            /// erhöhe Abspielposition des aktuell iterierten Audiovents um ein Sample
+            callback_pe->position += 1;
+            /**
             switch (status_filter) {
                 /// kein Filter anwenden
-                case statusFilter::no:
-                    /// erhöhe Abspielposition des aktuell iterierten Audiovents um ein Sample
-                    callback_pe->position += 1;
+                case 9:
+
                     break;
 
                 /// Alkohol Filter anwenden
                 /// Verzögere das Audiosignal im Zeitbereich um 1 Sample in jedem Schritt
-                case statusFilter::alcohol:
+                case 10:
                     /// falls Blockposition gerade ist
                     if(block_pos % 2 == 0) {
                         /// erhöhe Abspielposition des aktuell iterierten Audiovents um ein Sample
@@ -304,7 +306,7 @@ int AudioControl::instancepaCallback( const void *inputBuffer, void *outputBuffe
                 /// Schwanke die Lautstärke im Zeitbereich mit 1Hz Cosinus Schwingung
                 /// mixed_sample = mixed:sample_keinfilter * 1Hz_Lautstärke_Cosinus_Filter
                 /// 1Hz_Lautstärke_Cosinus_Filter = Betrag [cos(2 * pi * 1 / 44100 * (Anzahl bisher abgespielte Blöcke * 1024 + Position im Callback Block))]
-                case statusFilter::life:
+                case 11:
                     mixed_sample += mixed_sample*std::abs(std::cos(2 * M_PI * 1 /44100 *(blockcounter * BLOCKSIZE + block_pos)));
                     /// erhöhe Abspielposition des aktuell iterierten Audiovents um ein Sample
                     callback_pe->position += 1;
@@ -314,12 +316,13 @@ int AudioControl::instancepaCallback( const void *inputBuffer, void *outputBuffe
                 /// Schwanke die Lautstärke im Zeitbereich mit 5Hz Cosinus Schwingung
                 /// mixed_sample = mixed:sample_keinfilter * 5Hz_Lautstärke_Cosinus_Filter
                 /// 5Hz_Lautstärke_Cosinus_Filter = |cos(2 * pi * 0 / 44100 * (Anzahl bereitsabgespielte Blöcke * 1024 + aktuelle Position Callback Block))|
-                case statusFilter::lifecritical:
+                case 12:
                     mixed_sample += mixed_sample * std::cos(2 * M_PI * 5 /44100 *(blockcounter * BLOCKSIZE + block_pos));
                     /// erhöhe Abspielposition des aktuell iterierten Audiovents um ein Sample
                     callback_pe->position += 1;
                     break;
             }
+             */
             /// falls Samples Position des aktuell iterierten Audiovents Anzahl an Samples in Audioobject überschreitet
             if (callback_pe->position >= callback_pe->audioobject->getSamplenumber()) {
                 /// Loope Audiosignal -> setzte Samples Position auf Anfang zurück (pos = position-samplenumber)

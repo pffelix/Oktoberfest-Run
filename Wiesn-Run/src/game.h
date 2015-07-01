@@ -96,7 +96,7 @@ private:
     /// In der Welt befindliche Objekte
     std::list<GameObject*> worldObjects;
     /// Statische Objekte, die zu Anfang gespawnt werden
-    std::list<GameObject*> levelInitial;
+    //std::list<GameObject*> levelInitial;
     /// Objekte die zur Laufzeit dynamisch gespawnt werden
     std::list<GameObject*> levelSpawn;
     /// Zu löschende Schüsse
@@ -113,11 +113,11 @@ private:
     /// Breite der Szene
     int sceneWidth;
     /// Länge des Levels
-    int levelLength;
+    int levelLength = 0;
     /// Distanz in der Gegner gespawnt werden
     int spawnDistance;
     std::list<struct scoreStruct> scoreList;
-    struct scoreStruct playerScore;
+    struct scoreStruct playerScore = {"", 0, 0, 0, 0};
 
 
     int stepIntervall;
@@ -142,6 +142,9 @@ private:
 
 
     // Menüs
+    void menuInit();    /// Initialisiert Menüs
+    void displayStatistics();
+
     enum gameState state = gameMenuStart;    /// aktueller Spielzustand
     Menu *aktMenu = menuStart;      /// aktuell aktives Menü, null während das Spiel läuft; wird in setState gesetzt
 
@@ -157,8 +160,8 @@ private:
         menuId_NonClickable,
         menuStartId_NewGame, menuStartId_EndGame, menuStartId_Credits,   // Startmenü
         menuCreditsId_Back, // Credits
-        menuLevelId_Back, menuLevelId_Level1, menuLevelId_Level2, menuLevelId_Level3, menuLevelId_StartGame,   // Levelauswahl
-        menuBreakId_Resume, menuBreakId_EndGame,    // Pause
+        menuLevelId_Back, menuLevelId_Demo, menuLevelId_Level1, menuLevelId_Level2, menuLevelId_Level3, menuLevelId_StartGame,   // Levelauswahl
+        menuBreakId_Resume, menuBreakId_EarlyEnd, menuBreakId_EndGame,    // Pause
         menuStatisticsId_Next,  // Statistik
         menuNameId_Next,        // Name eingeben
         menuHighscoreId_Next   // Highscoretabelle
@@ -171,6 +174,7 @@ private:
     audioCooldownStruct audioCooldown;
     audioDistanceStruct audioDistance;
     chrono::high_resolution_clock::time_point thisStep;
+
 };
 
 #endif // GAME_H

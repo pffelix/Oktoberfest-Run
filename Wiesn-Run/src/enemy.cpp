@@ -16,12 +16,14 @@ Enemy::Enemy(int posX, int posY, int speedX, objectType enemy) : MovingObject(po
     switch (enemy) {
     case BOSS: {
         health = 5;
-        fireCooldown = frameRate;
+        fireRate = frameRate;
+        fireCooldown = 3 * frameRate;
         break;
     }
     case enemy_tourist: {
         health = 1;
-        fireCooldown = 2 * frameRate;
+        fireRate = 2 * frameRate;
+        fireCooldown = 3 * frameRate;
         break;
     }
     case enemy_security: {
@@ -29,6 +31,11 @@ Enemy::Enemy(int posX, int posY, int speedX, objectType enemy) : MovingObject(po
         //bedeutet der Gegner kann nicht schießen
         fireCooldown = -1;
     }
+    default: {
+        qDebug("Fehler beim Anlegen des Gegners: Default-Case");
+        break;
+    }
+
     }
     death = false;
     inflictedDamage = 1;

@@ -32,7 +32,7 @@ private:
     //Lebensstand
     int health;
     //Feuergeschwindigkeit
-    const int fireRate = frameRate;
+    int fireRate;
     //verbleibende Nachladezeit
     int fireCooldown;
     //Schaden, den Gegner verursacht

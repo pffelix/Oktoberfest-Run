@@ -201,6 +201,7 @@ qint16 Audio::to16bitSample(quint8 sample8bit) {
  *         Diese Amplitude wird auf den maximalen signed Integer 16 Bit Wert gesetzt (hier: -32767 oder 32767).
  *         Alle anderen Samples werden entsprechend ihres Verhältnises zur größten Betrag-Amplitude skaliert.
  * @author Felix Pfreundtner
+ * @todo controll whether working
  */
 void Audio::normalize() {
     // maxabs speichert die großte Betrag-Amplitude eines Samples aus sample

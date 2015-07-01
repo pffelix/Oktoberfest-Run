@@ -33,8 +33,8 @@ GameObject::GameObject(int posX, int posY, objectType type) {
         this->height = playerScale * 2;
 
         //Grafik - Obstacle Images initialisieren
-        setPixmap(QPixmap(":/images/images/obstacle.png"));
-        setPos(getPosX() - 0.5*getLength(), yOffset - getPosY() - getHeight());
+        setPixmap(QPixmap(":/images/images/barrel.png"));
+        setPos(getPosX() - 0.5*getLength(), yOffset - getPosY() - getHeight()-7);
         qDebug("   Obstacle erstellt");
         break;
     }
@@ -66,12 +66,20 @@ GameObject::GameObject(int posX, int posY, objectType type) {
         this->height = playerScale * 2;
 
         //Grafik - Enemy wird initialisiert
-        setPixmap(QPixmap(":/images/images/enemy1.png"));
-        setPos(getPosX() - 0.5*getLength(), yOffset - getPosY() - getHeight());
-        qDebug("   Enemy erstellt");
+        setPixmap(QPixmap(":/images/images/tourist1.png"));
+        setPos(getPosX() - 0.5*getLength() -15, yOffset - getPosY() - getHeight());
+        qDebug("   Tourist erstellt");
         break;
     }
     case enemy_security: {
+        // Verhältnis 1:2
+        this->length = playerScale;
+        this->height = playerScale * 2;
+
+        setPixmap(QPixmap(":/images/images/security.png"));
+        setPos(getPosX() - 0.5*getLength(), yOffset - getPosY() - getHeight());
+        qDebug("   Security erstellt");
+        break;
 
     }
     case powerUp: {
@@ -79,9 +87,6 @@ GameObject::GameObject(int posX, int posY, objectType type) {
         this->length = playerScale * (2.0 / 3.0);
         this->height = this->length;
 
-        //Grafik - powerup Grafik initialisieren
-        setPixmap(QPixmap(":/images/images/powerup.png"));
-        setPos(getPosX() - getLength()*0.5, yOffset - getPosY() - getHeight());
         qDebug("   PowerUp erstellt");
         break;
     }
@@ -91,14 +96,18 @@ GameObject::GameObject(int posX, int posY, objectType type) {
         this->height = playerScale * (2.0 / 3.0);
 
         //Grafik - Attackgrafik initialisieren
-        setPixmap(QPixmap(":/images/images/attack.png"));
+        setPixmap(QPixmap(":/images/images/beer.png"));
         setPos(getPosX() - getLength()*0.5, yOffset - getPosY() - getHeight());
         qDebug("   Shot erstellt");
         break;
     }
     case BOSS: {
-        this->length = 2 * playerScale;
+        this->length = 3 * playerScale;
         this->length = 4 * playerScale;
+
+        setPixmap(QPixmap(":/images/images/boss.png"));
+        setPos(getPosX() - getLength()*0.5 -10, yOffset - getPosY() - getHeight());
+        qDebug("   Boss erstellt");
         break;
     }
     };

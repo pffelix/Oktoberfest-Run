@@ -13,6 +13,7 @@
 
 #include <iostream>
 #include <list>
+#include <chrono>
 
 /**
  * @brief Enumerator für den aktuellen Spielstatus
@@ -29,6 +30,11 @@ enum gameState {
  * wird in allen Klassen für die CooldownParameter benutzt
  */
 const int frameRate = 30;
+
+/**
+ * @brief Alkohol, der pro Sekunde abgebaut wird
+ */
+const int minusAlcoholPerSecond = 30;
 
 /**
  * @brief Skalierungsfaktor für die Breite des Spielerobjekts bei 1024 Bildschirmbreite:
@@ -60,7 +66,7 @@ const int playerSpeed = maxSpeed + 1;
 /**
  * @brief Fall- / Sprunggeschwindigkeit
  */
-const int maxSpeedY = maxSpeed;
+const int maxSpeedY = 3 * maxSpeed / 2;
 
 /**
  * @brief maximales Leben
@@ -76,6 +82,7 @@ const int beerAlcohol = 400;
 const int beerHealth = 1;
 const int beerAmmo = 1;
 const int hendlHealth = 1;
+const int hendlAlcoholMalus = -500;
 
 /**
  * @brief Enumerator für den Objekt-Typ
@@ -105,10 +112,10 @@ enum collisionDirection {
  */
 struct scoreStruct {
     std::string name;
-    int enemiesKilled;
+    int totalPoints;
     int distanceCovered;
     int alcoholPoints;
-    int totalPoints;
+    int enemiesKilled;
 };
 
 
@@ -131,9 +138,9 @@ enum audioType {
     scene_enemy_boss,
     /// Kollision mit Hinderniss aufgetreten: wird einmal gesendet wenn eine Kollision mit einem Hindernis auftritt (cooldown)
     scene_collision_obstacle,
-    /// Kollision mit Gegner aufgetreten (Schaden): wird einmal gesendet wenn eine Kollision mit einem Gegner auftritt (cooldown)
+    /// Spieler hat Schaden am Gegner bezweckt: wird einmal gesendet wenn Schaden auftritt (cooldown)
     scene_collision_enemy,
-    /// Kollision mit Gegner aufgetreten (Besiegt): wird einmal gesendet wenn eine Kollision mit einem Gegner auftritt (cooldown)
+    /// Spieler hat Schaden genommen: wird einmal gesendet wenn Schaden auftritt (cooldown)
     scene_collision_player,
     /// Kollision mit geworfenen Bier aufgetreten: wird einmal gesendet wenn eine Kollision mit einem geworfenen Bier auftritt (cooldown)
     scene_collision_flyingbeer,
@@ -178,29 +185,29 @@ enum audioType {
  * @author Felix
  */
 typedef struct {
-    int scene_flyingbeer = 0;
-    int scene_enemy_tourist = 0;
-    int scene_enemy_security = 0;
-    int scene_enemy_boss = 0;
-    int scene_collision_obstacle = 306;
-    int scene_collision_enemy = 899;
-    int scene_collision_player = 2989;
-    int scene_collision_flyingbeer = 1211;
-    int powerup_beer = 2989;
-    int powerup_food = 1989;
-    int status_alcohol = 0;
-    int status_life = 0;
-    int status_lifecritical = 0;
-    int status_dead = 4989;
-    int player_walk = 0;
-    int player_jump = 354;
-    int background_menu = 0;
-    int background_highscore = 0;
-    int background_level1 = 0;
-    int background_level2 = 0;
-    int background_level3 = 0;
-    int background_startgame = 2838;
-    int background_levelfinished = 5365;
+    std::chrono::duration<int, std::milli> scene_flyingbeer = std::chrono::milliseconds(0);
+    std::chrono::duration<int, std::milli> scene_enemy_security = std::chrono::milliseconds(0);
+    std::chrono::duration<int, std::milli> scene_enemy_tourist = std::chrono::milliseconds(0);
+    std::chrono::duration<int, std::milli> scene_enemy_boss = std::chrono::milliseconds(0);
+    std::chrono::duration<int, std::milli> scene_collision_obstacle = std::chrono::milliseconds(200);
+    std::chrono::duration<int, std::milli> scene_collision_enemy = std::chrono::milliseconds(1639);
+    std::chrono::duration<int, std::milli> scene_collision_player = std::chrono::milliseconds(899);
+    std::chrono::duration<int, std::milli> scene_collision_flyingbeer = std::chrono::milliseconds(1211);
+    std::chrono::duration<int, std::milli> powerup_beer = std::chrono::milliseconds(2989);
+    std::chrono::duration<int, std::milli> powerup_food = std::chrono::milliseconds(3989);
+    std::chrono::duration<int, std::milli> status_alcohol = std::chrono::milliseconds(0);
+    std::chrono::duration<int, std::milli> status_life = std::chrono::milliseconds(0);
+    std::chrono::duration<int, std::milli> status_lifecritical = std::chrono::milliseconds(0);
+    std::chrono::duration<int, std::milli> status_dead = std::chrono::milliseconds(4989);
+    std::chrono::duration<int, std::milli> player_walk = std::chrono::milliseconds(0);
+    std::chrono::duration<int, std::milli> player_jump = std::chrono::milliseconds(354);
+    std::chrono::duration<int, std::milli> background_menu = std::chrono::milliseconds(0);
+    std::chrono::duration<int, std::milli> background_highscore = std::chrono::milliseconds(0);
+    std::chrono::duration<int, std::milli> background_level1 = std::chrono::milliseconds(0);
+    std::chrono::duration<int, std::milli> background_level2 = std::chrono::milliseconds(0);
+    std::chrono::duration<int, std::milli> background_level3 = std::chrono::milliseconds(0);
+    std::chrono::duration<int, std::milli> background_startgame = std::chrono::milliseconds(2838);
+    std::chrono::duration<int, std::milli> background_levelfinished = std::chrono::milliseconds(5365);
 } audioCooldownStruct;
 
 /**
@@ -289,7 +296,7 @@ struct audioStruct {
  */
 struct audioCooldownstruct {
     struct audioStruct audioEvent;
-    int cooldown;
+    std::chrono::duration<int, std::milli> cooldown;
 };
 
 enum powerUpType {
@@ -304,22 +311,12 @@ enum powerUpType {
  * @author Simon
  */
 struct stateStruct {
-    bool gameOver;
-    int actLevel;
-    int audioID_Background;
+    bool gameOver = false;
+    int actLevel = 0;
+    int audioID_Background = 0;
 
-    bool playerJumping;
-    bool playerAttacking;
-    bool playerRunning;
-    bool playerThrowing;
-    bool playerHit;
-
-    bool enemyAttacking;
-    bool enemyThrowing;
-    bool enemyDead;
-
-    bool beerCollected;
-    bool chickenCollected;
+    bool beerCollected = 0;
+    bool chickenCollected = 0;
 
 };
 

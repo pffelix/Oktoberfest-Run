@@ -82,10 +82,10 @@ PowerUp,1900,60,0,1,1,0
 PowerUp,2000,0,0,1,1,0
 
 Plane,3000,140
-Tourist,3100,140,-20
+Tourist,3100,140,0
 Plane,3120,140
 Plane,3240,140
-Security,3240,-10
+Security,3240,0
 Plane,3360,140
 Plane,3240,300
 Plane,3360,300
@@ -107,7 +107,5 @@ Obstacle,5100,240
 Obstacle,5100,360
 
 Obstacle,6000,0
-Tourist,6300,0,-10
-Security,6400,0
-Obstacle,6800,0
+
 
