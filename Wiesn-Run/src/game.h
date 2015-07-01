@@ -117,7 +117,7 @@ private:
     /// Distanz in der Gegner gespawnt werden
     int spawnDistance;
     std::list<struct scoreStruct> scoreList;
-    struct scoreStruct playerScore = {"", 0, 0, 0, 0};
+    struct scoreStruct playerScore;
 
 
     int stepIntervall;
