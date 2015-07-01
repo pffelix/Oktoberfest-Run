@@ -57,6 +57,8 @@ Game::Game(int argc, char *argv[]) : QObject() {
     /// Initialisiert den appPointer mit der QApplication
     appPointer = new QApplication(argc,argv);
 
+    playerScore = {"", 0, 0, 0, 0};
+
 }
 
 Game::~Game() {
