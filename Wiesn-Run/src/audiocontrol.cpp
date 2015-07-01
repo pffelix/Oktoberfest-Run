@@ -20,9 +20,9 @@ AudioControl::AudioControl() {
     audioobjects.insert(audioobjects.begin() + audioType::scene_enemy_boss, Audio("scene_enemy_boss")); // 16bit
     //source: http://soundbible.com/1522-Balloon-Popping.html
     audioobjects.insert(audioobjects.begin() + audioType::scene_collision_obstacle, Audio("scene_collision_obstacle")); // 16bit
-    //source: http://www.freesound.org/people/thecheeseman/sounds/44430/
-    audioobjects.insert(audioobjects.begin() + audioType::scene_collision_enemy, Audio("scene_collision_enemy")); // 16bit
     //source: http://www.freesound.org/people/qubodup/sounds/169725/
+    audioobjects.insert(audioobjects.begin() + audioType::scene_collision_enemy, Audio("scene_collision_enemy")); // 16bit
+    //source: http://www.freesound.org/people/thecheeseman/sounds/44430/
     audioobjects.insert(audioobjects.begin() + audioType::scene_collision_player, Audio("scene_collision_player")); // 16bit
     //source: http://helios.augustana.edu/~dr/105/wav/glasbk.wav
     audioobjects.insert(audioobjects.begin() + audioType::scene_collision_flyingbeer, Audio("scene_collision_flyingbeer")); // 16bit
