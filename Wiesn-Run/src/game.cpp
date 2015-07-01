@@ -224,6 +224,12 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
 
     levelScene->addItem(&playerStats[0]);
 
+    // Score initialisieren
+    playerScore.alcoholPoints = 0;
+    playerScore.distanceCovered = 0;
+    playerScore.enemiesKilled = 0;
+    playerScore.name = "Sepp";
+    playerScore.totalPoints = 0;
 
     // Zeiger auf Objekte aus levelInitial in worldObjects verlegen
     /// @todo Theoretisch brauchen wir levelIntial nicht mehr, die Frage ist, ob die Grafik da mitmacht.
