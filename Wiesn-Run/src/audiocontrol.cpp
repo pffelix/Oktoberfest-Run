@@ -245,6 +245,7 @@ void AudioControl::playInitialize(){
     /// Pausiere Funktion wenn Audiostream gerade aktiv ist (Audiowiedergabe übernimmt Callback Funktion)
     while (Pa_IsStreamActive(pastream) == 1) {
         Pa_Sleep(waitinms);
+        // std::this_thread::sleep_for(std::chrono::milliseconds(waitnms)); Ersatz für sleep() ?
     }
 
 
