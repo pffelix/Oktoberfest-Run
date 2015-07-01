@@ -1215,7 +1215,7 @@ void Game::updateAudio() {
                 handleObject->setAudioID(audioIDs);
                 audioIDs = audioIDs + 1;
             }
-            float distance = static_cast<float> ((std::abs(playerObjPointer->getPosX() - handleObject->getPosX()) / sceneWidth));
+            float distance = static_cast<float> ((std::abs(playerObjPointer->getPosX() - handleObject->getPosX()))) / static_cast<float> (sceneWidth);
             newAudio = {handleObject->getAudioID(), scene_enemy_tourist, distance};
             audioevents.push_back(newAudio);
             break;
@@ -1225,7 +1225,7 @@ void Game::updateAudio() {
                 handleObject->setAudioID(audioIDs);
                 audioIDs = audioIDs + 1;
             }
-            float distance = static_cast<float> ((std::abs(playerObjPointer->getPosX() - handleObject->getPosX()) / sceneWidth));
+            float distance = static_cast<float> ((std::abs(playerObjPointer->getPosX() - handleObject->getPosX()))) / static_cast<float> (sceneWidth);
             newAudio = {handleObject->getAudioID(), scene_enemy_security, distance};
             audioevents.push_back(newAudio);
             break;
@@ -1235,7 +1235,7 @@ void Game::updateAudio() {
                 handleObject->setAudioID(audioIDs);
                 audioIDs = audioIDs + 1;
             }
-            float distance = static_cast<float> ((std::abs(playerObjPointer->getPosX() - handleObject->getPosX()) / sceneWidth));
+            float distance = static_cast<float> ((std::abs(playerObjPointer->getPosX() - handleObject->getPosX()))) / static_cast<float> (sceneWidth);
             newAudio = {handleObject->getAudioID(), scene_enemy_boss, distance};
             audioevents.push_back(newAudio);
             break;
@@ -1246,7 +1246,7 @@ void Game::updateAudio() {
                 handleObject->setAudioID(audioIDs);
                 audioIDs = audioIDs + 1;
             }
-            float distance = static_cast<float> ((std::abs(playerObjPointer->getPosX() - handleObject->getPosX()) / sceneWidth));
+            float distance = static_cast<float> ((std::abs(playerObjPointer->getPosX() - handleObject->getPosX()))) / static_cast<float> (sceneWidth);
             newAudio = {handleObject->getAudioID(), scene_flyingbeer, distance};
             audioevents.push_back(newAudio);
             break;
