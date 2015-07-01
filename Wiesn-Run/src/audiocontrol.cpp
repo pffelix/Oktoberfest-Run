@@ -69,7 +69,7 @@ AudioControl::AudioControl() {
     /// Ein Normalisieren aller Ausgabeblöcke wäre möglich, würde jedoch 2D Audio nicht erlauben,
     /// da auch die Dynamik zwischen zwei Blöcken normalisiert wird
     /// -> Distanz- und somit Lautstärkeänderungen von Objekten werden mit normalisiert.
-    max_playevents = 6;
+    max_playevents = 5;
 
 }
 

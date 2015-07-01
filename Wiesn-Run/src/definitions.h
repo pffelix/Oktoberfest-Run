@@ -233,7 +233,7 @@ typedef struct {
     float status_dead = 0;
     float player_walk = 0;
     float player_jump = 0;
-    float background_menu = 0.1;
+    float background_menu = 0.0;
     float background_highscore = 0.1;
     float background_level1 = 0.3;
     float background_level2 = 0.3;

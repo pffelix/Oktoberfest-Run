@@ -58,7 +58,7 @@ RESOURCES += \
 
 
 # Kopiere Dateien in Build Verzeichnis (zu große Dateigrößen für Ressources)
-# Sources Verzeichnispfad und Build Verzeichnis Pfad sollten keine Umlaute enthalten.
+# Sources Verzeichnispfad und Build Verzeichnis Pfad darf keine Umlaute oder Sonderzeichen (z.B. ++) enthalten.
 audios.path = $$OUT_PWD/audios
 audios.files = src/audios/*
 images.path = $$OUT_PWD/images
