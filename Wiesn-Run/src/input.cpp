@@ -60,10 +60,6 @@ bool Input::eventFilter(QObject *obj, QEvent *event) {
 void Input::updateKeys() {
     /// update alle für das Gameplay relevante Tasten(-kombinationen)
     keyactions.clear();
-    if(keyevents.contains(Qt::Key_Left)) {
-            keyactions += Keyaction::Left;
-            qDebug("Left");
-    }
     if(keyevents.contains(Qt::Key_Right)) {
             keyactions += Keyaction::Right;
             qDebug("Right");

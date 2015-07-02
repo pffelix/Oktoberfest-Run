@@ -22,7 +22,6 @@ class Input : public QObject {
 public:
     enum Keyaction{
         noKeyaction,
-        Left,
         Right,
         Up,
         Down,
