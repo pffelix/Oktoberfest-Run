@@ -42,7 +42,7 @@ AudioControl::AudioControl() {
     audioobjects.insert(audioobjects.begin() + audioType::player_walk, Audio("player_walk")); // 16bit
     //source: http://soundbible.com/1343-Jump.html
     audioobjects.insert(audioobjects.begin() + audioType::player_jump, Audio("player_jump")); // 16bit
-    //source: http://www.freesound.org/people/reinsamba/sounds/239143/
+    //source: http://www.theholidayspot.com/oktoberfest/music/Octoberfest%20--%20Beerdrinking%20song%28Bavarian%29.wma
     audioobjects.insert(audioobjects.begin() + audioType::background_menu, Audio("background_menu")); // 16bit
     //source: http://soundbible.com/1563-Pacman-Introduction-Music.html
     audioobjects.insert(audioobjects.begin() + audioType::background_highscore, Audio("background_highscore")); // 16bit
