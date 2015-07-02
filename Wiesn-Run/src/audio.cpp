@@ -108,7 +108,7 @@ void Audio::readSamples() {
         buildpath.cdUp();
         folderchanges += 1;
         if (folderchanges > 2) {
-        errormessage = "Folder with audio files could not be found, needs to be located in: " + QCoreApplication::applicationDirPath().toStdString();
+        errormessage = "Folder with audio files could not be found in: \n" + QCoreApplication::applicationDirPath().toStdString() + "/audios" + "\n 1. please add commando param 'install' to qmake.exe and compile again \n 2. please delete build folder and compile again \n 3. please use just alphabetic letters in path name of build folder and sources folder \n 4. if this is not working copy audio files manually from sources to the above named folder and compile again" ;
         qFatal(errormessage.c_str());
         }
     }

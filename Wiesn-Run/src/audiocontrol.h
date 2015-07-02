@@ -26,6 +26,14 @@
 class AudioControl{
 
 public:
+
+    typedef struct
+    {
+        float left_phase;
+        float right_phase;
+    }
+    paData;
+
     typedef struct {
         /// id des playStruct
         int id;

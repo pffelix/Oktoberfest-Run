@@ -332,6 +332,7 @@ int AudioControl::instancepaCallback( const void *inputBuffer, void *outputBuffe
         }
         /// Füge gemischtes Sampls aller Audiovents dem PortAudio Outputbuffer hinzu
         *out++ = mixed_sample;
+        //*out++ = mixed_sample;
     }
     blockcounter += 1;
     //std::copy ( block, block + BLOCKSIZE, std::back_inserter ( blockcontinue ) );
