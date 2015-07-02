@@ -222,7 +222,7 @@ void AudioControl::playInitialize(){
     /// Öffene Ausgabe Stream pastream
     paerror = Pa_OpenDefaultStream (&pastream,
                                     0,          /// erstelle keine Eingangskänale
-                                    2,          /// erstelle Mono Audio Ausgabe
+                                    1,          /// erstelle Mono Audio Ausgabe
                                     paInt16,  /// setze Bittiefe der Audioausgabe 16 bit Integer
                                     SAMPLERATE, /// setze Samplerate der Audioausgabe zu 44100 Hz
                                     BLOCKSIZE, /// setze Anzahl an Samples per Bufferblock auf 1024
@@ -265,7 +265,7 @@ int AudioControl::instancepaCallback( const void *inputBuffer, void *outputBuffe
                            PaStreamCallbackFlags statusFlags ) {
     /* Cast data passed through stream to our structure. */
     /// erstelle Zeiger *out auf outputBuffer
-    int *out = (int*)outputBuffer;
+    short *out = (short*)outputBuffer;
     /// kein Input aktiviert, verhindere Warnmeldung "unbenutzter Parameter inputBuffer"
     (void) inputBuffer;
     /// keine timeInfo nötig, verhindere Warnmeldung "unbenutzter Parameter inputBuffer"
@@ -330,9 +330,8 @@ int AudioControl::instancepaCallback( const void *inputBuffer, void *outputBuffe
                 callback_pe->position = callback_pe->position - callback_pe->audioobject->getSamplenumber();
             }
         }
-        /// Füge gemischtes Sampls aller Audiovents dem PortAudio Outputbuffer hinzu
+        /// Füge gemischtes Samples aller Audiovents dem PortAudio Outputbuffer hinzu und Erhöhe Zeiger auf den Outputbuffer um 16bit
         *out++ = mixed_sample;
-        //*out++ = mixed_sample;
     }
     blockcounter += 1;
     //std::copy ( block, block + BLOCKSIZE, std::back_inserter ( blockcontinue ) );
