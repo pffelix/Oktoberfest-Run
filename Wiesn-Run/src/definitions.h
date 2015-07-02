@@ -189,7 +189,7 @@ typedef struct {
     std::chrono::duration<int, std::milli> scene_enemy_security = std::chrono::milliseconds(0);
     std::chrono::duration<int, std::milli> scene_enemy_tourist = std::chrono::milliseconds(0);
     std::chrono::duration<int, std::milli> scene_enemy_boss = std::chrono::milliseconds(0);
-    std::chrono::duration<int, std::milli> scene_collision_obstacle = std::chrono::milliseconds(200);
+    std::chrono::duration<int, std::milli> scene_collision_obstacle = std::chrono::milliseconds(300);
     std::chrono::duration<int, std::milli> scene_collision_enemy = std::chrono::milliseconds(1639);
     std::chrono::duration<int, std::milli> scene_collision_player = std::chrono::milliseconds(899);
     std::chrono::duration<int, std::milli> scene_collision_flyingbeer = std::chrono::milliseconds(1211);
