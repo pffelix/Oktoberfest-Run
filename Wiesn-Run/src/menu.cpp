@@ -61,13 +61,14 @@ int Menu::displayInit() {
     //für jeden Menüeintrag wird ein QGraphicsTexItem angelegt, eingestellt und angezeigt
     for(std::list<menuEntry*>::iterator it = menuEntrys.begin(); it != menuEntrys.end(); it ++) {
         (*it)->showEntry.setPlainText(QString::fromStdString((*it)->name));
+
         if((*it)->position == 0) {
             (*it)->showEntry.setPos(310,150);
             (*it)->showEntry.setDefaultTextColor(Qt::darkBlue);
             (*it)->showEntry.setFont(QFont("Times",60,66));
         }
         else {
-            (*it)->showEntry.setPos(310,225 + 80*(*it)->position );
+            (*it)->showEntry.setPos(310,200 + 80*(*it)->position );
             (*it)->showEntry.setDefaultTextColor(Qt::darkBlue);
             (*it)->showEntry.setFont(QFont("Times",50));
         }
