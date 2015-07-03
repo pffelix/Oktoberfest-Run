@@ -595,7 +595,7 @@ void Game::reduceWorldObjects(Player *playerPointer) {
     //Entferne die Objekte die sich links vom Bildschirm befinden
     while (!(worldObjects.empty())) {
         GameObject *currentObj = *worldObjects.begin();
-        if ((playerPointer->getPosX() - currentObj->getPosX()) > spawnDistance) {
+        if ((playerPointer->getPosX() - currentObj->getPosX()) > deleteDistance) {
             worldObjects.pop_front();
             //Grafik - Objekte aus der Scene löschen
             levelScene->removeItem(currentObj);
