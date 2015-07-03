@@ -1,4 +1,4 @@
-﻿LevelDatei für den dritten Level
+LevelDatei für den dritten Level
 
 Diese Datei kann nur von der Methode "loadLevelFile" ausgelesen werden.
 Zeilen, die mit einem Keyword beginnen, werden interpretiert. Alle anderen Zeilen werden ignoriert.
@@ -53,15 +53,15 @@ Player,130,0
 Levellänge,3000
 
 Obstacle,400,0
-#Tourist,600,0,-4
+Tourist,600,0,-4
 Obstacle,800,0
 
 Obstacle,1000,0
-#Security,1200,0
+Security,1200,0
 Obstacle,1400,0
 
 Obstacle,1600,0
-#Boss,1800,0,0
+Boss,1800,0,0
 Obstacle,2000,0
 
 Obstacle,2900,0

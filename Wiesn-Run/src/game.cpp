@@ -936,9 +936,9 @@ void Game::handleCollisions() {
                         }
                         //Referenz löschen
                         handleEnemy = 0;
-                        break;
                     }
                 }
+                break;
             }
             case BOSS: {
                 /* Zusammenstoß mit Endgegner
