@@ -59,9 +59,11 @@ Game::Game(int argc, char *argv[]) : QObject() {
 
 }
 
+
 Game::~Game() {
 
 }
+
 
 /**
  * @brief wird regelmäßig aufgerufen
@@ -75,6 +77,7 @@ void Game::timerEvent(QTimerEvent *event)
     step();
     ///@todo return von step...
 }
+
 
 /**
  * @brief Die Startfunktion, erstellt Fenster und Menüs, wird von main() aufgerufen
@@ -145,6 +148,7 @@ int Game::start() {
     return appPointer->exec();
 }
 
+
 /**
  * @brief Startet neues Spiel
  * lädt Leveldatei
@@ -190,8 +194,6 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
     //Grafik - Spieler der Scene hinzufügen und window auf ihn zentrieren
     levelScene->addItem(playerObjPointer);
     window->centerOn(playerObjPointer->getPosX(), 384);
-    // Spawn-Distanz setzen
-    spawnDistance = 1024;
     // Szenen-Breite setzen
     sceneWidth = 1024;
     // audioIDs initialisieren
@@ -528,6 +530,7 @@ int Game::step() {
 
     return 0;
 }
+
 
 /**
  * @brief Game::appendWorldObjects

@@ -85,6 +85,14 @@ const int hendlHealth = 1;
 const int hendlAlcoholMalus = -500;
 
 /**
+ * @brief Distanzen
+ * spawnDistance ist die Distanz vom Spieler zum Objekt, ab der Objekte von levelSpawn nach worldObjects verlegt werden.
+ * deleteDistance ist die Distanz von einem Objekt zum Spieler, ab welcher das Objekt gelöscht wird.
+ */
+const int spawnDistance = 1024;
+const int deleteDistance = 200;
+
+/**
  * @brief Enumerator für den Objekt-Typ
  * um welche Art von Objekt handelt es sich
  * @author Johann
