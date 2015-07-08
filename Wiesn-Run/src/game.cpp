@@ -509,13 +509,13 @@ int Game::step() {
             }
         }
 
-        // Gegner tot?
+        // Spieler tot?
         if (gameStats.gameOver) {
             endGame();
             setState(gameMenuName);
             // GameOver schriftzug einfügen
 
-            //Audio event wenn der Gegner stirbt
+            //Audio event wenn der Spieler stirbt
             audioCooldownstruct newAudio;
             newAudio.audioEvent = {4, status_dead, audioDistance.status_dead};
             newAudio.cooldown = audioCooldown.status_dead;
@@ -524,6 +524,7 @@ int Game::step() {
                 audioevents.push_back(newAudio.audioEvent);
                 audioOutput->update(&audioevents);
                 audioevents.clear();
+                std::this_thread::sleep_for(std::chrono::milliseconds(5));
                 chrono::high_resolution_clock::time_point actual = chrono::high_resolution_clock::now();
                 newAudio.cooldown = newAudio.cooldown - chrono::duration_cast<std::chrono::milliseconds> (actual - previous);
                 previous = actual;
