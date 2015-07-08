@@ -270,8 +270,6 @@ void Game::endGame() {
     setState(gameMenuName);
 
     /// @todo Aufräumarbeiten
-    // Highscore aktualisieren
-    updateHighScore("write");
 
     //Listen leeren
     audioevents.clear();
@@ -1694,6 +1692,9 @@ void Game::menuInit() {
  */
 void Game::displayStatistics() {
     using namespace std;    // für std::string
+
+    // Highscore aktualisieren
+    updateHighScore("write");
 
     // Statistik Menü
     menuStatistics->clear();
