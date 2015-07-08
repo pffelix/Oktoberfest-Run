@@ -233,6 +233,8 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
     playerScore.name = "Sepp";
     playerScore.totalPoints = 0;
 
+    stepCount = 0;
+
     // Zeiger auf Objekte aus levelInitial in worldObjects verlegen
     /// @todo Theoretisch brauchen wir levelIntial nicht mehr, die Frage ist, ob die Grafik da mitmacht.
 //    while (!(levelInitial.empty())) {
