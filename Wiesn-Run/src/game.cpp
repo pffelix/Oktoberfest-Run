@@ -846,6 +846,7 @@ void Game::handleCollisions() {
     int overlap;
     Enemy *handleEnemy;
     Shoot *handleShoot;
+    int obstacleCollisionCounter = 0;
 
     //Liste mit den Events abarbeiten
     while (!collisionsToHandle.empty()) {
@@ -902,12 +903,15 @@ void Game::handleCollisions() {
                     overlap = (playerObjPointer->getPosY() + playerObjPointer->getHeight()) - handleEvent.causingObject->getPosY();
                     playerObjPointer->setPosY(playerObjPointer->getPosY() - overlap);
                     //AudioAusgabe bei zusammenstoß von unten
-                    //Audioevent
-                    audioCooldownstruct newAudio;
-                    newAudio.audioEvent = {audioIDs, scene_collision_obstacle, audioDistance.scene_collision_obstacle};
-                    audioIDs = audioIDs + 1;
-                    newAudio.cooldown = audioCooldown.scene_collision_obstacle;
-                    audioStorage.push_back(newAudio);
+                    obstacleCollisionCounter = obstacleCollisionCounter + 1;
+                    if (obstacleCollisionCounter == 1){
+                        //Audioevent
+                        audioCooldownstruct newAudio;
+                        newAudio.audioEvent = {audioIDs, scene_collision_obstacle, audioDistance.scene_collision_obstacle};
+                        audioIDs = audioIDs + 1;
+                        newAudio.cooldown = audioCooldown.scene_collision_obstacle;
+                        audioStorage.push_back(newAudio);
+                    }
                     break;
                 }
                 }
@@ -1187,7 +1191,7 @@ void Game::updateAudio() {
     audioevents.push_back(newAudio);
 
     //Warntöne Leben/Alcoholpegel
-/*    switch (playerObjPointer->getHealth()) {
+    switch (playerObjPointer->getHealth()) {
     case 1: {
         newAudio = {11, status_lifecritical, audioDistance.status_lifecritical};
         audioevents.push_back(newAudio);
@@ -1198,7 +1202,7 @@ void Game::updateAudio() {
         audioevents.push_back(newAudio);
         break;
     }
-    }*/
+    }
     if (playerObjPointer->getAlcoholLevel() >maxAlcohol) {
         newAudio = {13, status_alcohol, audioDistance.status_alcohol};
         audioevents.push_back(newAudio);
