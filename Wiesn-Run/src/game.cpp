@@ -275,6 +275,7 @@ void Game::endGame() {
     audioevents.clear();
     audioStorage.clear();
 
+    stepCount = 0;
 
     playerObjPointer = 0;
     while (!(worldObjects.empty())) {
@@ -453,6 +454,13 @@ int Game::step() {
         appendWorldObjects(playerObjPointer);
         reduceWorldObjects(playerObjPointer);
 
+        // Audio
+        if (stepCount == 0) {
+            audioCooldownstruct newAudio;
+            newAudio.audioEvent = {5, background_startgame, audioDistance.background_startgame};
+            newAudio.cooldown = audioCooldown.background_startgame;
+            audioStorage.push_back(newAudio);
+        }
         updateAudio();
 
         evaluateInput();
