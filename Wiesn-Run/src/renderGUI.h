@@ -1,11 +1,19 @@
 #ifndef RENDERGUI_H
 #define RENDERGUI_H
 
+#include <QGraphicsTextItem>
 
-class rendergui
-{
+class RenderGUI {
+
 public:
-    rendergui();
+    //Konstruktor und Destruktor
+    RenderGUI();
+    ~RenderGUI();
+    QGraphicsTextItem showScore;
+private:
+
+
+
 };
 
 #endif // RENDERGUI_H

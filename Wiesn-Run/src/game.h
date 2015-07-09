@@ -20,6 +20,7 @@
 #include <chrono>
 #include "menu.h"
 #include "portaudio.h"
+#include "RenderGUI.h"
 using namespace std;
 
 /**
@@ -67,6 +68,8 @@ public:
 
     /// Hilfsfunktion
     void setState(enum gameState newState);
+
+        QGraphicsScene * levelScene;
 
 protected:
     void timerEvent(QTimerEvent *event);
@@ -127,14 +130,15 @@ private:
     Player *playerObjPointer;
 
     /// für das Ausgabefenster QGraphicsView
-    QGraphicsScene * levelScene;
     QGraphicsView * window;
+
+    RenderGUI * showGUI;
 
     /// Vector aller Hintergrundbilder
     std::vector<QGraphicsPixmapItem> backgrounds;
 
     /// Vektor der die Darstellgung von Leben,Highscore und Pegel enhält
-    std::vector<QGraphicsTextItem> playerStats;
+   // std::vector<QGraphicsTextItem> playerStats;
 
     /// Zeiger auf QApplication
     QApplication *appPointer;
