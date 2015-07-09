@@ -876,15 +876,14 @@ void Game::appendWorldObjects(Player *playerPointer) {
 /**
  * @brief Game::reduceWorldObjects
  * @param playerPointer
- * Die Funktion reduceWorldObjects löscht die Zeiger auf die GameObjects aus dem Spiel, von denen der Spieler bereits
+ * Alle Objekteaus der Liste objectsToDelete werden in der wolrdObjects gesucht und entfernt. Ihr Speicher wird wieder freigegeben.
+ * Die Funktion reduceWorldObjects löscht die GameObjects und gibt den Speicher wieder frei, von denen der Spieler bereits
  * weiter rechts als die spawnDistance entfernt ist.
- * Entfernt Bierkrüge, die im letzten Durchlauf mit Gegenständen kollidiert sind
- * @todo Objekte löschen anstatt nur die Zeiger aus der Liste entfernen
  * @author Simon, Johann
  */
 void Game::reduceWorldObjects(Player *playerPointer) {
 
-    //Entferne die Bierkrüge die an Wände oder Gegner, etc. gestoßen sind.
+    //Entferne alle Objekte die in der Liste objectsToDelete vorgemerkt sind
     objectsToDelete.sort(compareGameObjects());
     while (!(objectsToDelete.empty())) {
         GameObject *currentObject= *objectsToDelete.begin();
