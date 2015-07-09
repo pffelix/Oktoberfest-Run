@@ -452,12 +452,13 @@ void Game::loadLevelFile(QString fileSpecifier) {
  * Ist der mode = "write", so wird die aktuelle Highscore unter Berücksichtigung der aktuellen playerScore neu geschrieben.
  * Alle anderen Werte für mode lesen nur die alte Highscore und die des Spielers in die Liste ein, um sie z.B. im Highscore-Menü
  * anzuzeigen.
- * Dazu wird versucht, die Datei "wiesnHighscore.txt" auszulesen. Ist dies nicht möglich,
- * so wurde das Spiel in dem aktuellen Verzeichnis noch nie gestartet.
+ * Dazu wird versucht, die Datei "wiesnHighscore.txt" auszulesen. Ist dies nicht möglich, so wurde das Spiel in dem aktuellen
+ * Verzeichnis noch nie gestartet.
  * Falls die Datei gefunden und gelesen werden kann, so wird jeder Highscore-Eintrag in die scoreList aufgenommen.
  * Anschließend wird die Liste nach der Summe der Punkte absteigend sortiert, und nur die 10 besten Elemente werden gespeichert.
- * Wird für das aktuelle Spiel eine Score angelegt und in der scoreList gespeichert, so wird dieser Eintrag eingeordnet
+ * Wurde für das aktuelle Spiel eine Score angelegt und in der scoreList gespeichert, so wird dieser Eintrag eingeordnet
  * und gegebenenfalls auch abgespeichert.
+ * @author Simon
  */
 void Game::updateHighScore(std::string mode) {
     // scoreList leeren und alte Highscore einlesen
@@ -577,7 +578,7 @@ void Game::displayStatistics() {
  */
 void Game::endGame() {
     // Namen Menü
-    const string bavarianNames[208] = {"Ade", "Ali", "Loi", "Alosius", "Anderl", "Andi", "Ande", "Bäda", "Bare", "Bartl", "Baste", "Bastia", "Bastl", "Horstl", "Bene", " Benny", "Bep", "Beppa", "Beppe", "Bepperl", "Berne", "Hardl", "Ber", "Bert", "Berti", "Bini", "Blase", "Chris", "Christl", "Christ", "Christà", "Dam", "Dama", "Douma", "Doilfa", "Doilferl", "Don", "Dona", "Doner", "Dan", "Dannerl", "Donisl", "Ed", "Ederl", "Ferdl", "Fest", "Fesl", "Fidl", "Fips", "Flore", "Fonse", " Fone", "Franze", "Franzl", "Fre", "Fredl", "Fridl", "Fritz", "Girgl", "Gog", "Gog", " Gode", "Gottl", "Gore", "Grisch", " Grisse", "Guste", " Gustl", " Guste", "Hans", " Hanse", " Hans", " Hanse", " Hann", " Haan", " Hannas", "Hart", " Harte", "Hausl", "Heini", "Hias", "Irgei", "Jacher", " Jaherl", "Jack", "Joc", "Jock", "Jockei", "Kar", " Karle", "Kaschb", " Koschba", "Kone/", " Kon", "Korbe", " Korw", " Kurwe", "Laure", "Len", " Lenze", " Lenze", "Le", " Poldi", "Loi", " Lois", " Loise/", " Loise", " Lui", " Luis", " Luisele", "Lug", " Lugge", " Wickerl", "Lugge", "Maiche", "Mane", "Marine", " Nuss", " Mareale", "Mart", " Masch", " Madd", " Maschde", " Mart", " Mort", " Mäa", " Märt", "Mat", " Mat", " Matte", " Matze", "Ma", " Max", " Maxl", "Michl", " Miche", " Müche", " Mih", " Müh", " Misch", " Michei", "Muck", "Naze", " Naa", " Nadsl", "Nic", " Nicke", " Nickl", "Polde", " Poidl", "Quire", " Quirl", "Reine", "Remme", "Rude", " Rudi", " Rul", "Rups", "Schoasch", " Schorschl", " Schor", " Schosc", " Schoo", " Schos", " Schurli", "Sepp", " Seppe", " Sepp", " Sepper", " Seppei", "Siege", " Siggi", "Simmal", "Stachus", "Steffl", " Steffe", " Stefferl", "Stoff", " Stoff", " Stofferl", "Ton", " Tona", " Tonerl", "Vale", "Veit", " Veit", "Vere", " Verl", "Vie", " Vinz", "Voitl", "Was", " Waste", " Wastl", "Wic", " Wiggl", " Wigge", " Wigger", " Wack", "Woife", " Woifer", " Wolle", "Xandi", "Xar", " Xavi", " Xaver", " Xide", "Zenz"};
+    const string bavarianNames[208] = {"Ade", "Ali", "Loi", "Alosius", "Anderl", "Andi", "Ande", "Bäda", "Bare", "Bartl", "Baste", "Bastia", "Bastl", "Horstl", "Bene", " Benny", "Bep", "Beppa", "Beppe", "Bepperl", "Berne", "Hardl", "Ber", "Bert", "Berti", "Bini", "Blase", "Chris", "Christl", "Christ", "Christà", "Dam", "Dama", "Douma", "Doilfa", "Doilferl", "Don", "Dona", "Doner", "Dan", "Dannerl", "Donisl", "Ed", "Ederl", "Ferdl", "Fest", "Fesl", "Fidl", "Fips", "Flore", "Fonse", " Fone", "Franze", "Franzl", "Fre", "Fredl", "Fridl", "Fritz", "Girgl", "Gog", "Gog", "Gode", "Gottl", "Gore", "Grisch", "Grisse", "Guste", "Gustl", "Guste", "Hans", "Hanse", "Hans", "Hanse", "Hann", "Haan", "Hannas", "Hart", "Harte", "Hausl", "Heini", "Hias", "Irgei", "Jacher", " Jaherl", "Jack", "Joc", "Jock", "Jockei", "Kar", "Karle", "Kaschb", "Koschba", "Kone", "Kon", "Korbe", "Korw", "Kurwe", "Laure", "Len", "Lenze", "Lenze", "Le", "Poldi", "Loi", "Lois", "Loise", "Loisl", " Lui", "Luis", "Luisele", "Lug", "Lugge", "Wickerl", "Lugge", "Maiche", "Mane", "Marine", "Nuss", "Mareale", "Mart", "Masch", "Madd", "Maschde", "Mart", "Mort", "Mäa", "Märt", "Mat", "Mat", "Matte", "Matze", "Ma", "Max", "Maxl", "Michl", "Miche", "Müche", "Mih", "Müh", "Misch", "Michei", "Muck", "Naze", "Naa", "Nadsl", "Nic", "Nicke", "Nickl", "Polde", "Poidl", "Quire", "Quirl", "Reine", "Remme", "Rude", "Rudi", "Rul", "Rups", "Schoasch", "Schorschl", "Schor", "Schosc", "Schoo", "Schos", "Schurli", "Sepp", "Seppe", "Sepp", "Sepper", "Seppei", "Siege", "Siggi", "Simmal", "Stachus", "Steffl", "Steffe", "Stefferl", "Stoff", "Stoff", "Stofferl", "Ton", "Tona", "Tonerl", "Vale", "Veit", "Veit", "Vere", "Verl", "Vie", "Vinz", "Voitl", "Was", "Waste", "Wastl", "Wic", "Wiggl", "Wigge", "Wigger", "Wack", "Woife", "Woifer", "Wolle", "Xandi", "Xar", "Xavi", "Xaver", "Xide", "Zenz"};
     //std::string bavarianNames[10] = {"Ade", "Loisl", "Anderl", "Bäda", "Bertl", "Wickerl", "Beppi", "Hias", "Xaver", "Miche"};
 
     int nameMax = 208;  //10;
@@ -1048,11 +1049,11 @@ void Game::calculateMovement() {
 
 /**
  * @brief Game::detectCollision
- * Diese Funktion berechnet ob Kollisionen zwischen benachbarten Objekten auftreten und falls ja, aus welcher
+ * Diese Funktion berechnet, ob Kollisionen zwischen benachbarten Objekten auftreten und falls ja, aus welcher
  * Richtung diese stattfinden.
  * Da die Liste worldObjects in jedem Zeitschritt sortiert wird, müssen die Kollisionen nur für die nächsten Nachbarn
  * berechnet werden. Allerdings können durch ungünstige Lage auch Objekte kollidieren, die nicht direkt nebeneinander
- * in der Liste liegen. Dafür werden fünf Nachbarn links und rechts jedes MovingObjects geprüft, falls vorhanden.
+ * in der Liste liegen. Dafür werden die fünf Nachbarn links und rechts jedes MovingObjects geprüft, falls vorhanden.
  * @author Simon
  */
 void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
