@@ -599,6 +599,9 @@ void Game::endGame() {
     stepCount = 0;
 
     playerObjPointer = 0;
+    /// alle Objekte aus den Listen für die gameObjects werden gelöscht
+    delete playerObjPointer;
+
     while (!(worldObjects.empty())) {
         GameObject *handleObject = worldObjects.front();
         worldObjects.pop_front();
