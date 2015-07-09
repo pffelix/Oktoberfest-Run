@@ -1339,88 +1339,90 @@ void Game::handleCollisions() {
              */
 
             handleEnemy = dynamic_cast<Enemy*>(handleEvent.affectedObject);
+            if (!(handleEnemy->getDeath())) {
+                switch (handleEvent.causingObject->getType()) {
+                case player: {
+                    /* Zusammenstoß mit Spieler
+                     *      Spieler springt auf Gegner (sonst siehe affectedObject==player)
+                     * Der Gegner wird getötet
+                     */
+                    if (handleEvent.direction == fromBelow) {
+                        if (handleEnemy->receiveDamage(playerObjPointer->getInflictedDamage())) {
+                            playerObjPointer->increaseEnemiesKilled();
+                            //Audioausgabe
+                            audioCooldownstruct newAudio;
+                            newAudio.audioEvent = {audioIDs, scene_collision_enemy, audioDistance.scene_collision_enemy};
+                            audioIDs = audioIDs + 1;
+                            newAudio.cooldown = audioCooldown.scene_collision_enemy;
+                            audioStorage.push_back(newAudio);
 
-            switch (handleEvent.causingObject->getType()) {
-            case player: {
-                /* Zusammenstoß mit Spieler
-                 *      Spieler springt auf Gegner (sonst siehe affectedObject==player)
-                 * Der Gegner wird getötet
-                 */
-                if (handleEvent.direction == fromBelow) {
-                    if (handleEnemy->receiveDamage(playerObjPointer->getInflictedDamage())) {
+                        }
+                    }
+                    break;
+                }
+                case plane:
+                case obstacle: {
+                    /* Zusammenstoß mit Hindernis
+                     *  Bewegungsabbruch, Positionskorrektur, neue Bewegungsrichtung
+                     */
+                    if (handleEvent.direction == fromAbove) {
+                        //Fall wird beendet, X-Bewegung uneingeschränkt
+                        overlap = (handleEvent.causingObject->getPosY() + handleEvent.causingObject->getHeight()) - handleEnemy->getPosY();
+                        handleEnemy->setPosY(handleEnemy->getPosY() + overlap);
+                    } else {
+                        // Bewegungsabbruch, neue Bewegungsrichtung
+                        handleEnemy->setSpeedX(-handleEnemy->getSpeedX());
+                        //PositionsKorrektur
+                        if (handleEvent.direction == fromLeft) {
+                            //Gegner kommt von links
+                            overlap = (handleEnemy->getPosX() + (handleEnemy->getLength() / 2)) - (handleEvent.causingObject->getPosX() - (handleEvent.causingObject->getLength() / 2));
+                            handleEnemy->setPosX(handleEnemy->getPosX() - overlap);
+                        } else {
+                            //Gegner kommt von rechts
+                            overlap = (handleEvent.causingObject->getPosX() + (handleEvent.causingObject->getLength() / 2)) - (handleEnemy->getPosX() - (handleEnemy->getLength() / 2));
+                            handleEnemy->setPosX(handleEnemy->getPosX() + overlap);
+                        }
+                    }
+                    break;
+                }
+                case shot: {
+                    /* Zusammenstoß mit Bierkrug
+                     *  Fügt Schaden zu, falls von Spieler geworfen,
+                     *  Bierkrug zum löschen vormerken
+                     */
+                    handleShoot = dynamic_cast<Shoot*>(handleEvent.causingObject);
+                    if ((handleShoot->getOrigin() == player)) {
+                        //Schaden zufügen
+                        handleEnemy->receiveDamage(handleShoot->getInflictedDamage());
                         playerObjPointer->increaseEnemiesKilled();
-                        //Audioausgabe
+                        //Bierkrug zum löschen vormerken
+                        objectsToDelete.push_back(handleShoot);
+
+                        //Audioevent Krug zerbricht
                         audioCooldownstruct newAudio;
+                        newAudio.audioEvent = {audioIDs, scene_collision_flyingbeer, audioDistance.scene_collision_flyingbeer};
+                        audioIDs = audioIDs + 1;
+                        newAudio.cooldown = audioCooldown.scene_collision_flyingbeer;
+                        audioStorage.push_back(newAudio);
+                        //Audioausgabe Schaden an Gegner
                         newAudio.audioEvent = {audioIDs, scene_collision_enemy, audioDistance.scene_collision_enemy};
                         audioIDs = audioIDs + 1;
                         newAudio.cooldown = audioCooldown.scene_collision_enemy;
                         audioStorage.push_back(newAudio);
-
                     }
+                    handleShoot = 0;
+                    break;
                 }
+                default: {
+                    /*Zusammenstoß mit Gegner, PowerUp, BOSS
+                     *      kein Effekt
+                     */
+                }
+                }
+                handleEnemy = 0;
                 break;
             }
-            case plane:
-            case obstacle: {
-                /* Zusammenstoß mit Hindernis
-                 *  Bewegungsabbruch, Positionskorrektur, neue Bewegungsrichtung
-                 */
-                if (handleEvent.direction == fromAbove) {
-                    //Fall wird beendet, X-Bewegung uneingeschränkt
-                    overlap = (handleEvent.causingObject->getPosY() + handleEvent.causingObject->getHeight()) - handleEnemy->getPosY();
-                    handleEnemy->setPosY(handleEnemy->getPosY() + overlap);
-                } else {
-                    // Bewegungsabbruch, neue Bewegungsrichtung
-                    handleEnemy->setSpeedX(-handleEnemy->getSpeedX());
-                    //PositionsKorrektur
-                    if (handleEvent.direction == fromLeft) {
-                        //Gegner kommt von links
-                        overlap = (handleEnemy->getPosX() + (handleEnemy->getLength() / 2)) - (handleEvent.causingObject->getPosX() - (handleEvent.causingObject->getLength() / 2));
-                        handleEnemy->setPosX(handleEnemy->getPosX() - overlap);
-                    } else {
-                        //Gegner kommt von rechts
-                        overlap = (handleEvent.causingObject->getPosX() + (handleEvent.causingObject->getLength() / 2)) - (handleEnemy->getPosX() - (handleEnemy->getLength() / 2));
-                        handleEnemy->setPosX(handleEnemy->getPosX() + overlap);
-                    }
-                }
-                break;
-            }
-            case shot: {
-                /* Zusammenstoß mit Bierkrug
-                 *  Fügt Schaden zu, falls von Spieler geworfen,
-                 *  Bierkrug zum löschen vormerken
-                 */
-                handleShoot = dynamic_cast<Shoot*>(handleEvent.causingObject);
-                if ((handleShoot->getOrigin() == player) && (!(handleEnemy->getDeath()))) {
-                    //Schaden zufügen
-                    handleEnemy->receiveDamage(handleShoot->getInflictedDamage());
-                    playerObjPointer->increaseEnemiesKilled();
-                    //Bierkrug zum löschen vormerken
-                    objectsToDelete.push_back(handleShoot);
 
-                    //Audioevent Krug zerbricht
-                    audioCooldownstruct newAudio;
-                    newAudio.audioEvent = {audioIDs, scene_collision_flyingbeer, audioDistance.scene_collision_flyingbeer};
-                    audioIDs = audioIDs + 1;
-                    newAudio.cooldown = audioCooldown.scene_collision_flyingbeer;
-                    audioStorage.push_back(newAudio);
-                    //Audioausgabe Schaden an Gegner
-                    newAudio.audioEvent = {audioIDs, scene_collision_enemy, audioDistance.scene_collision_enemy};
-                    audioIDs = audioIDs + 1;
-                    newAudio.cooldown = audioCooldown.scene_collision_enemy;
-                    audioStorage.push_back(newAudio);
-                }
-                handleShoot = 0;
-                break;
-            }
-            default: {
-                /*Zusammenstoß mit Gegner, PowerUp, BOSS
-                 *      kein Effekt
-                 */
-            }
-            }
-            handleEnemy = 0;
-            break;
         }//end (case enemy)
 
         case BOSS: {
