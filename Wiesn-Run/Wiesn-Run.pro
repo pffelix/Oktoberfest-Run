@@ -36,7 +36,8 @@ SOURCES += src/main.cpp \
     src/audio.cpp \
     src/audiocontrol.cpp \
     src/menu.cpp \
-    src/powerup.cpp
+    src/powerup.cpp \
+    src/renderGUI.cpp
 
 HEADERS += \
     src/game.h \
@@ -51,7 +52,8 @@ HEADERS += \
     src/definitions.h \
     src/menu.h \
     src/powerup.h \
-    src/portaudio.h
+    src/portaudio.h \
+    src/renderGUI.h
 
 RESOURCES += \
     src/ressources.qrc
