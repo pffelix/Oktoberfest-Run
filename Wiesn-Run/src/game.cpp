@@ -56,7 +56,6 @@ struct compareScores {
 Game::Game(int argc, char *argv[]) : QObject() {
     /// Initialisiert den appPointer mit der QApplication
     appPointer = new QApplication(argc,argv);
-
 }
 
 
@@ -104,7 +103,8 @@ int Game::start() {
     // Zufall initialisieren
     srand(time(NULL));
 
-
+    // Länge des Vektors playerStats initialisieren
+    playerStats = std::vector<QGraphicsTextItem>(4);
 
     // Fundamentale stepSize setzen
     stepIntervall = 1000/frameRate;
@@ -158,7 +158,7 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
 
 
     // alles alte leeren
-   levelScene->clear();
+    //levelScene->clear();
     worldObjects.clear();
 
     //Levelscene einstellen
@@ -198,8 +198,6 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
     sceneWidth = 1024;
     // audioIDs initialisieren
     audioIDs = 20;
-
-    playerStats = std::vector<QGraphicsTextItem>(4);
 
     playerStats[0].setPlainText(QString("Gesundheit: " + QString::number(playerObjPointer->getHealth())));
     playerStats[0].setPos(playerObjPointer->getPosX()-95, 30);
