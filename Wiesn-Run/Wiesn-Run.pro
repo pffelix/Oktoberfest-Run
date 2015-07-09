@@ -16,7 +16,7 @@ LIBS += "C:\portaudio\libportaudio-2.dll"
 }
 
 win64 {
-    # Windows 32 includes
+    # Windows 64 includes
 LIBS += "C:\portaudio\libportaudio-2.dll"
 }
 
