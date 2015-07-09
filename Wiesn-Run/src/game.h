@@ -49,48 +49,53 @@ struct collisionStruct {
 class Game : QObject {
     //Q_OBJECT
 public:
+    /// Konstruktor und Destruktor
     Game(int argc, char *argv[]);
     ~Game();
 
-    /// Startet das die Game-Loop, wird einmalig von main() aufgerufen
+    // Startet das die Game-Loop, wird einmalig von main() aufgerufen
     int step();
-    /// Startet die Mockup QApplication app
+    // Startet die Mockup QApplication app
     int run(QApplication& app);
 
     struct stateStruct gameStats;
-    //Liste von Kollisionen
+    // Liste von Kollisionen
     std::list<struct collisionStruct> collisionsToHandle;
-    //struct stateStruct states;
+
+    /// Starten der Applikation
     int start();
 
+    /// Hilfsfunktion
     void setState(enum gameState newState);
 
 protected:
     void timerEvent(QTimerEvent *event);
 
 private:
-    int getStepIntervall();
+    /// Level starten und beenden
+    void startNewGame(QString levelFileName, int levelNum);
+    void loadLevelFile(QString fileSpecifier);
+    void updateHighScore(std::string mode);
+    void displayStatistics();
+    void endGame();
+
+    /// Funktionen in der Loop
     void appendWorldObjects(Player *playerPointer);
     void reduceWorldObjects(Player *playerPointer);
     void evaluateInput();
     void calculateMovement();
     void detectCollision(std::list<GameObject*> *objectsToCalculate);
     void handleCollisions();
-    void renderGraphics(std::list<GameObject *> *objectList, Player *playerPointer);
-    void endGame();
-    void clearLists();
-
-    void exitGame();
-    void updateAudio();
-    bool hurtPlayer(int damage);
-
     void updateScore();
-    void updateHighScore(std::string mode);
+    void updateAudio();
+    void renderGraphics(std::list<GameObject *> *objectList, Player *playerPointer);
 
-    void colTestLevel();
-    void loadLevelFile(QString fileSpecifier);
+    /// Funktionen zu Start und Ende der Applikation
+    void menuInit();
+    void exitGame();
 
-    void startNewGame(QString levelFileName, int levelNum);
+    /// Hilfsfunktion
+    int getStepIntervall();
 
 
     /// In der Welt befindliche Objekte
@@ -140,9 +145,6 @@ private:
 
 
     // Menüs
-    void menuInit();    /// Initialisiert Menüs
-    void displayStatistics();
-
     enum gameState state = gameMenuStart;    /// aktueller Spielzustand
     Menu *aktMenu = menuStart;      /// aktuell aktives Menü, null während das Spiel läuft; wird in setState gesetzt
 

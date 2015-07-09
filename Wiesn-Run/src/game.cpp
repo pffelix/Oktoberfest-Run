@@ -19,7 +19,9 @@
 
 // --------------- Komparatoren -------------------------------------------------------------------
 /**
- * @brief Verglecht zwei GameObjects, bezüglich der X-Position
+ * @brief Vergleich zweier GameObjects bezüglich der X-Position
+ * Die Methode std::list::sort benötig ein struct mit einem boolschen Operator zur Sortierung.
+ * Diese Implementierung des Operators sortiert aufsteigend.
  * @param 1.Objekt
  * @param 2.Objekt
  * @return true, wenn 1.Objekt weiter links als 2.Objekt
@@ -66,7 +68,7 @@ Game::~Game() {
 
 
 
-// --------------- Starten und Beenden der Applikation --------------------------------------------
+// --------------- Applikation starten und beenden ------------------------------------------------
 /**
  * @brief Die Startfunktion, erstellt Fenster und Menüs, wird von main() aufgerufen
  * Grafik und Inputs (Flo,Felix):
@@ -208,7 +210,7 @@ void Game::exitGame() {
 
 
 
-// --------------- Starten und Beenden eines Levels -----------------------------------------------
+// --------------- Level starten und beenden ------------------------------------------------------
 /**
  * @brief Startet neues Spiel
  * lädt Leveldatei
