@@ -16,6 +16,8 @@
 #include "menu.h"
 
 
+
+// --------------- Komparatoren -------------------------------------------------------------------
 /**
  * @brief Verglecht zwei GameObjects, bezüglich der X-Position
  * @param 1.Objekt
@@ -43,6 +45,8 @@ struct compareScores {
 };
 
 
+
+// --------------- Konstruktor und Destruktor -----------------------------------------------------
 /**
  * @brief Konstruktor
  * Initialisiert den appPointer
@@ -61,20 +65,8 @@ Game::~Game() {
 }
 
 
-/**
- * @brief wird regelmäßig aufgerufen
- * event muss drinstehen, damit der Timer die Funktion aufruft
- * @param event
- * @author Rupert
- */
-void Game::timerEvent(QTimerEvent *event)
-{
-    Q_UNUSED (event)        // Warnung unterdrücken
-    step();
-    ///@todo return von step...
-}
 
-
+// --------------- Starten und Beenden der Applikation --------------------------------------------
 /**
  * @brief Die Startfunktion, erstellt Fenster und Menüs, wird von main() aufgerufen
  * Grafik und Inputs (Flo,Felix):
@@ -141,6 +133,82 @@ int Game::start() {
 }
 
 
+/**
+ * @brief Initialisierung der Menüs
+ * wird in start() aufgerufen
+ * Logik:
+ *  Startmenü
+ *      Credits
+ *  Levelauswahl
+ *  spielen...
+ *      Pause
+ *  Name eingeben
+ *  Spielstatistik
+ *  Highscore
+ *  Von vorne
+ *
+ * @author Rupert
+ */
+void Game::menuInit() {
+    menuStart = new Menu(new std::string("Wiesn-Run"));
+    menuStart->addEntry("Pack ma's!",menuStartId_NewGame,true, gameMenuLevel);
+    menuStart->addEntry("Mia san Mia", menuStartId_Credits,true,gameMenuCredits);
+    menuStart->addEntry("Pfiat di!", menuStartId_EndGame,true);
+    menuStart->displayInit();
+
+    menuCredits = new Menu(new std::string("Credits"));
+    menuCredits->addEntry("Grundkurs C++", menuId_NonClickable,false);
+    menuCredits->addEntry("da Simon, da Rupi,", menuId_NonClickable,false);
+    menuCredits->addEntry("da Felix,", menuId_NonClickable,false);
+    menuCredits->addEntry("da Flo und da Johann", menuId_NonClickable,false);
+    menuCredits->addEntry("weg do!", menuCreditsId_Back,true,gameMenuStart);
+    menuCredits->displayInit();
+
+    menuLevel = new Menu(new std::string("Wos mogst?"));
+    menuLevel->addEntry("Demolevel",menuLevelId_Demo, true);
+    menuLevel->addEntry("Level 1",menuLevelId_Level1, true);
+    menuLevel->addEntry("Level 2",menuLevelId_Level2, true);
+    menuLevel->addEntry("Level 3",menuLevelId_Level3, true);
+    menuLevel->addEntry("naaa..",menuLevelId_Back, true,gameMenuStart);
+    menuLevel->displayInit();
+
+    menuBreak = new Menu(new std::string("Brotzeit!"));
+    menuBreak->addEntry("weida",menuBreakId_Resume,true);
+    menuBreak->addEntry("koa Lust mehr",menuBreakId_EarlyEnd, true,gameMenuName);
+    menuBreak->addEntry("vo vorn!",menuBreakId_EndGame,true);
+    menuBreak->displayInit();
+
+    menuStatistics = new Menu(new std::string("Boah!"), Menu::menuType::highscore);
+    menuStatistics->addEntry("weida",menuStatisticsId_Next,true,gameMenuHighscore);
+    menuStatistics->displayInit();
+
+    menuName = new Menu(new std::string("Wia hoaßt du?"), Menu::menuType::highscore);
+    menuName->addEntry("weida",menuNameId_Next,true,gameMenuStatisitcs);
+    menuName->displayInit();
+
+    menuHighscore = new Menu(new std::string("Highscores"), Menu::menuType::highscore);
+    menuHighscore->addEntry("weida",menuHighscoreId_Next,true,gameMenuStart);
+    menuHighscore->displayInit();
+}
+
+
+/**
+ * @brief Game::exitGame
+ *        Diese Funktion löscht nicht mehr nötige Variablen und Objekte wenn das Spiel komplett beendet wird.
+ * @author: Felix
+ */
+void Game::exitGame() {
+
+    /// Beende Audio Ausgabe und lösche Audiobezogene Variablen
+
+    /// rufe Desktrutor Objekt audioOutput auf
+    /// Stoppe PortAudio Audioausgabe, Beende Portaudio Stream, Beende PortAudio und lösche Objekt audioOutput
+    delete audioOutput;
+}
+
+
+
+// --------------- Starten und Beenden eines Levels -----------------------------------------------
 /**
  * @brief Startet neues Spiel
  * lädt Leveldatei
@@ -224,6 +292,274 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
 
 
 /**
+ * @brief Game::loadLevelFile
+ * @param fileSpecifier
+ * Diese Funktion liest Level-Dateien aus und kommt mit wenig Parametern aus.
+ * Der Player braucht posX und posY.
+ * Enemies brauchen posX, posY und speedX.
+ * Obstacles brauchen posX und posY.
+ * Planes (Zwischenebenen) brauchen posX und posY.
+ * PowerUps brauchen posX, posY und die jeweiligen Boni.
+ * @author Simon
+ */
+void Game::loadLevelFile(QString fileSpecifier) {
+    // Spezifizierte Datei öffnen
+    QFile levelFile(fileSpecifier);
+    if (!levelFile.open(QFile::ReadOnly | QFile::Text)) {
+        qDebug() << "Datei konnte nicht geöffnet werden!";
+    } else {
+        // Die Datei wurde erfolgreich geöffnet
+        // Die Liste wird geleert
+        levelSpawn.clear();
+
+        qDebug() << "Lese levelFile mit vorgesetzten Parametern aus:";
+
+        QTextStream fileStream(&levelFile);
+        while (!fileStream.atEnd()) {
+            QString line = fileStream.readLine();
+            // Trenne die aktuelle Zeile nach Komma getrennt auf
+            QStringList strlist = line.split(",");
+
+            try {
+
+                if (strlist.at(0) == "Levellänge") {
+                    if (strlist.length() != 2) {
+                        throw std::string("Ungültiger Eintrag für die Levellänge");
+                    } else {
+                        // Setze die Levellänge
+                        levelLength = strlist.at(1).toInt();
+                        qDebug("Levellänge gesetzt: %d",levelLength);
+                    }
+                }
+
+                if (strlist.at(0) == "Player") {
+                    if (strlist.length() != 3) {
+                        throw std::string("Ungültiger Player-Eintrag: ");
+                    } else {
+                        // Erstelle das Spieler-Objekt und setze den playerObjPointer
+                        qDebug() << "  Player-Eintrag gefunden.";
+                        GameObject *playerObject = new Player(strlist.at(1).toInt(), strlist.at(2).toInt(), 0);
+                        playerObjPointer = dynamic_cast<Player*>(playerObject);
+                    }
+                }
+
+                if (strlist.at(0) == "Tourist") {
+                    if (strlist.length() != 4) {
+                        throw std::string("Ungültiger Tourist-Eintrag:");
+                    } else {
+                        qDebug() << "  Tourist-Eintrag gefunden.";
+                        GameObject *enemyToAppend = new Enemy(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), enemy_tourist);
+                        levelSpawn.push_back(enemyToAppend);
+                    }
+                }
+
+                if (strlist.at(0) == "Security") {
+                    if (strlist.length() != 3) {
+                        throw std::string("Ungültiger Security-Eintrag:");
+                    } else {
+                        qDebug() << "  Security-Eintrag gefunden.";
+                        GameObject *enemyToAppend = new Enemy(strlist.at(1).toInt(), strlist.at(2).toInt(), 0, enemy_security);
+                        levelSpawn.push_back(enemyToAppend);
+                    }
+                }
+
+                if (strlist.at(0) == "Obstacle") {
+                    if (strlist.length() != 3) {
+                        throw std::string("  Ungültiger Obstacle-Eintrag:");
+                    } else {
+                        qDebug() << "  Obstacle-Eintrag gefunden.";
+                        GameObject *obstacleToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), obstacle);
+                        levelSpawn.push_back(obstacleToAppend);
+                    }
+                }
+
+                if (strlist.at(0) == "Plane") {
+                    if (strlist.length() != 3) {
+                        throw std::string("Ungültiger Plane-Eintrag:");
+                    } else {
+                        qDebug() << "  Plane-Eintrag gefunden.";
+                        GameObject *planeToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), plane);
+                        levelSpawn.push_back(planeToAppend);
+                    }
+                }
+
+                if (strlist.at(0) == "Bier") {
+                    if (strlist.length() != 3 ) {
+                        throw std::string("Ungültiger Bier-Eintrag:");
+                    } else {
+                        qDebug() << "  Bier-Eintrag gefunden.";
+                        GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), beerHealth, beerAlcohol, beerAmmo, 0, beer);
+                        levelSpawn.push_back(powerUpToAppend);
+                    }
+                }
+
+                if (strlist.at(0) == "Hendl") {
+                    if (strlist.length() != 3 ) {
+                        throw std::string("Ungültiger Hendl-Eintrag:");
+                    } else {
+                        qDebug() << "  Hendl-Eintrag gefunden.";
+                        GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), hendlHealth, hendlAlcoholMalus, 0, 0, food);
+                        levelSpawn.push_back(powerUpToAppend);
+                    }
+                }
+
+                if (strlist.at(0) == "PowerUp") {
+                    if (strlist.length() != 7 ) {
+                        throw std::string("Ungültiger PowerUp-Eintrag:");
+                    } else {
+                        qDebug() << "  PowerUp-Eintrag gefunden.";
+                        GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), strlist.at(4).toInt(), strlist.at(5).toInt(), strlist.at(6).toInt(), food);
+                        levelSpawn.push_back(powerUpToAppend);
+                    }
+                }
+
+                if (strlist.at(0) == "Boss") {
+                    if (strlist.length() != 4) {
+                        throw std::string("Ungültiger Boss-Eintrag:");
+                    } else {
+                        qDebug() << "  Boss-Eintrag gefunden.";
+                        GameObject *enemyToAppend = new Enemy(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), BOSS);
+                        levelSpawn.push_back(enemyToAppend);
+                    }
+                }
+            }
+            catch(std::string s) {
+                qDebug("%s %s", s.c_str(), line.toStdString().c_str());
+            }
+
+        } // end of while
+
+        levelSpawn.sort(compareGameObjects());
+
+        qDebug() << "Auslesen des levelFile beendet.";
+    }
+}
+
+
+/**
+ * @brief Game::updateHighScore
+ * Diese Funktion liest und aktualisiert die Highscore des Spiels. Als Parameter wird ein std::string mode erwartet.
+ * Ist der mode = "write", so wird die aktuelle Highscore unter Berücksichtigung der aktuellen playerScore neu geschrieben.
+ * Alle anderen Werte für mode lesen nur die alte Highscore und die des Spielers in die Liste ein, um sie z.B. im Highscore-Menü
+ * anzuzeigen.
+ * Dazu wird versucht, die Datei "wiesnHighscore.txt" auszulesen. Ist dies nicht möglich,
+ * so wurde das Spiel in dem aktuellen Verzeichnis noch nie gestartet.
+ * Falls die Datei gefunden und gelesen werden kann, so wird jeder Highscore-Eintrag in die scoreList aufgenommen.
+ * Anschließend wird die Liste nach der Summe der Punkte absteigend sortiert, und nur die 10 besten Elemente werden gespeichert.
+ * Wird für das aktuelle Spiel eine Score angelegt und in der scoreList gespeichert, so wird dieser Eintrag eingeordnet
+ * und gegebenenfalls auch abgespeichert.
+ */
+void Game::updateHighScore(std::string mode) {
+    // scoreList leeren und alte Highscore einlesen
+    scoreList.clear();
+    std::ifstream input("wiesnHighscore.txt");
+    if (!input) {
+        qDebug() << "Highscore-Datei nicht vorhanden";
+    } else {
+        qDebug("Lese Highscore ein...");
+        // Highscore-Einträge zeilenweise auslesen und als scoreStruct der Liste hinzufügen
+        std::string line;
+        while (std::getline(input, line)) {
+            QString qline = QString::fromStdString(line);
+            QStringList strlist = qline.split(",");
+            if (strlist.length() == 5) {
+                scoreStruct currentScoreItem = {strlist.at(0).toStdString(), strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), strlist.at(4).toInt()};
+                scoreList.push_back(currentScoreItem);
+            }
+        }
+    }
+    // Datei schließen
+    input.close();
+
+    // Score sortieren
+    scoreList.sort(compareScores());
+
+    if (mode == "write") {
+        // Neue Highscore schreiben
+
+        // Aktuelle Spielerscore hinzufügen und sortieren
+        scoreList.push_back(playerScore);
+        scoreList.sort(compareScores());
+
+        std::ofstream ofs;
+        ofs.open("wiesnHighscore.txt", std::ofstream::out | std::ofstream::trunc);
+
+        int i = 0;
+        // Schreibe maximal die besten 10 Scores in die Highscore-Datei
+        while (!scoreList.empty() && (i < 10)) {
+            scoreStruct currentScore = *scoreList.begin();
+            scoreList.pop_front();
+
+            // Highscore-Eintrag schreiben
+            ofs << currentScore.name.c_str() << "," << currentScore.totalPoints << "," << currentScore.distanceCovered << "," << currentScore.alcoholPoints << "," << currentScore.enemiesKilled << "\n";
+            i++;
+        }
+        // Datei schließen, damit Änderungen gespeichert werden
+        ofs.close();
+        qDebug("Highscore geschrieben.");
+    }
+}
+
+
+/**
+ * @brief füllt das Statistik- und HighscoreMenü
+ * löscht das Statistik- und Highscore-Menü und füllt es mit aktuellen Werten
+ * @author Rupert
+ */
+void Game::displayStatistics() {
+    using namespace std;    // für std::string
+
+    // Highscore aktualisieren
+    updateHighScore("write");
+
+    // Statistik Menü
+    menuStatistics->clear();
+
+    string name = "Name: ";
+    name.append(playerScore.name);
+    string enemies = "Verstorbene: ";
+    enemies.append(to_string(playerScore.enemiesKilled));
+    string distance = "glafne Meter: ";
+    distance.append(to_string(playerScore.distanceCovered));
+    string alk = "Promille: ";
+    alk.append(to_string(playerScore.alcoholPoints));
+    string points = "Punkte:";
+    points.append(to_string(playerScore.totalPoints));
+
+    menuStatistics->addEntry(name,menuId_NonClickable,false);
+    menuStatistics->addEntry(enemies,menuId_NonClickable,false);
+    menuStatistics->addEntry(distance,menuId_NonClickable,false);
+    menuStatistics->addEntry(alk,menuId_NonClickable,false);
+    menuStatistics->addEntry(points,menuId_NonClickable,false);
+    menuStatistics->addEntry("weida",menuStatisticsId_Next,true,gameMenuHighscore);
+    menuStatistics->displayInit();
+
+    // Highscore-Menü
+    menuHighscore->clear();
+
+    updateHighScore("listefüllen");
+    int scoreCount = 0;
+    for(std::list<scoreStruct>::iterator it = scoreList.begin(); it != scoreList.end(); ++it) {
+        if(scoreCount > 4) break;
+
+        scoreStruct score = *it;
+        string scoreStr = score.name;
+        scoreStr.append(": \t");
+        scoreStr.append(to_string(score.totalPoints));
+
+        menuHighscore->addEntry(scoreStr,menuId_NonClickable);
+
+        scoreCount++;
+
+    }
+
+    menuHighscore->addEntry("weida",menuHighscoreId_Next,true,gameMenuStart);
+    menuHighscore->displayInit();
+
+}
+
+
+/**
  * @brief Game::endGame
  * Diese Funktion löscht nicht mehr nötige Variablen und Objekte wenn vom Spiel in das Statistikmenü gewechselt wird.
  * es werden auch die Statistik und Highscoremenüs aktualisiert
@@ -266,18 +602,19 @@ void Game::endGame() {
 }
 
 
+
+// --------------- Regelmäßig aufgerufene Funktionen timerEvent() und step() ----------------------
 /**
- * @brief Game::exitGame
- *        Diese Funktion löscht nicht mehr nötige Variablen und Objekte wenn das Spiel komplett beendet wird.
- * @author: Felix
+ * @brief wird regelmäßig aufgerufen
+ * event muss drinstehen, damit der Timer die Funktion aufruft
+ * @param event
+ * @author Rupert
  */
-void Game::exitGame() {
-
-    /// Beende Audio Ausgabe und lösche Audiobezogene Variablen
-
-    /// rufe Desktrutor Objekt audioOutput auf
-    /// Stoppe PortAudio Audioausgabe, Beende Portaudio Stream, Beende PortAudio und lösche Objekt audioOutput
-    delete audioOutput;
+void Game::timerEvent(QTimerEvent *event)
+{
+    Q_UNUSED (event)        // Warnung unterdrücken
+    step();
+    ///@todo return von step...
 }
 
 
@@ -491,6 +828,7 @@ int Game::step() {
 }
 
 
+// --------------- Funktionen in der Loop ---------------------------------------------------------
 /**
  * @brief Game::appendWorldObjects
  * @param playerPointer
@@ -790,6 +1128,7 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
         } // Ende der if-Abfrage bzgl. des erfolgreichen Downcasts
     } // Ende der for-Schleife über die objectsToCalculate
 } // function
+
 
 /**
  * @brief Kollisionen in der Liste collisionsToHandle werden der Reihe nach aus Sicht des affectedObjects bearbeitet.
@@ -1131,6 +1470,22 @@ void Game::handleCollisions() {
     }
 }
 
+
+/**
+ * @brief Game::updateScore
+ * Aktualisiert die Score des Spielers. Diese Score wird von der Grafik
+ * während des Spiels ausgegeben und am Ende des Spiels in die Highscore
+ * aufgenommen.
+ * @author Simon
+ */
+void Game::updateScore() {
+    playerScore.distanceCovered = playerObjPointer->getPosX();
+    playerScore.enemiesKilled = playerObjPointer->getEnemiesKilled();
+    playerScore.alcoholPoints = playerScore.alcoholPoints + (playerObjPointer->getAlcoholLevel() / 100);
+    playerScore.totalPoints = playerScore.distanceCovered + playerScore.enemiesKilled + playerScore.alcoholPoints;
+}
+
+
 /**
  * @brief durchläuft die Liste audioStorage, zählt die Cooldowns runter
  *  Die Soundevents die noch laufen, werden an die Liste SoundEvents übergeben. Die fertigen werden gelöscht.
@@ -1301,232 +1656,6 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
     window->centerOn(playerObjPointer->getPosX() + 512 - 100 - 0.5 * playerObjPointer->getLength(), 384);
 }
 
-/**
- * @brief Game::loadLevelFile
- * @param fileSpecifier
- * Diese Funktion liest Level-Dateien aus und kommt mit wenig Parametern aus.
- * Der Player braucht posX und posY.
- * Enemies brauchen posX, posY und speedX.
- * Obstacles brauchen posX und posY.
- * Planes (Zwischenebenen) brauchen posX und posY.
- * PowerUps brauchen posX, posY und die jeweiligen Boni.
- * @author Simon
- */
-
-void Game::loadLevelFile(QString fileSpecifier) {
-    // Spezifizierte Datei öffnen
-    QFile levelFile(fileSpecifier);
-    if (!levelFile.open(QFile::ReadOnly | QFile::Text)) {
-        qDebug() << "Datei konnte nicht geöffnet werden!";
-    } else {
-        // Die Datei wurde erfolgreich geöffnet
-        // Die Liste wird geleert
-        levelSpawn.clear();
-
-        qDebug() << "Lese levelFile mit vorgesetzten Parametern aus:";
-
-        QTextStream fileStream(&levelFile);
-        while (!fileStream.atEnd()) {
-            QString line = fileStream.readLine();
-            //qDebug() << line;
-            // Trenne die aktuelle Zeile nach Komma getrennt auf
-            QStringList strlist = line.split(",");
-
-            try {
-
-                if (strlist.at(0) == "Levellänge") {
-                    if (strlist.length() != 2) {
-                        throw std::string("Ungültiger Eintrag für die Levellänge");
-                    } else {
-                        // Setze die Levellänge
-                        levelLength = strlist.at(1).toInt();
-                        qDebug("Levellänge gesetzt: %d",levelLength);
-                    }
-                }
-
-                if (strlist.at(0) == "Player") {
-                    if (strlist.length() != 3) {
-                        throw std::string("Ungültiger Player-Eintrag: ");
-                    } else {
-                        // Erstelle das Spieler-Objekt und setze den playerObjPointer
-                        qDebug() << "  Player-Eintrag gefunden.";
-                        GameObject *playerObject = new Player(strlist.at(1).toInt(), strlist.at(2).toInt(), 0);
-                        playerObjPointer = dynamic_cast<Player*>(playerObject);
-                    }
-                }
-
-                if (strlist.at(0) == "Tourist") {
-                    if (strlist.length() != 4) {
-                        throw std::string("Ungültiger Tourist-Eintrag:");
-                    } else {
-                        qDebug() << "  Tourist-Eintrag gefunden.";
-                        GameObject *enemyToAppend = new Enemy(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), enemy_tourist);
-                        levelSpawn.push_back(enemyToAppend);
-                    }
-                }
-
-                if (strlist.at(0) == "Security") {
-                    if (strlist.length() != 3) {
-                        throw std::string("Ungültiger Security-Eintrag:");
-                    } else {
-                        qDebug() << "  Security-Eintrag gefunden.";
-                        GameObject *enemyToAppend = new Enemy(strlist.at(1).toInt(), strlist.at(2).toInt(), 0, enemy_security);
-                        levelSpawn.push_back(enemyToAppend);
-                    }
-                }
-
-                if (strlist.at(0) == "Obstacle") {
-                    if (strlist.length() != 3) {
-                        throw std::string("  Ungültiger Obstacle-Eintrag:");
-                    } else {
-                        qDebug() << "  Obstacle-Eintrag gefunden.";
-                        GameObject *obstacleToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), obstacle);
-                        levelSpawn.push_back(obstacleToAppend);
-                    }
-                }
-
-                if (strlist.at(0) == "Plane") {
-                    if (strlist.length() != 3) {
-                        throw std::string("Ungültiger Plane-Eintrag:");
-                    } else {
-                        qDebug() << "  Plane-Eintrag gefunden.";
-                        GameObject *planeToAppend = new GameObject(strlist.at(1).toInt(), strlist.at(2).toInt(), plane);
-                        levelSpawn.push_back(planeToAppend);
-                    }
-                }
-
-                if (strlist.at(0) == "Bier") {
-                    if (strlist.length() != 3 ) {
-                        throw std::string("Ungültiger Bier-Eintrag:");
-                    } else {
-                        qDebug() << "  Bier-Eintrag gefunden.";
-                        GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), beerHealth, beerAlcohol, beerAmmo, 0, beer);
-                        levelSpawn.push_back(powerUpToAppend);
-                    }
-                }
-
-                if (strlist.at(0) == "Hendl") {
-                    if (strlist.length() != 3 ) {
-                        throw std::string("Ungültiger Hendl-Eintrag:");
-                    } else {
-                        qDebug() << "  Hendl-Eintrag gefunden.";
-                        GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), hendlHealth, hendlAlcoholMalus, 0, 0, food);
-                        levelSpawn.push_back(powerUpToAppend);
-                    }
-                }
-
-                if (strlist.at(0) == "PowerUp") {
-                    if (strlist.length() != 7 ) {
-                        throw std::string("Ungültiger PowerUp-Eintrag:");
-                    } else {
-                        qDebug() << "  PowerUp-Eintrag gefunden.";
-                        GameObject *powerUpToAppend = new PowerUp(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), strlist.at(4).toInt(), strlist.at(5).toInt(), strlist.at(6).toInt(), food);
-                        levelSpawn.push_back(powerUpToAppend);
-                    }
-                }
-
-                if (strlist.at(0) == "Boss") {
-                    if (strlist.length() != 4) {
-                        throw std::string("Ungültiger Boss-Eintrag:");
-                    } else {
-                        qDebug() << "  Boss-Eintrag gefunden.";
-                        GameObject *enemyToAppend = new Enemy(strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), BOSS);
-                        levelSpawn.push_back(enemyToAppend);
-                    }
-                }
-            }
-            catch(std::string s) {
-                qDebug("%s %s", s.c_str(), line.toStdString().c_str());
-            }
-
-        } // end of while
-
-        levelSpawn.sort(compareGameObjects());
-
-        qDebug() << "Auslesen des levelFile beendet.";
-    }
-}
-
-
-/**
- * @brief Game::updateScore
- * Aktualisiert die Score des Spielers. Diese Score wird von der Grafik
- * während des Spiels ausgegeben und am Ende des Spiels in die Highscore
- * aufgenommen.
- * @author Simon
- */
-void Game::updateScore() {
-    playerScore.distanceCovered = playerObjPointer->getPosX();
-    playerScore.enemiesKilled = playerObjPointer->getEnemiesKilled();
-    playerScore.alcoholPoints = playerScore.alcoholPoints + (playerObjPointer->getAlcoholLevel() / 100);
-    playerScore.totalPoints = playerScore.distanceCovered + playerScore.enemiesKilled + playerScore.alcoholPoints;
-}
-
-
-/**
- * @brief Game::updateHighScore
- * Diese Funktion liest und aktualisiert die Highscore des Spiels. Als Parameter wird ein std::string mode erwartet.
- * Ist der mode = "write", so wird die aktuelle Highscore unter Berücksichtigung der aktuellen playerScore neu geschrieben.
- * Alle anderen Werte für mode lesen nur die alte Highscore und die des Spielers in die Liste ein, um sie z.B. im Highscore-Menü
- * anzuzeigen.
- * Dazu wird versucht, die Datei "wiesnHighscore.txt" auszulesen. Ist dies nicht möglich,
- * so wurde das Spiel in dem aktuellen Verzeichnis noch nie gestartet.
- * Falls die Datei gefunden und gelesen werden kann, so wird jeder Highscore-Eintrag in die scoreList aufgenommen.
- * Anschließend wird die Liste nach der Summe der Punkte absteigend sortiert, und nur die 10 besten Elemente werden gespeichert.
- * Wird für das aktuelle Spiel eine Score angelegt und in der scoreList gespeichert, so wird dieser Eintrag eingeordnet
- * und gegebenenfalls auch abgespeichert.
- */
-void Game::updateHighScore(std::string mode) {
-    // scoreList leeren und alte Highscore einlesen
-    scoreList.clear();
-    std::ifstream input("wiesnHighscore.txt");
-    if (!input) {
-        qDebug() << "Highscore-Datei nicht vorhanden";
-    } else {
-        qDebug("Lese Highscore ein...");
-        // Highscore-Einträge zeilenweise auslesen und als scoreStruct der Liste hinzufügen
-        std::string line;
-        while (std::getline(input, line)) {
-            QString qline = QString::fromStdString(line);
-            QStringList strlist = qline.split(",");
-            if (strlist.length() == 5) {
-                scoreStruct currentScoreItem = {strlist.at(0).toStdString(), strlist.at(1).toInt(), strlist.at(2).toInt(), strlist.at(3).toInt(), strlist.at(4).toInt()};
-                scoreList.push_back(currentScoreItem);
-            }
-        }
-    }
-    // Datei schließen
-    input.close();
-
-    // Score sortieren
-    scoreList.sort(compareScores());
-
-    if (mode == "write") {
-        // Neue Highscore schreiben
-
-        // Aktuelle Spielerscore hinzufügen und sortieren
-        scoreList.push_back(playerScore);
-        scoreList.sort(compareScores());
-
-        std::ofstream ofs;
-        ofs.open("wiesnHighscore.txt", std::ofstream::out | std::ofstream::trunc);
-
-        int i = 0;
-        // Schreibe maximal die besten 10 Scores in die Highscore-Datei
-        while (!scoreList.empty() && (i < 10)) {
-            scoreStruct currentScore = *scoreList.begin();
-            scoreList.pop_front();
-
-            // Highscore-Eintrag schreiben
-            ofs << currentScore.name.c_str() << "," << currentScore.totalPoints << "," << currentScore.distanceCovered << "," << currentScore.alcoholPoints << "," << currentScore.enemiesKilled << "\n";
-            i++;
-        }
-        // Datei schließen, damit Änderungen gespeichert werden
-        ofs.close();
-        qDebug("Highscore geschrieben.");
-    }
-}
-
 
 /** gibt stepIntervall zurück
  * wird für Zeit auslesen gebraucht
@@ -1571,121 +1700,4 @@ void Game::setState(enum gameState newState) {
             aktMenu = menuHighscore;
             break;
     }
-}
-
-
-/**
- * @brief Initialisierung der Menüs
- * wird in start() aufgerufen
- * Logik:
- *  Startmenü
- *      Credits
- *  Levelauswahl
- *  spielen...
- *      Pause
- *  Name eingeben
- *  Spielstatistik
- *  Highscore
- *  Von vorne
- *
- * @author Rupert
- */
-void Game::menuInit() {
-    menuStart = new Menu(new std::string("Wiesn-Run"));
-    menuStart->addEntry("Pack ma's!",menuStartId_NewGame,true, gameMenuLevel);
-    menuStart->addEntry("Mia san Mia", menuStartId_Credits,true,gameMenuCredits);
-    menuStart->addEntry("Pfiat di!", menuStartId_EndGame,true);
-    menuStart->displayInit();
-
-    menuCredits = new Menu(new std::string("Credits"));
-    menuCredits->addEntry("Grundkurs C++", menuId_NonClickable,false);
-    menuCredits->addEntry("da Simon, da Rupi,", menuId_NonClickable,false);
-    menuCredits->addEntry("da Felix,", menuId_NonClickable,false);
-    menuCredits->addEntry("da Flo und da Johann", menuId_NonClickable,false);
-    menuCredits->addEntry("weg do!", menuCreditsId_Back,true,gameMenuStart);
-    menuCredits->displayInit();
-
-    menuLevel = new Menu(new std::string("Wos mogst?"));
-    menuLevel->addEntry("Demolevel",menuLevelId_Demo, true);
-    menuLevel->addEntry("Level 1",menuLevelId_Level1, true);
-    menuLevel->addEntry("Level 2",menuLevelId_Level2, true);
-    menuLevel->addEntry("Level 3",menuLevelId_Level3, true);
-    menuLevel->addEntry("naaa..",menuLevelId_Back, true,gameMenuStart);
-    menuLevel->displayInit();
-
-    menuBreak = new Menu(new std::string("Brotzeit!"));
-    menuBreak->addEntry("weida",menuBreakId_Resume,true);
-    menuBreak->addEntry("koa Lust mehr",menuBreakId_EarlyEnd, true,gameMenuName);
-    menuBreak->addEntry("vo vorn!",menuBreakId_EndGame,true);
-    menuBreak->displayInit();
-
-    menuStatistics = new Menu(new std::string("Boah!"), Menu::menuType::highscore);
-    menuStatistics->addEntry("weida",menuStatisticsId_Next,true,gameMenuHighscore);
-    menuStatistics->displayInit();
-
-    menuName = new Menu(new std::string("Wia hoaßt du?"), Menu::menuType::highscore);
-    menuName->addEntry("weida",menuNameId_Next,true,gameMenuStatisitcs);
-    menuName->displayInit();
-
-    menuHighscore = new Menu(new std::string("Highscores"), Menu::menuType::highscore);
-    menuHighscore->addEntry("weida",menuHighscoreId_Next,true,gameMenuStart);
-    menuHighscore->displayInit();
-}
-
-
-/**
- * @brief füllt das Statistik- und HighscoreMenü
- * löscht das Statistik- und Highscore-Menü und füllt es mit aktuellen Werten
- * @author Rupert
- */
-void Game::displayStatistics() {
-    using namespace std;    // für std::string
-
-    // Highscore aktualisieren
-    updateHighScore("write");
-
-    // Statistik Menü
-    menuStatistics->clear();
-
-    string name = "Name: ";
-    name.append(playerScore.name);
-    string enemies = "Verstorbene: ";
-    enemies.append(to_string(playerScore.enemiesKilled));
-    string distance = "glafne Meter: ";
-    distance.append(to_string(playerScore.distanceCovered));
-    string alk = "Promille: ";
-    alk.append(to_string(playerScore.alcoholPoints));
-    string points = "Punkte:";
-    points.append(to_string(playerScore.totalPoints));
-
-    menuStatistics->addEntry(name,menuId_NonClickable,false);
-    menuStatistics->addEntry(enemies,menuId_NonClickable,false);
-    menuStatistics->addEntry(distance,menuId_NonClickable,false);
-    menuStatistics->addEntry(alk,menuId_NonClickable,false);
-    menuStatistics->addEntry(points,menuId_NonClickable,false);
-    menuStatistics->addEntry("weida",menuStatisticsId_Next,true,gameMenuHighscore);
-    menuStatistics->displayInit();
-
-    // Highscore-Menü
-    menuHighscore->clear();
-
-    updateHighScore("listefüllen");
-    int scoreCount = 0;
-    for(std::list<scoreStruct>::iterator it = scoreList.begin(); it != scoreList.end(); ++it) {
-        if(scoreCount > 4) break;
-
-        scoreStruct score = *it;
-        string scoreStr = score.name;
-        scoreStr.append(": \t");
-        scoreStr.append(to_string(score.totalPoints));
-
-        menuHighscore->addEntry(scoreStr,menuId_NonClickable);
-
-        scoreCount++;
-
-    }
-
-    menuHighscore->addEntry("weida",menuHighscoreId_Next,true,gameMenuStart);
-    menuHighscore->displayInit();
-
 }
