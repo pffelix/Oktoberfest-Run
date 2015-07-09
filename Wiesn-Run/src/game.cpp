@@ -294,14 +294,15 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
 
 
 /**
- * @brief Game::loadLevelFile
+ * @brief Level-Datei auslesen
  * @param fileSpecifier
- * Diese Funktion liest Level-Dateien aus und kommt mit wenig Parametern aus.
- * Der Player braucht posX und posY.
- * Enemies brauchen posX, posY und speedX.
- * Obstacles brauchen posX und posY.
- * Planes (Zwischenebenen) brauchen posX und posY.
- * PowerUps brauchen posX, posY und die jeweiligen Boni.
+ * Diese Funktion liest Level-Dateien aus. In der Leveldatei werden Keywords für die anzulegenden Objekte
+ * verwendet. Nach den Objekten stehen durch Kommata getrennt die benötigten Parameter.
+ * Ein Player-Eintrag enthält posX und posY.
+ * Ein Enemy-Eintrag enthält posX, posY und speedX.
+ * Ein Obstacle-Eintrag enthält posX und posY.
+ * Ein Plane-Eintrag (Zwischenebene) enthältn posX und posY.
+ * Ein PowerUp-Eintrag enthält posX, posY und die jeweiligen Boni.
  * @author Simon
  */
 void Game::loadLevelFile(QString fileSpecifier) {
@@ -313,6 +314,8 @@ void Game::loadLevelFile(QString fileSpecifier) {
         // Die Datei wurde erfolgreich geöffnet
         // Die Liste wird geleert
         levelSpawn.clear();
+
+        bool levelLengthSet = false;
 
         qDebug() << "Lese levelFile mit vorgesetzten Parametern aus:";
 
@@ -330,6 +333,7 @@ void Game::loadLevelFile(QString fileSpecifier) {
                     } else {
                         // Setze die Levellänge
                         levelLength = strlist.at(1).toInt();
+                        levelLengthSet = true;
                         qDebug("Levellänge gesetzt: %d",levelLength);
                     }
                 }
@@ -432,6 +436,10 @@ void Game::loadLevelFile(QString fileSpecifier) {
         } // end of while
 
         levelSpawn.sort(compareGameObjects());
+
+        if (!levelLengthSet) {
+            qDebug() << "Fehler: Die Levellänge wurde nicht gesetzt!";
+        }
 
         qDebug() << "Auslesen des levelFile beendet.";
     }
