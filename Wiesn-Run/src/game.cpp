@@ -1126,7 +1126,7 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
                 }
 
                 // Ist die X-Überlappung größer als die Y-Überlappung und beide Überlappungen positiv, so findet eine vertikale Kollision statt.
-                if ((overlayX > overlayY) && (overlayY > 0)) {
+                if ((overlayX >= overlayY) && (overlayY > 0)) {
                     // Prüfe, ob die vertikale Kollision von Oben oder von Unten stattfindet
                     if (affectedAboveCausing) {
                         collisionStruct collision = {affectedObject, causingObject, fromAbove};
