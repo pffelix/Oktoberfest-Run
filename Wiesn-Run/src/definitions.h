@@ -72,7 +72,7 @@ const int maxSpeedY = 3 * maxSpeed / 2;
  * @brief maximales Leben
  */
 const int maxHealth = 5;
-const int maxAlcohol = 4500;
+const int maxAlcohol = 200;
 
 /**
  * @brief PowerUp-Konstanten
