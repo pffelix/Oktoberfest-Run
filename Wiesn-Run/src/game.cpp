@@ -1078,11 +1078,11 @@ void Game::handleCollisions() {
                     //PositionsKorrektur
                     if (handleEvent.direction == fromLeft) {
                         //Gegner kommt von links
-                        overlap = (handleEnemy->getPosX() + handleEnemy->getLength()) - handleEvent.causingObject->getPosX();
+                        overlap = (handleEnemy->getPosX() + (handleEnemy->getLength() / 2)) - (handleEvent.causingObject->getPosX() - (handleEvent.causingObject->getLength() / 2));
                         handleEnemy->setPosX(handleEnemy->getPosX() - overlap);
                     } else {
                         //Gegner kommt von rechts
-                        overlap = (handleEvent.causingObject->getPosX() + handleEvent.causingObject->getLength()) - handleEnemy->getPosX();
+                        overlap = (handleEvent.causingObject->getPosX() + (handleEvent.causingObject->getLength() / 2)) - (handleEnemy->getPosX() - (handleEnemy->getLength() / 2));
                         handleEnemy->setPosX(handleEnemy->getPosX() + overlap);
                     }
                 }
