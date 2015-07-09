@@ -16,9 +16,6 @@
 #include "menu.h"
 
 
-
-
-
 /**
  * @brief Verglecht zwei GameObjects, bezüglich der X-Position
  * @param 1.Objekt
@@ -108,7 +105,6 @@ int Game::start() {
 
     // Fundamentale stepSize setzen
     stepIntervall = 1000/frameRate;
-    //stepIntervall = 100; zum testen
 
     // Menüs erstellen
     menuInit();
@@ -135,11 +131,7 @@ int Game::start() {
     /// Installiere Event Filter zum Loggen der Keyboard Eingabe
     window->installEventFilter(keyInput);
 
-    ///@todo hier wird das Startmenü übersprungen
-    //startNewGame("level1_old.txt",1);
-    //setState(gameMenuStart);
     setState(gameMenuStart);
-
 
     // Timer installieren
     qDebug("Starte Timer mit 500msec-Intervall");
@@ -155,18 +147,14 @@ int Game::start() {
  * füllt worldobjects
  */
 void Game::startNewGame(QString levelFileName, int levelNum) {
-
-
     // alles alte leeren
-    //levelScene->clear();
     worldObjects.clear();
 
     //Levelscene einstellen
     levelScene->setSceneRect(0,0,100000,768);
     window->setScene(levelScene);
 
-
-    //level nummer speichern
+    //Level-Nummer speichern
     gameStats.actLevel = levelNum;
     // Level festlegen, der geladen werden soll
     QString fileSpecifier = ":/levelFiles/levelFiles/";
@@ -232,16 +220,6 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
     playerScore.totalPoints = 0;
 
     stepCount = 0;
-
-    // Zeiger auf Objekte aus levelInitial in worldObjects verlegen
-    /// @todo Theoretisch brauchen wir levelIntial nicht mehr, die Frage ist, ob die Grafik da mitmacht.
-//    while (!(levelInitial.empty())) {
-//        GameObject *currentObject = *levelInitial.begin();
-//        worldObjects.push_back(currentObject);
-//        levelInitial.pop_front();
-//        //Grafik
-//        levelScene->addItem(currentObject);
-//    }
 }
 
 
@@ -267,8 +245,6 @@ void Game::endGame() {
     playerScore.name = bavarianNames[nameIndex];
     setState(gameMenuName);
 
-    /// @todo Aufräumarbeiten
-
     //Listen leeren
     audioevents.clear();
     audioStorage.clear();
@@ -281,12 +257,6 @@ void Game::endGame() {
         worldObjects.pop_front();
         delete handleObject;
     }
-
-    /*while (!(levelInitial.empty())) {
-        GameObject *handleObject = levelInitial.front();
-        levelInitial.pop_front();
-        delete handleObject;
-    }*/
 
     while (!(levelSpawn.empty())) {
         GameObject *handleObject = levelSpawn.front();
@@ -339,16 +309,9 @@ int Game::step() {
     Input::Keyaction lastKey = keyInput->getLastKeyaction();
     Menu *aktStepMenu = aktMenu;
 
-    /// Zeit seit dem letzten Aufruf ausrechnen und ausgeben
-
-    //high_resolution_clock::time_point akt = letzterAufruf;
-    //letzterAufruf = high_resolution_clock::now();
-    //qDebug("Game::step() | Vergangene Zeit seit letztem step(): %d ms", static_cast<int>(duration_cast<milliseconds>(letzterAufruf-akt).count()));
-
     // falls Menü aktiv, Inputs verarbeiten, Grafik:
 
     if(aktStepMenu!=NULL) { // aktMenu ist nur NULL, wenn das Spiel gerade läuft
-
 
         //AudioEvent falls level begonnen wird
         audioCooldownstruct backgroundLevel;
@@ -471,17 +434,6 @@ int Game::step() {
         updateScore();
 
         renderGraphics(&worldObjects, playerObjPointer);
-
-
-
-        // Mockup: add audioStruct player_jump to audioevents list
-        //audioStruct player_jump{1, audioType::background_level1, 0.6};
-        // Mockup: add audioStruct powerup_beer to audioevents list
-        //audioevents.push_back(player_jump);
-        //audioStruct scene_beer{2, audioType::background_level1, 0.6};
-        //audioevents.push_back(scene_beer);
-        // send filled audioevents list to AudioControl Object, which updates current Output Sounds
-
 
         // Level zu Ende?
         if (playerObjPointer->getPosX() - playerScale >= levelLength) {
@@ -887,11 +839,6 @@ void Game::handleCollisions() {
                     break;
                 }
                 case fromRight: {
-//                    //Bewegung in X-Richtung stoppen
-//                    playerObjPointer->setSpeedX(0);
-//                    //Überlappung berechnen und Spieler nach rechts versetzen
-//                    overlap = (handleEvent.causingObject->getPosX() + (handleEvent.causingObject->getLength() / 2)) - (playerObjPointer->getPosX() - (playerObjPointer->getLength() / 2));
-//                    playerObjPointer->setPosX(handleEvent.causingObject->getPosX() + handleEvent.causingObject->getLength());
                     break;
                 }
                 case fromAbove: {
@@ -1513,7 +1460,6 @@ void Game::updateScore() {
     playerScore.enemiesKilled = playerObjPointer->getEnemiesKilled();
     playerScore.alcoholPoints = playerScore.alcoholPoints + (playerObjPointer->getAlcoholLevel() / 100);
     playerScore.totalPoints = playerScore.distanceCovered + playerScore.enemiesKilled + playerScore.alcoholPoints;
-//    playerScore.name = "Horstl";
 }
 
 
@@ -1581,6 +1527,7 @@ void Game::updateHighScore(std::string mode) {
     }
 }
 
+
 /** gibt stepIntervall zurück
  * wird für Zeit auslesen gebraucht
  * @return int Stepintervall in ms
@@ -1589,6 +1536,7 @@ void Game::updateHighScore(std::string mode) {
 int Game::getStepIntervall() {
     return stepIntervall;
 }
+
 
 /**
  * @brief setzt den Spielstatus
@@ -1624,6 +1572,7 @@ void Game::setState(enum gameState newState) {
             break;
     }
 }
+
 
 /**
  * @brief Initialisierung der Menüs
@@ -1682,6 +1631,7 @@ void Game::menuInit() {
     menuHighscore->addEntry("weida",menuHighscoreId_Next,true,gameMenuStart);
     menuHighscore->displayInit();
 }
+
 
 /**
  * @brief füllt das Statistik- und HighscoreMenü
