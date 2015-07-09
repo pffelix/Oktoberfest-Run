@@ -72,7 +72,7 @@ const int maxSpeedY = 3 * maxSpeed / 2;
  * @brief maximales Leben
  */
 const int maxHealth = 5;
-const int maxAlcohol = 4500;
+const int maxAlcohol = 200;
 
 /**
  * @brief PowerUp-Konstanten
@@ -158,9 +158,9 @@ enum audioType {
     powerup_food,
     /// Alkohol Status höher als 60%: wird solange gesendet wie Alkoholstatus höher als 60% ist
     status_alcohol,
-    /// Leben Status geringer als 40%: wird solange gesendet wie Lebenstatus geringer als 40% ist
+    /// Leben Status 2 Lebenspunkt3: wird solange gesendet wie Spieler 2 Lebenspunkt3 hat 40% ist
     status_life,
-    /// Leben Status geringer als 20%: wird solange gesendet wie Lebenstatus geringer als 20% ist
+    /// Leben Status 1 Lebenspunkt: wird solange gesendet wie Spieler 1 Lebenspunkt hat
     status_lifecritical,
     /// Gameover des Spielers: wird gesendet wenn der Spieler 0% Lebenstatus hat (cooldown)
     status_dead,
