@@ -1657,6 +1657,8 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
 }
 
 
+
+// --------------- Hilfsfunktionen ----------------------------------------------------------------
 /** gibt stepIntervall zurück
  * wird für Zeit auslesen gebraucht
  * @return int Stepintervall in ms
