@@ -20,6 +20,7 @@
 #include <chrono>
 #include "menu.h"
 #include "portaudio.h"
+#include "RenderGUI.h"
 using namespace std;
 
 /**
@@ -128,14 +129,16 @@ private:
     Player *playerObjPointer;
 
     /// für das Ausgabefenster QGraphicsView
-    QGraphicsScene * levelScene;
     QGraphicsView * window;
+    QGraphicsScene * levelScene;
+
+    RenderGUI * showGUI;
 
     /// Vector aller Hintergrundbilder
     std::vector<QGraphicsPixmapItem> backgrounds;
 
     /// Vektor der die Darstellgung von Leben,Highscore und Pegel enhält
-    std::vector<QGraphicsTextItem> playerStats;
+   // std::vector<QGraphicsTextItem> playerStats;
 
     /// Zeiger auf QApplication
     QApplication *appPointer;

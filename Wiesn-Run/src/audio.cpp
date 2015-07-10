@@ -8,7 +8,6 @@
 Audio::Audio(std::string state_name) {
     source = state_name;
     readSamples();
-
 }
 
 /**
@@ -51,27 +50,6 @@ float Audio::getSample(int pos) {
  */
 int Audio::getSamplenumber() {
     return samplenumber;
-}
-
-/**
- * @brief  Audio::getVolume
- *         "getVolume" gibt bei Aufruf zurück wie laut die Samples im Moment eingestellt sind.
- *         Der Rückgabewert "volume" ist ein short Datentyp im Bereich (still) 0...1 (maximal laut)
- * @return short volume
- * @author Felix Pfreundtner
- */
-short Audio::getVolume() {
-    return volume;
-}
-
-/**
- * @brief  Audio::setVolume
- *         "setVolume" setzt bei Aufruf für das Audio Objekt einen Lautstärkinformations Wert "volume".
- *         "volume" ist ein short Datentyp im Bereich (still) 0...1 (maximal laut).
- * @author Felix Pfreundtner
- */
-void Audio::setVolume(short volume_audio_obj){
-    volume = volume_audio_obj;
 }
 
 
@@ -182,7 +160,7 @@ void Audio::readSamples() {
 }
 
 /**
- * @brief  Audio::readSamples
+ * @brief  Audio::to16bitSample
  *         "readSamples" konvertiert einen 8 bit integer Sample in einen 16 bit Integer Sample.
  *         Ziel ist eine einheitlich Bearbeitung der Samples verschiedener Audioobjekte vornehmen zu können.
  * @author Felix Pfreundtner
