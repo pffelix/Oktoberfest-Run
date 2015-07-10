@@ -122,6 +122,8 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
     std::list<playStruct>::iterator pe;
     /// intialsiere status_filter mit no (Annahme kein Audioevent mit type status_alcohol / status_life / status_lifecritical in audioevents Liste)
     status_filter = statusFilter::no;
+    /// lock audioevents
+    mtx.lock();
 
     /// initialisiere die Abspielinformation aller playstructs in playevents auf false (verhindere weiteres abspielen im nächsten Step)
     for (std::list<playStruct>::iterator pe = playevents.begin(); pe != playevents.end(); pe++) {
@@ -201,6 +203,8 @@ void AudioControl::update(std::list<struct audioStruct> *audioevents){
     for (pe = playevents.begin(); pe != playevents.end(); pe++) {
         //qDebug() << QString("Audio played: ") << QString::fromStdString(pe->audioobject->getSource());
     }
+    /// unlock audioevents
+    mtx.unlock();
 }
 
 
@@ -273,13 +277,14 @@ int AudioControl::instancepaCallback( const void *inputBuffer, void *outputBuffe
     /// keine statusFlags nötig, verhindere Warnmeldung "unbenutzter Parameter statusFlags"
     (void) statusFlags;
 
-
+    /// lock audioevents
+    mtx.lock();
     for(unsigned int block_pos=0; block_pos<framesPerBuffer; block_pos++ ) {
 
         /// Berechne Sample Ausgabe für aktuellen Block Zeitschritt aus Samples aller Audiovents
         mixed_sample = 0;
         /// für alle aktuell abzuspielenden Audioevents
-        for (callback_pe = playevents.begin(); callback_pe != playevents.end(); callback_pe++) {    
+        for (std::list<playStruct>::iterator callback_pe = playevents.begin(); callback_pe != playevents.end(); callback_pe++) {
             /// lese Sample für aktuelles Audioevent and aktuell iterierter Position ein
             /// mixed:sample_keinfilter = sample(aktuell Position Audioevent)*aktuelle_relative_lautstärke_audioevent/anzahl_maximaler_playevents
             mixed_sample += callback_pe->audioobject->getSample(callback_pe->position) * callback_pe->volume / max_playevents;
@@ -333,6 +338,9 @@ int AudioControl::instancepaCallback( const void *inputBuffer, void *outputBuffe
         /// Füge gemischtes Samples aller Audiovents dem PortAudio Outputbuffer hinzu und Erhöhe Zeiger auf den Outputbuffer um 16bit
         *out++ = mixed_sample;
     }
+
+    /// unlock audioevents
+    mtx.unlock();
     blockcounter += 1;
     //std::copy ( block, block + BLOCKSIZE, std::back_inserter ( blockcontinue ) );
     return 0;
