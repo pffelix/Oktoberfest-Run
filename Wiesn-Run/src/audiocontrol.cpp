@@ -52,7 +52,7 @@ AudioControl::AudioControl() {
     audioobjects.insert(audioobjects.begin() + audioType::background_level2, Audio("background_level2")); // 16bit
     //source: http://www.freesound.org/people/Westmed/sounds/239538/
     audioobjects.insert(audioobjects.begin() + audioType::background_level3, Audio("background_level3")); // 16bit
-    //source: http://www.freesound.org/people/plasterbrain/sounds/243020/
+    //source: http://www.freesound.org/people/Harbour11/sounds/194625/
     audioobjects.insert(audioobjects.begin() + audioType::background_startgame, Audio("background_startgame")); // 16bit
     //source: http://soundbible.com/1823-Winning-Triumphal-Fanfare.html
     audioobjects.insert(audioobjects.begin() + audioType::background_levelfinished, Audio("background_levelfinished")); // 16bit

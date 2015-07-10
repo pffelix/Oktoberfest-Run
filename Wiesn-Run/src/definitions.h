@@ -214,7 +214,7 @@ typedef struct {
     std::chrono::duration<int, std::milli> background_level1 = std::chrono::milliseconds(0);
     std::chrono::duration<int, std::milli> background_level2 = std::chrono::milliseconds(0);
     std::chrono::duration<int, std::milli> background_level3 = std::chrono::milliseconds(0);
-    std::chrono::duration<int, std::milli> background_startgame = std::chrono::milliseconds(2838);
+    std::chrono::duration<int, std::milli> background_startgame = std::chrono::milliseconds(3000);
     std::chrono::duration<int, std::milli> background_levelfinished = std::chrono::milliseconds(5365);
 } audioCooldownStruct;
 
