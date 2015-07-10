@@ -9,6 +9,10 @@ RenderGUI::RenderGUI(QGraphicsScene *scene) {
     this->showHealth.setPos(30, 30);
     this->showHealth.setDefaultTextColor(Qt::red);
     this->showHealth.setFont(QFont("Times",25));
+    this->showHealth.setPlainText(QString("Gesundheit: "));
+
+    this->showHealthBar.setParentItem(&showHealth);
+    this->showHealthBar.setBrush(Qt::red);
 
     this->showScore.setParentItem(&showHealth);
     this->showScore.setPos(650, 0);
@@ -17,8 +21,12 @@ RenderGUI::RenderGUI(QGraphicsScene *scene) {
 
     this->showAlcohol.setParentItem(&showHealth);
     this->showAlcohol.setPos(0, 50);
-    this->showAlcohol.setDefaultTextColor(Qt::black);
+    this->showAlcohol.setDefaultTextColor(Qt::darkBlue);
     this->showAlcohol.setFont(QFont("Times",25));
+    this->showAlcohol.setPlainText(QString("Alkoholpegel: "));
+
+    this->showAlcoholBar.setParentItem(&showHealth);
+    this->showAlcoholBar.setBrush(Qt::darkBlue);
 
     this->showAmmo.setParentItem(&showHealth);
     this->showAmmo.setPos(0, 100);
@@ -36,9 +44,9 @@ void RenderGUI::setPos(int x) {
     this->showHealth.setPos(this->showHealth.x()+x, this->showHealth.y());
 }
 
-void RenderGUI::setValues(int health, int ammo, int alcohol, int score) {
-    this->showHealth.setPlainText(QString("Gesundheit: " + QString::number(health)));
-    this->showAmmo.setPlainText(QString("Alkoholpegel: " + QString::number(ammo)));
-    this->showAlcohol.setPlainText(QString("Munition: " + QString::number(alcohol)));
+void RenderGUI::setValues(int health, int alcohol, int ammo, int score) {
+    this->showHealthBar.setRect(210,10,health*50,35);
+    this->showAlcoholBar.setRect(210,60,alcohol/10,35);
+    this->showAmmo.setPlainText(QString("Munition: " + QString::number(ammo)));
     this->showScore.setPlainText(QString("Score: " + QString::number(score)));
 }

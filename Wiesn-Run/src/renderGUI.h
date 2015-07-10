@@ -3,6 +3,7 @@
 
 #include <QGraphicsTextItem>
 #include <QGraphicsScene>
+#include <QGraphicsRectItem>
 
 class RenderGUI {
 
@@ -12,14 +13,16 @@ public:
     ~RenderGUI();
 
     void setPos(int x);
-    void setValues(int health, int ammo, int alcohol, int score);
+    void setValues(int health, int alcohol, int ammo, int score);
 
 private:
 
     QGraphicsTextItem showHealth;
+    QGraphicsRectItem showHealthBar;
     QGraphicsTextItem showScore;
     QGraphicsTextItem showAmmo;
     QGraphicsTextItem showAlcohol;
+    QGraphicsRectItem showAlcoholBar;
 
 };
 
