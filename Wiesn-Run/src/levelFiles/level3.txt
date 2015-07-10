@@ -171,4 +171,25 @@ Obstacle,17500,280
 Tourist,17400,280,0
 Bier,17600,300
 
+# Ein bisschen Erholung
+Obstacle,18000,0
+Bier,18200,40
+Bier,18400,40
+Bier,18600,40
+Hendl,18800,40
+Obstacle,18900,0
+
+# Schwierige Tourist-Planes
+Plane,19500,130
+Plane,19620,130
+Plane,19740,130
+Plane,19860,130
+Plane,19980,130
+Plane,20100,130
+Plane,20220,130
+Plane,20340,130
+Tourist,19620,150,0
+Tourist,19860,150,0
+Tourist,20100,150,0
+Tourist,20340,150,0
 
