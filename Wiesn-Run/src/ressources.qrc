@@ -15,6 +15,14 @@
         <file>images/tourist1.png</file>
         <file>images/tourist2.png</file>
         <file>images/barrel.png</file>
+        <file>images/bg_lev2_1.png</file>
+        <file>images/bg_lev2_2.png</file>
+        <file>images/bg_lev2_3.png</file>
+        <file>images/bg_lev2_4.png</file>
+        <file>images/bg_lev3_1.png</file>
+        <file>images/bg_lev3_2.png</file>
+        <file>images/bg_lev3_3.png</file>
+        <file>images/bg_lev3_4.png</file>
     </qresource>
     <qresource prefix="/levelFiles">
         <file>levelFiles/level1.txt</file>
