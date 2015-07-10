@@ -65,13 +65,13 @@ Obstacle,3200,0
 
 # Tourist zwischen zwei Obstacles
 Obstacle,4300,0
-Tourist,4600,0,-1
+Tourist,4600,0,-2
 Obstacle,4900,0
 
 # Nach Obstacle zwei Touristen, die auf einen zulaufen
 Obstacle,6000,0
-Tourist,6500,0,-1
-Tourist,6800,0,-1
+Tourist,6500,0,-2
+Tourist,6800,0,-2
 
 # Security unter Plan: Spieler muss drüber laufen
 Plane,7900,130
@@ -128,4 +128,47 @@ Plane,14700,130
 Plane,14820,130
 Tourist,14700,150,0
 Tourist,14820,150,0
+
+# Lange Ebene mit vielen Gegnern
+Plane,16000,130
+Plane,16120,130
+Plane,16240,130
+Plane,16360,130
+Plane,16480,130
+Plane,16600,130
+Plane,16720,130
+Plane,16840,130
+Plane,16960,130
+Plane,17080,130
+Bier,16010,170
+Hendl,16110,170
+Security,16200,150
+Tourist,16400,150,0
+Security,16600,150
+Tourist,1700,150,-2
+
+# Mehrere Ebenen
+Plane,17000,130
+Plane,17120,130
+Plane,17240,130
+Plane,17360,130
+Plane,17480,130
+Plane,17600,130
+Plane,17720,130
+Plane,17840,130
+Plane,17960,130
+Plane,18080,130
+Plane,17120,260
+Plane,17240,260
+Plane,17360,260
+Plane,17480,260
+Plane,17600,260
+Plane,17720,260
+Plane,17840,260
+Plane,17960,260
+Plane,18080,260
+Obstacle,17500,280
+Tourist,17400,280,0
+Bier,17600,300
+
 
