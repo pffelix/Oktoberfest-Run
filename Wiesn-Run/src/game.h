@@ -20,7 +20,7 @@
 #include <chrono>
 #include "menu.h"
 #include "portaudio.h"
-#include "RenderGUI.h"
+#include "renderGUI.h"
 using namespace std;
 
 /**
