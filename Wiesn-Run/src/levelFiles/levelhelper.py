@@ -1,7 +1,7 @@
 '''
 Usage:
 ipython
-run createPlanes.py
+run levelhelper.py
 L = Levelhelper()
 L.makePlanes(12345,130,10)
     -> copy to Levelfile
