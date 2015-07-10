@@ -239,7 +239,7 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
     audioIDs = 20;
 
     //Hintergründe initialisieren
-    showBackground = new RenderBackground(levelScene);
+    showBackground = new RenderBackground(levelScene, levelNum);
 
     //Anzeigen Leben, Highscore, Munition und Pegel initialisieren
     showGUI = new RenderGUI(levelScene);

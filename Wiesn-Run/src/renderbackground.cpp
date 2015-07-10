@@ -3,12 +3,12 @@
 #include <QGraphicsScene>
 
 
-RenderBackground::RenderBackground(QGraphicsScene *scene) {
+RenderBackground::RenderBackground(QGraphicsScene *scene, int level) {
 
-    this->backgroundOne.setPixmap(QPixmap(":/images/images/bg_lev1_1.png"));
-    this->backgroundTwo.setPixmap(QPixmap(":/images/images/bg_lev1_2.png"));
-    this->backgroundThree.setPixmap(QPixmap(":/images/images/bg_lev1_3.png"));
-    this->backgroundFour.setPixmap(QPixmap(":/images/images/bg_lev1_4.png"));
+    this->backgroundOne.setPixmap(QPixmap(":/images/images/bg_lev"+ QString::number(level) + "_1.png"));
+    this->backgroundTwo.setPixmap(QPixmap(":/images/images/bg_lev"+ QString::number(level) + "_2.png"));
+    this->backgroundThree.setPixmap(QPixmap(":/images/images/bg_lev"+ QString::number(level) + "_3.png"));
+    this->backgroundFour.setPixmap(QPixmap(":/images/images/bg_lev"+ QString::number(level) + "_4.png"));
 
     this->backgroundTwo.setPos(imageLength,0);
     this->backgroundFour.setPos(imageLength,0);

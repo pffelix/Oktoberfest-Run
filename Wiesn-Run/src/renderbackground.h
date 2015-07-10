@@ -8,7 +8,7 @@ class RenderBackground
 {
 public:
     //Konstruktor und Destruktor
-    RenderBackground(QGraphicsScene *scene);
+    RenderBackground(QGraphicsScene *scene, int level);
     ~RenderBackground();
 
     void setPos(int x, QGraphicsPixmapItem *background);
