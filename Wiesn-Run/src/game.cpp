@@ -94,9 +94,6 @@ int Game::start() {
     // Zufall initialisieren
     srand(time(NULL));
 
-    // Länge des Vektors playerStats initialisieren
-    playerStats = std::vector<QGraphicsTextItem>(4);
-
     // Fundamentale stepSize setzen
     stepIntervall = 1000/frameRate;
 
@@ -257,30 +254,8 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
     // audioIDs initialisieren
     audioIDs = 20;
 
-    playerStats[0].setPlainText(QString("Gesundheit: " + QString::number(playerObjPointer->getHealth())));
-    playerStats[0].setPos(playerObjPointer->getPosX()-95, 30);
-    playerStats[0].setDefaultTextColor(Qt::red);
-    playerStats[0].setFont(QFont("Times",25));
-
-    playerStats[1].setParentItem(&playerStats[0]);
-    playerStats[1].setPlainText(QString("Alkoholpegel: " + QString::number(playerObjPointer->getAlcoholLevel())));
-    playerStats[1].setPos(0, 50);
-    playerStats[1].setDefaultTextColor(Qt::black);
-    playerStats[1].setFont(QFont("Times",25));
-
-    playerStats[2].setParentItem(&playerStats[0]);
-    playerStats[2].setPlainText(QString("Score: " + QString::number(playerScore.totalPoints)));
-    playerStats[2].setPos(670, 0);
-    playerStats[2].setDefaultTextColor(Qt::yellow);
-    playerStats[2].setFont(QFont("Times",35));
-
-    playerStats[3].setParentItem(&playerStats[0]);
-    playerStats[3].setPlainText(QString("Munition: " + QString::number(playerObjPointer->getAmmunatiuon())));
-    playerStats[3].setPos(0, 100);
-    playerStats[3].setDefaultTextColor(Qt::darkGreen);
-    playerStats[3].setFont(QFont("Times",25));
-
-    levelScene->addItem(&playerStats[0]);
+    //Anzeigen Leben, Highscore, Munition und Pegel iniitalisieren
+    showGUI = new RenderGUI(levelScene);
 
     // Score initialisieren
     playerScore.alcoholPoints = 0;
@@ -613,6 +588,9 @@ void Game::endGame() {
         levelSpawn.pop_front();
         delete handleObject;
     }
+
+
+    delete showGUI;
 }
 
 
@@ -1624,18 +1602,16 @@ void Game::updateAudio() {
  */
 void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPointer) {
 
+    //Leben,Pegel,Munition,Highscore bleiben auf die View zentriert
+    showGUI->setPos(playerPointer->getPosX() - (playerScale/2) - playerPointer->x());
+
+    //Leben,Highscore,Pegel,Munition wird aktualisiert
+    showGUI->setValues(playerPointer->getHealth(),playerPointer->getAlcoholLevel(),
+                       playerPointer->getAmmunatiuon(),playerScore.totalPoints);
+
     //Bewegunsparralaxe Positionsaktualisierung
     (backgrounds[0]).setPos(((backgrounds[0]).x()) + ((playerPointer->getPosX() - (playerScale/2) - (playerPointer->x())) /2), 0);
     (backgrounds[1]).setPos(((backgrounds[1]).x()) + ((playerPointer->getPosX() - (playerScale/2) - (playerPointer->x())) /2), 0);
-
-    //Leben,Pegel,Munition,Highscore bleiben auf die View zentriert
-    playerStats[0].setPos( playerStats[0].x() + (playerPointer->getPosX() - (playerScale/2) - playerPointer->x()), playerStats[0].y());
-
-    //Leben,Highscore,Pegel,Munition wird aktualisiert
-    playerStats[0].setPlainText(QString("Gesundheit: " + QString::number(playerPointer->getHealth())));
-    playerStats[1].setPlainText(QString("Alkoholpegel: " + QString::number(playerPointer->getAlcoholLevel())));
-    playerStats[2].setPlainText(QString("Score: " + QString::number(playerScore.totalPoints)));
-    playerStats[3].setPlainText(QString("Munition: " + QString::number(playerPointer->getAmmunatiuon())));
 
     //Wenn der Spieler aus einerm Hintergrundbild "rausläuft" wird die Position nachvorne verschoben
     for(int i = 0; i<=3; i++) {
