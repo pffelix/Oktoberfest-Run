@@ -762,7 +762,7 @@ int Game::step() {
 
         worldObjects.sort(compareGameObjects());
         qDebug("---Nächster Zeitschritt---");
-//        timeNeeded("start");
+        timeNeeded("startLoop");
 
         appendWorldObjects(playerObjPointer);
         reduceWorldObjects(playerObjPointer);
@@ -838,7 +838,7 @@ int Game::step() {
                 previous = actual;
             }
         }
-//        timeNeeded("Levelend");
+        timeNeeded("endLoop");
 
         stepCount++;
     }
@@ -1206,10 +1206,13 @@ void Game::handleCollisions() {
                 case fromAbove: {
                     /* Überlappung berechnen und Spieler nach obern versetzen
                      *      Sprungzustand zurücksetzten
+                     * NUR wenn der Spieler sich nicht im Sprung befindet
                      */
-                    overlap = (handleEvent.causingObject->getPosY() + handleEvent.causingObject->getHeight()) - playerObjPointer->getPosY();
-                    playerObjPointer->setPosY(playerObjPointer->getPosY() + overlap);
-                    playerObjPointer->resetJumpState();
+                    if (playerObjPointer->getSpeedY() <= 0) {
+                        overlap = (handleEvent.causingObject->getPosY() + handleEvent.causingObject->getHeight()) - playerObjPointer->getPosY();
+                        playerObjPointer->setPosY(playerObjPointer->getPosY() + overlap);
+                        playerObjPointer->resetJumpState();
+                    }
                     break;
                 }
                 case fromBelow: {
