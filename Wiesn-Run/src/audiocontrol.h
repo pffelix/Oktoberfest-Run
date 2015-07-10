@@ -15,6 +15,7 @@
 #include <math.h>
 #include "portaudio.h"
 #include <cmath>
+#include <mutex>
 
 /**
  * @brief  AudioControl-Klasse
@@ -63,6 +64,12 @@ public:
     void update(std::list<struct audioStruct> *audioevents);
 
     private:
+    /**
+     * @brief  mtx
+     *         mtx ist eine Mutex für playevents.
+     * @author  Felix Pfreundtner
+     */
+    std::mutex mtx;
     /**
      * @brief  playevents
      *         playevents beinhaltet eine Liste mit allen im Moment abgespielten playStructs.
