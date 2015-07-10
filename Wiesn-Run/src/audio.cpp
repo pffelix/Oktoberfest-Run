@@ -99,7 +99,7 @@ void Audio::readSamples() {
         return;
     }
     else {
-        qWarning() << "Audio::readsamples: openend File" << QString::fromStdString(source);
+        qWarning() << "Audio::readsamples: loaded File" << QString::fromStdString(source);
     }
 
     /// Lese relevante Informationen aus dem fmt chunk
