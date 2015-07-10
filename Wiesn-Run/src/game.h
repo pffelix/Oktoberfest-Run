@@ -69,8 +69,6 @@ public:
     /// Hilfsfunktion
     void setState(enum gameState newState);
 
-        QGraphicsScene * levelScene;
-
 protected:
     void timerEvent(QTimerEvent *event);
 
@@ -131,6 +129,7 @@ private:
 
     /// für das Ausgabefenster QGraphicsView
     QGraphicsView * window;
+    QGraphicsScene * levelScene;
 
     RenderGUI * showGUI;
 

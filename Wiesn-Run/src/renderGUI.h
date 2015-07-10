@@ -9,10 +9,16 @@ public:
     //Konstruktor und Destruktor
     RenderGUI();
     ~RenderGUI();
-    QGraphicsTextItem showScore;
+
+    void setPos(int x);
+    void setValues(int health, int ammo, int alcohol, int score);
+
+        QGraphicsTextItem showHealth;
 private:
 
-
+    QGraphicsTextItem showScore;
+    QGraphicsTextItem showAmmo;
+    QGraphicsTextItem showAlcohol;
 
 };
 
