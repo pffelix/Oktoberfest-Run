@@ -2,20 +2,21 @@
 #define RENDERGUI_H
 
 #include <QGraphicsTextItem>
+#include <QGraphicsScene>
 
 class RenderGUI {
 
 public:
     //Konstruktor und Destruktor
-    RenderGUI();
+    RenderGUI(QGraphicsScene *scene);
     ~RenderGUI();
 
     void setPos(int x);
     void setValues(int health, int ammo, int alcohol, int score);
 
-        QGraphicsTextItem showHealth;
 private:
 
+    QGraphicsTextItem showHealth;
     QGraphicsTextItem showScore;
     QGraphicsTextItem showAmmo;
     QGraphicsTextItem showAlcohol;

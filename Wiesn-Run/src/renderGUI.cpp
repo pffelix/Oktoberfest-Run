@@ -1,8 +1,10 @@
 #include "renderGUI.h"
+
+#include <QGraphicsScene>
 #include <QFont>
 
 
-RenderGUI::RenderGUI() {
+RenderGUI::RenderGUI(QGraphicsScene *scene) {
 
     this->showHealth.setPos(30, 30);
     this->showHealth.setDefaultTextColor(Qt::red);
@@ -23,6 +25,7 @@ RenderGUI::RenderGUI() {
     this->showAmmo.setDefaultTextColor(Qt::darkGreen);
     this->showAmmo.setFont(QFont("Times",25));
 
+    scene->addItem(&(this->showHealth));
 }
 
 RenderGUI::~RenderGUI() {

@@ -254,9 +254,8 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
     // audioIDs initialisieren
     audioIDs = 20;
 
-    //Anzeigen Leben, Highscore, Munition und Pegel aktualisieren, sowie zur Scene hinzufügen
-    showGUI = new RenderGUI;
-    levelScene->addItem(&(showGUI->showHealth));
+    //Anzeigen Leben, Highscore, Munition und Pegel iniitalisieren
+    showGUI = new RenderGUI(levelScene);
 
     // Score initialisieren
     playerScore.alcoholPoints = 0;
@@ -589,6 +588,9 @@ void Game::endGame() {
         levelSpawn.pop_front();
         delete handleObject;
     }
+
+
+    delete showGUI;
 }
 
 
