@@ -762,9 +762,11 @@ int Game::step() {
 
         worldObjects.sort(compareGameObjects());
         qDebug("---Nächster Zeitschritt---");
+//        timeNeeded("start");
 
         appendWorldObjects(playerObjPointer);
         reduceWorldObjects(playerObjPointer);
+//        timeNeeded("WorldObjects");
 
         // Audio
         if (stepCount == 0) {
@@ -774,17 +776,24 @@ int Game::step() {
             audioStorage.push_back(newAudio);
         }
         updateAudio();
+//        timeNeeded("audio");
 
         evaluateInput();
+//        timeNeeded("input");
         worldObjects.sort(compareGameObjects());
         calculateMovement();
+//        timeNeeded("Bewegung");
         worldObjects.sort(compareGameObjects());
         detectCollision(&worldObjects);
+//        timeNeeded("detectCol");
         handleCollisions();
+//        timeNeeded("handleCol");
 
         updateScore();
+//        timeNeeded("score");
 
         renderGraphics(&worldObjects, playerObjPointer);
+//        timeNeeded("Graphics");
 
         // Level zu Ende?
         if (playerObjPointer->getPosX() - playerScale >= levelLength) {
@@ -829,6 +838,7 @@ int Game::step() {
                 previous = actual;
             }
         }
+//        timeNeeded("Levelend");
 
         stepCount++;
     }
@@ -1203,20 +1213,22 @@ void Game::handleCollisions() {
                     break;
                 }
                 case fromBelow: {
-                    //Wegen Zusammenstoß wird ein Fall initiiert
-                    playerObjPointer->abortJump();
-                    //Überlappung berechnen und Spieler nach unten versetzen
-                    overlap = (playerObjPointer->getPosY() + playerObjPointer->getHeight()) - handleEvent.causingObject->getPosY();
-                    playerObjPointer->setPosY(playerObjPointer->getPosY() - overlap);
-                    //AudioAusgabe bei zusammenstoß von unten
-                    obstacleCollisionCounter = obstacleCollisionCounter + 1;
-                    if (obstacleCollisionCounter == 1){
-                        //Audioevent
-                        audioCooldownstruct newAudio;
-                        newAudio.audioEvent = {audioIDs, scene_collision_obstacle, audioDistance.scene_collision_obstacle};
-                        audioIDs = audioIDs + 1;
-                        newAudio.cooldown = audioCooldown.scene_collision_obstacle;
-                        audioStorage.push_back(newAudio);
+                    if(playerObjPointer->getSpeedY() > 0){
+                        //Wegen Zusammenstoß wird ein Fall initiiert
+                        playerObjPointer->abortJump();
+                        //Überlappung berechnen und Spieler nach unten versetzen
+                        overlap = (playerObjPointer->getPosY() + playerObjPointer->getHeight()) - handleEvent.causingObject->getPosY();
+                        playerObjPointer->setPosY(playerObjPointer->getPosY() - overlap);
+                        //AudioAusgabe bei zusammenstoß von unten
+                        obstacleCollisionCounter = obstacleCollisionCounter + 1;
+                        if (obstacleCollisionCounter == 1){
+                            //Audioevent
+                            audioCooldownstruct newAudio;
+                            newAudio.audioEvent = {audioIDs, scene_collision_obstacle, audioDistance.scene_collision_obstacle};
+                            audioIDs = audioIDs + 1;
+                            newAudio.cooldown = audioCooldown.scene_collision_obstacle;
+                            audioStorage.push_back(newAudio);
+                        }
                     }
                     break;
                 }
@@ -1588,14 +1600,19 @@ void Game::updateAudio() {
     chrono::high_resolution_clock::time_point lastStep = thisStep;
     thisStep = chrono::high_resolution_clock::now();
     chrono::duration<int, milli> difference = chrono::duration_cast<std::chrono::milliseconds> (thisStep - lastStep);
+    std::cout <<difference.count()<<endl;
 
     // Cooldown audios weiterzählen und bei ablauf löschen
     for (std::list<audioCooldownstruct>::iterator it = audioStorage.begin(); it != audioStorage.end(); it++) {
         if (it->cooldown > chrono::duration<int>(0)) {
             it->cooldown = it->cooldown - difference;
             audioevents.push_back(it->audioEvent);
+            if (it->audioEvent.type == scene_collision_obstacle) {
+                cout <<"collision_Obstacle"<<it->audioEvent.id<<endl;
+            }
         } else {
             it = audioStorage.erase(it);
+            it--;
         }
     }
 }
@@ -1683,6 +1700,14 @@ int Game::getStepIntervall() {
     return stepIntervall;
 }
 
+void Game::timeNeeded(string name) {
+
+    // Zeit seit dem letzten aufruf messen
+    chrono::high_resolution_clock::time_point lastStep = testStep;
+    testStep = chrono::high_resolution_clock::now();
+    chrono::duration<int, milli> difference = chrono::duration_cast<std::chrono::milliseconds> (testStep - lastStep);
+    std::cout <<name<<":    "<<difference.count()<<endl;
+}
 
 /**
  * @brief setzt den Spielstatus

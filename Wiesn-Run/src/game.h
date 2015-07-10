@@ -96,6 +96,7 @@ private:
 
     /// Hilfsfunktion
     int getStepIntervall();
+    void timeNeeded(string name);
 
 
     /// In der Welt befindliche Objekte
@@ -174,6 +175,7 @@ private:
     audioCooldownStruct audioCooldown;
     audioDistanceStruct audioDistance;
     chrono::high_resolution_clock::time_point thisStep;
+    chrono::high_resolution_clock::time_point testStep;
 
 };
 
