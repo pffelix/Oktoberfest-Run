@@ -35,8 +35,6 @@ public:
     std::string getSource();
     float getSample(int pos);
     int getSamplenumber();
-    short getVolume();
-    void setVolume(short volume_audio_obj);
 
 private:
     /**
@@ -61,12 +59,6 @@ private:
      * @author  Felix Pfreundtner
      */    
     int samplenumber;
-    /**
-     * @brief  volume
-     *         volume speichert die Lautstärkeinformation des Audioobjektes (Bereich 0...1).
-     * @author  Felix Pfreundtner
-     */
-    short volume;
 
     void readSamples();
     qint16 to16bitSample(quint8 sample8bit);
