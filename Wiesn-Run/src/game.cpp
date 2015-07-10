@@ -218,7 +218,7 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
     worldObjects.clear();
 
     //Levelscene einstellen
-    levelScene->setSceneRect(0,0,100000,768);
+    levelScene->setSceneRect(0,0,levelLength+sceneWidth,768);
     window->setScene(levelScene);
 
     //Level-Nummer speichern
