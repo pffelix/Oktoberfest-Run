@@ -36,3 +36,14 @@ class Levelhelper:
         else:
             return plane_str
 
+    def makeTouristPlanes(self, startPos, height, number, mode_T='print'):
+        out_str = self.makePlanes(startPos, height, number, mode='return')
+        tourists = round(number / 2, 0)
+        for i in range(1, tourists):
+            out_str = "Tourist," + str(startPos + 120 + (i-1)*240) + "," + str(height+20) + "," + "0" + "\n"
+
+        if mode_T == 'print':
+            print out_str
+        else:
+            return out_str
+
