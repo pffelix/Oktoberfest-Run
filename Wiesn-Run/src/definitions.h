@@ -208,7 +208,7 @@ typedef struct {
     std::chrono::duration<int, std::milli> status_lifecritical = std::chrono::milliseconds(0);
     std::chrono::duration<int, std::milli> status_dead = std::chrono::milliseconds(4989);
     std::chrono::duration<int, std::milli> player_walk = std::chrono::milliseconds(0);
-    std::chrono::duration<int, std::milli> player_jump = std::chrono::milliseconds(354);
+    std::chrono::duration<int, std::milli> player_jump = std::chrono::milliseconds(700);
     std::chrono::duration<int, std::milli> background_menu = std::chrono::milliseconds(0);
     std::chrono::duration<int, std::milli> background_highscore = std::chrono::milliseconds(0);
     std::chrono::duration<int, std::milli> background_level1 = std::chrono::milliseconds(0);
