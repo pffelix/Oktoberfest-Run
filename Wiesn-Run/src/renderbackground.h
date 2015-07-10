@@ -11,6 +11,10 @@ public:
     RenderBackground(QGraphicsScene *scene);
     ~RenderBackground();
 
+    void setPos(int x, QGraphicsPixmapItem *background);
+    void updateParallaxe(int x);
+    void updateBackgroundPos(int x);
+
     QGraphicsPixmapItem backgroundOne;
     QGraphicsPixmapItem backgroundTwo;
     QGraphicsPixmapItem backgroundThree;

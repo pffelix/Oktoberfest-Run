@@ -129,18 +129,15 @@ private:
     int stepIntervall;
     Player *playerObjPointer;
 
-    /// für das Ausgabefenster QGraphicsView
+    /// für das Ausgabefenster QGraphicsView und QGraphicsScene der Level
     QGraphicsView * window;
     QGraphicsScene * levelScene;
 
+    /// für alle Anzeigen wie Leben,Score,..
     RenderGUI * showGUI;
+
+    /// für die Hintergrundgrafiken
     RenderBackground * showBackground;
-
-    /// Vector aller Hintergrundbilder
-   // std::vector<QGraphicsPixmapItem> backgrounds;
-
-    /// Vektor der die Darstellgung von Leben,Highscore und Pegel enhält
-   // std::vector<QGraphicsTextItem> playerStats;
 
     /// Zeiger auf QApplication
     QApplication *appPointer;

@@ -2,6 +2,7 @@
 
 #include <QGraphicsScene>
 
+
 RenderBackground::RenderBackground(QGraphicsScene *scene) {
 
     this->backgroundOne.setPixmap(QPixmap(":/images/images/bg_lev1_1.png"));
@@ -23,3 +24,26 @@ RenderBackground::~RenderBackground() {
 
 }
 
+void RenderBackground::setPos(int x, QGraphicsPixmapItem *background) {
+    background->setPos(background->x() + x , 0);
+}
+
+void RenderBackground::updateBackgroundPos(int x) {
+    if(x >= this->backgroundOne.x() + 2560) {
+        this->setPos(5120, &(this->backgroundOne));
+    }
+    else if(x >= this->backgroundTwo.x() + 2560) {
+        this->setPos(5120, &(this->backgroundTwo));
+    }
+    else if(x >= this->backgroundThree.x() + 2560) {
+        this->setPos(5120, &(this->backgroundThree));
+    }
+    else if(x >= this->backgroundFour.x() + 2560) {
+        this->setPos(5120, &(this->backgroundFour));
+    }
+}
+
+void RenderBackground::updateParallaxe(int x) {
+    this->setPos(x, &(this->backgroundOne));
+    this->setPos(x, &(this->backgroundTwo));
+}

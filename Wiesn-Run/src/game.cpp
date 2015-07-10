@@ -228,23 +228,6 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
     fileSpecifier.append(levelFileName);
     loadLevelFile(fileSpecifier);
 
-    /*//Backgroundgrafiken initialisieren
-    backgrounds = std::vector<QGraphicsPixmapItem>(4);
-
-    backgrounds[0].setPixmap(QPixmap(":/images/images/bg_lev1_1.png"));
-    backgrounds[1].setPixmap(QPixmap(":/images/images/bg_lev1_2.png"));
-    backgrounds[2].setPixmap(QPixmap(":/images/images/bg_lev1_3.png"));
-    backgrounds[3].setPixmap(QPixmap(":/images/images/bg_lev1_4.png"));
-
-    //Backgroundgrafiken positionieren
-    backgrounds[1].setPos(2560,0);
-    backgrounds[3].setPos(2560,0);
-
-    //Backgroundgrafiken der Scene hinzufügen
-    for(int i=0; i<4; i++) {
-        levelScene->addItem(&backgrounds[i]);
-    }*/
-
     // Spieler hinzufügen
     worldObjects.push_back(playerObjPointer);
     //Grafik - Spieler der Scene hinzufügen und window auf ihn zentrieren
@@ -255,11 +238,11 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
     // audioIDs initialisieren
     audioIDs = 20;
 
-    //Anzeigen Leben, Highscore, Munition und Pegel initialisieren
-    showGUI = new RenderGUI(levelScene);
-
     //Hintergründe initialisieren
     showBackground = new RenderBackground(levelScene);
+
+    //Anzeigen Leben, Highscore, Munition und Pegel initialisieren
+    showGUI = new RenderGUI(levelScene);
 
     // Score initialisieren
     playerScore.alcoholPoints = 0;
@@ -1614,16 +1597,11 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
     showGUI->setValues(playerPointer->getHealth(),playerPointer->getAlcoholLevel(),
                        playerPointer->getAmmunatiuon(),playerScore.totalPoints);
 
-   /* //Bewegunsparralaxe Positionsaktualisierung
-    (backgrounds[0]).setPos(((backgrounds[0]).x()) + ((playerPointer->getPosX() - (playerScale/2) - (playerPointer->x())) /2), 0);
-    (backgrounds[1]).setPos(((backgrounds[1]).x()) + ((playerPointer->getPosX() - (playerScale/2) - (playerPointer->x())) /2), 0);
+    //Parralaxe Positionsupdate
+    showBackground->updateParallaxe((playerPointer->getPosX() - (playerScale/2) - playerPointer->x()) /2);
 
-    //Wenn der Spieler aus einerm Hintergrundbild "rausläuft" wird die Position nachvorne verschoben
-    for(int i = 0; i<=3; i++) {
-        if(playerPointer->getPosX() - playerOffset >= static_cast<int>(backgrounds[i].x()+ 2560)) {
-               backgrounds[i].setPos(backgrounds[i].x() + 5120, 0);
-        }
-    }*/
+    //Hintergrund Positionsupdate
+    showBackground->updateBackgroundPos(playerPointer->getPosX() - playerOffset);
 
     //Positionsaktualisierungen aller Movingobjects
     for (std::list<GameObject*>::iterator it = objectList->begin(); it != objectList->end(); ++it) {
