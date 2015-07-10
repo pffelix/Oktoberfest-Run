@@ -21,6 +21,7 @@
 #include "menu.h"
 #include "portaudio.h"
 #include "renderGUI.h"
+#include "renderbackground.h"
 using namespace std;
 
 /**
@@ -133,9 +134,10 @@ private:
     QGraphicsScene * levelScene;
 
     RenderGUI * showGUI;
+    RenderBackground * showBackground;
 
     /// Vector aller Hintergrundbilder
-    std::vector<QGraphicsPixmapItem> backgrounds;
+   // std::vector<QGraphicsPixmapItem> backgrounds;
 
     /// Vektor der die Darstellgung von Leben,Highscore und Pegel enhält
    // std::vector<QGraphicsTextItem> playerStats;
