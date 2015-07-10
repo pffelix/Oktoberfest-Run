@@ -72,7 +72,7 @@ const int maxSpeedY = 3 * maxSpeed / 2;
  * @brief maximales Leben
  */
 const int maxHealth = 5;
-const int maxAlcohol = 200;
+const int maxAlcohol = 1000;
 
 /**
  * @brief PowerUp-Konstanten
@@ -208,13 +208,13 @@ typedef struct {
     std::chrono::duration<int, std::milli> status_lifecritical = std::chrono::milliseconds(0);
     std::chrono::duration<int, std::milli> status_dead = std::chrono::milliseconds(4989);
     std::chrono::duration<int, std::milli> player_walk = std::chrono::milliseconds(0);
-    std::chrono::duration<int, std::milli> player_jump = std::chrono::milliseconds(354);
+    std::chrono::duration<int, std::milli> player_jump = std::chrono::milliseconds(700);
     std::chrono::duration<int, std::milli> background_menu = std::chrono::milliseconds(0);
     std::chrono::duration<int, std::milli> background_highscore = std::chrono::milliseconds(0);
     std::chrono::duration<int, std::milli> background_level1 = std::chrono::milliseconds(0);
     std::chrono::duration<int, std::milli> background_level2 = std::chrono::milliseconds(0);
     std::chrono::duration<int, std::milli> background_level3 = std::chrono::milliseconds(0);
-    std::chrono::duration<int, std::milli> background_startgame = std::chrono::milliseconds(2838);
+    std::chrono::duration<int, std::milli> background_startgame = std::chrono::milliseconds(3000);
     std::chrono::duration<int, std::milli> background_levelfinished = std::chrono::milliseconds(5365);
 } audioCooldownStruct;
 

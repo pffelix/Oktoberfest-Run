@@ -40,7 +40,7 @@ AudioControl::AudioControl() {
     audioobjects.insert(audioobjects.begin() + audioType::status_dead, Audio("status_dead")); // 16bit
     //source: http://www.arts.rpi.edu/public_html/ruiz/VES01/sebram/final/walk_crop.wav
     audioobjects.insert(audioobjects.begin() + audioType::player_walk, Audio("player_walk")); // 16bit
-    //source: http://soundbible.com/1601-Mario-Jumping.html
+    //source: http://soundbible.com/266-Boing-Cartoonish.html
     audioobjects.insert(audioobjects.begin() + audioType::player_jump, Audio("player_jump")); // 16bit
     //source: http://www.theholidayspot.com/oktoberfest/music/Octoberfest%20--%20Beerdrinking%20song%28Bavarian%29.wma
     audioobjects.insert(audioobjects.begin() + audioType::background_menu, Audio("background_menu")); // 16bit
@@ -52,7 +52,7 @@ AudioControl::AudioControl() {
     audioobjects.insert(audioobjects.begin() + audioType::background_level2, Audio("background_level2")); // 16bit
     //source: http://www.freesound.org/people/Westmed/sounds/239538/
     audioobjects.insert(audioobjects.begin() + audioType::background_level3, Audio("background_level3")); // 16bit
-    //source: http://www.freesound.org/people/plasterbrain/sounds/243020/
+    //source: http://www.freesound.org/people/Harbour11/sounds/194625/
     audioobjects.insert(audioobjects.begin() + audioType::background_startgame, Audio("background_startgame")); // 16bit
     //source: http://soundbible.com/1823-Winning-Triumphal-Fanfare.html
     audioobjects.insert(audioobjects.begin() + audioType::background_levelfinished, Audio("background_levelfinished")); // 16bit

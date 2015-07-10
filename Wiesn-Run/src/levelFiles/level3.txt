@@ -1,4 +1,4 @@
-﻿LevelDatei für den dritten Level
+LevelDatei für den dritten Level
 
 Diese Datei kann nur von der Methode "loadLevelFile" ausgelesen werden.
 Zeilen, die mit einem Keyword beginnen, werden interpretiert. Alle anderen Zeilen werden ignoriert.
@@ -50,19 +50,125 @@ Level3: Käfer-Zelt
 ------------
 
 Player,130,0
-Levellänge,3000
+Levellänge,30000
 
-Obstacle,400,0
-Tourist,600,0,-4
+
 Obstacle,800,0
 
-Obstacle,1000,0
-Security,1200,0
-Obstacle,1400,0
-
+# Bier auf Obstacle
 Obstacle,1600,0
-Boss,1800,0,0
-Obstacle,2000,0
+Bier,1600,130
 
-Obstacle,2900,0
+# Security vor Obstacle
+Security,3000,0
+Obstacle,3200,0
+
+# Tourist zwischen zwei Obstacles
+Obstacle,4300,0
+Tourist,4600,0,-2
+Obstacle,4900,0
+
+# Nach Obstacle zwei Touristen, die auf einen zulaufen
+Obstacle,6000,0
+Tourist,6500,0,-2
+Tourist,6800,0,-2
+
+# Security unter Plan: Spieler muss drüber laufen
+Plane,7900,130
+Security,7900,0
+
+# Treppe aus Obstacles
+Obstacle,9000,0
+Obstacle,9090,0
+Obstacle,9180,0
+Obstacle,9180,120
+
+# Fast eine Bildschirmlänge hohe Planes mit viel Bier und Hendl
+Plane,9445,240
+Plane,9565,240
+Plane,9685,240
+Plane,9805,240
+Plane,9925,240
+Plane,10045,240
+Plane,10165,240
+Plane,10285,240
+Bier,9400,300
+Bier,9600,300
+Bier,9800,300
+Hendl,10000,300
+
+# Obstacle zum Beginn eines neuen Bereichs
+Obstacle,10800,0
+
+# Security auf Obstacle: Muss durch Schuss getötet werden
+Obstacle,11500,0
+Security,11500,120
+
+# Zwei Ebenen und nur unten geht es weiter
+Plane,12000,140
+Plane,12120,140
+Plane,12240,140
+Plane,12360,140
+Obstacle,12375,160
+Obstacle,12375,280
+Hendl,12150,40
+
+# Security auf Obstacles
+Bier,13000,40
+Obstacle,13400,0
+Security,13400,120
+Obstacle,13700,0
+Security,13700,120
+
+# Springen unter Kreuzfeuer
+Obstacle,14200,0
+Obstacle,14400,0
+Obstacle,14600,0
+Plane,14700,130
+Plane,14820,130
+Tourist,14700,150,0
+Tourist,14820,150,0
+
+# Lange Ebene mit vielen Gegnern
+Plane,16000,130
+Plane,16120,130
+Plane,16240,130
+Plane,16360,130
+Plane,16480,130
+Plane,16600,130
+Plane,16720,130
+Plane,16840,130
+Plane,16960,130
+Plane,17080,130
+Bier,16010,170
+Hendl,16110,170
+Security,16200,150
+Tourist,16400,150,0
+Security,16600,150
+Tourist,1700,150,-2
+
+# Mehrere Ebenen
+Plane,17000,130
+Plane,17120,130
+Plane,17240,130
+Plane,17360,130
+Plane,17480,130
+Plane,17600,130
+Plane,17720,130
+Plane,17840,130
+Plane,17960,130
+Plane,18080,130
+Plane,17120,280
+Plane,17240,280
+Plane,17360,280
+Plane,17480,280
+Plane,17600,280
+Plane,17720,280
+Plane,17840,280
+Plane,17960,280
+Plane,18080,280
+Obstacle,17500,280
+Tourist,17400,280,0
+Bier,17600,300
+
 
