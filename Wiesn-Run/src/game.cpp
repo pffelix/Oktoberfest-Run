@@ -1600,16 +1600,13 @@ void Game::updateAudio() {
     chrono::high_resolution_clock::time_point lastStep = thisStep;
     thisStep = chrono::high_resolution_clock::now();
     chrono::duration<int, milli> difference = chrono::duration_cast<std::chrono::milliseconds> (thisStep - lastStep);
-    std::cout <<difference.count()<<endl;
+//    std::cout <<difference.count()<<endl;
 
     // Cooldown audios weiterzählen und bei ablauf löschen
     for (std::list<audioCooldownstruct>::iterator it = audioStorage.begin(); it != audioStorage.end(); it++) {
         if (it->cooldown > chrono::duration<int>(0)) {
             it->cooldown = it->cooldown - difference;
             audioevents.push_back(it->audioEvent);
-            if (it->audioEvent.type == scene_collision_obstacle) {
-                cout <<"collision_Obstacle"<<it->audioEvent.id<<endl;
-            }
         } else {
             it = audioStorage.erase(it);
             it--;
