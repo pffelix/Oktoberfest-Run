@@ -10,8 +10,8 @@ RenderBackground::RenderBackground(QGraphicsScene *scene) {
     this->backgroundThree.setPixmap(QPixmap(":/images/images/bg_lev1_3.png"));
     this->backgroundFour.setPixmap(QPixmap(":/images/images/bg_lev1_4.png"));
 
-    this->backgroundTwo.setPos(2560,0);
-    this->backgroundFour.setPos(2560,0);
+    this->backgroundTwo.setPos(imageLength,0);
+    this->backgroundFour.setPos(imageLength,0);
 
     scene->addItem(&(this->backgroundOne));
     scene->addItem(&(this->backgroundTwo));
@@ -29,17 +29,17 @@ void RenderBackground::setPos(int x, QGraphicsPixmapItem *background) {
 }
 
 void RenderBackground::updateBackgroundPos(int x) {
-    if(x >= this->backgroundOne.x() + 2560) {
-        this->setPos(5120, &(this->backgroundOne));
+    if(x >= this->backgroundOne.x() + imageLength) {
+        this->setPos(imageLength*2, &(this->backgroundOne));
     }
-    else if(x >= this->backgroundTwo.x() + 2560) {
-        this->setPos(5120, &(this->backgroundTwo));
+    else if(x >= this->backgroundTwo.x() + imageLength) {
+        this->setPos(imageLength*2, &(this->backgroundTwo));
     }
-    else if(x >= this->backgroundThree.x() + 2560) {
-        this->setPos(5120, &(this->backgroundThree));
+    else if(x >= this->backgroundThree.x() + imageLength) {
+        this->setPos(imageLength*2, &(this->backgroundThree));
     }
-    else if(x >= this->backgroundFour.x() + 2560) {
-        this->setPos(5120, &(this->backgroundFour));
+    else if(x >= this->backgroundFour.x() + imageLength) {
+        this->setPos(imageLength*2, &(this->backgroundFour));
     }
 }
 

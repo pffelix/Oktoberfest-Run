@@ -15,10 +15,13 @@ public:
     void updateParallaxe(int x);
     void updateBackgroundPos(int x);
 
+private:
     QGraphicsPixmapItem backgroundOne;
     QGraphicsPixmapItem backgroundTwo;
     QGraphicsPixmapItem backgroundThree;
     QGraphicsPixmapItem backgroundFour;
+
+    int imageLength = 2560;
 };
 
 #endif // RENDERBACKGROUND_H

@@ -3,7 +3,6 @@
 
 
 #include <list>
-#include <vector>
 
 #include "definitions.h"
 #include "gameobject.h"
