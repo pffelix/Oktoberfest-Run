@@ -234,6 +234,7 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
     worldObjects.push_back(playerObjPointer);
     //Grafik - Spieler der Scene hinzufügen und window auf ihn zentrieren
     levelScene->addItem(playerObjPointer);
+    //window->centerOn(playerObjPointer->getPosX() + 512 - 100 - 0.5 * playerObjPointer->getLength(), 384);
     window->centerOn(playerObjPointer->getPosX(), 384);
     // Szenen-Breite setzen
     sceneWidth = 1024;
@@ -809,6 +810,8 @@ int Game::step() {
         }
         timeNeeded("endLoop");
 
+        ///@todo Workaround, Spiel wird ab dem zweiten Durchlauf auf Spieler zentriert (Rupert)
+        window->centerOn(playerObjPointer->getPosX() + 512 - 100 - 0.5 * playerObjPointer->getLength(), 384);
         stepCount++;
     }
 
@@ -816,6 +819,7 @@ int Game::step() {
     audioOutput->update(&audioevents);
     /// delete List audioStruct elements in list and fill it in the next step again
     audioevents.clear();
+
 
     return 0;
 }
@@ -1648,6 +1652,7 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
 
     //View wird wieder auf den Spieler zentriert
     window->centerOn(playerObjPointer->getPosX() + 512 - 100 - 0.5 * playerObjPointer->getLength(), 384);
+    ///@todo funktioniert nicht
 }
 
 
