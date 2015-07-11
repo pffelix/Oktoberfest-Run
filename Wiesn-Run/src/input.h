@@ -3,7 +3,6 @@
 
 
 #include <QSet>
-#include <QObject>
 #include <QEvent>
 #include <QChar>
 #include <set>
@@ -16,8 +15,7 @@
  *         Die einzelnen Methoden werden in der input.cpp erklärt.
  * @author  Felix Pfreundtner
  */
-class Input : public QObject {
-    Q_OBJECT
+class Input {
 
 public:
     enum Keyaction{
@@ -90,6 +88,7 @@ public:
 
     Input();
     ~Input();
+    void evaluatekeyEvent(QEvent *event);
     QSet<int> getKeyactions();
     std::set<char> getKeyletters();
     Keyaction getLastKeyaction();
@@ -130,11 +129,6 @@ private:
     Keyletter lastKeyletter;
 
     void updateKeys();
-
-
-
-protected:
-    bool eventFilter(QObject *obj, QEvent *event);
 };
 
 #endif // INPUT_H

@@ -18,7 +18,7 @@ Input::~Input() {
 }
 
 /**
- * @brief  Input::eventFilter
+ * @brief  Input::evaluatekeyEvent
  *         eventFilter sammelt alle im Momment gepressten Tastatur Eingaben
  *         und speichert die integer IDs in der Instanzvariable keyevents.
  *         wird eine Taste nicht mehr gedrück wird die id in keyevents gelöscht
@@ -28,27 +28,19 @@ Input::~Input() {
  * @author  Felix Pfreundtner
  */
 
-bool Input::eventFilter(QObject *obj, QEvent *event) {
+void Input::evaluatekeyEvent(QEvent *event) {
     if(event->type() == QEvent::KeyPress && ((QKeyEvent*)event)->isAutoRepeat() == false) {
         //qDebug("key pressed");
         keyevents += ((QKeyEvent*)event)->key();
         updateKeys();
-        return true;
     }
     else if(event->type() == QEvent::KeyRelease && ((QKeyEvent*)event)->isAutoRepeat() == false) {
         //qDebug("key released");
         keyevents -= ((QKeyEvent*)event)->key();
         updateKeys();
-        return true;
         }
     else if (event->type() == QEvent::Close) {
-
     }
-    else {
-         return QObject::eventFilter(obj, event);
-    }
-
-
 }
 
 /**
