@@ -17,10 +17,14 @@
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
 #include <chrono>
+#include <QMainWindow>
 #include "menu.h"
 #include "portaudio.h"
 #include "renderGUI.h"
 #include "renderbackground.h"
+#include <QEvent>
+#include <QCloseEvent>
+#include <thread>
 using namespace std;
 
 /**
@@ -48,7 +52,7 @@ struct collisionStruct {
  * @author Simon, Johann, Felix
  */
 class Game : QObject {
-    //Q_OBJECT
+    Q_OBJECT
 public:
     /// Konstruktor und Destruktor
     Game(int argc, char *argv[]);
@@ -96,6 +100,7 @@ private:
     /// Funktionen zu Start und Ende der Applikation
     void menuInit();
     void exitGame();
+    bool eventFilter(QObject *obj, QEvent *event);
 
     /// Hilfsfunktion
     int getStepIntervall();
@@ -112,8 +117,7 @@ private:
     std::list<GameObject*> objectsToDelete;
     /// Audiocontrol Objekt zum Erzeugen der Soundausgabe
     AudioControl *audioOutput;
-    /// Error Variable von PortAudio
-    PaError paerror;
+    std::thread portaudiothread;
     /// Liste audioevents mit allen im Step stattfindenden AudioStructs
     std::list<struct audioStruct> audioevents;
     /// Liste mit den Audioevents die einmal aufgerufen werden aber eine Längere Spielzeit haben

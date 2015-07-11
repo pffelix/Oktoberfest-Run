@@ -201,7 +201,7 @@ void Game::menuInit() {
 
 /**
  * @brief Game::eventFilter
- *        Diese Funktion handelt einen Betätigung des QT Schließ-Button (x) des
+ *        Diese Funktion handelt einen Betätigung von Tastatur Eingabe und des QT Schließ-Button (x) des
  *        Spielfensters.
  *        Der Aufruf diese Schließbuttons ist neben dem Aufruf des Schließbuttons im
  *        Hauptmenü die 2. Möglichkeit das Spiel zu beenden. Wird ein CloseEvent
