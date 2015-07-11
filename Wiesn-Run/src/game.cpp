@@ -220,7 +220,7 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
     worldObjects.clear();
 
     //Levelscene einstellen
-    levelScene->setSceneRect(0,0,levelLength+sceneWidth,768);
+    levelScene->setSceneRect(0,0,/* levelLength+sceneWidth */ 200000,768);  // verantwortlich für Fehler, es wurde nicht mehr Spieler zentriert (Rupi)
     window->setScene(levelScene);
 
     //Level-Nummer speichern
@@ -811,7 +811,7 @@ int Game::step() {
         timeNeeded("endLoop");
 
         ///@todo Workaround, Spiel wird ab dem zweiten Durchlauf auf Spieler zentriert (Rupert)
-        window->centerOn(playerObjPointer->getPosX() + 512 - 100 - 0.5 * playerObjPointer->getLength(), 384);
+        //window->centerOn(playerObjPointer->getPosX() + 512 - 100 - 0.5 * playerObjPointer->getLength(), 384);
         stepCount++;
     }
 
