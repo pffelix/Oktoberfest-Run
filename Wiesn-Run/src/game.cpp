@@ -122,7 +122,7 @@ int Game::start() {
 
     /// Installiere Event Filter zum Loggen der Keyboard Eingabe
     window->installEventFilter(keyInput);
-    /// Installiere Event Filter zum Überwachen des Fenster Schließ-Buttons
+    /// Installiere Event Filter zum Überwachen des QT Fenster Schließ-Buttons (x)
     window->installEventFilter(this);
 
     setState(gameMenuStart);
@@ -203,7 +203,7 @@ void Game::menuInit() {
 
 /**
  * @brief Game::eventFilter
- *        Diese Funktion handelt einen Betätigung des Schließ-Button (x) des
+ *        Diese Funktion handelt einen Betätigung des QT Schließ-Button (x) des
  *        Spielfensters.
  *        Der Aufruf diese Schließbuttons ist neben dem Aufruf des Schließbuttons im
  *        Hauptmenü die 2. Möglichkeit das Spiel zu beenden. Wird ein CloseEvent
@@ -230,7 +230,7 @@ void Game::exitGame() {
     ///
     /// Stoppe PortAudio Audioausgabe, Beende Portaudio Stream, Beende PortAudio
     audioOutput->playTerminate();
-    /// warte bis thread sich beendet hat
+    /// warte bis Audio Output Thread sich beendet hat
     portaudiothread.join();
 }
 

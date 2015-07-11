@@ -323,7 +323,12 @@ int AudioControl::instancepaCallback( const void *inputBuffer, void *outputBuffe
     return 0;
 }
 
-
+/**
+ * @brief  AudioControl::playTerminate
+ *         Stoppt bei Aufruf PortAudio Audioausgabe, beendet im Anschluss
+ *         Portaudio Stream und beendet zuletzt PortAudio.
+ * @author  Felix Pfreundtner
+ */
 void AudioControl::playTerminate(){
 
     /// Stoppe den Portaudio Stream
