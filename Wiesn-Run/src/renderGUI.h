@@ -18,11 +18,11 @@ public:
 private:
 
     QGraphicsTextItem showHealth;
-    QGraphicsRectItem showHealthBar;
+    QGraphicsRectItem showHealthBar[2];
     QGraphicsTextItem showScore;
     QGraphicsTextItem showAmmo;
     QGraphicsTextItem showAlcohol;
-    QGraphicsRectItem showAlcoholBar;
+    QGraphicsRectItem showAlcoholBar[2];
 
 };
 
