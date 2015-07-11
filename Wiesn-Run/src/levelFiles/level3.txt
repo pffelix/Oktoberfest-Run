@@ -73,7 +73,7 @@ Obstacle,6000,0
 Tourist,6500,0,-2
 Tourist,6800,0,-2
 
-# Security unter Plan: Spieler muss drüber laufen
+# Security unter Plane: Spieler muss drüber laufen
 Plane,7900,130
 Security,7900,0
 
@@ -192,4 +192,51 @@ Tourist,19620,150,0
 Tourist,19860,150,0
 Tourist,20100,150,0
 Tourist,20340,150,0
+
+# Touristen kommen von hinten Oben
+Plane,20800,150
+Plane,20920,150
+Plane,21040,150
+Plane,21160,150
+Plane,21280,150
+Plane,21400,150
+Plane,21520,150
+Obstacle,20785,170
+Obstacle,20785,290
+Tourist,20920,170,2
+Obstacle,21900,0
+
+# Erholungsstrecke
+Bier,22400,40
+Bier,22500,40
+Hendl,22600,40
+Hendl,22800,40
+Hendl,23000,40
+
+# Drei Ebenen mit Touristen und Security
+Plane,23500,130
+Plane,23620,130
+Plane,23740,130
+Plane,23860,130
+Plane,23980,130
+Plane,24100,130
+Plane,24220,130
+Tourist,23620,150,0
+Tourist,23860,150,0
+Tourist,24100,150,0
+Plane,23620,260
+Plane,23740,260
+Plane,23860,260
+Plane,23980,260
+Plane,24100,260
+Plane,24220,260
+Tourist,23740,280,0
+Tourist,23980,280,0
+Tourist,24220,280,0
+Security,23740,0
+Bier,23740,170
+Bier,24000,170
+
+
+
 
