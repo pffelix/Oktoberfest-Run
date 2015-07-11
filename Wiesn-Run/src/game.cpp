@@ -215,6 +215,9 @@ void Game::exitGame() {
     delete audioOutput;
 }
 
+void Game::closeEvent(QCloseEvent *event) {
+    exit(0);
+}
 
 
 // --------------- Level starten und beenden ------------------------------------------------------
@@ -233,6 +236,7 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
 
     //Level-Nummer speichern
     gameStats.actLevel = levelNum;
+    gameStats.gameOver = false;
     // Level festlegen, der geladen werden soll
     QString fileSpecifier = ":/levelFiles/levelFiles/";
     fileSpecifier.append(levelFileName);
@@ -777,7 +781,7 @@ int Game::step() {
         if (playerObjPointer->getPosX() - playerScale >= levelLength) {
             endGame();
             setState(gameMenuName);
-            // Erfolgreich Schriftzug einfügen
+            ///@todo Erfolgreich Schriftzug einfügen
 
             // Sound für erfolgreichen abschluss spielen
             audioCooldownstruct newAudio;
@@ -799,7 +803,7 @@ int Game::step() {
         if (gameStats.gameOver) {
             endGame();
             setState(gameMenuName);
-            // GameOver schriftzug einfügen
+            ///@todo GameOver schriftzug einfügen
 
             //Audio event wenn der Spieler stirbt
             audioCooldownstruct newAudio;
@@ -818,8 +822,6 @@ int Game::step() {
         }
         timeNeeded("endLoop");
 
-        ///@todo Workaround, Spiel wird ab dem zweiten Durchlauf auf Spieler zentriert (Rupert)
-        //window->centerOn(playerObjPointer->getPosX() + 512 - 100 - 0.5 * playerObjPointer->getLength(), 384);
         stepCount++;
     }
 

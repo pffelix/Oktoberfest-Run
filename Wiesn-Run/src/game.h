@@ -54,6 +54,8 @@ public:
     Game(int argc, char *argv[]);
     ~Game();
 
+    void closeEvent(QCloseEvent *event);
+
     // Startet das die Game-Loop, wird einmalig von main() aufgerufen
     int step();
     // Startet die Mockup QApplication app
