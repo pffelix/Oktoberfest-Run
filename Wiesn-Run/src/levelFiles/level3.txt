@@ -50,7 +50,7 @@ Level3: Käfer-Zelt
 ------------
 
 Player,130,0
-Levellänge,21000
+Levellänge,30000
 
 
 Obstacle,800,0
@@ -167,7 +167,7 @@ Plane,17720,280
 Plane,17840,280
 Plane,17960,280
 Plane,18080,280
-Obstacle,17500,280
+Obstacle,17500,300
 Tourist,17400,280,0
 Bier,17600,300
 
