@@ -239,6 +239,9 @@ void Game::exitGame() {
     audioOutput->playTerminate();
     /// warte bis Audio Output Thread sich beendet hat
     portaudiothread.join();
+
+    /// lösche AudioControl Objekt
+    delete audioOutput;
 }
 
 
