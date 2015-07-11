@@ -72,10 +72,10 @@ Game::~Game() {
 // --------------- Applikation starten und beenden ------------------------------------------------
 /**
  * @brief Die Startfunktion, erstellt Fenster und Menüs, wird von main() aufgerufen
- * Grafik und Inputs (Flo,Felix):
+ * Grafik und Input (Flo,Felix):
  * Erstelle QApplication app mit QGraphicsView Widget window (Eventfilter installiert) und Zeiger input auf Input Objekt.
  * Um Funktionen der Tastatur Eingabe entwickeln zu können ist ein Qt Widget Fenster nötig.
- * Auf dem Widget wird ein Eventfilter installiert welcher kontinuierlich Tastureingaben mitloggt.
+ * Auf dem Widget wird ein Eventfilter installiert welcher kontinuierlich Tastatureingaben mitloggt.
  * Die Eingaben werden in dem Objekt der Input Klasse gespeichert und können über getKeyactions() abgerufen werden.
  *
  * Logik (Rupert):
@@ -87,7 +87,7 @@ Game::~Game() {
  * gameState wird auf gameMenuStart gesetzt, dh das Spiel startet im Startmenü
  *
  * @return Rückgabewert von app.exec()
- * @author Rupert
+ * @author Rupert, Felix
  */
 int Game::start() {
     qDebug("Game::start()");
@@ -100,6 +100,9 @@ int Game::start() {
 
     // Menüs erstellen
     menuInit();
+
+    // Spiel am laufen
+    exitGameevent = false;
 
     /// Erstelle Audiocontrol Objekt zum Einlesen der Audiodatein und speichern der Ausgabeparameter
     audioOutput = new AudioControl;
@@ -207,8 +210,8 @@ void Game::menuInit() {
  *        Die Tastatureingaben werden über das keyInput Ojekt ausgewertet.
  *        Der Aufruf des QT Schließ-Button (x) ist neben dem Aufruf des Hauptmenüeintrags Exit
  *        die 2. Möglichkeit das Spiel zu beenden. Wird ein CloseEvent
- *        festgestellt wird die normale Hauptmenü Beendenroutine über die Funktion
- *        exitGame() aufgerufen.
+ *        festgestellt wird die Variable exitGameevent auf False gesetzt und
+ *        das Spiel zum Ende des aktuellen Steps in Game::timerEvent beendet.
  * @author: Felix
  */
 bool Game::eventFilter(QObject *obj, QEvent *event) {
@@ -217,7 +220,7 @@ bool Game::eventFilter(QObject *obj, QEvent *event) {
     // falls QT Schließ-Button gedrückt
     if (event->type() == QEvent::Close) {
         // beende Spiel
-        exitGame();
+        exitGameevent = true;
     }
     else {
          return QObject::eventFilter(obj, event);
@@ -231,18 +234,16 @@ bool Game::eventFilter(QObject *obj, QEvent *event) {
  */
 void Game::exitGame() {
     /// Beende Audio Ausgabe Thread
-    ///
+
     /// Stoppe PortAudio Audioausgabe, Beende Portaudio Stream, Beende PortAudio
     audioOutput->playTerminate();
     /// warte bis Audio Output Thread sich beendet hat
     portaudiothread.join();
+
+    /// lösche AudioControl Objekt
+    delete audioOutput;
 }
 
-
-
-void Game::closeEvent(QCloseEvent *event) {
-    exit(0);
-}
 
 
 // --------------- Level starten und beenden ------------------------------------------------------
@@ -629,13 +630,20 @@ void Game::endGame() {
  * @brief wird regelmäßig aufgerufen
  * event muss drinstehen, damit der Timer die Funktion aufruft
  * @param event
- * @author Rupert
+ * @author Rupert, Felix
  */
 void Game::timerEvent(QTimerEvent *event)
 {
     Q_UNUSED (event)        // Warnung unterdrücken
     if(step() != 0) {
         throw std::runtime_error("step() wurde nicht ordnungsgemäß beendet");  // Exception, wenn step() nicht 0 zurückgibt
+    }
+    /// falls QT Schließ-Button (x) gedrückt wurde (Game::eventFilter()) oder im Hautpmenü exit ausgewählt wurde (Game::step()) beende Spiel
+    if (exitGameevent == true) {
+        /// beende Audio Thread und lösche Variablen
+        exitGame();
+        /// Beende Spiel
+        exit(0);
     }
 }
 
@@ -659,7 +667,7 @@ void Game::timerEvent(QTimerEvent *event)
  *  - entsprechend warten
  * goto LOOP
  * @return 0 bei fehlerfreiem Beenden
- * @author Rupert
+ * @author Rupert, Felix
  */
 int Game::step() {
     using namespace std::chrono;
@@ -706,8 +714,7 @@ int Game::step() {
             // Zusatzaufgaben, die in den Menüs ausgeführt werden
             switch(aktStepMenu->getSelection()->id) {
                 case menuStartId_EndGame:
-                    exitGame();
-                    exit(0);
+                    exitGameevent = true;
                 case menuLevelId_Demo:
                     startNewGame("level_test.txt",1);
                     setState(gameIsRunning);
@@ -783,7 +790,7 @@ int Game::step() {
             newAudio.cooldown = audioCooldown.background_startgame;
             audioStorage.push_back(newAudio);
         }
-        updateAudio();
+        updateAudioevents();
 //        timeNeeded("audio");
 
         evaluateInput();
@@ -816,7 +823,7 @@ int Game::step() {
             chrono::high_resolution_clock::time_point previous = chrono::high_resolution_clock::now();
             while ( newAudio.cooldown > chrono::duration<int>(0)) {
                 audioevents.push_back(newAudio.audioEvent);
-                audioOutput->update(&audioevents);
+                audioOutput->updatePlayevents(&audioevents);
                 audioevents.clear();
                 std::this_thread::sleep_for(std::chrono::milliseconds(5));
                 chrono::high_resolution_clock::time_point actual = chrono::high_resolution_clock::now();
@@ -838,7 +845,7 @@ int Game::step() {
             chrono::high_resolution_clock::time_point previous = chrono::high_resolution_clock::now();
             while ( newAudio.cooldown > chrono::duration<int>(0)) {
                 audioevents.push_back(newAudio.audioEvent);
-                audioOutput->update(&audioevents);
+                audioOutput->updatePlayevents(&audioevents);
                 audioevents.clear();
                 std::this_thread::sleep_for(std::chrono::milliseconds(5));
                 chrono::high_resolution_clock::time_point actual = chrono::high_resolution_clock::now();
@@ -852,7 +859,7 @@ int Game::step() {
     }
 
     // Audio ausgabe außerhalb des If-Statements damit auch in den Menüs Musik ausgegben wird
-    audioOutput->update(&audioevents);
+    audioOutput->updatePlayevents(&audioevents);
     /// delete List audioStruct elements in list and fill it in the next step again
     audioevents.clear();
 
@@ -1527,11 +1534,11 @@ void Game::updateScore() {
 
 /**
  * @brief durchläuft die Liste audioStorage, zählt die Cooldowns runter
- *  Die Soundevents die noch laufen, werden an die Liste SoundEvents übergeben. Die fertigen werden gelöscht.
+ *  Die Soundevents die noch laufen, werden an die Liste AudioEvents übergeben. Die fertigen werden gelöscht.
  *
  * @author Johann
  */
-void Game::updateAudio() {
+void Game::updateAudioevents() {
 
     //Hintergrundmusik
     audioType levelBackground [3] {background_level1, background_level2, background_level3};

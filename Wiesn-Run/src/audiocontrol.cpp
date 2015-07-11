@@ -84,13 +84,13 @@ AudioControl::~AudioControl() {
 }
 
 /**
- * @brief  update
- *         Nach Aufruf über Game::step aktualisiert update alle im Moment abgespielten, in der Liste "playevents"
- *         gespeicherten playStruct's mit aktuellen audioStruct's aus der übergebenen Liste audioevents.
+ * @brief  updatePlayevents
+ *         Nach Aufruf über Game::step aktualisiert updatePlayevents alle im Moment abgespielten, in der Liste
+ *         "playevents" gespeicherten playStruct's mit aktuellen audioStruct's aus der übergebenen Liste audioevents.
  * @param  Qlist audioevents
  * @author  Felix Pfreundtner
  */
-void AudioControl::update(std::list<struct audioStruct> *audioevents){
+void AudioControl::updatePlayevents(std::list<struct audioStruct> *audioevents){
     /// erstelle neues temporäres audioStruct, welches stets das aktuelle audioStruct Element der Liste audioevents beinhaltet.
     struct audioStruct newaudiostruct;
     /// erstelle neues temporäres audioStruct, welches stets das aktuelle playStruct Element der Liste playevents beinhaltet.
