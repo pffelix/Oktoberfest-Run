@@ -4,7 +4,6 @@
 
 #include <QSet>
 #include <QEvent>
-#include <QChar>
 #include <set>
 #include <QKeyEvent>
 
