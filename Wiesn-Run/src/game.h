@@ -58,8 +58,6 @@ public:
     Game(int argc, char *argv[]);
     ~Game();
 
-    void closeEvent(QCloseEvent *event);
-
     // Startet das die Game-Loop, wird einmalig von main() aufgerufen
     int step();
     // Startet die Mockup QApplication app
@@ -94,7 +92,7 @@ private:
     void detectCollision(std::list<GameObject*> *objectsToCalculate);
     void handleCollisions();
     void updateScore();
-    void updateAudio();
+    void updateAudioevents();
     void renderGraphics(std::list<GameObject *> *objectList, Player *playerPointer);
 
     /// Funktionen zu Start und Ende der Applikation
@@ -131,8 +129,11 @@ private:
     std::list<struct scoreStruct> scoreList;
     struct scoreStruct playerScore;
 
-
+    /// Länge eines Steps
     int stepIntervall;
+    /// Spiel Beenden gedrückt
+    bool exitGameevent;
+
     Player *playerObjPointer;
 
     /// für das Ausgabefenster QGraphicsView und QGraphicsScene der Level
