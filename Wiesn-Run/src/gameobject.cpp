@@ -103,7 +103,7 @@ GameObject::GameObject(int posX, int posY, objectType type) {
     }
     case BOSS: {
         this->length = 3 * playerScale;
-        this->length = 4 * playerScale;
+        this->height = 4 * playerScale;
 
         setPixmap(QPixmap(":/images/images/boss.png"));
         setPos(getPosX() - getLength()*0.5 -10, yOffset - getPosY() - getHeight());
