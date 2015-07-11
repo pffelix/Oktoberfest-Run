@@ -52,7 +52,7 @@ struct collisionStruct {
  * @author Simon, Johann, Felix
  */
 class Game : QObject {
-    Q_OBJECT
+    //Q_OBJECT
 public:
     /// Konstruktor und Destruktor
     Game(int argc, char *argv[]);
