@@ -201,17 +201,22 @@ void Game::menuInit() {
 
 /**
  * @brief Game::eventFilter
- *        Diese Funktion handelt einen Betätigung des QT Schließ-Button (x) des
- *        Spielfensters.
- *        Der Aufruf diese Schließbuttons ist neben dem Aufruf des Schließbuttons im
- *        Hauptmenü die 2. Möglichkeit das Spiel zu beenden. Wird ein CloseEvent
+ *        eventFilter wird aufgerufen, wenn ein neues QEvent auftritt.
+ *        Diese Funktion überwacht die Betätigung von Tastatur Eingaben und handelt
+ *        den Aufruf des QT Schließ-Button (x) im Spielfenster.
+ *        Die Tastatureingaben werden über das keyInput Ojekt ausgewertet.
+ *        Der Aufruf des QT Schließ-Button (x) ist neben dem Aufruf des Hauptmenüeintrags Exit
+ *        die 2. Möglichkeit das Spiel zu beenden. Wird ein CloseEvent
  *        festgestellt wird die normale Hauptmenü Beendenroutine über die Funktion
- *        exitGame() gestartet.
+ *        exitGame() aufgerufen.
  * @author: Felix
  */
 bool Game::eventFilter(QObject *obj, QEvent *event) {
+    // werte aktuelle Keyboardeingaben aus
     keyInput->evaluatekeyEvent(event);
+    // falls QT Schließ-Button gedrückt
     if (event->type() == QEvent::Close) {
+        // beende Spiel
         exitGame();
     }
     else {

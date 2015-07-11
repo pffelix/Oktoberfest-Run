@@ -85,8 +85,8 @@ AudioControl::~AudioControl() {
 
 /**
  * @brief  update
- *         update aktualisiert die im Moment abgespielten, in der Liste "playevents"
- *         gespeicherten playStruct's mit aktuellen audioStruct's aus der Liste audioevents der GameLogik.
+ *         Nach Aufruf über Game::step aktualisiert update alle im Moment abgespielten, in der Liste "playevents"
+ *         gespeicherten playStruct's mit aktuellen audioStruct's aus der übergebenen Liste audioevents.
  * @param  Qlist audioevents
  * @author  Felix Pfreundtner
  */

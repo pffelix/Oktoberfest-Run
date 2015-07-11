@@ -19,11 +19,12 @@ Input::~Input() {
 
 /**
  * @brief  Input::evaluatekeyEvent
- *         eventFilter sammelt alle im Momment gepressten Tastatur Eingaben
- *         und speichert die integer IDs in der Instanzvariable keyevents.
- *         wird eine Taste nicht mehr gedrück wird die id in keyevents gelöscht
- *         wird eine Taste neu gedrückt wird die id in keyevents hinzugefügt
- * @param  QObject *obj, QEvent *event
+ *         Nach Aufruf über Game::eventFilter wertet evaluatekeyEvent
+ *         alle im Momment gleichzeitig gepressten Tastatur Eingaben aus
+ *         und speichert die zugehörigen enum ids in der Instanzvariable keyevents.
+ *         wird eine Taste nicht mehr gedrück wird die enum id in keyevents gelöscht
+ *         wird eine Taste neu gedrückt wird die enum id in keyevents hinzugefügt
+ * @param  QEvent *event
  * @return  Boolean
  * @author  Felix Pfreundtner
  */
