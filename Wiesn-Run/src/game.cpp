@@ -6,6 +6,8 @@
 #include <iomanip>
 #include <cmath>
 
+//#include <exception>
+
 #include <fstream>
 #include <thread>
 
@@ -593,8 +595,9 @@ void Game::endGame() {
 void Game::timerEvent(QTimerEvent *event)
 {
     Q_UNUSED (event)        // Warnung unterdrücken
-    step();
-    ///@todo return von step...
+    if(step() != 0) {
+        throw std::runtime_error("step() wurde nicht ordnungsgemäß beendet");  // Exception, wenn step() nicht 0 zurückgibt
+    }
 }
 
 
