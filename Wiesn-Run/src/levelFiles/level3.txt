@@ -52,6 +52,8 @@ Level3: Käfer-Zelt
 Player,130,0
 Levellänge,28000
 
+# Boss ganz am Anfang zu testen (auskommentiert)
+#Boss,500,0,0
 
 Obstacle,800,0
 

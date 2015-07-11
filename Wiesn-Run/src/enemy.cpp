@@ -30,6 +30,7 @@ Enemy::Enemy(int posX, int posY, int speedX, objectType enemy) : MovingObject(po
         health = 1;
         //bedeutet der Gegner kann nicht schießen
         fireCooldown = -1;
+        break;
     }
     default: {
         qDebug("Fehler beim Anlegen des Gegners: Default-Case");
