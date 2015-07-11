@@ -819,7 +819,7 @@ int Game::step() {
             chrono::high_resolution_clock::time_point previous = chrono::high_resolution_clock::now();
             while ( newAudio.cooldown > chrono::duration<int>(0)) {
                 audioevents.push_back(newAudio.audioEvent);
-                audioOutput->update(&audioevents);
+                audioOutput->updatePlayevents(&audioevents);
                 audioevents.clear();
                 std::this_thread::sleep_for(std::chrono::milliseconds(5));
                 chrono::high_resolution_clock::time_point actual = chrono::high_resolution_clock::now();
@@ -841,7 +841,7 @@ int Game::step() {
             chrono::high_resolution_clock::time_point previous = chrono::high_resolution_clock::now();
             while ( newAudio.cooldown > chrono::duration<int>(0)) {
                 audioevents.push_back(newAudio.audioEvent);
-                audioOutput->update(&audioevents);
+                audioOutput->updatePlayevents(&audioevents);
                 audioevents.clear();
                 std::this_thread::sleep_for(std::chrono::milliseconds(5));
                 chrono::high_resolution_clock::time_point actual = chrono::high_resolution_clock::now();
@@ -855,7 +855,7 @@ int Game::step() {
     }
 
     // Audio ausgabe außerhalb des If-Statements damit auch in den Menüs Musik ausgegben wird
-    audioOutput->update(&audioevents);
+    audioOutput->updatePlayevents(&audioevents);
     /// delete List audioStruct elements in list and fill it in the next step again
     audioevents.clear();
 

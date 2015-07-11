@@ -62,7 +62,7 @@ public:
     ~AudioControl();
     void playInitialize();
     void playTerminate();
-    void update(std::list<struct audioStruct> *audioevents);
+    void updatePlayevents(std::list<struct audioStruct> *audioevents);
 
     private:
     /**
