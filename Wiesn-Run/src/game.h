@@ -52,7 +52,7 @@ struct collisionStruct {
  * @author Simon, Johann, Felix
  */
 class Game : QObject {
-    Q_OBJECT
+    //Q_OBJECT
 public:
     /// Konstruktor und Destruktor
     Game(int argc, char *argv[]);
@@ -115,8 +115,9 @@ private:
     std::list<GameObject*> levelSpawn;
     /// Zu löschende Schüsse
     std::list<GameObject*> objectsToDelete;
-    /// Audiocontrol Objekt zum Erzeugen der Soundausgabe
+    /// Audiocontrol Objekt welches aktuelle Audioevents auswertet
     AudioControl *audioOutput;
+    /// Audio Wiedergabe Thread welcher Portaudio Callback Funktion ausführt und Audioevents Blockweise abspielt
     std::thread portaudiothread;
     /// Liste audioevents mit allen im Step stattfindenden AudioStructs
     std::list<struct audioStruct> audioevents;

@@ -1550,7 +1550,7 @@ void Game::updateAudio() {
         break;
     }
     }
-    if (playerObjPointer->getAlcoholLevel() >maxAlcohol) {
+    if (playerObjPointer->getAlcoholLevel() >maxAlcohol-400) {
         newAudio = {13, status_alcohol, audioDistance.status_alcohol};
         audioevents.push_back(newAudio);
     }
