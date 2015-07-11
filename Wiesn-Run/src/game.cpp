@@ -154,8 +154,16 @@ void Game::menuInit() {
     menuStart = new Menu(new std::string("Wiesn-Run"));
     menuStart->addEntry("Pack ma's!",menuStartId_NewGame,true, gameMenuLevel);
     menuStart->addEntry("Mia san Mia", menuStartId_Credits,true,gameMenuCredits);
+    menuStart->addEntry("Hilfe", menuStartId_Help,true,gameMenuHelp);
     menuStart->addEntry("Pfiat di!", menuStartId_EndGame,true);
     menuStart->displayInit();
+
+    menuHelp = new Menu(new std::string("Hilfe"));
+    menuHelp->addEntry("Laffa: Pfeile",menuId_NonClickable);
+    menuHelp->addEntry("Schiaßn: Space",menuId_NonClickable);
+    menuHelp->addEntry("Aufgem: Escape",menuId_NonClickable);
+    menuHelp->addEntry("Zruck",menuHelpId_Back,true,gameMenuStart);
+    menuHelp->displayInit();
 
     menuCredits = new Menu(new std::string("Credits"));
     menuCredits->addEntry("Grundkurs C++", menuId_NonClickable,false);
@@ -1689,6 +1697,9 @@ void Game::setState(enum gameState newState) {
             break;
         case gameMenuStart:
             aktMenu = menuStart;
+            break;
+        case gameMenuHelp:
+            aktMenu = menuHelp;
             break;
         case gameMenuLevel:
             aktMenu = menuLevel;
