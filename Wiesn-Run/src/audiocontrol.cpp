@@ -81,27 +81,6 @@ AudioControl::AudioControl() {
  */
 AudioControl::~AudioControl() {
 
-    /// Stoppe den Portaudio Stream
-    paerror = Pa_StopStream(pastream);
-    if(paerror != paNoError && paerror != 0) {
-        fprintf(stderr, "Ein Error trat während der Benutzung der PortAudio Ausgabe auf\n" );
-        fprintf(stderr, "Error Nummer: %d\n", paerror);
-        fprintf(stderr, "Error Nachricht: %s\n", Pa_GetErrorText(paerror));
-    }
-    /// Schließe den Portaudio Stream
-    paerror = Pa_CloseStream(pastream);
-    if(paerror != paNoError && paerror != 0) {
-        fprintf(stderr, "Ein Error trat während der Benutzung der PortAudio Ausgabe auf\n" );
-        fprintf(stderr, "Error Nummer: %d\n", paerror);
-        fprintf(stderr, "Error Nachricht: %s\n", Pa_GetErrorText(paerror));
-    }
-    /// Beende PortAudio
-    paerror = Pa_Terminate();
-    if(paerror != paNoError && paerror != 0) {
-        fprintf(stderr, "Ein Error trat während der Benutzung der PortAudio Ausgabe auf\n" );
-        fprintf(stderr, "Error Nummer: %d\n", paerror);
-        fprintf(stderr, "Error Nachricht: %s\n", Pa_GetErrorText(paerror));
-    }
 }
 
 /**
@@ -251,8 +230,6 @@ void AudioControl::playInitialize(){
         Pa_Sleep(waitinms);
         // std::this_thread::sleep_for(std::chrono::milliseconds(waitnms)); Ersatz für sleep() ?
     }
-
-
 }
 
 
@@ -346,4 +323,29 @@ int AudioControl::instancepaCallback( const void *inputBuffer, void *outputBuffe
     return 0;
 }
 
+
+void AudioControl::playTerminate(){
+
+    /// Stoppe den Portaudio Stream
+    paerror = Pa_StopStream(pastream);
+    if(paerror != paNoError && paerror != 0) {
+        fprintf(stderr, "Ein Error trat während der Benutzung der PortAudio Ausgabe auf\n" );
+        fprintf(stderr, "Error Nummer: %d\n", paerror);
+        fprintf(stderr, "Error Nachricht: %s\n", Pa_GetErrorText(paerror));
+    }
+    /// Schließe den Portaudio Stream
+    paerror = Pa_CloseStream(pastream);
+    if(paerror != paNoError && paerror != 0) {
+        fprintf(stderr, "Ein Error trat während der Benutzung der PortAudio Ausgabe auf\n" );
+        fprintf(stderr, "Error Nummer: %d\n", paerror);
+        fprintf(stderr, "Error Nachricht: %s\n", Pa_GetErrorText(paerror));
+    }
+    /// Beende PortAudio
+    paerror = Pa_Terminate();
+    if(paerror != paNoError && paerror != 0) {
+        fprintf(stderr, "Ein Error trat während der Benutzung der PortAudio Ausgabe auf\n" );
+        fprintf(stderr, "Error Nummer: %d\n", paerror);
+        fprintf(stderr, "Error Nachricht: %s\n", Pa_GetErrorText(paerror));
+    }
+}
 

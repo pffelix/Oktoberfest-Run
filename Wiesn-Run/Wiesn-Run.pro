@@ -21,7 +21,7 @@ LIBS += "C:\portaudio\libportaudio-2.dll"
 }
 
 
-QT += core gui
+QT += gui core
 QT += widgets
 
 

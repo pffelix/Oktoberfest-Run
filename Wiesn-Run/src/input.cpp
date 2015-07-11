@@ -41,9 +41,14 @@ bool Input::eventFilter(QObject *obj, QEvent *event) {
         updateKeys();
         return true;
         }
+    else if (event->type() == QEvent::Close) {
+
+    }
     else {
          return QObject::eventFilter(obj, event);
     }
+
+
 }
 
 /**

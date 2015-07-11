@@ -96,9 +96,9 @@ private:
     void renderGraphics(std::list<GameObject *> *objectList, Player *playerPointer);
 
     /// Funktionen zu Start und Ende der Applikation
+    bool eventFilter(QObject *obj, QEvent *event);
     void menuInit();
     void exitGame();
-    bool eventFilter(QObject *obj, QEvent *event);
 
     /// Hilfsfunktion
     int getStepIntervall();

@@ -9,7 +9,6 @@
 //#include <exception>
 
 #include <fstream>
-#include <thread>
 
 #include "player.h"
 #include "gameobject.h"
@@ -106,7 +105,7 @@ int Game::start() {
     audioOutput = new AudioControl;
     /// Erstelle einen neuen Thread portaudiothread.
     /// Initialisiere dort PortAudio und beginne eine Audioausgabe zu erzeugen.
-    std::thread portaudiothread(&AudioControl::playInitialize, audioOutput);
+    portaudiothread = std::thread(&AudioControl::playInitialize, audioOutput);
 
     // QGraphicsScene der Level erstellen
     levelScene = new QGraphicsScene;
@@ -123,6 +122,8 @@ int Game::start() {
 
     /// Installiere Event Filter zum Loggen der Keyboard Eingabe
     window->installEventFilter(keyInput);
+    /// Installiere Event Filter zum Überwachen des Fenster Schließ-Buttons
+    window->installEventFilter(this);
 
     setState(gameMenuStart);
 
@@ -192,20 +193,40 @@ void Game::menuInit() {
     menuHighscore->displayInit();
 }
 
+/**
+ * @brief Game::eventFilter
+ *        Diese Funktion handelt einen Betätigung des Schließ-Button (x) des
+ *        Spielfensters.
+ *        Der Aufruf diese Schließbuttons ist neben dem Aufruf des Schließbuttons im
+ *        Hauptmenü die 2. Möglichkeit das Spiel zu beenden. Wird ein CloseEvent
+ *        festgestellt wird die normale Hauptmenü Beendenroutine über die Funktion
+ *        exitGame() gestartet.
+ * @author: Felix
+ */
+bool Game::eventFilter(QObject *obj, QEvent *event) {
+    if (event->type() == QEvent::Close) {
+        exitGame();
+    }
+    else {
+         return QObject::eventFilter(obj, event);
+    }
+}
 
 /**
  * @brief Game::exitGame
- *        Diese Funktion löscht nicht mehr nötige Variablen und Objekte wenn das Spiel komplett beendet wird.
+ *        Diese Funktion wird aufgerufen wenn das Programm beendet werden soll.
  * @author: Felix
  */
 void Game::exitGame() {
-
-    /// Beende Audio Ausgabe und lösche Audiobezogene Variablen
-
-    /// rufe Desktrutor Objekt audioOutput auf
-    /// Stoppe PortAudio Audioausgabe, Beende Portaudio Stream, Beende PortAudio und lösche Objekt audioOutput
-    delete audioOutput;
+    /// Beende Audio Ausgabe Thread
+    ///
+    /// Stoppe PortAudio Audioausgabe, Beende Portaudio Stream, Beende PortAudio
+    audioOutput->playTerminate();
+    /// warte bis thread sich beendet hat
+    portaudiothread.join();
 }
+
+
 
 
 
