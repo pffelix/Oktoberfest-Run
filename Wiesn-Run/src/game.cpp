@@ -615,9 +615,10 @@ void Game::endGame() {
         levelSpawn.pop_front();
         delete handleObject;
     }
-
-
+    //Anzeige der Spielerwerte entfernen & löschen
     delete showGUI;
+
+    //Hintergrundgrafiken entfernen & löschen
     delete showBackground;
 }
 
@@ -1631,19 +1632,22 @@ void Game::updateAudio() {
  * @param objectList
  */
 void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPointer) {
+    //Berechnung der X-Positionsänderung des Spielers im aktuellen Step
+    int playerStepMov = playerObjPointer->getPosX()- (playerScale/2) - playerObjPointer->x();
 
     //Leben,Pegel,Munition,Highscore bleiben auf die View zentriert
-    showGUI->setPos(playerPointer->getPosX() - (playerScale/2) - playerPointer->x());
+    showGUI->setPos(playerStepMov);
 
     //Leben,Highscore,Pegel,Munition wird aktualisiert
     showGUI->setValues(playerPointer->getHealth(),playerPointer->getAlcoholLevel(),
                        playerPointer->getAmmunatiuon(),playerScore.totalPoints);
 
     //Parralaxe Positionsupdate
-    showBackground->updateParallaxe(playerPointer->getPosX() - (playerScale/2) - playerPointer->x());
+    showBackground->updateParallaxe(playerStepMov);
 
     //Hintergrund Positionsupdate
-    showBackground->updateBackgroundPos(playerPointer->getPosX() - playerOffset);
+    showBackground->updateBackgroundPos(playerObjPointer->getPosX() - playerOffset);
+
 
     //Positionsaktualisierungen aller Movingobjects
     for (std::list<GameObject*>::iterator it = objectList->begin(); it != objectList->end(); ++it) {
@@ -1687,7 +1691,6 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
 
     //View wird wieder auf den Spieler zentriert
     window->centerOn(playerObjPointer->getPosX() + 512 - 100 - 0.5 * playerObjPointer->getLength(), 384);
-    ///@todo funktioniert nicht
 }
 
 

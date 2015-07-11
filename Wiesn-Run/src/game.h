@@ -139,7 +139,7 @@ private:
     QGraphicsView * window;
     QGraphicsScene * levelScene;
 
-    /// für alle Anzeigen wie Leben,Score,..
+    /// für alle Anzeigen wie Leben,Alkohol,Score,..
     RenderGUI * showGUI;
 
     /// für die Hintergrundgrafiken

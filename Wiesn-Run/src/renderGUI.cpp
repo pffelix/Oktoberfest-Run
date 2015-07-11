@@ -6,10 +6,7 @@
 
 /**
  * @brief Konstruktor für alle Spielerwert Anzeigen
- * Die Grafikelemente der Anzeigen werden initialisiert und eingestellt.
- * Alle Elemente sind "Kinder" der Gesundheitsanzeige um Positionsaktualisierungen zu vereinfachen
- * (Kindelemente verhalten sich immer relativ um Elternobjekt und werden auch automatisch mit diesem
- * der Scene hinzugefügt bzw. auch wieder entfernt)
+ * Die Grafikelemente der Anzeigen werden initialisiert, eingestellt und der Scene hinzugefügt
  * @param scene     : levelScene
  * @author Flo
  */
@@ -24,7 +21,7 @@ RenderGUI::RenderGUI(QGraphicsScene *scene) {
     this->showHealthBar[0].setParentItem(&showHealth);
     this->showHealthBar[0].setBrush(Qt::red);
     this->showHealthBar[1].setParentItem(&showHealth);
-    this->showHealthBar[1].setRect(207,7,256,41);
+    this->showHealthBar[1].setRect(207,7,BARLENGTH+6,BARHEIGHT+6);
 
     //TextItem der Gesundheitsanzeige wird initalisiert
     this->showScore.setParentItem(&showHealth);
@@ -43,7 +40,7 @@ RenderGUI::RenderGUI(QGraphicsScene *scene) {
     this->showAlcoholBar[0].setParentItem(&showHealth);
     this->showAlcoholBar[0].setBrush(Qt::darkBlue);
     this->showAlcoholBar[1].setParentItem(&showHealth);
-    this->showAlcoholBar[1].setRect(207,57,256,41);
+    this->showAlcoholBar[1].setRect(207,57,BARLENGTH+6,BARHEIGHT+6);
 
     //TextItem der Munitionssanzeige wird initalisiert
     this->showAmmo.setParentItem(&showHealth);
@@ -81,8 +78,8 @@ void RenderGUI::setPos(int x) {
  * @author Flo
  */
 void RenderGUI::setValues(int health, int alcohol, int ammo, int score) {
-    this->showHealthBar[0].setRect(210,10,(static_cast<float>(health)/maxHealth)*250,35);
-    this->showAlcoholBar[0].setRect(210,60,(static_cast<float>(alcohol)/maxAlcohol)*250,35);
+    this->showHealthBar[0].setRect(210,10,(static_cast<float>(health)/maxHealth)*BARLENGTH,BARHEIGHT);
+    this->showAlcoholBar[0].setRect(210,60,(static_cast<float>(alcohol)/maxAlcohol)*BARLENGTH,BARHEIGHT);
     this->showAmmo.setPlainText(QString("Munition: " + QString::number(ammo)));
     this->showScore.setPlainText(QString("Score: " + QString::number(score)));
 }
