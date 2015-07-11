@@ -1644,7 +1644,7 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
                        playerPointer->getAmmunatiuon(),playerScore.totalPoints);
 
     //Parralaxe Positionsupdate
-    showBackground->updateParallaxe((playerPointer->getPosX() - (playerScale/2) - playerPointer->x()) /2);
+    showBackground->updateParallaxe(playerPointer->getPosX() - (playerScale/2) - playerPointer->x());
 
     //Hintergrund Positionsupdate
     showBackground->updateBackgroundPos(playerPointer->getPosX() - playerOffset);
