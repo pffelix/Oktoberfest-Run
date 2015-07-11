@@ -50,8 +50,10 @@ Level3: Käfer-Zelt
 ------------
 
 Player,130,0
-Levellänge,21000
+Levellänge,28000
 
+# Boss ganz am Anfang zu testen (auskommentiert)
+#Boss,500,0,0
 
 Obstacle,800,0
 
@@ -167,7 +169,7 @@ Plane,17720,280
 Plane,17840,280
 Plane,17960,280
 Plane,18080,280
-Obstacle,17500,280
+Obstacle,17500,300
 Tourist,17400,280,0
 Bier,17600,300
 
@@ -193,7 +195,7 @@ Tourist,19860,150,0
 Tourist,20100,150,0
 Tourist,20340,150,0
 
-# Touristen kommen von hinten Oben
+# Tourist macht oben nur Angst, fällt aber nicht runter
 Plane,20800,150
 Plane,20920,150
 Plane,21040,150
@@ -224,19 +226,33 @@ Plane,24220,130
 Tourist,23620,150,0
 Tourist,23860,150,0
 Tourist,24100,150,0
-Plane,23620,260
-Plane,23740,260
-Plane,23860,260
-Plane,23980,260
-Plane,24100,260
-Plane,24220,260
-Tourist,23740,280,0
-Tourist,23980,280,0
-Tourist,24220,280,0
+Plane,23620,280
+Plane,23740,280
+Plane,23860,280
+Plane,23980,280
+Plane,24100,280
+Plane,24220,280
+Tourist,23740,300,0
+Tourist,23980,300,0
+Tourist,24220,300,0
 Security,23740,0
 Bier,23740,170
 Bier,24000,170
 
+# Tourist kommt von hinten
+Plane,24700,130
+Plane,24820,130
+Plane,24940,130
+Obstacle,24685,0
+Tourist,24820,0,2
 
+# Bier
+Bier,25500,40
+Bier,25700,40
+Hendl,26000,40
+Hendl,26200,40
+Bier,26500,40
+
+# ENDE
 
 

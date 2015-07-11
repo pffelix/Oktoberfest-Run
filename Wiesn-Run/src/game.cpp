@@ -155,8 +155,16 @@ void Game::menuInit() {
     menuStart = new Menu(new std::string("Wiesn-Run"));
     menuStart->addEntry("Pack ma's!",menuStartId_NewGame,true, gameMenuLevel);
     menuStart->addEntry("Mia san Mia", menuStartId_Credits,true,gameMenuCredits);
+    menuStart->addEntry("Hilfe", menuStartId_Help,true,gameMenuHelp);
     menuStart->addEntry("Pfiat di!", menuStartId_EndGame,true);
     menuStart->displayInit();
+
+    menuHelp = new Menu(new std::string("Hilfe"));
+    menuHelp->addEntry("Laffa: Pfeile",menuId_NonClickable);
+    menuHelp->addEntry("Schiaßn: Space",menuId_NonClickable);
+    menuHelp->addEntry("Aufgem: Escape",menuId_NonClickable);
+    menuHelp->addEntry("Zruck",menuHelpId_Back,true,gameMenuStart);
+    menuHelp->displayInit();
 
     menuCredits = new Menu(new std::string("Credits"));
     menuCredits->addEntry("Grundkurs C++", menuId_NonClickable,false);
@@ -228,6 +236,9 @@ void Game::exitGame() {
 
 
 
+void Game::closeEvent(QCloseEvent *event) {
+    exit(0);
+}
 
 
 // --------------- Level starten und beenden ------------------------------------------------------
@@ -246,6 +257,7 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
 
     //Level-Nummer speichern
     gameStats.actLevel = levelNum;
+    gameStats.gameOver = false;
     // Level festlegen, der geladen werden soll
     QString fileSpecifier = ":/levelFiles/levelFiles/";
     fileSpecifier.append(levelFileName);
@@ -790,7 +802,7 @@ int Game::step() {
         if (playerObjPointer->getPosX() - playerScale >= levelLength) {
             endGame();
             setState(gameMenuName);
-            // Erfolgreich Schriftzug einfügen
+            ///@todo Erfolgreich Schriftzug einfügen
 
             // Sound für erfolgreichen abschluss spielen
             audioCooldownstruct newAudio;
@@ -812,7 +824,7 @@ int Game::step() {
         if (gameStats.gameOver) {
             endGame();
             setState(gameMenuName);
-            // GameOver schriftzug einfügen
+            ///@todo GameOver schriftzug einfügen
 
             //Audio event wenn der Spieler stirbt
             audioCooldownstruct newAudio;
@@ -831,8 +843,6 @@ int Game::step() {
         }
         timeNeeded("endLoop");
 
-        ///@todo Workaround, Spiel wird ab dem zweiten Durchlauf auf Spieler zentriert (Rupert)
-        //window->centerOn(playerObjPointer->getPosX() + 512 - 100 - 0.5 * playerObjPointer->getLength(), 384);
         stepCount++;
     }
 
@@ -1710,6 +1720,9 @@ void Game::setState(enum gameState newState) {
             break;
         case gameMenuStart:
             aktMenu = menuStart;
+            break;
+        case gameMenuHelp:
+            aktMenu = menuHelp;
             break;
         case gameMenuLevel:
             aktMenu = menuLevel;

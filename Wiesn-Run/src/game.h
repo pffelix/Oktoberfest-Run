@@ -58,6 +58,8 @@ public:
     Game(int argc, char *argv[]);
     ~Game();
 
+    void closeEvent(QCloseEvent *event);
+
     // Startet das die Game-Loop, wird einmalig von main() aufgerufen
     int step();
     // Startet die Mockup QApplication app
@@ -161,16 +163,18 @@ private:
     Menu *menuStatistics;
     Menu *menuName;
     Menu *menuHighscore;
+    Menu *menuHelp;
     /// zur Unterscheidung und Identifizierung der Menü-Einträge
     enum menuIds {
         menuId_NonClickable,
-        menuStartId_NewGame, menuStartId_EndGame, menuStartId_Credits,   // Startmenü
+        menuStartId_NewGame, menuStartId_EndGame, menuStartId_Help, menuStartId_Credits,   // Startmenü
         menuCreditsId_Back, // Credits
         menuLevelId_Back, menuLevelId_Demo, menuLevelId_Level1, menuLevelId_Level2, menuLevelId_Level3, menuLevelId_StartGame,   // Levelauswahl
         menuBreakId_Resume, menuBreakId_EarlyEnd, menuBreakId_EndGame,    // Pause
         menuStatisticsId_Next,  // Statistik
         menuNameId_Next,        // Name eingeben
-        menuHighscoreId_Next   // Highscoretabelle
+        menuHighscoreId_Next,   // Highscoretabelle
+        menuHelpId_Back         // Hilfemenü
     };
 
     /// stepCount wird mit jedem Step um ein erhöht

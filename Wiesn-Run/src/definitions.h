@@ -22,7 +22,7 @@
  * @author Rupert
  */
 enum gameState {
-    gameIsRunning, gameMenuStart, gameMenuCredits, gameMenuLevel, gameMenuBreak, gameMenuStatisitcs, gameMenuName, gameMenuHighscore
+    gameIsRunning, gameMenuStart, gameMenuCredits, gameMenuLevel, gameMenuBreak, gameMenuStatisitcs, gameMenuName, gameMenuHighscore, gameMenuHelp
 };
 
 /**

@@ -1,4 +1,5 @@
 #include "renderGUI.h"
+#include "definitions.h"
 
 #include <QGraphicsScene>
 #include <QFont>
@@ -45,8 +46,8 @@ void RenderGUI::setPos(int x) {
 }
 
 void RenderGUI::setValues(int health, int alcohol, int ammo, int score) {
-    this->showHealthBar.setRect(210,10,health*50,35);
-    this->showAlcoholBar.setRect(210,60,alcohol/10,35);
+    this->showHealthBar.setRect(210,10,(static_cast<float>(health)/maxHealth)*250,35);
+    this->showAlcoholBar.setRect(210,60,(static_cast<float>(alcohol)/maxAlcohol)*250,35);
     this->showAmmo.setPlainText(QString("Munition: " + QString::number(ammo)));
     this->showScore.setPlainText(QString("Score: " + QString::number(score)));
 }
