@@ -2,6 +2,6 @@
 *.pro.user
 *.pro.user*
 build*
-Doxygen
+Doxygen/*
 !Doxygen/latex/refman.pdf
 
