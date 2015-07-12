@@ -72,7 +72,7 @@ Game::~Game() {
 // --------------- Applikation starten und beenden ------------------------------------------------
 /**
  * @brief Die Startfunktion, erstellt Fenster und Menüs, wird von main() aufgerufen
- * Grafik und Input (Flo,Felix):
+ * Grafik und Input (Flo, Felix):
  * Erstelle QApplication app mit QGraphicsView Widget window (Eventfilter installiert) und Zeiger input auf Input Objekt.
  * Um Funktionen der Tastatur Eingabe entwickeln zu können ist ein Qt Widget Fenster nötig.
  * Auf dem Widget wird ein Eventfilter installiert welcher kontinuierlich Tastatureingaben mitloggt.
@@ -1574,7 +1574,7 @@ void Game::updateAudioevents() {
         break;
     }
     }
-    if (playerObjPointer->getAlcoholLevel() > maxAlcohol*0.6) {
+    if (playerObjPointer->getAlcoholLevel() > maxAlcohol*0.8) {
         newAudio = {13, status_alcohol, audioDistance.status_alcohol};
         audioevents.push_back(newAudio);
     }

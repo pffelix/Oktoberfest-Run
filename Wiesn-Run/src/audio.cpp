@@ -4,8 +4,8 @@
  * @brief  Konstruktor instanziert ein Objekt der Klasse Audio.
  * @author  Felix Pfreundtner
  */
-Audio::Audio(std::string state_name) {
-    source = state_name;
+Audio::Audio(std::string type_name) {
+    source = type_name;
     readSamples();
 }
 

@@ -82,7 +82,7 @@ AudioControl::~AudioControl() {
 }
 
 /**
- * @brief  updatePlayevents aktualsiert nach Aufruf über Game::step alle im Moment abgespielten, in der Liste "playevents" gespeicherten playStruct's mit aktuellen audioStruct's aus der übergebenen Liste audioevents.
+ * @brief  updatePlayevents aktualisert nach Aufruf über Game::step alle im Moment abgespielten, in der Liste "playevents" gespeicherten playStruct's mit aktuellen audioStruct's aus der übergebenen Liste audioevents.
  * @param  std::list<struct audioStruct> *audioevents
  * @author  Felix Pfreundtner
  */

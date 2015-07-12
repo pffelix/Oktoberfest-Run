@@ -18,7 +18,7 @@
 #include <QtGlobal>
 
 /**
- * @brief  Die Audio-Klasse erzeugt Audioobjekte. Mehrere Instanzen dieser Klasse werden in der Klasse AudioControl erstellt. Jedes Audioobjekt liest die zum Ojekt gehörigen Audiosamples ein und übergibt diese an die Kontrollklasse. Audiocontrol, welche im Anschluss die Samples aller Objekte mischt und abspielt. Die einzelnen Methoden werden in der audio.cpp erklärt.
+ * @brief  Die Audio-Klasse erzeugt Audioobjekte. Für jeden Audioobjekt Typ mit Name type_name wird zu Beginn eine Instanz der Klasse erstellt und in AudioControl an die Liste audioobjects angehängt. Jedes Audioobjekt liest die zum Objekt Typ gehörigen Audiosamples aus einer WAVE Datei ein und übergibt das Sample an Position pos per Aufruf mit getSample(int pos) an den Aufrufer.
  * @author  Felix Pfreundtner
  */
 class Audio{
@@ -26,7 +26,7 @@ class Audio{
 public:
 
     // Funktionen
-    Audio(std::string state_name);
+    Audio(std::string type_name);
     ~Audio();
     std::string getSource();
     float getSample(int pos);
@@ -42,7 +42,7 @@ private:
     // Variablen
     /**
      * @var  std::string source
-     * @brief  source speichert den namen des aktuellen objekts als string welcher dem namen im ressourcenpfad entspricht.
+     * @brief  source speichert den Namen des Audioobjekts als string welcher dem Dateinamen der zugehörigen Wave Datei entspricht.
      */
     std::string source;
 

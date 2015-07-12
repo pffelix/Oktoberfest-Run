@@ -18,7 +18,7 @@
 #include <mutex>
 
 /**
- * @brief  Die AudioControl-Klasse synchronisiert alle Audioausgabeanweisungen und spielt passende Audioobjekte ab. Eine Instanz dieser Klasse wir innerhalb der game.h angelegt. Die einzelnen Methoden werden in der audiocontrol.cpp erklärt.
+ * @brief  Die AudioControl-Klasse synchronisiert alle Audioausgabeanweisungen und spielt passende Audioobjekte ab. Eine Instanz dieser Klasse wir innerhalb der game.h angelegt.
  * @author  Felix Pfreundtner
  */
 class AudioControl{
