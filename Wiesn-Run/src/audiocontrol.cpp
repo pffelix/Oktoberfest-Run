@@ -31,9 +31,9 @@ AudioControl::AudioControl() {
     audioobjects.insert(audioobjects.begin() + audioType::powerup_food, Audio("powerup_food")); // 16bit
     //source: http://www.freesound.org/people/afleetingspeck/sounds/151180/
     audioobjects.insert(audioobjects.begin() + audioType::status_alcohol, Audio("status_alcohol")); // 16bit
-    // source: http://soundbible.com/1612-Slow-HeartBeat.html
+    //source: http://soundbible.com/1612-Slow-HeartBeat.html
     audioobjects.insert(audioobjects.begin() + audioType::status_life, Audio("status_life")); // 16bit
-    //source: http://soundbible.com/1707-Hearbeat-2.html
+    //source: http://soundbible.com/1612-Slow-HeartBeat.html
     audioobjects.insert(audioobjects.begin() + audioType::status_lifecritical, Audio("status_lifecritical")); // 16bit
     //source: http://www.freesound.org/people/Robinhood76/sounds/256469/
     audioobjects.insert(audioobjects.begin() + audioType::status_dead, Audio("status_dead")); // 16bit
@@ -155,7 +155,7 @@ void AudioControl::updatePlayevents(std::list<struct audioStruct> *audioevents){
         }
         // falls playevent im nächsten Step abgespielt werden soll
         else {
-            // falls Type des aktuellen playevents status_lifecritical ist (niedrigere Filter Priorität)
+            // falls Type des aktuellen playevents status_lifecritical ist (niedrigste Filter Priorität)
             if (pe->type == status_lifecritical) {
                 // setze Alkohol Status auf aktiv
                 status_filter = statusFilter::lifecritical;
@@ -229,7 +229,9 @@ void AudioControl::playInitialize(){
  * @return  int returncode
  * @author  Felix Pfreundtner
  */
-int AudioControl::instancepaCallback( const void *inputBuffer, void *outputBuffer,
+int AudioControl::instancepaCallback(
+                           const void *inputBuffer,
+                           void *outputBuffer,
                            unsigned long framesPerBuffer,
                            const PaStreamCallbackTimeInfo* timeInfo,
                            PaStreamCallbackFlags statusFlags ) {
@@ -256,15 +258,15 @@ int AudioControl::instancepaCallback( const void *inputBuffer, void *outputBuffe
 
             // wähle aktuell anzuwenden Filter aus
             switch (status_filter) {
-                // kein Filter anwenden
-                case statusFilter::lifecritical:
+                // keinen Filter anwenden
+                case statusFilter::no:
                 // erhöhe Abspielposition des aktuell iterierten Audiovents um ein Sample
                     pe->position += 1;
                     break;
 
                 // Alkohol Filter anwenden
                 // Verzögere den Spielsound im Zeitbereich um 1 Sample pro Schritt (50% Verzögerung)
-                // Ausgenommen betrunkenes Gerede
+               // für alle Audio Typen außgenommen status_alcohol
                 case statusFilter::alcohol:
                     if (pe->type == status_alcohol) {
                         // erhöhe Abspielposition des aktuell iterierten Audiovents um ein Sample
@@ -281,9 +283,8 @@ int AudioControl::instancepaCallback( const void *inputBuffer, void *outputBuffe
 
                 // Wenig Leben Filter anwenden
                 // Erhöhe den Spielsound im Zeitbereich um 1 Sample pro Schritt (50% Geschwindigkeitszunahme)
-                // Ausgenommen betrunkenes Gerede
-
-                case statusFilter::no:
+                // für Audio Typen player_walk, scene_enemy_boss und status_lifecritical
+                case statusFilter::lifecritical:
                     if (pe->type == player_walk || pe->type == scene_enemy_boss || pe->type == status_lifecritical) {
                         // erhöhe Abspielposition des aktuell iterierten Audiovents um zwei Samples
                         pe->position += 2;
