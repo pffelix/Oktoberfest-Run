@@ -64,7 +64,7 @@ public:
     int run(QApplication& app);
 
     struct stateStruct gameStats;
-    // Liste von Kollisionen
+    /// Liste von Kollisionen
     std::list<struct collisionStruct> collisionsToHandle;
 
     /// Starten der Applikation
