@@ -24,14 +24,22 @@
 class Audio{
 
 public:
+
+    // Funktionen
     Audio(std::string state_name);
     ~Audio();
-
     std::string getSource();
     float getSample(int pos);
     int getSamplenumber();
 
 private:
+
+    // Funktionen
+    void readSamples();
+    qint16 to16bitSample(quint8 sample8bit);
+    void normalize();
+
+    // Variablen
     /**
      * source speichert den namen des aktuellen objekts als string welcher dem namen im ressourcenpfad entspricht.
      */
@@ -46,9 +54,6 @@ private:
      */    
     int samplenumber;
 
-    void readSamples();
-    qint16 to16bitSample(quint8 sample8bit);
-    void normalize();    
 };
 
 #endif // AUDIO_H

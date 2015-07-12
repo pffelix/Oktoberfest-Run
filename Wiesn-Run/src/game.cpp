@@ -58,7 +58,7 @@ struct compareScores {
  * @author Rupert
  */
 Game::Game(int argc, char *argv[]) : QObject() {
-    /// Initialisiert den appPointer mit der QApplication
+    // Initialisiert den appPointer mit der QApplication
     appPointer = new QApplication(argc,argv);
 }
 
@@ -104,10 +104,10 @@ int Game::start() {
     // Spiel am laufen
     exitGameevent = false;
 
-    /// Erstelle Audiocontrol Objekt zum Einlesen der Audiodatein und speichern der Ausgabeparameter
+    // Erstelle Audiocontrol Objekt zum Einlesen der Audiodatein und speichern der Ausgabeparameter
     audioOutput = new AudioControl;
-    /// Erstelle einen neuen Thread portaudiothread.
-    /// Initialisiere dort PortAudio und beginne eine Audioausgabe zu erzeugen.
+    // Erstelle einen neuen Thread portaudiothread.
+    // Initialisiere dort PortAudio und beginne eine Audioausgabe zu erzeugen.
     portaudiothread = std::thread(&AudioControl::playInitialize, audioOutput);
 
     // QGraphicsScene der Level erstellen
@@ -123,7 +123,7 @@ int Game::start() {
     window->show();
     qDebug("initialize window");
 
-    /// Installiere Event Filter zum Überwachen der Keyboard Eingabe und des QT Fenster Schließ-Buttons (x)
+    // Installiere Event Filter zum Überwachen der Keyboard Eingabe und des QT Fenster Schließ-Buttons (x)
     window->installEventFilter(this);
 
     setState(gameMenuStart);
@@ -203,15 +203,10 @@ void Game::menuInit() {
 }
 
 /**
- * @brief Game::eventFilter
- *        eventFilter wird aufgerufen, wenn ein neues QEvent auftritt.
- *        Diese Funktion überwacht die Betätigung von Tastatur Eingaben und handelt
- *        den Aufruf des QT Schließ-Button (x) im Spielfenster.
- *        Die Tastatureingaben werden über das keyInput Ojekt ausgewertet.
- *        Der Aufruf des QT Schließ-Button (x) ist neben dem Aufruf des Hauptmenüeintrags Exit
- *        die 2. Möglichkeit das Spiel zu beenden. Wird ein CloseEvent
- *        festgestellt wird die Variable exitGameevent auf False gesetzt und
- *        das Spiel zum Ende des aktuellen Steps in Game::timerEvent beendet.
+ * @brief eventFilter wird aufgerufen, wenn ein neues QEvent auftritt. Diese Funktion überwacht die Betätigung von Tastatur Eingaben und handelt den Aufruf des QT Schließ-Button (x) im Spielfenster. Die Tastatureingaben werden über das keyInput Ojekt ausgewertet. Der Aufruf des QT Schließ-Button (x) ist neben dem Aufruf des Hauptmenüeintrags Exit die 2. Möglichkeit das Spiel zu beenden. Wird ein CloseEvent festgestellt wird die Variable exitGameevent auf False gesetzt und das Spiel zum Ende des aktuellen Steps in Game::timerEvent beendet.
+ * @param: QObject *obj
+ * @param: QEvent *event
+ * @return: QObject::eventFilter(obj, event)
  * @author: Felix
  */
 bool Game::eventFilter(QObject *obj, QEvent *event) {
@@ -223,25 +218,23 @@ bool Game::eventFilter(QObject *obj, QEvent *event) {
         exitGameevent = true;
     }
     //else {
-        ///@todo nur auskommentiert, muss entfernt werden
          return QObject::eventFilter(obj, event);
     //}
 }
 
 /**
- * @brief Game::exitGame
- *        Diese Funktion wird aufgerufen wenn das Programm beendet werden soll.
+ * @brief Diese Funktion wird aufgerufen wenn das Programm beendet werden soll.
  * @author: Felix
  */
 void Game::exitGame() {
-    /// Beende Audio Ausgabe Thread
+    // Beende Audio Ausgabe Thread
 
-    /// Stoppe PortAudio Audioausgabe, Beende Portaudio Stream, Beende PortAudio
+    // Stoppe PortAudio Audioausgabe, Beende Portaudio Stream, Beende PortAudio
     audioOutput->playTerminate();
-    /// warte bis Audio Output Thread sich beendet hat
+    // warte bis Audio Output Thread sich beendet hat
     portaudiothread.join();
 
-    /// lösche AudioControl Objekt
+    // lösche AudioControl Objekt
     delete audioOutput;
 }
 
@@ -578,7 +571,7 @@ void Game::displayStatistics() {
  * @brief Game::endGame
  * Diese Funktion löscht nicht mehr nötige Variablen und Objekte wenn vom Spiel in das Statistikmenü gewechselt wird.
  * es werden auch die Statistik und Highscoremenüs aktualisiert
- * @ author: Felix, Johann
+ * @author: Felix, Johann
  */
 void Game::endGame() {
     // Namen Menü
@@ -603,7 +596,7 @@ void Game::endGame() {
     stepCount = 0;
 
     playerObjPointer = 0;
-    /// alle Objekte aus den Listen für die gameObjects werden gelöscht
+    // alle Objekte aus den Listen für die gameObjects werden gelöscht
     delete playerObjPointer;
 
     while (!(worldObjects.empty())) {
@@ -639,11 +632,11 @@ void Game::timerEvent(QTimerEvent *event)
     if(step() != 0) {
         throw std::runtime_error("step() wurde nicht ordnungsgemäß beendet");  // Exception, wenn step() nicht 0 zurückgibt
     }
-    /// falls QT Schließ-Button (x) gedrückt wurde (Game::eventFilter()) oder im Hautpmenü exit ausgewählt wurde (Game::step()) beende Spiel
+    // falls QT Schließ-Button (x) gedrückt wurde (Game::eventFilter()) oder im Hautpmenü exit ausgewählt wurde (Game::step()) beende Spiel
     if (exitGameevent == true) {
-        /// beende Audio Thread und lösche Variablen
+        // beende Audio Thread und lösche Variablen
         exitGame();
-        /// Beende Spiel
+        // Beende Spiel
         exit(0);
     }
 }
@@ -673,7 +666,7 @@ void Game::timerEvent(QTimerEvent *event)
 int Game::step() {
     using namespace std::chrono;
 
-    /// Tasten abfragen
+    // Tasten abfragen
     Input::Keyaction lastKey = keyInput->getLastKeyaction();
     Menu *aktStepMenu = aktMenu;
 
@@ -875,7 +868,7 @@ int Game::step() {
 
     // Audio ausgabe außerhalb des If-Statements damit auch in den Menüs Musik ausgegben wird
     audioOutput->updatePlayevents(&audioevents);
-    /// delete List audioStruct elements in list and fill it in the next step again
+    // delete List audioStruct elements in list and fill it in the next step again
     audioevents.clear();
 
 
@@ -1032,19 +1025,21 @@ void Game::evaluateInput() {
 void Game::calculateMovement() {
     using namespace std;               // für std::list
 
-    /// für qDebug (Rupert)
+    // für qDebug (Rupert)
     std::string objecttypes[] = {"Player ", "Tourist", "Securit", "Obstacl", "Plane  ", "Shot   ", "PowerUp", "Boss   "};
     qDebug("Object\tSize\tPosX\tPosY\tSpeed");
     int speedX=0,speedY=0;
 
     list<GameObject*>::iterator it;     // Iterator erstellen
-    /// Schleife startet beim ersten Element und geht bis zum letzen Element durch
+    // Schleife startet beim ersten Element und geht bis zum letzen Element durch
     for(it = worldObjects.begin(); it != worldObjects.end(); ++it) {
         speedX = 0; speedY = 0;         // für Debug
         GameObject *aktObject = *it;
-        MovingObject *aktMovingObject = dynamic_cast<MovingObject*> (aktObject);    // Versuche GameObject in Moving Object umzuwandeln
+        MovingObject *aktMovingObject = dynamic_cast<MovingObject*> (aktObject);
+        // Versuche GameObject in Moving Object umzuwandeln
         if(aktMovingObject != 0) {
-            aktMovingObject->update();          // Wenn der cast klappt, rufe update() auf.
+            // Wenn der cast klappt, rufe update() auf.
+            aktMovingObject->update();
             //falls es sich um einen Gegner handelt feuern
             if ((aktMovingObject->getType() == enemy_security) || (aktMovingObject->getType() == enemy_tourist)){
                 Enemy *aktEnemy = dynamic_cast<Enemy*> (aktMovingObject);
@@ -1548,9 +1543,7 @@ void Game::updateScore() {
 
 
 /**
- * @brief durchläuft die Liste audioStorage, zählt die Cooldowns runter
- *  Die Soundevents die noch laufen, werden an die Liste AudioEvents übergeben. Die fertigen werden gelöscht.
- *
+ * @brief durchläuft die Liste audioStorage und zählt die Audio Cooldowns herunter. Die Soundevents die noch laufen, werden an die Liste AudioEvents übergeben. Die fertigen werden gelöscht.
  * @author Johann, Felix
  */
 void Game::updateAudioevents() {

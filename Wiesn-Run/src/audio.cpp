@@ -18,8 +18,8 @@ Audio::~Audio() {
 
 /**
  * @brief  getSource gibt bei Aufruf den Namen des Objektes zurück welcher welcher dem Pfad in der Ressourcendatenbank entspricht.
- * @return std::string source
- * @author Felix Pfreundtner
+ * @return  std::string source
+ * @author  Felix Pfreundtner
  */
 std::string Audio::getSource() {
     return source;
@@ -27,8 +27,8 @@ std::string Audio::getSource() {
 
 /**
  * @brief  getSample gibt bei Aufruf das Sample an Position = pos der zu Audioobjekt gehörigen Wave Datei mit Bittiefe 16 bit zurück.
- * @return float sample
- * @author Felix Pfreundtner
+ * @return  float sample
+ * @author  Felix Pfreundtner
  */
 float Audio::getSample(int pos) {
         //gebe Sample des Audioobjekts an der Stelle pos zurück
@@ -37,8 +37,8 @@ float Audio::getSample(int pos) {
 
 /**
  * @brief  getSamplenumber gibt bei Aufruf die Anzahl an Samples der zu Audioobjekt gehörigen Wave Datei zurück.
- * @return int samplenumber
- * @author Felix Pfreundtner
+ * @return  int Instanzvariable samplenumber
+ * @author  Felix Pfreundtner
  */
 int Audio::getSamplenumber() {
     return samplenumber;
@@ -47,7 +47,7 @@ int Audio::getSamplenumber() {
 
 /**
  * @brief  readSamples liest bei Aufruf alle Samples der zu Audioobjekt gehörigen Wave Datei in die Variable "samples" ein. Eingelesen werden sollen RIFF Mono Wave Dateien mit 44100Hz Samplerate. Die Bittiefe ist hierbei variabel 8 oder 16bit. Es greift hierfür auf die zum Objekt gehörige, in der Ressourcendatenbank gespeicherte Wave Datei mit Pfadnamen "source" zurück. Die Funktion wertet den fmt Header des Wave File aus und liest im Anschluss den data Chunk ein. Die Bittiefe wird in float konvertiert um eine Weiterbearbeitung der Samples ohne Dynamikverlust durchführen zu können.
- * @author Felix Pfreundtner
+ * @author  Felix Pfreundtner
  */
 void Audio::readSamples() {
     std::string sourcepath; // Pfad zur Wave Datei in den Ressourcendateien
@@ -143,7 +143,9 @@ void Audio::readSamples() {
 
 /**
  * @brief  to16bitSample konvertiert einen 8 bit integer Sample in einen 16 bit Integer Sample. Ziel ist eine einheitlich Bearbeitung der Samples verschiedener Audioobjekte vornehmen zu können.
- * @author Felix Pfreundtner
+ * @param  quint8 sample8bit
+ * @return  qint16 sample16bit
+ * @author  Felix Pfreundtner
  */
 qint16 Audio::to16bitSample(quint8 sample8bit) {
     qint16 sample16bit;
@@ -154,7 +156,7 @@ qint16 Audio::to16bitSample(quint8 sample8bit) {
 
 /**
  * @brief  normalize normalisiert den 16 bit Integer QVector samples. Es wird hierfür die größte Betrag-Amplitude eines Sample in samples bestimmt. Diese Amplitude wird auf den maximalen signed Integer 16 Bit Wert gesetzt. Alle anderen Samples werden entsprechend ihres Verhältnises zur größten Betrag-Amplitude skaliert.
- * @author Felix Pfreundtner
+ * @author  Felix Pfreundtner
  */
 void Audio::normalize() {
     // maxabs speichert die großte Betrag-Amplitude eines Samples aus sample
@@ -164,7 +166,7 @@ void Audio::normalize() {
 
     maxabs = 0;
     // iteriere über alle Samples in samples
-    for (int pos = 0; pos < samples.size(); pos++) {
+    for (unsigned int pos = 0; pos < samples.size(); pos++) {
         maxabspos = abs(samples[pos]);
         // ween die Betrag-Amplitude an pos größer ist als die voherigen Betrag-Amplituden speichere sie in maxabs
         if (maxabspos > maxabs) {
@@ -174,7 +176,7 @@ void Audio::normalize() {
     // normalisiere den QVector samples auf maximale signed Integer 16bit Grenzen
     // iteriere über alle Samples in samples
     if (maxabs != 0) {
-        for (int pos = 0; pos < samples.size(); pos++) {
+        for (unsigned int pos = 0; pos < samples.size(); pos++) {
             samples[pos] = samples[pos] / maxabs * 32767;
         }
     }

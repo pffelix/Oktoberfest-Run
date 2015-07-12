@@ -83,7 +83,7 @@ AudioControl::~AudioControl() {
 
 /**
  * @brief  updatePlayevents aktualsiert nach Aufruf über Game::step alle im Moment abgespielten, in der Liste "playevents" gespeicherten playStruct's mit aktuellen audioStruct's aus der übergebenen Liste audioevents.
- * @param  Qlist audioevents
+ * @param  std::list<struct audioStruct> *audioevents
  * @author  Felix Pfreundtner
  */
 void AudioControl::updatePlayevents(std::list<struct audioStruct> *audioevents){
@@ -185,7 +185,6 @@ void AudioControl::updatePlayevents(std::list<struct audioStruct> *audioevents){
 
 /**
  * @brief  playInitialize initialisiert die Abspielbibliothek Portaudio, öffenet den PortAudio Stream pastream und startet eine Callback Audiowiedergabe
- * @param  Qlist audioevents
  * @author  Felix Pfreundtner
  */
 void AudioControl::playInitialize(){
@@ -229,8 +228,13 @@ void AudioControl::playInitialize(){
 
 
 /**
- * @brief  playCallback wird von Portaudio aufgerufen wenn nahezu alle Audiosamples abgespielt sind und neu Audiosamples benötigt werden.
- * @param  Qlist audioevents
+ * @brief  instancepaCallback wird von Portaudio aufgerufen wenn nahezu letzer Audioblock abgespielt wurde und neu Audiosamples benötigt werden.
+ * @param  const void *inputBuffer
+ * @param  void *outputBuffer
+ * @param  unsigned long framesPerBuffer,
+ * @param  const PaStreamCallbackTimeInfo* timeInfo,
+ * @param  PaStreamCallbackFlags statusFlags
+ * @return  int returncode
  * @author  Felix Pfreundtner
  */
 int AudioControl::instancepaCallback( const void *inputBuffer, void *outputBuffer,
@@ -311,9 +315,9 @@ int AudioControl::instancepaCallback( const void *inputBuffer, void *outputBuffe
 
     // unlock audioevents
     mtx.unlock();
-    blockcounter += 1;
-    //std::copy ( block, block + BLOCKSIZE, std::back_inserter ( blockcontinue ) );
-    return 0;
+    blockcounter += 1;    
+    int returncode = 0;
+    return returncode;
 }
 
 /**

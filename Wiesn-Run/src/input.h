@@ -14,6 +14,10 @@
 class Input {
 
 public:
+
+    /**
+     * Keyaction definiert alle auszuwertenden Tastenkominbationen Bezeichner
+     */
     enum Keyaction{
         noKeyaction,
         Right,
@@ -24,7 +28,9 @@ public:
         Exit,
         Enter,
     };
-
+    /**
+     * Keyletter definiert alle auszuwertenden Tastatur Buchstaben
+     */
     enum Keyletter{
         noKeyletter,
         a = (int)'a',
@@ -82,6 +88,7 @@ public:
         Backspace = (int)'\b',
     };
 
+    // Funktionen
     Input();
     ~Input();
     void evaluatekeyEvent(QEvent *event);
@@ -91,6 +98,11 @@ public:
     Keyletter getLastKeyletter();
 
 private:
+
+    // Funktionen
+    void updateKeys();
+
+    // Variablen
     /**
      * keyevents speichert die id aller im Momment gepressten Tasten.
      */
@@ -112,7 +124,6 @@ private:
      */
     Keyletter lastKeyletter;
 
-    void updateKeys();
 };
 
 #endif // INPUT_H
