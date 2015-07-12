@@ -1551,7 +1551,7 @@ void Game::updateScore() {
  * @brief durchläuft die Liste audioStorage, zählt die Cooldowns runter
  *  Die Soundevents die noch laufen, werden an die Liste AudioEvents übergeben. Die fertigen werden gelöscht.
  *
- * @author Johann
+ * @author Johann, Felix
  */
 void Game::updateAudioevents() {
 
