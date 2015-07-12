@@ -2,8 +2,7 @@
 #include "portaudio.h"
 
 /**
- * @brief  AudioControl::AudioControl
- *         Konstruktor instanziert ein Objekt der Klasse AudioControl.
+ * @brief  Konstruktor instanziert ein Objekt der Klasse AudioControl.
  * @author  Felix Pfreundtner
  */
 AudioControl::AudioControl() {
@@ -75,8 +74,7 @@ AudioControl::AudioControl() {
 
 
 /**
- * @brief  AudioControl::~AudioControl
- *         Destruktor löscht ein Objekt der Klasse AudioControl
+ * @brief  Destruktor löscht ein Objekt der Klasse AudioControl
  * @author  Felix Pfreundtner
  */
 AudioControl::~AudioControl() {
@@ -84,9 +82,7 @@ AudioControl::~AudioControl() {
 }
 
 /**
- * @brief  updatePlayevents
- *         Nach Aufruf über Game::step aktualisiert updatePlayevents alle im Moment abgespielten, in der Liste
- *         "playevents" gespeicherten playStruct's mit aktuellen audioStruct's aus der übergebenen Liste audioevents.
+ * @brief  updatePlayevents aktualsiert nach Aufruf über Game::step alle im Moment abgespielten, in der Liste "playevents" gespeicherten playStruct's mit aktuellen audioStruct's aus der übergebenen Liste audioevents.
  * @param  Qlist audioevents
  * @author  Felix Pfreundtner
  */
@@ -188,8 +184,7 @@ void AudioControl::updatePlayevents(std::list<struct audioStruct> *audioevents){
 
 
 /**
- * @brief  playInitialize
- *         playInitialize initialisiert die Abspielbibliothek Portaudio, öffenet den PortAudio Stream pastream und startet eine Callback Audiowiedergabe
+ * @brief  playInitialize initialisiert die Abspielbibliothek Portaudio, öffenet den PortAudio Stream pastream und startet eine Callback Audiowiedergabe
  * @param  Qlist audioevents
  * @author  Felix Pfreundtner
  */
@@ -234,9 +229,7 @@ void AudioControl::playInitialize(){
 
 
 /**
- * @brief  playCallback
- *         playCallback wird von Portaudio aufgerufen wenn nahezu alle
- *         Audiosamples abgespielt sind und neu Audiosamples benötigt werden.
+ * @brief  playCallback wird von Portaudio aufgerufen wenn nahezu alle Audiosamples abgespielt sind und neu Audiosamples benötigt werden.
  * @param  Qlist audioevents
  * @author  Felix Pfreundtner
  */
@@ -324,9 +317,7 @@ int AudioControl::instancepaCallback( const void *inputBuffer, void *outputBuffe
 }
 
 /**
- * @brief  AudioControl::playTerminate
- *         Stoppt bei Aufruf PortAudio Audioausgabe, beendet im Anschluss
- *         Portaudio Stream und beendet zuletzt PortAudio.
+ * @brief  playTerminate stoppt bei Aufruf die PortAudio Audioausgabe, beendet im Anschluss den Portaudio Stream und beendet zuletzt PortAudio.
  * @author  Felix Pfreundtner
  */
 void AudioControl::playTerminate(){

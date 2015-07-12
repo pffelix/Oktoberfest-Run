@@ -18,23 +18,23 @@
 #include <mutex>
 
 /**
- * @brief  AudioControl-Klasse
- *         Die AudioControl-Klasse synchronisiert alle Audioausgabeanweisungen und spielt passende Audioobjekte ab.
- *         Eine Instanz dieser Klasse wir innerhalb der game.h angelegt.
- *         Die einzelnen Methoden werden in der audiocontrol.cpp erklärt.
+ * @brief  Die AudioControl-Klasse synchronisiert alle Audioausgabeanweisungen und spielt passende Audioobjekte ab. Eine Instanz dieser Klasse wir innerhalb der game.h angelegt. Die einzelnen Methoden werden in der audiocontrol.cpp erklärt.
  * @author  Felix Pfreundtner
  */
 class AudioControl{
 
 public:
+    AudioControl();
+    ~AudioControl();
+    void playInitialize();
+    void playTerminate();
+    void updatePlayevents(std::list<struct audioStruct> *audioevents);
 
-    typedef struct
-    {
-        float left_phase;
-        float right_phase;
-    }
-    paData;
+private:
 
+    /**
+     * typedef playStruct definiert die Struktur eines Playevents
+     */
     typedef struct {
         /// id des playStruct
         int id;
@@ -51,6 +51,9 @@ public:
 
     } playStruct;
 
+    /**
+     * status Filter enum, welches alle Filter Status Möglichkeiten beinhaltet
+     */
     enum statusFilter {
         no,
         alcohol,
@@ -58,126 +61,83 @@ public:
         lifecritical
     };
 
-    AudioControl();
-    ~AudioControl();
-    void playInitialize();
-    void playTerminate();
-    void updatePlayevents(std::list<struct audioStruct> *audioevents);
-
-    private:
-    /**
-     * @brief  mtx
-     *         mtx ist eine Mutex für playevents.
-     * @author  Felix Pfreundtner
-     */
-    std::mutex mtx;
-    /**
-     * @brief  playevents
-     *         playevents beinhaltet eine Liste mit allen im Moment abgespielten playStructs.
-     * @author  Felix Pfreundtner
-     */
-    std::list<playStruct> playevents;
-    /**
-     * @brief  audioobjects
-     *         audioobjects beinhaltet eine Array mit allen vorhandenen Objekten der Klasse Audio( beispielsweise deren Samples als QVector).
-     * @author  Felix Pfreundtner
-     */
-    std::vector<Audio> audioobjects;
-    /**
-     * @brief  waitinms
-     *         Wartezeit bis zum Beenden von PortAudio in Millisekunden.
-     * @author  Felix Pfreundtner
-     */
-    int waitinms;
-    /**
-     * @brief  playinitializeerror
-     *         playinitializeerror speichert eventuell auftretende Error beim Öffenen und Schließen des PortAudio Streams.
-     * @author  Felix Pfreundtner
-     */
-    PaError playinitializeerror;
-    /**
-     * @brief  callback_pe
-     *         Iterator über Audioevents Liste in PortAudio Callback Funktion. Zur höheren Perfomance bereits hier deklariert.
-     * @author  Felix Pfreundtner
-     */
-    std::list<playStruct>::iterator callback_pe;
-    /**
-     * @brief  max_playevents
-     *         Maximum Number of Playevents without Clipping.
-     * @author  Felix Pfreundtner
-     */
-    int max_playevents;
-    /** @brief  blockcontinue
-     *         Audio Ausgabe blockcontinue mit gemischen Samples aller während der Programmlaufzeit abgespielten block's.
-     * @author  Felix Pfreundtner
-     */
-    std::vector<float> blockcontinue;
-    /**
-     * @brief  blockcounter
-     *         blockcounter zählt die bereits abgespielten Audio Ausgabe Blöcke.
-     * @author  Felix Pfreundtner
-     */    
-    int blockcounter;
-    /**
-     * @brief  mixed_sample
-     *         mixed_sample beinhaltet das aktuell von mixSample() gemixte Sample aller audioEvents.
-     * @author  Felix Pfreundtner
-     */
-    float mixed_sample;
-    /**
-     * @brief  playeventsnumber
-     *         playeventsnumber beinhaltet die Anzahl an aktuelle abzuspielenden audioEvents.
-     *         Float Format da mit diesem Wert in mixsamples effizient gerechnet werden muss ohne Castumwandlung Integer in Float.
-     * @author  Felix Pfreundtner
-     */
-    int playeventsnumber;
-    /**
-     * @brief  pastream
-     *         Erstelle Zeiger auf PortAudio Stream pastream.
-     * @author  Felix Pfreundtner
-     */
-    PaStream *pastream;
-    /**
-     * @brief  paerror
-     *         Erstelle Variable um PortAudio Errors zu speichern.
-     * @author  Felix Pfreundtner
-     */
-    PaError paerror;
-    /**
-     * @brief  status_alcohol_active
-     *         Erstelle Variable welche den aktuellen Filterstatus angibt
-     *         wenn kein Audioevent in der audiovents List den Type status_alcohol hat -> enum none-> 0.
-     *         wenn mindestens ein Audioevent in der audiovents List den Type status_alcohol hat -> enum alcohol-> 1.
-     *         wenn mindestens ein Audioevent in der audiovents List den Type status_life hat -> enum alcohol-> 2.
-     *         wenn mindestens ein Audioevent in der audiovents List den Type status_lifecritical hat -> enum alcohol-> 3.
-
-     * @author  Felix Pfreundtner
-     */
-    int status_filter;
-
-    /// Instanz Callbackfunktion (des von Game.cpp erstellten AudioControl Objekts audioOutput)
-    /// hier kann auf alle gesetzten Instanzvariablen zurückgegriffen werden.
     int instancepaCallback(const void *input, void *output,
                                unsigned long frameCount,
                                const PaStreamCallbackTimeInfo* timeInfo,
                                PaStreamCallbackFlags statusFlags);
 
-    /// Statische Callback Funktion der AudioControl Klasse
+    /**
+     * @brief staticpaCallback ist die Statische Callback Funktion der AudioControl Klasse. Die Funktion wird immer dann aufgerufen, wenn der PortAudio Stream einen neuen Ausgabeblock benötigt, da der letzte abgespielt wurde. Die Funktion ruft die Funktion instancepaCallback auf, welche nicht statisch ist und auf alle instance variablen und Funktionen (des von Game erzeugten AudioControl Ojektes audioOutput) zugreifen kann. Dies ermöglicht einen Einfachen Austasch von Audio Blöcken zwischen Game Thread und Portaudio Wiedergabethread.
+    */
     static int staticpaCallback(
                               const void *input, void *output,
                               unsigned long frameCount,
                               const PaStreamCallbackTimeInfo* timeInfo,
                               PaStreamCallbackFlags statusFlags,
                               void *userData )
-    /// gebe einen Function Pointer auf Instanz Callback Funktion zurück
     {
       return ((AudioControl*)userData)
          ->instancepaCallback(input, output, frameCount, timeInfo, statusFlags);
     }
 
-    void play();
+    /**
+     * mtx ist eine Mutex, welche zwischen dem Game Thread und dem PortAudio Ausgabe Thread die Liste playevents lockt.
+     */
+    std::mutex mtx;
+    /**
+     * playevents beinhaltet eine Liste mit allen im Moment abgespielten playStructs.
+     */
+    std::list<playStruct> playevents;
+    /**
+     * audioobjects beinhaltet eine Array mit allen vorhandenen Objekten der Klasse Audio( beispielsweise deren Samples als QVector).
+     */
+    std::vector<Audio> audioobjects;
+    /**
+     * Wartezeit bis zum Beenden von PortAudio in Millisekunden.
+     */
+    int waitinms;
+    /**
+     * playinitializeerror speichert eventuell auftretende Error beim Öffenen und Schließen des PortAudio Streams.
+     */
+    PaError playinitializeerror;
+    /**
+     * Iterator über Audioevents Liste in PortAudio Callback Funktion. Zur höheren Perfomance bereits hier deklariert.
+     * @author  Felix Pfreundtner
+     */
+    std::list<playStruct>::iterator callback_pe;
+    /**
+     * Maximum Number of Playevents without Clipping.
+     */
+    int max_playevents;
+    /**
+     * Audio Ausgabe blockcontinue mit gemischen Samples aller während der Programmlaufzeit abgespielten block's.
+     */
+    std::vector<float> blockcontinue;
+    /**
+     * blockcounter zählt die bereits abgespielten Audio Ausgabe Blöcke.
+     */    
+    int blockcounter;
+    /**
+     * mixed_sample beinhaltet das aktuell von mixSample() gemixte Sample aller audioEvents.
+     */
+    float mixed_sample;
+    /**
+     * playeventsnumber beinhaltet die Anzahl an aktuelle abzuspielenden audioEvents. Float Format da mit diesem Wert in mixsamples effizient gerechnet werden muss ohne Castumwandlung Integer in Float.
+     */
+    int playeventsnumber;
+    /**
+     * Erstelle Zeiger auf PortAudio Stream pastream.
+     */
+    PaStream *pastream;
+    /**
+     * Erstelle Variable um PortAudio Errors zu speichern.
+     */
+    PaError paerror;
+    /**
+     * Erstelle Variable welche den aktuellen Filterstatus angibt wenn kein Audioevent in der audiovents List den Type status_alcohol hat -> enum none-> 0. wenn mindestens ein Audioevent in der audiovents List den Type status_alcohol hat -> enum alcohol-> 1. wenn mindestens ein Audioevent in der audiovents List den Type status_life hat -> enum alcohol-> 2. wenn mindestens ein Audioevent in der audiovents List den Type status_lifecritical hat -> enum alcohol-> 3.
+     */
+    int status_filter;
 
-protected:
 };
 
 #endif // AUDIOCONTROL_H
