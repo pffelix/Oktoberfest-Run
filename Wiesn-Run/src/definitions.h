@@ -15,6 +15,10 @@
 #include <list>
 #include <chrono>
 
+/** @file  defintions.h
+ * @brief  defintions beinhaltet enum und struct Definitionen.
+ */
+
 /**
  * @brief Enumerator für den aktuellen Spielstatus
  * ähnlich zu einer StateMachine
@@ -217,7 +221,7 @@ typedef struct {
 } audioCooldownStruct;
 
 /**
- * @var  typedef struct audioDistanceStruct
+ * @typdef  typedef struct audioDistanceStruct
  * @brief  Typdef Struct mit Konstanten für die Distance jedes Audiotypes. In diesen Konstanten wird festgelegt wie weit entfernt ein Event (mit "id=...) eines audioTypes vom Spieler standardmäßig auftritt [Werbereicht 0 (beim spieler) bis 1(maximale Distanz des Fensters). Ist die Konstante -1 ist die Distance eines Events vom Typ audioType variabel und muss von der Gamelogik bestimmt werden.
  * @author  Felix
  */
