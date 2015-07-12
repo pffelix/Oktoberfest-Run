@@ -19,7 +19,7 @@ AudioControl::AudioControl() {
     audioobjects.insert(audioobjects.begin() + audioType::scene_enemy_boss, Audio("scene_enemy_boss")); // 16bit
     //source: http://soundbible.com/1522-Balloon-Popping.html
     audioobjects.insert(audioobjects.begin() + audioType::scene_collision_obstacle, Audio("scene_collision_obstacle")); // 16bit
-    //source: http://www.freesound.org/people/qubodup/sounds/169725/
+    /// source: http://www.freesound.org/people/qubodup/sounds/169725/
     audioobjects.insert(audioobjects.begin() + audioType::scene_collision_enemy, Audio("scene_collision_enemy")); // 16bit
     //source: http://www.freesound.org/people/thecheeseman/sounds/44430/
     audioobjects.insert(audioobjects.begin() + audioType::scene_collision_player, Audio("scene_collision_player")); // 16bit
@@ -68,7 +68,7 @@ AudioControl::AudioControl() {
     // Ein Normalisieren aller Ausgabeblöcke wäre möglich, würde jedoch 2D Audio nicht erlauben,
     // da auch die Dynamik zwischen zwei Blöcken normalisiert wird
     // -> Distanz- und somit Lautstärkeänderungen von Objekten werden mit normalisiert.
-    max_playevents = 5;
+    max_playevents = 7;
 
 }
 
