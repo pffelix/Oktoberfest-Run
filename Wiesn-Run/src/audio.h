@@ -18,12 +18,7 @@
 #include <QtGlobal>
 
 /**
- * @brief  Audio-Klasse
- *         Die Audio-Klasse erzeugt Audioobjekte.
- *         Mehrere Instanzen dieser Klasse werden in der Klasse AudioControl erstellt.
- *         Jedes Audioobjekt liest die zum Ojekt gehörigen Audiosamples ein und übergibt diese an die Kontrollklasse
- *         Audiocontrol, welche im Anschluss die Samples aller Objekte mischt und abspielt.
- *         Die einzelnen Methoden werden in der audio.cpp erklärt.
+ * @brief  Die Audio-Klasse erzeugt Audioobjekte. Mehrere Instanzen dieser Klasse werden in der Klasse AudioControl erstellt. Jedes Audioobjekt liest die zum Ojekt gehörigen Audiosamples ein und übergibt diese an die Kontrollklasse. Audiocontrol, welche im Anschluss die Samples aller Objekte mischt und abspielt. Die einzelnen Methoden werden in der audio.cpp erklärt.
  * @author  Felix Pfreundtner
  */
 class Audio{
@@ -38,32 +33,22 @@ public:
 
 private:
     /**
-     * @brief  source
-     *         source speichert den namen des aktuellen objekts als string
-     *         welcher dem namen im ressourcenpfad entspricht.
-     * @author  Felix Pfreundtner
+     * source speichert den namen des aktuellen objekts als string welcher dem namen im ressourcenpfad entspricht.
      */
     std::string source;
 
     /**
-     * @brief  samples
-     *         samples speichert die normalisierten samples des Audio
-     *         Objekts als QVektor mit 32 bit float Werten.
-     * @author  Felix Pfreundtner
+     * samples speichert die normalisierten samples des Audio Objekts als QVektor mit 32 bit float Werten.
      */
     std::vector<float> samples;
     /**
-     * @brief  samplenumber
-     *         samplenumber speichert die Anzahl an Samples in der gesamten Audio Datei
-     *         des Audio Objekts als Integer.
-     * @author  Felix Pfreundtner
+     * samplenumber speichert die Anzahl an Samples in der gesamten Audio Datei des Audio Objekts als Integer.
      */    
     int samplenumber;
 
     void readSamples();
     qint16 to16bitSample(quint8 sample8bit);
     void normalize();    
-protected:
 };
 
 #endif // AUDIO_H

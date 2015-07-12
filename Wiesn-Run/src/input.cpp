@@ -42,7 +42,7 @@ void Input::evaluatekeyEvent(QEvent *event) {
  * @author  Felix Pfreundtner
  */
 void Input::updateKeys() {
-    /// update alle für das Gameplay relevante Tasten(-kombinationen)
+    // update alle für das Gameplay relevante Tasten(-kombinationen)
     keyactions.clear();
     if(keyevents.contains(Qt::Key_Right)) {
             keyactions += Keyaction::Right;
@@ -78,7 +78,7 @@ void Input::updateKeys() {
             qDebug("Enter");
     }
 
-    /// update für die Tastatureingabe relevante Tasten(-kombinationen)
+    // update für die Tastatureingabe relevante Tasten(-kombinationen)
     keyletters.clear();
     if(keyevents.contains(Qt::Key_A)) {
         if(keyevents.contains(Qt::Key_Shift)) {
