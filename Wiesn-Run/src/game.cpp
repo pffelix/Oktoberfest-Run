@@ -791,8 +791,6 @@ int Game::step() {
         if(lastKey == Input::Keyaction::Exit) {
             setState(gameMenuBreak);
         }
-        /// @todo Levelende hier abfragen
-
         worldObjects.sort(compareGameObjects());
         qDebug("---Nächster Zeitschritt---");
         timeNeeded("startLoop");
