@@ -96,7 +96,7 @@ private:
 
     /**
      * @var  std::mutex mtx
-     * @brief  mtx ist eine Mutex, welche zwischen dem Game Thread und dem PortAudio Ausgabe Thread die Liste playevents lockt.
+     * @brief  mtx ist eine Mutex, welche zwischen dem Game Thread und dem PortAudio Ausgabe Thread vermittelt. Es muss die gleichzeitig von Game über updatePlayevents() beschriebene und PortAudio über instancepaCallback() gelesene Liste playevents gelockt werden.
      */
     std::mutex mtx;
     /**
@@ -119,11 +119,6 @@ private:
      * @brief  playinitializeerror speichert eventuell auftretende Error beim Öffenen und Schließen des PortAudio Streams.
      */
     PaError playinitializeerror;
-    /**
-     * @var  std::list<playStruct>::iterator callback_pe
-     * @brief  callback_pe ist ein Iterator über die Audioevents Liste, welcher in der PortAudio Callback Funktion Verwendung findet.
-     */
-    std::list<playStruct>::iterator callback_pe;
     /**
      * @var int max_playevents
      * @brief  max_playevents definiert die maximale Anzahl an abgespielten playEvents ohne Clipping Effekte.

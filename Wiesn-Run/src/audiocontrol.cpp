@@ -97,7 +97,7 @@ void AudioControl::updatePlayevents(std::list<struct audioStruct> *audioevents){
     std::list<playStruct>::iterator pe;
     // intialsiere status_filter mit no (Annahme kein Audioevent mit type status_alcohol / status_life / status_lifecritical in audioevents Liste)
     status_filter = statusFilter::no;
-    // lock audioevents
+    // lock mutex
     mtx.lock();
 
     // initialisiere die Abspielinformation aller playstructs in playevents auf false (verhindere weiteres abspielen im nächsten Step)
@@ -170,7 +170,7 @@ void AudioControl::updatePlayevents(std::list<struct audioStruct> *audioevents){
     }
     playeventsnumber = playevents.size();
 
-    // unlock audioevents
+    // unlock mutex
     mtx.unlock();
 }
 
@@ -243,64 +243,69 @@ int AudioControl::instancepaCallback( const void *inputBuffer, void *outputBuffe
     // keine statusFlags nötig, verhindere Warnmeldung "unbenutzter Parameter statusFlags"
     (void) statusFlags;
 
-    // lock audioevents
+    // lock mutex
     mtx.lock();
     for(unsigned int block_pos=0; block_pos<framesPerBuffer; block_pos++ ) {
 
         // Berechne Sample Ausgabe für aktuellen Blockwert aus Samples aller Audiovents
         mixed_sample = 0;
         // für alle aktuell abzuspielenden Audioevents
-        for (std::list<playStruct>::iterator callback_pe = playevents.begin(); callback_pe != playevents.end(); callback_pe++) {
+        for (std::list<playStruct>::iterator pe = playevents.begin(); pe != playevents.end(); pe++) {
+            // mixed:sample_keinfilter = sample(aktuell Position Audioevent)*aktuelle_relative_lautstärke_audioevent/anzahl_maximaler_playevents
+            mixed_sample += pe->audioobject->getSample(pe->position) * pe->volume / max_playevents;
 
             // wähle aktuell anzuwenden Filter aus
             switch (status_filter) {
                 // kein Filter anwenden
-                case statusFilter::no:
-                // mixed:sample_keinfilter = sample(aktuell Position Audioevent)*aktuelle_relative_lautstärke_audioevent/anzahl_maximaler_playevents
-                    mixed_sample += callback_pe->audioobject->getSample(callback_pe->position) * callback_pe->volume / max_playevents;
+                case statusFilter::lifecritical:
                 // erhöhe Abspielposition des aktuell iterierten Audiovents um ein Sample
-                    callback_pe->position += 1;
+                    pe->position += 1;
                     break;
 
                 // Alkohol Filter anwenden
-                // Verzögere den Spielsound im Zeitbereich um 1 Sample pro Schritt (50% Verzögerung, ausgenommen betrunkenes Gerede)
+                // Verzögere den Spielsound im Zeitbereich um 1 Sample pro Schritt (50% Verzögerung)
+                // Ausgenommen betrunkenes Gerede
                 case statusFilter::alcohol:
-                    mixed_sample += callback_pe->audioobject->getSample(callback_pe->position) * callback_pe->volume / max_playevents;
-                    if (callback_pe->type == status_alcohol) {
-                            callback_pe->position += 1;
+                    if (pe->type == status_alcohol) {
+                        // erhöhe Abspielposition des aktuell iterierten Audiovents um ein Sample
+                        pe->position += 1;
                         }
                     else {
                         // falls Blockposition gerade ist
-                        if(block_pos % 2 == 0) {
+                        if(block_pos % 2 != 0) {
                             // erhöhe Abspielposition des aktuell iterierten Audiovents um ein Sample
-                            callback_pe->position += 1;
+                            pe->position += 1;
                          }
                     }
-
                     break;
 
                 // Wenig Leben Filter anwenden
-                // Schwanke die Lautstärke im Zeitbereich mit 2Hz Cosinus Schwingung
-                // mixed_sample = mixed:sample_keinfilter * 2Hz_Lautstärke_Cosinus_Filter
-                // 1Hz_Lautstärke_Cosinus_Filter = Betrag [cos(2 * pi * 2 / 44100 * (Anzahl bisher abgespielte Blöcke * 1024 + Position im Callback Block))]
-                case statusFilter::lifecritical:
-                    mixed_sample += mixed_sample*std::abs(std::cos(2 * M_PI * 1 /44100 *(blockcounter * BLOCKSIZE + block_pos)));
-                    // erhöhe Abspielposition des aktuell iterierten Audiovents um ein Sample
-                    callback_pe->position += 1;
+                // Erhöhe den Spielsound im Zeitbereich um 1 Sample pro Schritt (50% Geschwindigkeitszunahme)
+                // Ausgenommen betrunkenes Gerede
+
+                case statusFilter::no:
+                    if (pe->type == player_walk || pe->type == scene_enemy_boss || pe->type == status_lifecritical) {
+                        // erhöhe Abspielposition des aktuell iterierten Audiovents um zwei Samples
+                        pe->position += 2;
+                        }
+                    else {
+                        // erhöhe Abspielposition des aktuell iterierten Audiovents um ein Sample
+                        pe->position += 1;
+                         }
                     break;
             }
 
             // falls Samples Position des aktuell iterierten Audiovents Anzahl an Samples in Audioobject überschreitet
-            if (callback_pe->position >= callback_pe->audioobject->getSamplenumber()) {
+            if (pe->position >= pe->audioobject->getSamplenumber()) {
                 // Loope Audiosignal -> setzte Samples Position auf Anfang zurück (pos = position-samplenumber)
-                callback_pe->position = callback_pe->position - callback_pe->audioobject->getSamplenumber();
+                pe->position = pe->position - pe->audioobject->getSamplenumber();
             }
         }
         // Füge gemischtes Samples aller Audiovents dem PortAudio Outputbuffer hinzu und Erhöhe Zeiger auf den Outputbuffer um 16bit
         *out++ = mixed_sample;
     }
 
-    // unlock audioevents
+    // unlock mutex
     mtx.unlock();
     blockcounter += 1;    
     int returncode = 0;
