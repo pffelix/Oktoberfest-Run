@@ -738,7 +738,8 @@ int Game::step() {
                     break;
                 case menuBreakId_Resume:
                     window->setScene(levelScene);
-                    setState(gameIsRunning);                                 
+                    setState(gameIsRunning);
+                    levelStartevent = true;
                     break;
                 case menuBreakId_EndGame:
                     //setState(gameMenuStart);
