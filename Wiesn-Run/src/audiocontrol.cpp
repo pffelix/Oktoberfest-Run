@@ -155,29 +155,21 @@ void AudioControl::updatePlayevents(std::list<struct audioStruct> *audioevents){
         }
         // falls playevent im nächsten Step abgespielt werden soll
         else {
-            // falls Type des aktuellen playevents status_alcohol ist (niedrige Priorität)
-            if (pe->type == status_alcohol) {
-                // setze Alkohol Status auf aktiv
-                status_filter = statusFilter::alcohol;
-            }
-            // falls Type des aktuellen playevents status_life ist (mittlere Priorität)
-            if (pe->type == status_life) {
-                // setze Alkohol Status auf aktiv
-                status_filter = statusFilter::life;;
-            }
-            // falls Type des aktuellen playevents status_lifecritical ist (höchste Priorität)
+            // falls Type des aktuellen playevents status_lifecritical ist (niedrigere Filter Priorität)
             if (pe->type == status_lifecritical) {
                 // setze Alkohol Status auf aktiv
                 status_filter = statusFilter::lifecritical;
+            }
+            // falls Type des aktuellen playevents status_alcohol ist (höchste Filter Priorität)
+            if (pe->type == status_alcohol) {
+                // setze Alkohol Status auf aktiv
+                status_filter = statusFilter::alcohol;
             }
             pe++;
         }
     }
     playeventsnumber = playevents.size();
-    //qDebug() << QString("Filter Status: ") << QString::number(status_filter);
-    for (pe = playevents.begin(); pe != playevents.end(); pe++) {
-        //qDebug() << QString("Audio played: ") << QString::fromStdString(pe->audioobject->getSource());
-    }
+
     // unlock audioevents
     mtx.unlock();
 }
@@ -255,54 +247,49 @@ int AudioControl::instancepaCallback( const void *inputBuffer, void *outputBuffe
     mtx.lock();
     for(unsigned int block_pos=0; block_pos<framesPerBuffer; block_pos++ ) {
 
-        // Berechne Sample Ausgabe für aktuellen Block Zeitschritt aus Samples aller Audiovents
+        // Berechne Sample Ausgabe für aktuellen Blockwert aus Samples aller Audiovents
         mixed_sample = 0;
         // für alle aktuell abzuspielenden Audioevents
         for (std::list<playStruct>::iterator callback_pe = playevents.begin(); callback_pe != playevents.end(); callback_pe++) {
-            // lese Sample für aktuelles Audioevent and aktuell iterierter Position ein
-            // mixed:sample_keinfilter = sample(aktuell Position Audioevent)*aktuelle_relative_lautstärke_audioevent/anzahl_maximaler_playevents
-            mixed_sample += callback_pe->audioobject->getSample(callback_pe->position) * callback_pe->volume / max_playevents;
+
             // wähle aktuell anzuwenden Filter aus
-            // erhöhe Abspielposition des aktuell iterierten Audiovents um ein Sample
-            callback_pe->position += 1;
-            /**
             switch (status_filter) {
                 // kein Filter anwenden
-                case 9:
-
+                case statusFilter::no:
+                // mixed:sample_keinfilter = sample(aktuell Position Audioevent)*aktuelle_relative_lautstärke_audioevent/anzahl_maximaler_playevents
+                    mixed_sample += callback_pe->audioobject->getSample(callback_pe->position) * callback_pe->volume / max_playevents;
+                // erhöhe Abspielposition des aktuell iterierten Audiovents um ein Sample
+                    callback_pe->position += 1;
                     break;
 
                 // Alkohol Filter anwenden
-                // Verzögere das Audiosignal im Zeitbereich um 1 Sample in jedem Schritt
-                case 10:
-                    // falls Blockposition gerade ist
-                    if(block_pos % 2 == 0) {
-                        // erhöhe Abspielposition des aktuell iterierten Audiovents um ein Sample
-                        callback_pe->position += 1;
+                // Verzögere den Spielsound im Zeitbereich um 1 Sample pro Schritt (50% Verzögerung, ausgenommen betrunkenes Gerede)
+                case statusFilter::alcohol:
+                    mixed_sample += callback_pe->audioobject->getSample(callback_pe->position) * callback_pe->volume / max_playevents;
+                    if (callback_pe->type == status_alcohol) {
+                            callback_pe->position += 1;
+                        }
+                    else {
+                        // falls Blockposition gerade ist
+                        if(block_pos % 2 == 0) {
+                            // erhöhe Abspielposition des aktuell iterierten Audiovents um ein Sample
+                            callback_pe->position += 1;
+                         }
                     }
+
                     break;
 
                 // Wenig Leben Filter anwenden
-                // Schwanke die Lautstärke im Zeitbereich mit 1Hz Cosinus Schwingung
-                // mixed_sample = mixed:sample_keinfilter * 1Hz_Lautstärke_Cosinus_Filter
-                // 1Hz_Lautstärke_Cosinus_Filter = Betrag [cos(2 * pi * 1 / 44100 * (Anzahl bisher abgespielte Blöcke * 1024 + Position im Callback Block))]
-                case 11:
+                // Schwanke die Lautstärke im Zeitbereich mit 2Hz Cosinus Schwingung
+                // mixed_sample = mixed:sample_keinfilter * 2Hz_Lautstärke_Cosinus_Filter
+                // 1Hz_Lautstärke_Cosinus_Filter = Betrag [cos(2 * pi * 2 / 44100 * (Anzahl bisher abgespielte Blöcke * 1024 + Position im Callback Block))]
+                case statusFilter::lifecritical:
                     mixed_sample += mixed_sample*std::abs(std::cos(2 * M_PI * 1 /44100 *(blockcounter * BLOCKSIZE + block_pos)));
                     // erhöhe Abspielposition des aktuell iterierten Audiovents um ein Sample
                     callback_pe->position += 1;
                     break;
-
-                // Sehr wenig Leben Filter anwenden
-                // Schwanke die Lautstärke im Zeitbereich mit 5Hz Cosinus Schwingung
-                // mixed_sample = mixed:sample_keinfilter * 5Hz_Lautstärke_Cosinus_Filter
-                // 5Hz_Lautstärke_Cosinus_Filter = |cos(2 * pi * 0 / 44100 * (Anzahl bereitsabgespielte Blöcke * 1024 + aktuelle Position Callback Block))|
-                case 12:
-                    mixed_sample += mixed_sample * std::cos(2 * M_PI * 5 /44100 *(blockcounter * BLOCKSIZE + block_pos));
-                    // erhöhe Abspielposition des aktuell iterierten Audiovents um ein Sample
-                    callback_pe->position += 1;
-                    break;
             }
-             */
+
             // falls Samples Position des aktuell iterierten Audiovents Anzahl an Samples in Audioobject überschreitet
             if (callback_pe->position >= callback_pe->audioobject->getSamplenumber()) {
                 // Loope Audiosignal -> setzte Samples Position auf Anfang zurück (pos = position-samplenumber)

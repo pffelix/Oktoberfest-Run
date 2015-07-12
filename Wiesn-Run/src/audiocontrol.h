@@ -61,7 +61,6 @@ private:
     enum statusFilter {
         no,
         alcohol,
-        life,
         lifecritical
     };
 

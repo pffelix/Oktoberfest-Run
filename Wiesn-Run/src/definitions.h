@@ -129,10 +129,9 @@ struct scoreStruct {
 
 
 /**
- * @brief Enum für den Audiotype
- *        In diesen Enum wird der Audiotype in einen Integer gewandelt.
- *        Jede ID wird dabei einem Audiotype zugeordnet welcher angibt welches Audiofile zur ID abgespielt werden soll.
- * @author Felix Pfreundtner
+ * @var  enum audioType
+ * @brief  Enum für den Audiotype. In diesen Enum wird der Audiotype in einen Integer gewandelt. Jede ID wird dabei einem Audiotype zugeordnet welcher angibt welches Audiofile zur ID abgespielt werden soll.
+ * @author  Felix Pfreundtner
  */
 
 enum audioType {
@@ -187,10 +186,9 @@ enum audioType {
 };
 
 /**
- * @brief Typdef Struct mit Konstanten für den Audiocooldown jedes Audiotypes
- *        In diesen Konstanten wird festgelegt wie viele millisekunden für ein Event (mit "id=...") eines audioTypes trotz verschwinden in der Grafik nachwievor audioStructs gesendet werden.
- *        Ein 0 bedeteutet, dass kein Cooldown erfolgt, die Audiostructs werden hier solange gesendet wie das Event sichtbar ist.
- * @author Felix
+ * @var  typedef struct audioCooldownStruct
+ * @brief  Typdef Struct mit Konstanten für den Audiocooldown jedes Audiotypes In diesen Konstanten wird festgelegt wie viele millisekunden für ein Event (mit "id=...") eines audioTypes trotz verschwinden in der Grafik nachwievor audioStructs gesendet werden. Ein 0 bedeteutet, dass kein Cooldown erfolgt, die Audiostructs werden hier solange gesendet wie das Event sichtbar ist.
+ * @author  Felix
  */
 typedef struct {
     std::chrono::duration<int, std::milli> scene_flyingbeer = std::chrono::milliseconds(0);
@@ -219,10 +217,9 @@ typedef struct {
 } audioCooldownStruct;
 
 /**
- * @brief Typdef Struct mit Konstanten für die Distance jedes Audiotypes
- *        In diesen Konstanten wird festgelegt wie weit entfernt ein Event (mit "id=...) eines audioTypes vom Spieler standardmäßig auftritt [Werbereicht 0 (beim spieler) bis 1(maximale Distanz des Fensters).
- *        Ist die Konstante -1 ist die Distance eines Events vom Typ audioType variabel und muss von der Gamelogik bestimmt werden.
- * @author Felix
+ * @var  typedef struct audioDistanceStruct
+ * @brief  Typdef Struct mit Konstanten für die Distance jedes Audiotypes. In diesen Konstanten wird festgelegt wie weit entfernt ein Event (mit "id=...) eines audioTypes vom Spieler standardmäßig auftritt [Werbereicht 0 (beim spieler) bis 1(maximale Distanz des Fensters). Ist die Konstante -1 ist die Distance eines Events vom Typ audioType variabel und muss von der Gamelogik bestimmt werden.
+ * @author  Felix
  */
 typedef struct {
     float scene_flyingbeer = -1;
@@ -248,12 +245,12 @@ typedef struct {
     float background_level3 = 0.3;
     float background_startgame = 0.5;
     float background_levelfinished = 0.0;
-
 } audioDistanceStruct;
 
 
 /**
- * @brief Struktur für einzelne Audio Events
+ * @var  struct audioStruct
+ * @brief  Struktur für einzelne Audio Events
  * AudioControl arbeitet Events von dieser Struktur ab.
  * Jedes Audioevent hat eine eindeutige int "id", einen enum->integer Gruppen "type" und eine float "distance"
  * und ordnet somit jedem Objekt einen Sound zu, wobei sich die Distanzinformation des Sounds ändern kann.
@@ -290,7 +287,7 @@ typedef struct {
  *
  * Ist gerade das Level 1 aktiv so wird in jedem Step ein audioStruct mit "ID=..." und "type=background_level1" an die Liste angehängt.
  * Bei Background Musik ist "distance=0.5". Dies bewirkt dass sie leiser als Playersounds (distance = 0) abgespielt wird.
- * @author Felix Pfreundtner
+ * @author  Felix Pfreundtner
  */
 struct audioStruct {
     int id;
@@ -300,7 +297,8 @@ struct audioStruct {
 
 
 /**
- * @brief Struktur für audioevents mit ihrer abspielzeit als Cooldown
+ * @var  struct audioCooldownstruct
+ * @brief  Struktur für audioevents mit ihrer abspielzeit als Cooldown
  */
 struct audioCooldownstruct {
     struct audioStruct audioEvent;
