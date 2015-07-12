@@ -222,9 +222,10 @@ bool Game::eventFilter(QObject *obj, QEvent *event) {
         // beende Spiel
         exitGameevent = true;
     }
-    else {
+    //else {
+        ///@todo nur auskommentiert, muss entfernt werden
          return QObject::eventFilter(obj, event);
-    }
+    //}
 }
 
 /**
