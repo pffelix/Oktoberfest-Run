@@ -133,6 +133,8 @@ private:
     int stepIntervall;
     /// Spiel Beenden gedrückt
     bool exitGameevent;
+    /// Spiel Starten gedrückt
+    bool levelStartevent;
 
     Player *playerObjPointer;
 

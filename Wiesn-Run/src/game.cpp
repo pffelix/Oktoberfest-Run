@@ -719,22 +719,26 @@ int Game::step() {
                 case menuLevelId_Demo:
                     startNewGame("level_test.txt",1);
                     setState(gameIsRunning);
+                    levelStartevent = true;
                     break;
                 case menuLevelId_Level1:
                     startNewGame("level1.txt",1);
                     setState(gameIsRunning);
+                    levelStartevent = true;
                     break;
                 case menuLevelId_Level2:
                     startNewGame("level2.txt",2);
                     setState(gameIsRunning);
+                    levelStartevent = true;
                     break;
                 case menuLevelId_Level3:
                     startNewGame("level3.txt",3);
                     setState(gameIsRunning);
+                    levelStartevent = true;
                     break;
                 case menuBreakId_Resume:
                     window->setScene(levelScene);
-                    setState(gameIsRunning);
+                    setState(gameIsRunning);                                 
                     break;
                 case menuBreakId_EndGame:
                     //setState(gameMenuStart);
@@ -799,13 +803,7 @@ int Game::step() {
         reduceWorldObjects(playerObjPointer);
 //        timeNeeded("WorldObjects");
 
-        // Audio
-        if (stepCount == 0) {
-            audioCooldownstruct newAudio;
-            newAudio.audioEvent = {5, background_startgame, audioDistance.background_startgame};
-            newAudio.cooldown = audioCooldown.background_startgame;
-            audioStorage.push_back(newAudio);
-        }
+
         updateAudioevents();
 //        timeNeeded("audio");
 
@@ -1556,12 +1554,20 @@ void Game::updateScore() {
  */
 void Game::updateAudioevents() {
 
-    //Hintergrundmusik
+    // Hintergrundmusik
     audioType levelBackground [3] {background_level1, background_level2, background_level3};
     audioStruct newAudio = {(10-gameStats.actLevel), levelBackground[gameStats.actLevel - 1], 0.5};
     audioevents.push_back(newAudio);
 
-    //Warntöne Leben/Alcoholpegel
+    // Anfangsmusik beim Levelstart
+    if (levelStartevent == true) {
+        audioCooldownstruct newAudio;
+        newAudio.audioEvent = {5, background_startgame, audioDistance.background_startgame};
+        newAudio.cooldown = audioCooldown.background_startgame;
+        audioStorage.push_back(newAudio);
+    }
+
+    // Warntöne Leben/Alcoholpegel
     switch (playerObjPointer->getHealth()) {
     case 1: {
         newAudio = {11, status_lifecritical, audioDistance.status_lifecritical};
@@ -1631,11 +1637,25 @@ void Game::updateAudioevents() {
         }
         }
     }
+
     // Zeit seit dem letzten aufruf messen
-    chrono::high_resolution_clock::time_point lastStep = thisStep;
-    thisStep = chrono::high_resolution_clock::now();
-    chrono::duration<int, milli> difference = chrono::duration_cast<std::chrono::milliseconds> (thisStep - lastStep);
-//    std::cout <<difference.count()<<endl;
+    // Zeit zwischen letztem und diesem Step
+    chrono::duration<int, milli> difference;
+    // falls Level gerade begonnen hat überspringe Wechselzeit Menü zu Spiel
+    if (levelStartevent == true) {
+        thisStep = chrono::high_resolution_clock::now();
+        difference =  std::chrono::milliseconds(0);
+        levelStartevent = false;
+    }
+    // andernfalls, berechne vergangene Zeit zwischen letzem und diesem Step
+    else {
+        chrono::high_resolution_clock::time_point lastStep = thisStep;
+        thisStep = chrono::high_resolution_clock::now();
+        difference = chrono::duration_cast<std::chrono::milliseconds> (thisStep - lastStep);
+    //    std::cout <<difference.count()<<endl;
+    }
+
+
 
     // Cooldown audios weiterzählen und bei ablauf löschen
     for (std::list<audioCooldownstruct>::iterator it = audioStorage.begin(); it != audioStorage.end(); it++) {
