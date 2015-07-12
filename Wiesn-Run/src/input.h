@@ -8,10 +8,7 @@
 #include <QKeyEvent>
 
 /**
- * @brief  Input-Klasse
- *         Die Input-Klasse aktualisiert die für das Spiel relevanten Tastatureingaben.
- *         Eine Instanz dieser Klasse wir innerhalb der game.h angelegt.
- *         Die einzelnen Methoden werden in der input.cpp erklärt.
+ * @brief  Die Input-Klasse aktualisiert die für das Spiel relevanten Tastatureingaben. Eine Instanz dieser Klasse wir innerhalb der game.h angelegt.
  * @author  Felix Pfreundtner
  */
 class Input {
@@ -95,35 +92,23 @@ public:
 
 private:
     /**
-     * @brief  keyevents
-     *         keyevents speichert die id aller im Momment gepressten Tasten.
-     * @author  Felix Pfreundtner
+     * keyevents speichert die id aller im Momment gepressten Tasten.
      */
     QSet<int> keyevents;
     /**
-     * @brief  keyactions
-     *         Die Variable keyactions speichert die id aller im Moment
-     *         gepressten Tastenkombinationen, welche für das Spiel relevant sind.
-     * @author  Felix Pfreundtner
+     * Die Variable keyactions speichert die id aller im Moment gepressten Tastenkombinationen, welche für das Spiel relevant sind.
      */
     QSet<int> keyactions;
     /**
-     * @brief  keyletters
-     *         Die Variable keyletters speichert die die Buchstababen als "strings" aller im Moment
-     *         gepressten Buchstaben Tasten.
-     * @author  Felix Pfreundtner
+     * Die Variable keyletters speichert die die Buchstababen als "strings" aller im Moment gepressten Buchstaben Tasten.
      */
     std::set<char> keyletters;
     /**
-     * @brief  lastKeyaction
-     *         Die Variable lastKeyaction speichert die letzte gedrückte Tastenkombination als Enum Keyaction
-     * @author  Felix Pfreundtner
+     * Die Variable lastKeyaction speichert die letzte gedrückte Tastenkombination als Enum Keyaction
      */
     Keyaction lastKeyaction;
     /**
-     * @brief  lastKeyletter
-     *         Die Variable lastKeyletter speichert den letzten gedrückten Buchstaben als Enum Keyletter
-     * @author  Felix Pfreundtner
+     * Die Variable lastKeyletter speichert den letzten gedrückten Buchstaben als Enum Keyletter
      */
     Keyletter lastKeyletter;
 

@@ -246,7 +246,7 @@ typedef struct {
     float background_level1 = 0.3;
     float background_level2 = 0.3;
     float background_level3 = 0.3;
-    float background_startgame = 0.0;
+    float background_startgame = 0.3;
     float background_levelfinished = 0.0;
 
 } audioDistanceStruct;
