@@ -7,53 +7,53 @@
  */
 AudioControl::AudioControl() {
 
-    // erstelle für jede objektgruppe "type" ein audio Objekt welches unter anderem die Samples beinhaltet
+    /// erstelle für jede objektgruppe "type" ein audio Objekt welches unter anderem die Samples beinhaltet
     audioobjects.reserve(23);
-    //source: http://soundbible.com/1247-Wind.html
+    /// Quelle scene_flyingbeer: http://soundbible.com/1247-Wind.html
     audioobjects.insert(audioobjects.begin() + audioType::scene_flyingbeer, Audio("scene_flyingbeer")); // 16bit
-    //source: http://www.freesound.org/people/Reitanna/sounds/241215/
+    /// Quelle scene_enemy_tourist: http://www.freesound.org/people/Reitanna/sounds/241215/
     audioobjects.insert(audioobjects.begin() + audioType::scene_enemy_tourist, Audio("scene_enemy_tourist")); // 16bit
-    //source: http://www.freesound.org/people/Robinhood76/sounds/195414/
+    /// Quelle scene_enemy_security: http://www.freesound.org/people/Robinhood76/sounds/195414/
     audioobjects.insert(audioobjects.begin() + audioType::scene_enemy_security, Audio("scene_enemy_security")); // 16bit
-    //source: http://soundbible.com/1501-Buzzer.html
+    /// Quelle scene_enemy_boss: http://soundbible.com/1501-Buzzer.html
     audioobjects.insert(audioobjects.begin() + audioType::scene_enemy_boss, Audio("scene_enemy_boss")); // 16bit
-    //source: http://soundbible.com/1522-Balloon-Popping.html
+    /// Quelle scene_collision_obstacle: http://soundbible.com/1522-Balloon-Popping.html
     audioobjects.insert(audioobjects.begin() + audioType::scene_collision_obstacle, Audio("scene_collision_obstacle")); // 16bit
-    /// source: http://www.freesound.org/people/qubodup/sounds/169725/
+    /// Quelle scene_collision_enemy: http://www.freesound.org/people/qubodup/sounds/169725/
     audioobjects.insert(audioobjects.begin() + audioType::scene_collision_enemy, Audio("scene_collision_enemy")); // 16bit
-    //source: http://www.freesound.org/people/thecheeseman/sounds/44430/
+    /// Quelle scene_collision_player: http://www.freesound.org/people/thecheeseman/sounds/44430/
     audioobjects.insert(audioobjects.begin() + audioType::scene_collision_player, Audio("scene_collision_player")); // 16bit
-    //source: http://helios.augustana.edu/~dr/105/wav/glasbk.wav
+    /// Quelle scene_collision_flyingbeer: http://helios.augustana.edu/~dr/105/wav/glasbk.wav
     audioobjects.insert(audioobjects.begin() + audioType::scene_collision_flyingbeer, Audio("scene_collision_flyingbeer")); // 16bit
-    //source: http://www.freesound.org/people/edhutschek/sounds/215634/
+    /// Quelle powerup_beer: http://www.freesound.org/people/edhutschek/sounds/215634/
     audioobjects.insert(audioobjects.begin() + audioType::powerup_beer, Audio("powerup_beer")); // 16bit
-    //source: https://www.freesound.org/people/bassboybg/sounds/264544/
+    /// Quelle powerup_food: https://www.freesound.org/people/bassboybg/sounds/264544/
     audioobjects.insert(audioobjects.begin() + audioType::powerup_food, Audio("powerup_food")); // 16bit
-    //source: http://www.freesound.org/people/afleetingspeck/sounds/151180/
+    /// Quelle status_alcohol: http://www.freesound.org/people/afleetingspeck/sounds/151180/
     audioobjects.insert(audioobjects.begin() + audioType::status_alcohol, Audio("status_alcohol")); // 16bit
-    //source: http://soundbible.com/1612-Slow-HeartBeat.html
+    /// Quelle status_life: http://soundbible.com/1612-Slow-HeartBeat.html
     audioobjects.insert(audioobjects.begin() + audioType::status_life, Audio("status_life")); // 16bit
-    //source: http://soundbible.com/1612-Slow-HeartBeat.html
+    /// Quelle status_lifecritical: http://soundbible.com/1612-Slow-HeartBeat.html
     audioobjects.insert(audioobjects.begin() + audioType::status_lifecritical, Audio("status_lifecritical")); // 16bit
-    //source: http://www.freesound.org/people/Robinhood76/sounds/256469/
+    /// Quelle status_dead: http://www.freesound.org/people/Robinhood76/sounds/256469/
     audioobjects.insert(audioobjects.begin() + audioType::status_dead, Audio("status_dead")); // 16bit
-    //source: http://www.arts.rpi.edu/public_html/ruiz/VES01/sebram/final/walk_crop.wav
+    /// Quelle player_walk: http://www.arts.rpi.edu/public_html/ruiz/VES01/sebram/final/walk_crop.wav
     audioobjects.insert(audioobjects.begin() + audioType::player_walk, Audio("player_walk")); // 16bit
-    //source: http://soundbible.com/266-Boing-Cartoonish.html
+    /// Quelle player_jump: http://soundbible.com/266-Boing-Cartoonish.html
     audioobjects.insert(audioobjects.begin() + audioType::player_jump, Audio("player_jump")); // 16bit
-    //source: http://www.theholidayspot.com/oktoberfest/music/Octoberfest%20--%20Beerdrinking%20song%28Bavarian%29.wma
+    /// Quelle background_menu: http://www.theholidayspot.com/oktoberfest/music/Octoberfest%20--%20Beerdrinking%20song%28Bavarian%29.wma
     audioobjects.insert(audioobjects.begin() + audioType::background_menu, Audio("background_menu")); // 16bit
-    //source: http://soundbible.com/1563-Pacman-Introduction-Music.html
+    /// Quelle background_highscore: http://soundbible.com/1563-Pacman-Introduction-Music.html
     audioobjects.insert(audioobjects.begin() + audioType::background_highscore, Audio("background_highscore")); // 16bit
-    //source: http://soundbible.com/1763-Ambience-Casino.html
+    /// Quelle background_level1: http://soundbible.com/1763-Ambience-Casino.html
     audioobjects.insert(audioobjects.begin() + audioType::background_level1, Audio("background_level1")); // 16bit
-    //source: http://www.freesound.org/people/Kyster/sounds/122789/
+    /// Quelle background_level2: http://www.freesound.org/people/Kyster/sounds/122789/
     audioobjects.insert(audioobjects.begin() + audioType::background_level2, Audio("background_level2")); // 16bit
-    //source: http://www.freesound.org/people/Westmed/sounds/239538/
+    /// Quelle background_level3: http://www.freesound.org/people/Westmed/sounds/239538/
     audioobjects.insert(audioobjects.begin() + audioType::background_level3, Audio("background_level3")); // 16bit
-    //source: http://www.freesound.org/people/Harbour11/sounds/194625/
+    /// Quelle background_startgame: http://www.freesound.org/people/Harbour11/sounds/194625/
     audioobjects.insert(audioobjects.begin() + audioType::background_startgame, Audio("background_startgame")); // 16bit
-    //source: http://soundbible.com/1823-Winning-Triumphal-Fanfare.html
+    /// Quelle background_levelfinished: http://soundbible.com/1823-Winning-Triumphal-Fanfare.html
     audioobjects.insert(audioobjects.begin() + audioType::background_levelfinished, Audio("background_levelfinished")); // 16bit
 
     // setzte Status Filter auf kein Filter
