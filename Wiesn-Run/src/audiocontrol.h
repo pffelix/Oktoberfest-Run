@@ -35,7 +35,8 @@ public:
 private:
 
     /**
-     * playStruct definiert die Struktur eines Playevents
+     * @var  typedef struct playStruct
+     * @brief  playStruct definiert die Struktur eines Playevents
      */
     typedef struct {
         /// id des playStruct
@@ -54,7 +55,8 @@ private:
     } playStruct;
 
     /**
-     * statusFilter definiert alle Audio Filter Status Optionen
+     * @var  enum statusFilter
+     * @brief  statusFilter definiert alle Audio Filter Status Optionen
      */
     enum statusFilter {
         no,
@@ -94,56 +96,68 @@ private:
     // Variablen
 
     /**
-     * mtx ist eine Mutex, welche zwischen dem Game Thread und dem PortAudio Ausgabe Thread die Liste playevents lockt.
+     * @var  std::mutex mtx
+     * @brief  mtx ist eine Mutex, welche zwischen dem Game Thread und dem PortAudio Ausgabe Thread die Liste playevents lockt.
      */
     std::mutex mtx;
     /**
-     * playevents beinhaltet eine Liste mit allen im Moment abgespielten playStructs.
+     * @var  std::list<playStruct> playevents
+     * @brief  playevents beinhaltet eine Liste mit allen im Moment abgespielten playStructs.
      */
     std::list<playStruct> playevents;
     /**
-     * audioobjects beinhaltet eine Array mit allen vorhandenen Objekten der Klasse Audio( beispielsweise deren Samples als QVector).
+     * @var  std::vector<Audio> audioobjects
+     * @brief  audioobjects beinhaltet eine Array mit allen vorhandenen Objekten der Klasse Audio( beispielsweise deren Samples als QVector).
      */
     std::vector<Audio> audioobjects;
     /**
-     * waitinms speichert die wartezeit bis zum Beenden von PortAudio in Millisekunden.
+     * @var  int waitinms
+     * @brief  waitinms speichert die wartezeit bis zum Beenden von PortAudio in Millisekunden.
      */
     int waitinms;
     /**
-     * playinitializeerror speichert eventuell auftretende Error beim Öffenen und Schließen des PortAudio Streams.
+     * @var  PaError playinitializeerror
+     * @brief  playinitializeerror speichert eventuell auftretende Error beim Öffenen und Schließen des PortAudio Streams.
      */
     PaError playinitializeerror;
     /**
-     * callback_pe ist ein Iterator über die Audioevents Liste, welcher in der PortAudio Callback Funktion Verwendung findet.
-     * @author  Felix Pfreundtner
+     * @var  std::list<playStruct>::iterator callback_pe
+     * @brief  callback_pe ist ein Iterator über die Audioevents Liste, welcher in der PortAudio Callback Funktion Verwendung findet.
      */
     std::list<playStruct>::iterator callback_pe;
     /**
-     * max_playevents definiert die maximale Anzahl an abgespielten playEvents ohne Clipping Effekte.
+     * @var int max_playevents
+     * @brief  max_playevents definiert die maximale Anzahl an abgespielten playEvents ohne Clipping Effekte.
      */
     int max_playevents;
     /**
-     * blockcounter zählt die bereits abgespielten Audio Ausgabe Blöcke.
+     * @var  int blockcounter
+     * @brief  blockcounter zählt die bereits abgespielten Audio Ausgabe Blöcke.
      */    
     int blockcounter;
     /**
-     * mixed_sample beinhaltet das aktuell von mixSample() gemixte Sample aller audioEvents.
+     * @var  float mixed_sample
+     * @brief  mixed_sample beinhaltet das aktuell von mixSample() gemixte Sample aller audioEvents.
      */
     float mixed_sample;
     /**
-     * playeventsnumber beinhaltet die Anzahl an aktuelle abzuspielenden audioEvents. Float Format da mit diesem Wert in mixsamples effizient gerechnet werden muss ohne Castumwandlung Integer in Float.
+     * @var  int playeventsnumber
+     * @brief  playeventsnumber beinhaltet die Anzahl an aktuelle abzuspielenden audioEvents. Float Format da mit diesem Wert in mixsamples effizient gerechnet werden muss ohne Castumwandlung Integer in Float.
      */
     int playeventsnumber;
     /**
-     * pastream ist ein Zeiger auf den PortAudio Stream.
+     * @var  PaStream *pastream
+     * @brief  pastream ist ein Zeiger auf den PortAudio Stream.
      */
     PaStream *pastream;
     /**
-     * paerror speichert einen eventuellen PortAudio Error.
+     * @var  PaError paerror
+     * @brief  paerror speichert einen eventuellen PortAudio Error.
      */
     PaError paerror;
     /**
-     * status_filter gibt den Filterstatus an. Wenn kein Audioevent in der audiovents List den Type status_alcohol hat -> enum none-> 0. Wenn mindestens ein Audioevent in der audiovents List den Type status_alcohol hat -> enum alcohol-> 1. Wenn mindestens ein Audioevent in der audiovents List den Type status_life hat -> enum alcohol-> 2. Wenn mindestens ein Audioevent in der audiovents List den Type status_lifecritical hat -> enum alcohol-> 3.
+     * @var  status_filter
+     * @brief  status_filter gibt den Filterstatus an. Wenn kein Audioevent in der audiovents List den Type status_alcohol hat -> enum none-> 0. Wenn mindestens ein Audioevent in der audiovents List den Type status_alcohol hat -> enum alcohol-> 1. Wenn mindestens ein Audioevent in der audiovents List den Type status_life hat -> enum alcohol-> 2. Wenn mindestens ein Audioevent in der audiovents List den Type status_lifecritical hat -> enum alcohol-> 3.
      */
     int status_filter;
 

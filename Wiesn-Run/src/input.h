@@ -16,7 +16,8 @@ class Input {
 public:
 
     /**
-     * Keyaction definiert alle auszuwertenden Tastenkominbationen Bezeichner
+     * @var  enum Keyaction
+     * @brief  Keyaction definiert alle auszuwertenden Tastenkominbationen Bezeichner
      */
     enum Keyaction{
         noKeyaction,
@@ -29,7 +30,8 @@ public:
         Enter,
     };
     /**
-     * Keyletter definiert alle auszuwertenden Tastatur Buchstaben
+     * @var  enum Keyletter
+     * @brief  Keyletter definiert alle auszuwertenden Tastatur Buchstaben
      */
     enum Keyletter{
         noKeyletter,
@@ -104,23 +106,28 @@ private:
 
     // Variablen
     /**
-     * keyevents speichert die id aller im Momment gepressten Tasten.
+     * @var  QSet<int> keyevents
+     * @brief  keyevents speichert die id aller im Momment gepressten Tasten.
      */
     QSet<int> keyevents;
     /**
-     * Die Variable keyactions speichert die id aller im Moment gepressten Tastenkombinationen, welche für das Spiel relevant sind.
+     * @var  QSet<int> keyactions
+     * @brief  Die Variable keyactions speichert die id aller im Moment gepressten Tastenkombinationen, welche für das Spiel relevant sind.
      */
     QSet<int> keyactions;
     /**
-     * Die Variable keyletters speichert die die Buchstababen als "strings" aller im Moment gepressten Buchstaben Tasten.
+     * @var  std::set<char> keyletters
+     * @brief  Die Variable keyletters speichert die die Buchstababen als "strings" aller im Moment gepressten Buchstaben Tasten.
      */
     std::set<char> keyletters;
     /**
-     * Die Variable lastKeyaction speichert die letzte gedrückte Tastenkombination als Enum Keyaction
+     * @var  Keyaction lastKeyaction
+     * @brief  Die Variable lastKeyaction speichert die letzte gedrückte Tastenkombination als Enum Keyaction
      */
     Keyaction lastKeyaction;
     /**
-     * Die Variable lastKeyletter speichert den letzten gedrückten Buchstaben als Enum Keyletter
+     * @var  Keyletter lastKeyletter
+     * @brief  Die Variable lastKeyletter speichert den letzten gedrückten Buchstaben als Enum Keyletter
      */
     Keyletter lastKeyletter;
 

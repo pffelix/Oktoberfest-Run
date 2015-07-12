@@ -41,16 +41,19 @@ private:
 
     // Variablen
     /**
-     * source speichert den namen des aktuellen objekts als string welcher dem namen im ressourcenpfad entspricht.
+     * @var  std::string source
+     * @brief  source speichert den namen des aktuellen objekts als string welcher dem namen im ressourcenpfad entspricht.
      */
     std::string source;
 
     /**
-     * samples speichert die normalisierten samples des Audio Objekts als QVektor mit 32 bit float Werten.
+     * @var std::vector<float> samples
+     * @brief samples speichert die normalisierten samples des Audio Objekts als QVektor mit 32 bit float Werten.
      */
     std::vector<float> samples;
     /**
-     * samplenumber speichert die Anzahl an Samples in der gesamten Audio Datei des Audio Objekts als Integer.
+     * @var  int samplenumber
+     * @brief samplenumber speichert die Anzahl an Samples in der gesamten Audio Datei des Audio Objekts als Integer.
      */    
     int samplenumber;
 
