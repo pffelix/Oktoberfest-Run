@@ -185,7 +185,7 @@ void Game::menuInit() {
 
     menuBreak = new Menu(new std::string("Brotzeit!"));
     menuBreak->addEntry("weida",menuBreakId_Resume,true);
-    menuBreak->addEntry("koa Lust mehr",menuBreakId_EarlyEnd, true,gameMenuName);
+    menuBreak->addEntry("I gib auf!",menuBreakId_EarlyEnd, true,gameMenuName);
     menuBreak->addEntry("vo vorn!",menuBreakId_EndGame,true);
     menuBreak->displayInit();
 
@@ -736,7 +736,24 @@ int Game::step() {
                     setState(gameIsRunning);
                     break;
                 case menuBreakId_EndGame:
-                    setState(gameMenuStart);
+                    //setState(gameMenuStart);
+                    // Level von vorne starten:
+                    endGame();
+                    switch(gameStats.actLevel) {
+                        case 0:
+                            startNewGame("level_test.txt",1);
+                            break;
+                        case 1:
+                            startNewGame("level1.txt",1);
+                            break;
+                        case 2:
+                            startNewGame("level2.txt",2);
+                            break;
+                        case 3:
+                            startNewGame("level3.txt",3);
+                            break;
+                    }
+                    setState(gameIsRunning);
                     break;
                 case menuBreakId_EarlyEnd:
                     endGame();
