@@ -1,13 +1,3 @@
-/**************************************************************************************************
- * @brief
- * Datei für alle benötigten Datentypen
- *
- * @latestUpdate:
- * include GameObject.h fixed problems
- *
- * @author Johann, Simon
- **************************************************************************************************/
-
 #ifndef DEFINITIONS_H
 #define DEFINITIONS_H
 
@@ -15,8 +5,9 @@
 #include <list>
 #include <chrono>
 
-/** @file  defintions.h
- * @brief  defintions beinhaltet enum und struct Definitionen.
+/** @file  definitions.h
+ * @brief  definitions beinhaltet Datentyp Definitionen.
+ * @author Johann, Simon, Felix
  */
 
 /**
