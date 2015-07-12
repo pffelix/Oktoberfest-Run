@@ -1543,7 +1543,12 @@ void Game::updateScore() {
 
 
 /**
- * @brief durchläuft die Liste audioStorage und zählt die Audio Cooldowns herunter. Die Soundevents die noch laufen, werden an die Liste AudioEvents übergeben. Die fertigen werden gelöscht.
+ * @brief Game::updateAudioevents
+ * Übergibt vom Spiel erzeugte Audioevents an den Output
+ * Audioevents der Hintergrundmusik für das entsprechende Level werden übergeben,
+ * Überprüfen, ob sich der Spieler in einem Kritischen zustand befindet und entsprechende Audioevents übergeben.
+ * Für Gegner und fliegende Bierkrüge Ausioevents übergeben.
+ * Bei einmaligen Audioevents die Restspielzeit aktualisieren und das Event übergeben
  * @author Johann, Felix
  */
 void Game::updateAudioevents() {
