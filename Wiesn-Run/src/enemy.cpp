@@ -1,15 +1,16 @@
 #include "enemy.h"
 
-/// Class Enemy
-/// lastUpdate:  update() 10.6 Johann
-
 /**
  * @brief Konstruktor für ein Enemy-Objekt
- * @param posX      : X-Position
- * @param posY      : Y-Position
- * @param speedX    : Geschwindigkeit in X-Richtung
+ * Erzeugt einen neuen Gegner, dabei werden Startwerte für die einzelnen Attribute festgelegt, je nachdem, um welchen Gegner es sich handelt.
+ * Mögliche Gegnertypen: BOSS, Tourist, Security
+ * Attribute in denen sich die Gegner unterscheiden: Leben, Feuerrate
  *
- * @todo Skalieren der Werte und fireCooldown erhöhen
+ * @param posX X-Position
+ * @param posY Y-Position
+ * @param speedX Geschwindigkeit in X-Richtung
+ *
+ * @author Johann
  */
 Enemy::Enemy(int posX, int posY, int speedX, objectType enemy) : MovingObject(posX, posY, enemy, speedX, -maxSpeedY) {
    //Unterscheiden der verschiedenen Gegnerarten
@@ -17,7 +18,7 @@ Enemy::Enemy(int posX, int posY, int speedX, objectType enemy) : MovingObject(po
     case BOSS: {
         health = 5;
         fireRate = frameRate;
-        fireCooldown = 3 * frameRate;
+        fireCooldown = 2 * frameRate;
         break;
     }
     case enemy_tourist: {
@@ -48,25 +49,29 @@ Enemy::~Enemy() {
 }
 
 /**
- * @brief Enemy::getHealth
- * Gibt Lebensstand zurück
+ * @brief Gibt Leben des Gegners zurück.
  *
- * @return : Lebensstand
+ * @return int
  */
 int Enemy::getHealth() const {
     return health;
 }
 
 /**
- * @brief Enemy::setHealth
- * Lebensstand wird gesetzt
+ * @brief Setzt das Leben des Gegners.
  *
- * @param health : Lebensstand
+ * @param Wert, auf den das Leben gesetzt werden soll
  */
 void Enemy::setHealth(int health) {
     this->health = health;
 }
 
+/**
+ * @brief Fügt dem Gegner Schaden zu. Und gibt zurück, ob der Gegner danach tot ist.
+ *
+ * @param Wert des Schadens, der zugefügt werden soll
+ * @return true, wenn der Gegner tot ist
+ */
 bool Enemy::receiveDamage(int damage) {
     health = health - damage;
     death = !(health > 0);
@@ -77,62 +82,62 @@ bool Enemy::receiveDamage(int damage) {
 }
 
 /**
- * @brief Enemy::getInflictedDamage
- * gibt Schaden zurück, den der gegner zufügt
+ * @brief Gibt den Schaden zurück, den der Gegner zufügt.
  *
- * @return : Schaden
+ * @return int
  */
 int Enemy::getInflictedDamage() const {
     return inflictedDamage;
 }
 
 /**
- * @brief Enemy::getFireCooldown
- * @return fireCooldown
+ * @brief Gibt fir verbleibende Nachladezeit zurück.
+ *
+ * @return int
  */
 int Enemy::getFireCooldown() const{
     return fireCooldown;
 }
 
 /**
- * @brief Enemy::getDeath
- * Gibt an ob der Gegner Tot ist
+ * @brief gibt den Todeszustand des Gegners zurück
  *
- * @return : Zustand - TOT
+ * @return true, wenn der Gegner tot ist
  */
 bool Enemy::getDeath() const {
     return death;
 }
 
 /**
- * @brief Enemy::setDeath
- * Zustand-TOT wird gesetzt
+ * @brief setzt den Todeszustand des Gegners
  *
- * @param death : Zustand-TOT
+ * @param Todeszustand
  */
 void Enemy::setDeath(bool death) {
     this->death = death;
 }
 
 /**
- * @brief Enemy::getDeathCooldown
- * @return deathCooldown
+ * @brief Gibt die verbleibende Zeit zurück, die der Gegner noch angezeigt werden soll.
+ *      In Frames
+ *
+ * @return int
  */
 int Enemy::getDeathCooldown() const {
     return DeathCooldown;
 }
 
 /**
- * @brief Enemy::update
- * führt Bewegungen des Gegners aus
+ * @brief Hier werden alle framespezifischen Aktualisierungen durchgeführt.
+ *
+ * @author Johann
  */
 void Enemy::update() {
     if (death) {
+        /// Wenn der Gegner tot ist, wird die verbleibende Zeit der Anzeige um 1 verringert,
         DeathCooldown = DeathCooldown - 1;
     } else {
-        //Bewegung durchführen
-        updatePosition();
-
+        /// sonst wird jedesmal, wenn die Nachladezeit abgelaufen ist, mit einem Bierkrug geworfen
         if (fireCooldown == 0) {
             fireCooldown = fireRate;
         } else if (fireCooldown > 0){
@@ -140,8 +145,6 @@ void Enemy::update() {
         }
     }
 
-    /* Bewegung durchführen
-     *      ist außerhalb dem IF-statement weil der Gegner noch fallen soll, wenn er in der Luft stirbt.
-     */
+    /// zuletzt wird die Position des Gegners aktualisiert, damit im Falle des Todes die Gegner nach unten Fallen.
     updatePosition();
 }

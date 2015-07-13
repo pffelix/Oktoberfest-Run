@@ -3,43 +3,58 @@
 
 #include "movingobject.h"
 
+/**
+ * @brief Das GegnerObjekt.
+ * Dieses Objekt repräsentiert den Gegner. Das Objekt erbt von MovingObjekt und die wichtigsten Funktionen sind:
+ *  - Automatische Aktualisierung
+ *  - Schaden erhalten
+ * die wichtigsten Attribute sind:
+ *  - Leben
+ *  - Schaden
+ * Die Gegner-Objekte führen alle Bewegungen selbstständig aus nur das Bierkrugwerfen wird von außen geregelt.
+ *
+ * @author Johann
+ */
 class Enemy : public MovingObject {
 
 public:
 
-    //Konstruktor und Destruktor
+    // ------------ Konstruktor, Destruktor ----------------
+
     Enemy(int posX, int posY, int speedX, objectType enemy);
     ~Enemy();
 
-    //Leben()
-    int getHealth() const;
-    void setHealth(int health);
-    bool receiveDamage(int damage);
+    // ------------ Öffentliche Methoden -------------------
 
-    //Damage()
-    int getInflictedDamage() const;
-    int getFireCooldown() const;
+    // -------Leben-------
+    int getHealth() const;              // Gibt Leben des Gegners zurück
+    void setHealth(int health);         // Setzt das Leben des Gegners auf den übergebenen Wert
+    bool receiveDamage(int damage);     // Fügt dem Gegner schaden zu, falls möglich
 
-    //Tod()
-    bool getDeath() const;
-    void setDeath(bool death);
-    int getDeathCooldown() const;
+    // -------Feuern-------
+    int getInflictedDamage() const;     // Gibt den Schaden zurück, den der Gegner zufügt
+    int getFireCooldown() const;        // Gibt verbleibende Nachladezeit zurück
 
-    //update()
-    virtual void update();
+    // -------Tod-------
+    bool getDeath() const;              // Gibt den Todeszustand des Gegners zurück
+    void setDeath(bool death);          // setz den Todeszustand des Gegners
+    int getDeathCooldown() const;       // Gibt die verbleibende Zeit an, die der Gegner noch angezeigt werden soll, wenn er tot ist
+
+    // -------update-------
+    virtual void update();              // Automatische Aktualisierung
 
 private:
-    //Lebensstand
+    // Leben
     int health;
-    //Feuergeschwindigkeit
+    // Feuergeschwindigkeit
     int fireRate;
-    //verbleibende Nachladezeit
+    // verbleibende Nachladezeit
     int fireCooldown;
-    //Schaden, den Gegner verursacht
+    // Schaden
     int inflictedDamage;
-    //Todes-Zustand
+    // Todeszustand
     bool death;
-    //verbleibende Zeit nach Tod
+    // verbleibende Zeit nach Tod
     int DeathCooldown;
 };
 
