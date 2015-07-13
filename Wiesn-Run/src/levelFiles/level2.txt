@@ -46,7 +46,7 @@ Level2: Im Zelt
 ------------
 
 Player,130,0
-Levellänge,20000
+Levellänge,14000
 
 # Dieses Level startet mit einem Hendl
 Hendl,800,40
@@ -116,5 +116,33 @@ Obstacle,8295,0
 Obstacle,8295,120
 Obstacle,8295,240
 
+# Folge von Obstacles
+Obstacle,9500,0
+Obstacle,9700,0
+Obstacle,9900,0
 
+# Security auf Obstacle
+Obstacle,10700,0
+Security,10700,120
 
+# Zwei Securities auf Plane
+Plane,11000,130
+Security,10980,150
+Security,11020,150
+
+# Zwei Ebenen und nur unten geht es weiter
+Plane,12000,140
+Plane,12120,140
+Plane,12240,140
+Plane,12360,140
+Obstacle,12375,160
+Obstacle,12375,280
+Hendl,12150,40
+
+# Der erste Tourist - willkommen auf der Wiesn
+Tourist,13300,0,-2
+
+# Bier am Ende
+Bier,13500,40
+
+# Ende
