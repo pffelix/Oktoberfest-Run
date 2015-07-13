@@ -121,7 +121,6 @@ struct scoreStruct {
 
 
 /**
- * @var  enum audioType
  * @brief  Enum für den Audiotype. In diesen Enum wird der Audiotype in einen Integer gewandelt. Jede ID wird dabei einem Audiotype zugeordnet welcher angibt welches Audiofile zur ID abgespielt werden soll.
  * @author  Felix Pfreundtner
  */
@@ -178,7 +177,6 @@ enum audioType {
 };
 
 /**
- * @var  typedef struct audioCooldownStruct
  * @brief  Typdef Struct mit Konstanten für den Audiocooldown jedes Audiotypes In diesen Konstanten wird festgelegt wie viele millisekunden für ein Event (mit "id=...") eines audioTypes trotz verschwinden in der Grafik nachwievor audioStructs gesendet werden. Ein 0 bedeteutet, dass kein Cooldown erfolgt, die Audiostructs werden hier solange gesendet wie das Event sichtbar ist.
  * @author  Felix
  */
@@ -209,7 +207,6 @@ typedef struct {
 } audioCooldownStruct;
 
 /**
- * @typdef  typedef struct audioDistanceStruct
  * @brief  Typdef Struct mit Konstanten für die Distance jedes Audiotypes. In diesen Konstanten wird festgelegt wie weit entfernt ein Event (mit "id=...) eines audioTypes vom Spieler standardmäßig auftritt [Werbereicht 0 (beim spieler) bis 1(maximale Distanz des Fensters). Ist die Konstante -1 ist die Distance eines Events vom Typ audioType variabel und muss von der Gamelogik bestimmt werden.
  * @author  Felix
  */
@@ -241,7 +238,6 @@ typedef struct {
 
 
 /**
- * @var  struct audioStruct
  * @brief  Struktur für einzelne Audio Events
  * AudioControl arbeitet Events von dieser Struktur ab.
  * Jedes Audioevent hat eine eindeutige int "id", einen enum->integer Gruppen "type" und eine float "distance"
@@ -289,7 +285,6 @@ struct audioStruct {
 
 
 /**
- * @var  struct audioCooldownstruct
  * @brief  Struktur für audioevents mit ihrer abspielzeit als Cooldown
  */
 struct audioCooldownstruct {
@@ -297,6 +292,10 @@ struct audioCooldownstruct {
     std::chrono::duration<int, std::milli> cooldown;
 };
 
+
+/**
+ * @brief  Enum für die Powerup Typen
+ */
 enum powerUpType {
     beer, food
 };
