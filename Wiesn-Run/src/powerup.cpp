@@ -27,7 +27,7 @@ PowerUp::PowerUp(int posX, int posY, int healthBonus, int alcoholLevelBonus, int
     else {
         setPixmap(QPixmap(":/images/images/beer.png"));
     }
-    setPos(getPosX() - getLength()*0.5, yOffset - getPosY() - getHeight());
+    qDebug("   PowerUp erstellt");
 }
 
 /**

@@ -20,74 +20,86 @@ GameObject::GameObject(int posX, int posY, int length, int height, objectType ty
     this->type = type;
 }
 
+/**
+ * @brief GameObject Konstruktor
+ * Jedes Objekt bekommt ihr seine Grafik zugewiesen und die "Startposition" wird in Scenenkoordinaten errechnet
+ * @param posX      : X-Position
+ * @param posY      : Y-Position
+ * @param type      : Typ
+ *
+ * @author Johann, Flo
+ */
 GameObject::GameObject(int posX, int posY, objectType type) {
     this->posX = posX;
     this->posY = posY;
     this->type = type;
     audioID = 0;
 
+    //Grafik Initialisierungen aller Objekte außer Powerups
     switch (type) {
     case obstacle: {
         // Verhältnis 1:2 (b:h)
-        this->length = playerScale * (3.0 / 2.0);
-        this->height = playerScale * 2;
+        length = playerScale * (3.0 / 2.0);
+        height = playerScale * 2;
 
         //Grafik - Obstacle Images initialisieren
         setPixmap(QPixmap(":/images/images/barrel.png"));
-        setPos(getPosX() - 0.5*getLength(), yOffset - getPosY() - getHeight()-7);
+        setPos(posX - length*0.5, yOffset - posY - height - 7);
         qDebug("   Obstacle erstellt");
         break;
     }
     case plane: {
         // Verhältnis 2:(1/3)
-        this->length = playerScale * 2;
-        this->height = playerScale / 3;
+        length = playerScale * 2;
+        height = playerScale / 3;
 
         // Grafik - Plane Images initialisieren
         setPixmap(QPixmap(":/images/images/plane.png"));
-        setPos(getPosX() - getLength()*0.5, yOffset - getPosY() - getHeight());
+        setPos(posX - length*0.5, yOffset - posY - height);
         qDebug("   Plane erstellt");
         break;
     }
     case player: {
         // Verhältnis 1:2 (b:h)
-        this->length = playerScale;
-        this->height = playerScale * 2;
+        length = playerScale;
+        height = playerScale * 2;
 
         //Grafik - Player wird initialisiert
         setPixmap(QPixmap(":/images/images/player1.png"));
-        setPos(getPosX() - 0.5*getLength(), yOffset - getPosY() - getHeight());
+        setPos(posX - 0.5*length, yOffset - posY - height);
         qDebug("   Player erstellt");
         break;
     }
     case enemy_tourist: {
         // Verhältnis 1:2 (b:h)
-        this->length = playerScale;
-        this->height = playerScale * 2;
+        length = playerScale;
+        height = playerScale * 2;
 
-        //Grafik - Enemy wird initialisiert
+        //Grafik - Enemy_tourist wird initialisiert
         setPixmap(QPixmap(":/images/images/tourist1.png"));
-        setPos(getPosX() - 0.5*getLength() -15, yOffset - getPosY() - getHeight());
+        setPos(posX - 0.5*length -15, yOffset - posY - height);
         qDebug("   Tourist erstellt");
         break;
     }
     case enemy_security: {
         // Verhältnis 1:2
-        this->length = playerScale;
-        this->height = playerScale * 2;
+        length = playerScale;
+        height = playerScale * 2;
 
+        //Grafik - Enemy_security wird initialisiert
         setPixmap(QPixmap(":/images/images/security.png"));
-        setPos(getPosX() - 0.5*getLength(), yOffset - getPosY() - getHeight());
+        setPos(posX - 0.5*length, yOffset - posY - height);
         qDebug("   Security erstellt");
         break;
 
     }
     case powerUp: {
         // Verhältnis (2/3):(2/3)
-        this->length = playerScale * (2.0 / 3.0);
-        this->height = this->length;
+        length = playerScale * (2.0 / 3.0);
+        height = length;
 
-        qDebug("   PowerUp erstellt");
+        //Powerups Grafiken werden im powerup Konstruktor erstellt da sie nicht im ObjectType enum aufgenommen sind
+        setPos(posX - length*0.5, yOffset - posY - height);
         break;
     }
     case shot: {
@@ -97,7 +109,7 @@ GameObject::GameObject(int posX, int posY, objectType type) {
 
         //Grafik - Attackgrafik initialisieren
         setPixmap(QPixmap(":/images/images/beer.png"));
-        setPos(getPosX() - getLength()*0.5, yOffset - getPosY() - getHeight());
+        setPos(posX - length*0.5, yOffset - posY - height);
         qDebug("   Shot erstellt");
         break;
     }
@@ -105,8 +117,9 @@ GameObject::GameObject(int posX, int posY, objectType type) {
         this->length = 3 * playerScale;
         this->height = 4 * playerScale;
 
+        //Grafik - Bossgrafik initialisieren
         setPixmap(QPixmap(":/images/images/boss.png"));
-        setPos(getPosX() - getLength()*0.5 -10, yOffset - getPosY() - getHeight());
+        setPos(posX - length*0.5 -10, yOffset - posY - height);
         qDebug("   Boss erstellt");
         break;
     }
