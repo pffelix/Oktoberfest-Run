@@ -22,12 +22,12 @@ public:
     void setSpeedX(int speedX);
     void setSpeedY(int speedY);
 
-    //gibt an für wieviele Frames ohne Unterbrechung in einer Richtung gelaufen wurde
-    void setFramesDirection(int framesDirection);
-    int getFramesDirection();
 
     //'Abstrakte Methode' update
     virtual void update()=0;
+
+    //aktualisiert die Framezahl die ohne Unterbrechung in eine Richtung gelaufen wurde
+    void updateFramesDirection();
 
     //spiegelt Grafiken
     void flipHorizontal();

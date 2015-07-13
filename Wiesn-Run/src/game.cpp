@@ -16,6 +16,9 @@
 #include "shoot.h"
 #include "menu.h"
 
+#define WINDOWHEIGHT (768)
+#define WINDOWLENGTH (1024)
+
 
 
 // --------------- Komparatoren -------------------------------------------------------------------
@@ -126,7 +129,7 @@ int Game::start() {
     window = new QGraphicsView();
     window->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     window->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    window->setFixedSize(1024,768);
+    window->setFixedSize(WINDOWLENGTH,WINDOWHEIGHT);
     window->setWindowTitle(QApplication::translate("Game Widget", "Wiesn - Run"));
     // ViewItems reagieren standartmäßig auf Keyboard Input, das wird nicht benötigt und ausgeschaltet
     window->setEnabled(false);
@@ -264,10 +267,10 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
 
     //Levelscene einstellen (Die Scene lässt sich leider durch ein QT internes Problem
     //nicht exakt auf die Levellänge einstellen)
-    levelScene->setSceneRect(0,0,/* levelLength+sceneWidth */ 200000,768);
+    levelScene->setSceneRect(0,0,/* levelLength+sceneWidth */ 200000,WINDOWHEIGHT);
     window->setScene(levelScene);
     // Szenen-Breite setzen
-    sceneWidth = 1024;
+    sceneWidth = WINDOWHEIGHT;
 
     //Level-Nummer speichern
     gameStats.actLevel = levelNum;
@@ -1685,12 +1688,13 @@ void Game::updateAudioevents() {
 
 /**
  * @brief Game::renderGraphics
- * Positionssaktualisierungen der Grafiken aller Beewglichen Objekte
  * @param objectList
+ * @param playerPointer
+ * @author Flo
  */
 void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPointer) {
     //Berechnung der X-Positionsänderung des Spielers im aktuellen Step
-    int playerStepMov = playerObjPointer->getPosX()- (playerScale/2) - playerObjPointer->x();
+    int playerStepMov = playerPointer->getPosX()- (playerScale/2) - playerPointer->x();
 
     //Leben,Pegel,Munition,Highscore bleiben auf die View zentriert
     showGUI->setPos(playerStepMov);
@@ -1703,53 +1707,34 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
     showBackground->updateParallaxe(playerStepMov);
 
     //Hintergrund Positionsupdate
-    showBackground->updateBackgroundPos(playerObjPointer->getPosX() - playerOffset - playerScale*0.5);
+    showBackground->updateBackgroundPos(playerPointer->getPosX() - playerOffset - playerScale*0.5);
 
-
-    //Positionsaktualisierungen aller Movingobjects
+    //Die GameObjectliste wird durchgelaufen
     for (std::list<GameObject*>::iterator it = objectList->begin(); it != objectList->end(); ++it) {
+
+        //alle statischen Objekte werden aussortiert durch einen cast auf MovingObject
         MovingObject *aktMovingObject = dynamic_cast<MovingObject*> (*it);
         if(aktMovingObject != 0) {
 
-            //if(dynamic_cast<Shoot*> (aktMovingObject) == 0 ) {
-            if( (aktMovingObject->getType() != shot && aktMovingObject->getType() != player)
-                 || (aktMovingObject->getType() == player && playerPointer->inJump() == false) ) {
-                //im letzten Frame vorwärst gelaufen?
-                if(aktMovingObject->getSpeedX() > 0 ) {
-                    if(aktMovingObject->getFramesDirection() < 0) {
-                        aktMovingObject->setFramesDirection(0);
-                        aktMovingObject->flipHorizontal();
-                    }
-                    if(aktMovingObject->getFramesDirection()%(frameRate/2) == 0) {
-                        aktMovingObject->swapImage();
-                    }
-                    aktMovingObject->setFramesDirection(aktMovingObject->getFramesDirection()+1);
-                }
-                //im letzten Frame rückwärtsgelaufen?
-                else if(aktMovingObject->getSpeedX()< 0 ) {
-                    if(aktMovingObject->getFramesDirection() > 0) {
-                        aktMovingObject->setFramesDirection(0);
-                        aktMovingObject->flipHorizontal();
-                    }
-                    if(aktMovingObject->getFramesDirection()%10 == 0) {
-                      aktMovingObject->swapImage();
-                    }
-                    aktMovingObject->setFramesDirection(aktMovingObject->getFramesDirection()-1);
-                }
-                else {
-                    aktMovingObject->setFramesDirection(0);
-                }
-            }
+            //alle Schüsse werden aussortiert
+            if(aktMovingObject->getType() != shot) {
 
+                //überprüft ob das Objekt gespiegelt werden soll und führt die Spiegelung ggf. aus
+                aktMovingObject->flipHorizontal();
+                //überprüft ob das Objekt das Bild wechseln werden soll und führt dass ggf. aus
+                aktMovingObject->swapImage();
+                //aktualisiert die Anzahl der Frames die das Objekt ununterbrochen in einer Richtung gelaufen ist
+                aktMovingObject->updateFramesDirection();
+                }
             //Positionsaktualisierung aller MovingObjects
-            aktMovingObject->setPos(aktMovingObject->getPosX() - 0.5*aktMovingObject->getLength(), yOffset - aktMovingObject->getPosY() - aktMovingObject->getHeight());
+            aktMovingObject->setPos(aktMovingObject->getPosX() - 0.5*aktMovingObject->getLength(),
+                                    yOffset - aktMovingObject->getPosY() - aktMovingObject->getHeight());
         }
     }
 
     //View wird wieder auf den Spieler zentriert
-    window->centerOn(playerObjPointer->getPosX() + 512 - 100 - 0.5 * playerObjPointer->getLength(), 384);
+    window->centerOn(playerPointer->getPosX() - playerOffset - (playerScale/2) + (WINDOWLENGTH/2), (WINDOWHEIGHT/2));
 }
-
 
 
 // --------------- Hilfsfunktionen ----------------------------------------------------------------
