@@ -1102,6 +1102,9 @@ void Game::calculateMovement() {
         qDebug("%s\t%dx%d\t%4d\t%4d\t(%3d,%3d)",objecttypes[static_cast<int>(aktObject->getType())].c_str(),aktObject->getLength(),aktObject->getHeight(), aktObject->getPosX(),aktObject->getPosY(),speedX,speedY);
 
     }
+    if (playerObjPointer->getHealth() <= 0) {
+        gameStats.gameOver = true;
+    }
 
 }
 

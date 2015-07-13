@@ -14,6 +14,7 @@
 //Da Länge und Breite konstante Werte beim Bierkrug sind, zur Zeit nur Optinal
 Shoot::Shoot(int posX, int posY, int direction, objectType origin) : MovingObject((posX + (playerScale / 2)), (posY + playerScale), shot, (direction * 3 * maxSpeed) , 0) {
     inflictedDamage = 1;
+    harming = true;
     this->origin = origin;
 }
 
