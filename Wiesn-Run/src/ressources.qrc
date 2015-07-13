@@ -24,9 +24,9 @@
         <file>images/bg_lev3_3.png</file>
         <file>images/bg_lev3_4.png</file>
         <file>images/ammo.png</file>
+        <file>images/score.png</file>
         <file>images/heart.png</file>
         <file>images/pegel.png</file>
-        <file>images/score.png</file>
     </qresource>
     <qresource prefix="/levelFiles">
         <file>levelFiles/level1.txt</file>

@@ -12,41 +12,46 @@
  */
 RenderGUI::RenderGUI(QGraphicsScene *scene) {
     //TextItem der Gesundheitsanzeige wird initalisiert
-    this->showHealth.setPos(30, 30);
-    this->showHealth.setDefaultTextColor(Qt::red);
-    this->showHealth.setFont(QFont("Times",25));
-    this->showHealth.setPlainText(QString("Gesundheit: "));
+    this->showHealth.setPos(20, 15);
+    this->showHealth.setPixmap(QPixmap(":/images/images/heart.png"));
 
     //Gesundheitsbalken wird initialisiert
     this->showHealthBar[0].setParentItem(&showHealth);
     this->showHealthBar[0].setBrush(Qt::red);
     this->showHealthBar[1].setParentItem(&showHealth);
-    this->showHealthBar[1].setRect(207,7,BARLENGTH+6,BARHEIGHT+6);
+    this->showHealthBar[1].setRect(137,12,BARLENGTH+6,BARHEIGHT+6);
 
-    //TextItem der Gesundheitsanzeige wird initalisiert
+    //TextItem der Scoreanzeige wird initalisiert
+    this->showScoreValue.setParentItem(&showHealth);
+    this->showScoreValue.setPos(760, -15);
+    this->showScoreValue.setDefaultTextColor(Qt::black);
+    this->showScoreValue.setFont(QFont("Times",50));
+
+    //
     this->showScore.setParentItem(&showHealth);
-    this->showScore.setPos(650, 0);
-    this->showScore.setDefaultTextColor(Qt::yellow);
-    this->showScore.setFont(QFont("Times",35));
+    this->showScore.setPixmap(QPixmap(":/images/images/score.png"));
+    this->showScore.setPos(550, 0);
 
     //TextItem der Alkoholanzeige wird initalisiert
     this->showAlcohol.setParentItem(&showHealth);
-    this->showAlcohol.setPos(0, 50);
-    this->showAlcohol.setDefaultTextColor(Qt::darkBlue);
-    this->showAlcohol.setFont(QFont("Times",25));
-    this->showAlcohol.setPlainText(QString("Alkoholpegel: "));
+    this->showAlcohol.setPixmap(QPixmap(":/images/images/pegel.png"));
+    this->showAlcohol.setPos(0, 75);
 
     //Alkoholbalken wird initialisiert
     this->showAlcoholBar[0].setParentItem(&showHealth);
     this->showAlcoholBar[0].setBrush(Qt::darkBlue);
     this->showAlcoholBar[1].setParentItem(&showHealth);
-    this->showAlcoholBar[1].setRect(207,57,BARLENGTH+6,BARHEIGHT+6);
+    this->showAlcoholBar[1].setRect(137,87,BARLENGTH+6,BARHEIGHT+6);
 
     //TextItem der Munitionssanzeige wird initalisiert
+    this->showAmmoValue.setParentItem(&showHealth);
+    this->showAmmoValue.setPos(760, 60);
+    this->showAmmoValue.setDefaultTextColor(Qt::darkGreen);
+    this->showAmmoValue.setFont(QFont("Times",50));
+
     this->showAmmo.setParentItem(&showHealth);
-    this->showAmmo.setPos(0, 100);
-    this->showAmmo.setDefaultTextColor(Qt::darkGreen);
-    this->showAmmo.setFont(QFont("Times",25));
+    this->showAmmo.setPixmap(QPixmap(":/images/images/ammo.png"));
+    this->showAmmo.setPos(600, 75);
 
     //Alle Anzeigen werden der Scene hinzugefügt
     scene->addItem(&(this->showHealth));
@@ -79,13 +84,13 @@ void RenderGUI::setPos(int x) {
  * @author Flo
  */
 void RenderGUI::setValues(int health, int alcohol, int ammo, int score, int stepCount) {
-    this->showHealthBar[0].setRect(210,10,(static_cast<float>(health)/maxHealth)*BARLENGTH,BARHEIGHT);
-    this->showAmmo.setPlainText(QString("Munition: " + QString::number(ammo)));
-    this->showScore.setPlainText(QString("Score: " + QString::number(score)));
+    this->showHealthBar[0].setRect(140,15,(static_cast<float>(health)/maxHealth)*BARLENGTH,BARHEIGHT);
+    this->showAmmoValue.setPlainText(QString(QString::number(ammo)));
+    this->showScoreValue.setPlainText(QString(QString::number(score)));
 
     //AlkoholMax überschritten?
     if(alcohol>maxAlcohol) {
-        this->showAlcoholBar[0].setRect(210,60,BARLENGTH,BARHEIGHT);
+        this->showAlcoholBar[0].setRect(140,60,BARLENGTH,BARHEIGHT);
 
         //Balken blinkt rot auf
         if(stepCount%(frameRate*2) == 0) {
@@ -96,6 +101,6 @@ void RenderGUI::setValues(int health, int alcohol, int ammo, int score, int step
         }
     }
     else {
-        this->showAlcoholBar[0].setRect(210,60,(static_cast<float>(alcohol)/maxAlcohol)*BARLENGTH,BARHEIGHT);
+        this->showAlcoholBar[0].setRect(140,90,(static_cast<float>(alcohol)/maxAlcohol)*BARLENGTH,BARHEIGHT);
     }
 }
