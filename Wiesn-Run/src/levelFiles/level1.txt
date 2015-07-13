@@ -1,4 +1,4 @@
-LevelDatei für den ersten Level
+﻿LevelDatei für den ersten Level
 
 Diese Datei kann nur von der Methode "loadLevelFile" ausgelesen werden.
 Zeilen, die mit einem Keyword beginnen, werden interpretiert. Alle anderen Zeilen werden ignoriert.
@@ -42,7 +42,7 @@ Erläuterung
 # PowerUp,posX,posY,health,alcohol,ammo,immunityCooldown
 
 Player,130,0
-Levellänge,11500
+Levellaenge,11500
 
 
 # Der erste Level beginnt mit einem Bier ;)

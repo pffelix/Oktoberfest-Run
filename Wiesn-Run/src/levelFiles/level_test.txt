@@ -48,7 +48,7 @@ Erläuterung
 
 
 Player,130,0
-Levellänge,11000
+Levellaenge,11000
 
 # Springen mit Obstacles vorführen
 Obstacle,400,0
