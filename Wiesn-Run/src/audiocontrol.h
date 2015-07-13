@@ -35,10 +35,10 @@ public:
 private:
 
     /**
-     * @var  typedef struct playStruct
+     * @struct  struct playStruct
      * @brief  playStruct definiert die Struktur eines Playevents
      */
-    typedef struct {
+    struct playStruct{
         /// id des playStruct
         int id;
         /// type des playStruct
@@ -52,7 +52,7 @@ private:
         /// aktuelle Abspielposition in Audiobjekt in Samples (Beginn des Abspielblockes mit Länge 1024 Samples
         int position;
 
-    } playStruct;
+    };
 
     /**
      * @var  enum statusFilter
