@@ -1,4 +1,4 @@
-﻿LevelDatei für den ersten Level
+LevelDatei für den ersten Level
 
 Diese Datei kann nur von der Methode "loadLevelFile" ausgelesen werden.
 Zeilen, die mit einem Keyword beginnen, werden interpretiert. Alle anderen Zeilen werden ignoriert.
@@ -41,43 +41,71 @@ Erläuterung
 # Beliebiges Powerup anlegen:
 # PowerUp,posX,posY,health,alcohol,ammo,immunityCooldown
 
-Level1: Weg zum Zelt (keine Gegner, nur Obstacles und PowerUps
-------------
-
 Player,130,0
 Levellänge,20000
 
-Obstacle,400,0
 
+# Der erste Level beginnt mit einem Bier ;)
+Bier,400,40
+
+# Einzelne Obstacles
 Obstacle,800,0
+Obstacle,1100,0
+Obstacle,1300,0
 
-Plane,1450,150
-Plane,1570,150
-Plane,1690,150
+# Erste Plane mit Bier als Belohnung
+Plane,1900,130
+Bier,1900,170
 
-Plane,1860,170
-Plane,1980,170
-Plane,2100,150
-Plane,2220,150
-Plane,2340,150
-Plane,2460,150
-Plane,2580,170
-Plane,2700,170
-Plane,2820,170
-Plane,2940,170
-Obstacle,2940,190
-Plane,3060,170
-Plane,3280,170
-Plane,3400,170
+# Springen von einer Plane zur nächsten
+Plane,2400,130
+Plane,2670,130
+Bier,2670,170
 
-Obstacle,3800,0
+# Treppe aus Planes
+Plane,3000,40
+Plane,3120,40
+Plane,3240,80
+Plane,3360,80
+Plane,3480,120
+Plane,3600,120
+Plane,3720,160
+Plane,3840,160
+Plane,3960,200
+Plane,4080,200
 
-Obstacle,4100,0
+# Weg mit Löchern
+Plane,4200,260
+Plane,4320,260
+Plane,4440,260
+Bier,4600,360
+Plane,4800,260
+Plane,4920,260
+Plane,5040,260
+Bier,5200,360
+Plane,5400,260
+Plane,5520,260
+Plane,5640,260
+Plane,5760,260
+Obstacle,5775,0
+Obstacle,5775,120
 
-Bier,5000,60
-Bier,5200,60
-Bier,5400,60
-Hendl,5500,60
+# Treppe aus Obstacles
+Obstacle,6300,0
+Obstacle,6390,0
+Obstacle,6390,120
+Bier,6390,270
 
+# Wahl zwischen Bier und Hendl
+Plane,6900,130
+Bier,6900,170
+Hendl,6900,40
 
-
+# Sprungschanze aus Obstacles
+Obstacle,7600,0
+Obstacle,7690,0
+Obstacle,7690,120
+Bier,7800,320
+Obstacle,7900,0
+Obstacle,7900,120
+Obstacle,7990,0
