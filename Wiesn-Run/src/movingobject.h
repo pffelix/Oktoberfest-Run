@@ -47,7 +47,7 @@ private:
     //gibt an für wieviele Frames ohne Unterbrechung in einer Richtung gelaufen wurde
     int framesDirection = 0;
 
-    //merkt sich welches Bild gerade gesetzt ist
+    //merkt sich welches Bild gerade gesetzt ist (für Bewegungsanimation)
     bool imageState = true;
 
 };

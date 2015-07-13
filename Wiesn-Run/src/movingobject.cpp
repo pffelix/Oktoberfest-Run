@@ -64,6 +64,8 @@ void MovingObject::updatePosition() {
 
 /**
  * @brief spiegelt Grafiken an der Y-Achse
+ * kopiert von https://forum.qt.io/topic/18131/solved-flip-a-qgraphicssvgitem-on-its-center-point/2 und angepasst.
+ * Ermöglicht das Spiegeln von Bildern über eine Transformationsmatrix.
  * @author Flo
  */
 void MovingObject::flipHorizontal()
@@ -93,6 +95,12 @@ void MovingObject::flipHorizontal()
     setTransform(transform);
 }
 
+/**
+ * @brief MovingObject::swapImage
+ * Die Funktion testet mit Hilfe von "imageState" welches Bild gerade aktiv ist und wechselt dann jeweils auf das andere
+ * Bild für die Bewegungsanimation.
+ * @Author Flo
+ */
 void MovingObject::swapImage()
 {
     switch (getType()) {
