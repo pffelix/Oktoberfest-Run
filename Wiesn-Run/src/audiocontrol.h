@@ -35,7 +35,6 @@ public:
 private:
 
     /**
-     * @struct  struct playStruct
      * @brief  playStruct definiert die Struktur eines Playevents
      */
     struct playStruct{

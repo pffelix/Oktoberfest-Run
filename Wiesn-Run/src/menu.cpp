@@ -49,7 +49,7 @@ Menu::menuType Menu::getType() {
 
 /**
  * @brief gibt den Menü-Titel zurück
- * @return Zeiger auf std::tring
+ * @return Zeiger auf std::string
  */
 std::string *Menu::getTitle() {
     return title;

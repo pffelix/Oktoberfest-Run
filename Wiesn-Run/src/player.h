@@ -3,81 +3,95 @@
 
 #include "movingobject.h"
 
+/**
+ * @brief Das Spieler-Objekt.
+ * Dieses Objekt repräsentiert den Spieler. Das Objekt erbt von MovingObject und die wichtigsten Attribute sind:
+ *  - Leben
+ *  - Alkoholpegel
+ *  - Munition
+ *  - Schaden
+ *
+ * @author Johann
+ */
 class Player : public MovingObject {
 
 public:
-    //Konstruktoren und Destruktoren
+
+    // ------------ Konstruktor, Destruktor ----------------
+
     Player(int posX, int posY, int speedX);
     ~Player();
 
-    //Leben()
-    int getHealth() const;
-    void setHealth(int health);
-    void increaseHealth (int health);
-    bool receiveDamage(int damage);
+    // ------------ Öffentliche Methoden -------------------
 
-    //Alcoholpegel()
+    // -------Leben------
+    int getHealth() const;              // Gibt Leben des Spielers zurück
+    void setHealth(int health);         // Setzt das Leben des Spielers auf einen Wert
+    void increaseHealth (int health);   // erhöht das Leben des Spielers um den Wert health
+    bool receiveDamage(int damage);     // fügt dem Spieler Schaden, im Wert von damage, zu, falls möglich
+
+    // ------Alcoholpegel------
     int getAlcoholLevel() const;
     void increaseAlcoholLevel(int additionalAlcohol);
     void decreaseAlcoholLevel(int decreaseLevel);
 
-    //Munnition()
-    int getAmmunatiuon() const;
-    void increaseAmmunation(int ammunationBonus);
-    void decreaseAmmunation();
+    // ------Munnition------
+    int getAmmunatiuon() const;                     // Gibt Munition des Spielers zurück
+    void increaseAmmunation(int ammunationBonus);   // Erhöht die Munition des Spielers um den Wert ammunationBonus
+    void decreaseAmmunation();                      // Verringert die Munition des Spielers um 1
 
-    //Feuern
-    void setFireCooldown();
-    int getFireCooldown();
+    // ------Schaden------
+    int getInflictedDamage() const;     // Gibt den Schaden zurück, den der Spieler zufügt
 
-    //Schaden()
-    int getInflictedDamage() const;
+    // ------Feuern------
+    void setFireCooldown();         // Setzt die Nachladezeit auf eine Sekunde
+    int getFireCooldown();          // Gibt die verbleibende Nachladezeit zurück
 
-    //Schadensimunität()
-    int getImmunityCooldown() const;    /// Wird nicht benutzt 23.6
-    void setImmunityCooldown(int remainingTime);
+    // ------Schadensimunität------
+    int getImmunityCooldown() const;                // Gibt die Vebleibende Zeit für Immunität zurück
+    void setImmunityCooldown(int remainingTime);    // Setzt die Verbleibende Zeit für Immunität auf remainingTime fest
 
-    //Sprung()
-    void startJump();
-    bool inJump() const;
-    void resetJumpState();
-    void abortJump();
+    // ------Sprung------
+    void startJump();           // Beginnt einen Sprung des Spielers
+    bool inJump() const;        // Gibt an, ob sich der Spieler in der Luft befindet
+    void resetJumpState();      // Setzt den Wert, ob sich der Spieler in der Luft befindet auf false
+    void abortJump();           // Bricht einen Sprung ab, und lässt den Spieler fallen
 
-    // Getötete Gegner
-    int getEnemiesKilled();
-    void increaseEnemiesKilled();
+    // ------Getötete Gegner------
+    int getEnemiesKilled();         // Gibt an wieviele Gegner der Spieler schon besiegt hat
+    void increaseEnemiesKilled();   // Erhöht die Anzahl der besiegten Gegner um eins
 
-    // Geschwindigkeitsskalierung
-    int getSpeedScale() const;
+    // ------Geschwindigkeitsskalierung------
+    int getSpeedScale() const;      // Gibt den Skalierungsfaktor für die Geschwindigkeit zurück
 
     //update()
     virtual void update();
 
 private:
-    // Leben
+    /// Leben
     int health;
-    // Alkoholpegel
+    /// Alkoholpegel
     int alcoholLevel;
-    // verbleibende Munition
+    /// Munition
     int ammunation;
-    // Schaden den der Spieler verursacht
+    /// Schaden, den der Spieler verursacht
     int inflictedDamage;
-    // Anzahl Frames Schadensimmunität (Unsterblichkeit)
-    int immunityCooldown;
-    // verbleibende Nachladezeit
+    /// Nachladezeit
     int fireCooldown;
-    // Feuergeschwindigkeit
+    /// Feuergeschwindigkeit
     int fireRate;
-    // In-der-Luft-Zustand
+    /// Schadensimmunität (Unsterblichkeit)
+    int immunityCooldown;
+    // Sprungzustand
     bool jumpState;
-    // In-der-Luft-'Ort'
+    // Sprungdauer
     int jumpCooldown;
-    // Getötete Gegner
-    int enemiesKilled;
     // Skalierungsfaktor für Spielergeschwindigkeit
     int speedScale;
     // Wartezeit zwischen zwei Lebensabzügen wegen Alkoholüberdosis
     int alcoholDamageCooldown;
+    /// Anzahl getöteter Gegner
+    int enemiesKilled;
 
 };
 
