@@ -42,7 +42,7 @@ Erläuterung
 # PowerUp,posX,posY,health,alcohol,ammo,immunityCooldown
 
 Player,130,0
-Levellänge,20000
+Levellänge,11500
 
 
 # Der erste Level beginnt mit einem Bier ;)
@@ -109,3 +109,36 @@ Bier,7800,320
 Obstacle,7900,0
 Obstacle,7900,120
 Obstacle,7990,0
+
+# Plane-Obstacle-Plane
+Plane,8600,130
+Obstacle,8800,0
+Plane,9000,130
+
+# Zwei Ebenen
+Plane,9500,130
+Plane,9620,130
+Plane,9740,130
+Plane,9860,130
+Plane,9980,130
+Plane,10100,130
+Plane,10220,130
+Plane,10340,130
+Plane,10460,130
+Plane,10580,130
+Obstacle,10580,150
+Plane,10700,130
+Plane,9620,280
+Plane,9740,280
+Plane,9860,280
+Bier,9860,340
+Plane,9980,280
+Plane,10100,280
+Plane,10220,280
+Plane,10340,280
+Bier,10340,340
+Plane,10460,280
+Plane,10580,280
+Plane,10700,280
+
+# Ende
