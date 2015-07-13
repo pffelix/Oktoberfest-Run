@@ -791,7 +791,9 @@ int Game::step() {
                 if(letter=='\b' && name.length()>0) {  // Backspace
                     name.pop_back();    // Zeichen löschen
                 } else {
-                    name.push_back(letter);
+                    if(letter != '\n') {    // Anscheinend wurden manchmal falsche Enter in die Datei geschrieben
+                        name.push_back(letter);
+                    }
                 }
                 playerScore.name = name;
 
