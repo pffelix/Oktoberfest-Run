@@ -51,16 +51,13 @@ const int yOffset = 668;
 const int playerOffset = 100;
 
 /**
- * @brief Geschwindigkeit mit der sich die beweglichen Objekte durch die Welt bewegen
+ * @brief Geschwindigkeitskonstanten
+ * maxSpeed:    Grundgeschwindigkeit, von dieser leiten sich alle Geschwindigkeiten des Spiels ab
+ * playerSpeed: Grundgeschwindigkeit mit der sich der Spieler horizontal bewegt
+ * maxSpeedY:   Fallgeschwindigkeit/Sprunggeschwindigkeit
  */
 const int maxSpeed = 3 * (playerScale / frameRate) ;
-
-/// normale Player-Speed
 const int playerSpeed = maxSpeed + 1;
-
-/**
- * @brief Fall- / Sprunggeschwindigkeit
- */
 const int maxSpeedY = 3 * maxSpeed / 2;
 
 /**
