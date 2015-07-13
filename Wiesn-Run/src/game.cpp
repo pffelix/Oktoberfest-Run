@@ -142,7 +142,7 @@ int Game::start() {
     setState(gameMenuStart);
 
     // Timer installieren
-    qDebug("Starte Timer mit 500msec-Intervall");
+    qDebug("Starte Timer mit Intervall: %d", stepIntervall);
     Game::startTimer(stepIntervall);
     return appPointer->exec();
 }
