@@ -76,6 +76,8 @@ private:
     int enemiesKilled;
     // Skalierungsfaktor für Spielergeschwindigkeit
     int speedScale;
+    // Wartezeit zwischen zwei Lebensabzügen wegen Alkoholüberdosis
+    int alcoholDamageCooldown;
 
 };
 

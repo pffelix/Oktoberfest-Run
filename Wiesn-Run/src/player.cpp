@@ -16,6 +16,7 @@ Player::Player(int posX, int posY, int speedX) : MovingObject(posX, posY, player
     fireCooldown = 0;
 
     enemiesKilled = 0;
+    alcoholDamageCooldown = 0;
 }
 
 Player::~Player() {
@@ -178,6 +179,7 @@ int Player::getSpeedScale() const {
  * Die updatePosition-Methode des Spielers wird aufgerufen.
  * Falls sich der Spieler im Sprung befindet die verbeibende Zeit der Aufwärtsbewegung um 1 verringern.
  * Abklingzeiten für den Alkoholpegel, für Schadensimmunität und fürs Feuern verringern.
+ * Schaden zufügen, falls der Spieler zuviel Alkohol im Blut hat
  *
  * @author Johann
  */
@@ -185,11 +187,13 @@ void Player::update() {
     //Bewegung ausführen
     updatePosition();
 
-    //Falls der Spieler Springt, die
+    //Sprungverlauf
     if (jumpState) {
         if (jumpCooldown > 1) {
+            //verbleibende Sprungdauer verringern
             jumpCooldown = jumpCooldown - 1;
         } else {
+            //Sprung wird zu Fall
             setSpeedY(-maxSpeedY * speedScale);
         }
     }
@@ -210,9 +214,22 @@ void Player::update() {
         fireCooldown = fireCooldown - 1;
     }
 
+    //Skalierung der Geschwindigkeit des Spielers bei geringem Leben
     if (health < 2) {
         speedScale = 2;
     } else {
         speedScale = 1;
+    }
+
+    //Schaden bei zu hohem Alkoholpegel
+    if (alcoholLevel > maxAlcohol) {
+        if (alcoholDamageCooldown == 0) {
+            health = health - 1;
+            alcoholDamageCooldown = 4 * frameRate;
+        } else {
+            alcoholDamageCooldown = alcoholDamageCooldown - 1;
+        }
+    } else {
+        alcoholDamageCooldown = 0;
     }
 }
