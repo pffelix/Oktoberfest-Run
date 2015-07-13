@@ -1,41 +1,57 @@
 #include "player.h"
 
-/// Class Player
-/// lastUpdate: update() 10.6 Johann
-
+/**
+ * @brief Konstruktor
+ * Erzeugt einen neuen Spieler.
+ * Dabei werden Startwerte für alle Attribute festgelegt.
+ *
+ * @param posX X-Position in Level
+ * @param posY Y-Position in Level
+ * @param speedX HorizontalGeschwindigkeit
+ */
 Player::Player(int posX, int posY, int speedX) : MovingObject(posX, posY, player, speedX, -maxSpeedY) {
     health = 3;
-    //Startpegel 5 alle 5 Sekunden wird eins abgebaut
-    alcoholLevel = 5 * (5 * frameRate);
+    alcoholLevel = 5 * (5 * frameRate);     // Startpegel 5 alle 5 Sekunden wird eins abgebaut
     jumpState = false;
     speedScale = 1;
     ammunation = 5;
     inflictedDamage = 1;
     immunityCooldown = 0;
-    fireRate =  frameRate / 2;
+    fireRate =  frameRate / 2;              // default-Wert für die Nachladezeit: 0.5 Sekunden
     fireCooldown = 0;
 
     enemiesKilled = 0;
     alcoholDamageCooldown = 0;
 }
 
+/**
+ * @brief Destruktor.
+ */
 Player::~Player() {
 
 }
 
+/**
+ * @brief Gibt Leben des Spielers zurück.
+ *
+ * @return int health
+ */
 int Player::getHealth() const{
     return health;
 }
 
 /**
- * @brief Player::setHealth
- * Leben wird erhöht
+ * @brief Leben wird erhöht.
  *
  * @param health
  * Wert, um den das Leben erhöht wird
  */
 void Player::setHealth(int health) {
-    this->health = health;
+    if (health < 5) {
+        this->health = health;
+    } else {
+        this->health = 5;
+    }
 }
 void Player::increaseHealth(int health) {
     this->health = this->health + health;
@@ -45,11 +61,10 @@ void Player::increaseHealth(int health) {
 }
 
 /**
- * @brief Player::receiveDamage
- * Dem Spieler wird schaden zugefügt, falls er nicht immun ist.
+ * @brief Fügt dem Spieler Schaden zu, wenn er nicht immun ist, lässt ihn für eine Sekunde immun sein und gibt zurück, ob er gestorben ist.
  *
- * @return true, wenn der Spieler tot ist.
- * @author Johann
+ * @param Schaden der dem Spieler zugefügt werden soll
+ * @return true, wenn der Spieler gestorben ist
  */
 bool Player::receiveDamage(int damage) {
     if (immunityCooldown == 0) {
@@ -71,24 +86,20 @@ int Player::getAlcoholLevel() const {
  * Wert um den erhöht wird
  */
 void Player::increaseAlcoholLevel(int additionalAlcohol) {
-    // Erhöhe bzw. Senke den Alkoholstand, verhindere jedoch, dass er unter Null fällt
-    if ((alcoholLevel + additionalAlcohol) <= 0) {
+    alcoholLevel = alcoholLevel + additionalAlcohol;
+    //Falls der alkohollevel unter Nullfällt wieder auf Null setzten
+    if (alcoholLevel < 0) {
         alcoholLevel = 0;
-    } else {
-        alcoholLevel = alcoholLevel + (additionalAlcohol);
     }
 
 }
 
 /**
- * @brief Player::decreaseAlcoholLevel
- * verringert den Pegel des Spielers
- * @todo Überflüssig, da nie aufgerufen. Auch wenn der Name es nicht vermuten lässt: increaseAlcoholLevel kann den Level auch verringern und wird benutzt.
- *
- * @param decreaseLevel
- * Wert um den der Pegel verringert wird
- *
- */
+  * @brief Verringert den Alkoholpegel des Spielers und den Wert decreaseLevel.
+  * Falls der Wert unter 0 fällt wird er af 0 gesetzt
+  *
+  * @param Wert um den der Alkoholpegel verringert werden soll
+  */
  void Player::decreaseAlcoholLevel(int decreaseLevel) {
     alcoholLevel = alcoholLevel - decreaseLevel;
     if (alcoholLevel < 0 ) {
@@ -96,40 +107,69 @@ void Player::increaseAlcoholLevel(int additionalAlcohol) {
     }
 }
 
+ /**
+ * @brief Gibt die Munition des Spielers zurück
+ *
+ * @return int
+ */
 int Player::getAmmunatiuon() const {
     return ammunation;
 }
 
+/**
+ * @brief Erhöht die Munition des Spielers.
+ *
+ * @param Der Wert um den die Munition erhöht werden soll
+ */
 void Player::increaseAmmunation(int ammunationBonus) {
     ammunation = ammunation + ammunationBonus;
 }
 
+/**
+ * @brief Verringert die Munition des Spielers um 1
+ */
 void Player::decreaseAmmunation() {
     ammunation = ammunation - 1;
 }
 
+/**
+ * @brief Setzt die verbleibende Nachladezeit auf den default-Wert, fireRate.
+ */
 void Player::setFireCooldown() {
     fireCooldown = fireRate;
 }
 
+/**
+ * @brief gibt die verbleibende Nachladezeit zurück.
+ *
+ * @return int
+ */
 int Player::getFireCooldown() {
     return fireCooldown;
 }
 
+/**
+ * @brief Gibt den Schaden zurück, den der Spieler zufügt
+ *
+ * @return int
+ */
 int Player::getInflictedDamage() const {
     return inflictedDamage;
 }
 
+/**
+ * @brief Gibt zurück, wie lange der Spieler noch Immun ist.
+ *
+ * @return int
+ */
 int Player::getImmunityCooldown() const {
     return immunityCooldown;
 }
 
 /**
- * @brief Player::setImmunityCooldown
- * Zahl der Frames für Unverwundbarkeit wird gesetzt
+ * @brief Zeit für Unverwundbarkeit wird gesetzt, in Frames
  *
- * @param immunityCooldown
- * Zahl der Frames
+ * @param Anzahl der Frames, für die der Spieler unverwundbar sein soll
  */
 void Player::setImmunityCooldown(int remainingTime) {
     if (immunityCooldown < remainingTime) {
@@ -138,7 +178,7 @@ void Player::setImmunityCooldown(int remainingTime) {
 }
 
 /**
- * @brief beginnt einen Sprung
+ * @brief Beginnt einen Sprung.
  * Nur wenn der Spieler sich nicht in der Luft befindet
  */
 void Player::startJump() {
@@ -150,78 +190,106 @@ void Player::startJump() {
     }
 }
 
+/**
+ * @brief Gibt zurück, ob sich der Spieler in der Luft befindet.
+ *
+ * @return true, falls der Spieler in der Luft ist
+ */
 bool Player::inJump() const{
     return jumpState;
 }
 
+/**
+ * @brief Setzt den Wert, dass sich der Spieler auf festem Grund befindet.
+ */
 void Player::resetJumpState() {
     jumpState = false;
 }
 
+/**
+ * @brief bricht einen Sprung ab und initiert einen Fall.
+ */
 void Player::abortJump() {
-    setSpeedY(-maxSpeedY);
+    setSpeedY(-maxSpeedY * getSpeedScale());
 }
 
+/**
+ * @brief Gibt zurück, wieviele Gegner der Spieler schon besiegt hat.
+ *
+ * @return int
+ */
 int Player::getEnemiesKilled() {
     return enemiesKilled;
 }
 
+/**
+ * @brief Erhöht die Anzahl der besiegten Gegner um 1
+ */
 void Player::increaseEnemiesKilled() {
     enemiesKilled = enemiesKilled + 1;
 }
 
+/**
+ * @brief Gibt den Skalierungsfaktor für die Spielergeschwindigkeit wieder.
+ *
+ * @return int
+ */
 int Player::getSpeedScale() const {
     return speedScale;
 }
 
 /**
- * @brief Player::update
- * Die updatePosition-Methode des Spielers wird aufgerufen.
- * Falls sich der Spieler im Sprung befindet die verbeibende Zeit der Aufwärtsbewegung um 1 verringern.
- * Abklingzeiten für den Alkoholpegel, für Schadensimmunität und fürs Feuern verringern.
- * Schaden zufügen, falls der Spieler zuviel Alkohol im Blut hat
+ * @brief Hier werden alle framespezifischen Aktualisierungen durchgeführt.
  *
  * @author Johann
  */
 void Player::update() {
-    //Bewegung ausführen
+    /// Bewegung ausführen
     updatePosition();
 
-    //Sprungverlauf
+    /// Sprungverlauf:
     if (jumpState) {
+        /// befindet sich der Spieler in der Luft und hat noch verbleibende Sprungdauer,
+        /// so wird die verbleibende Sprungdauer um eins verringert, sonst wird ein Fall initiiert
         if (jumpCooldown > 1) {
-            //verbleibende Sprungdauer verringern
             jumpCooldown = jumpCooldown - 1;
         } else {
             //Sprung wird zu Fall
             setSpeedY(-maxSpeedY * speedScale);
         }
     }
+    /// Falls sich der Spieler über der Nullebene befindet, entspricht der Spieler ist in der Luft,
+    /// wird jumpState auf true gesetzt, um einen Sprung zu verhindern
     if (getPosY() > 0) {
         jumpState = true;
     } else {
         jumpState = false;
     }
 
-    //Zeitlicher Abbau von Cooldowns
+    // Zeitlicher Abbau von Cooldowns
+
+    /// Alkoholpegel wird über die Zeit abgebaut
     if (alcoholLevel > 0) {
         alcoholLevel = alcoholLevel - (minusAlcoholPerSecond / frameRate);
     }
+    /// Immunität wird über die Zeit abgebaut
     if (immunityCooldown > 0) {
         immunityCooldown = immunityCooldown - 1;
     }
+    /// restliche Nachladezeit wird verkürzt
     if (fireCooldown > 0) {
         fireCooldown = fireCooldown - 1;
     }
 
-    //Skalierung der Geschwindigkeit des Spielers bei geringem Leben
+    /// Der Skalierungsfaktor für die Spielergeschwindigkeit wird aktualisiert:
+    ///  Spieler kann sich doppelt so schnell bewegen, wenn er nur noch ein Leben hat.
     if (health < 2) {
         speedScale = 2;
     } else {
         speedScale = 1;
     }
 
-    //Schaden bei zu hohem Alkoholpegel
+    /// Hat der Spieler zu viel Alkohol im Blut, so verliert er alle 4 Sekunden ein Leben.
     if (alcoholLevel > maxAlcohol) {
         //wenn der Alkoholpegel zu hoch wird dem Spieler alle 4 Sekunden ein Leben abgezogen
         if (alcoholDamageCooldown == 0) {
