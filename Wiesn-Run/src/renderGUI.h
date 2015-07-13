@@ -6,6 +6,7 @@
 #include <QGraphicsTextItem>
 #include <QGraphicsScene>
 #include <QGraphicsRectItem>
+#include <QGraphicsPixmapItem>
 
 /**
  * @brief Anzeigen der Spielerwerte-Klasse
@@ -34,11 +35,13 @@ public:
 private:
 
     //PixmapItems der angezeigten Spielerwerte
-    QGraphicsTextItem showHealth;
+    QGraphicsPixmapItem showHealth;
     QGraphicsRectItem showHealthBar[2];
-    QGraphicsTextItem showScore;
-    QGraphicsTextItem showAmmo;
-    QGraphicsTextItem showAlcohol;
+    QGraphicsPixmapItem showScore;
+    QGraphicsTextItem showScoreValue;
+    QGraphicsPixmapItem showAmmo;
+    QGraphicsTextItem showAmmoValue;
+    QGraphicsPixmapItem showAlcohol;
     QGraphicsRectItem showAlcoholBar[2];
 
 };
