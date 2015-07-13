@@ -1,4 +1,4 @@
-LevelDatei für den zweiten Level
+﻿LevelDatei für den zweiten Level
 
 Diese Datei kann nur von der Methode "loadLevelFile" ausgelesen werden.
 Zeilen, die mit einem Keyword beginnen, werden interpretiert. Alle anderen Zeilen werden ignoriert.
