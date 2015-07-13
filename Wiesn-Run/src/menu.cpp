@@ -19,6 +19,7 @@ Menu::Menu(std::string *menuTitle, menuType type) {
  */
 Menu::~Menu() {
     delete menuScene;
+    delete background;
 }
 
 /**
@@ -62,8 +63,8 @@ Menu::menuType Menu::getType() {
 int Menu::displayInit() {
     //Menü-Scene und Menü-Hintergrundbild werde initialisiert
     menuScene = new QGraphicsScene;
-    background.setPixmap(QPixmap(":/images/images/menubackground.png"));
-    menuScene->addItem(&background);
+    background = new QGraphicsPixmapItem(QPixmap(":/images/images/menubackground.png"));
+    menuScene->addItem(background);
 
     //Bierkruggrafik welcher die aktuelle Selektion im Menü anzeigt
     beerMug.setPixmap(QPixmap(":/images/images/beer.png"));

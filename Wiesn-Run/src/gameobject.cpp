@@ -38,7 +38,7 @@ GameObject::GameObject(int posX, int posY, objectType type) {
     //Grafik Initialisierungen aller Objekte außer Powerups
     switch (type) {
     case obstacle: {
-        // Verhältnis 1:2 (b:h)
+        // Verhältnis (3/2):2 (b:h)
         length = playerScale * (3.0 / 2.0);
         height = playerScale * 2;
 
@@ -71,13 +71,13 @@ GameObject::GameObject(int posX, int posY, objectType type) {
         break;
     }
     case enemy_tourist: {
-        // Verhältnis 1:2 (b:h)
-        length = playerScale;
+        // Verhältnis (3/2):2 (b:h)
+        length = playerScale * (3.0 /2.0);
         height = playerScale * 2;
 
         //Grafik - Enemy_tourist wird initialisiert
         setPixmap(QPixmap(":/images/images/tourist1.png"));
-        setPos(posX - 0.5*length -15, yOffset - posY - height);
+        setPos(posX - 0.5*length, yOffset - posY - height);
         qDebug("   Tourist erstellt");
         break;
     }
