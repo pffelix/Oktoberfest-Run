@@ -997,7 +997,7 @@ void Game::reduceWorldObjects(Player *playerPointer) {
 void Game::evaluateInput() {
     // Pfeil rechts?
     if(keyInput->getKeyactions().contains(Input::Keyaction::Right)) {
-        playerObjPointer->setSpeedX(playerSpeed);
+        playerObjPointer->setSpeedX(playerSpeed * playerObjPointer->getSpeedScale());
         if (!(playerObjPointer->inJump())) {
             // Audioevent erzeugen
             audioStruct playerAudio = {19, player_walk, 0};
