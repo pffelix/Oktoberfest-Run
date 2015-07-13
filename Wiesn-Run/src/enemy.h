@@ -4,7 +4,7 @@
 #include "movingobject.h"
 
 /**
- * @brief Das GegnerObjekt.
+ * @brief Das Gegner Objekt.
  * Dieses Objekt repräsentiert den Gegner. Das Objekt erbt von MovingObjekt und die wichtigsten Funktionen sind:
  *  - Automatische Aktualisierung
  *  - Schaden erhalten
