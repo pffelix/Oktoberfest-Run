@@ -62,9 +62,14 @@ Game::Game(int argc, char *argv[]) : QObject() {
     appPointer = new QApplication(argc,argv);
 }
 
-
+/**
+ * @brief Destruktor
+ * * Gibt verwendeten Heap-Speicher wieder frei.
+ */
 Game::~Game() {
-
+    //Speicherfreigabe von levelScene und window
+    delete levelScene;
+    delete window;
 }
 
 
@@ -72,9 +77,13 @@ Game::~Game() {
 // --------------- Applikation starten und beenden ------------------------------------------------
 /**
  * @brief Die Startfunktion, erstellt Fenster und Menüs, wird von main() aufgerufen
- * Grafik und Input (Flo, Felix):
+ * Grafik (Flo):
+ * Es wird ein QGraphicsView Widget "window" angelegt in der Größe 1024x768 angelegt welches Das Spiel visualisiert.
+ * Verschiedene Einstellungen werden vorgenommen wie zb. das deaktivieren der Scrollbars.
+ *
+ * Input (Felix):
  * Erstelle QApplication app mit QGraphicsView Widget window (Eventfilter installiert) und Zeiger input auf Input Objekt.
- * Um Funktionen der Tastatur Eingabe entwickeln zu können ist ein Qt Widget Fenster nötig.
+ * Um Funktionen der Tastatur Eingabe entwickeln zu können ist ein Qt Widget Fenster("windwo") nötig.
  * Auf dem Widget wird ein Eventfilter installiert welcher kontinuierlich Tastatureingaben mitloggt.
  * Die Eingaben werden in dem Objekt der Input Klasse gespeichert und können über getKeyactions() abgerufen werden.
  *
@@ -87,7 +96,7 @@ Game::~Game() {
  * gameState wird auf gameMenuStart gesetzt, dh das Spiel startet im Startmenü
  *
  * @return Rückgabewert von app.exec()
- * @author Rupert, Felix
+ * @author Rupert, Felix, Flo
  */
 int Game::start() {
     qDebug("Game::start()");
@@ -119,6 +128,7 @@ int Game::start() {
     window->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     window->setFixedSize(1024,768);
     window->setWindowTitle(QApplication::translate("Game Widget", "Wiesn - Run"));
+    // ViewItems reagieren standartmäßig auf Keyboard Input, das wird nicht benötigt und ausgeschaltet
     window->setEnabled(false);
     window->show();
     qDebug("initialize window");
@@ -243,16 +253,21 @@ void Game::exitGame() {
 // --------------- Level starten und beenden ------------------------------------------------------
 /**
  * @brief Startet neues Spiel
- * lädt Leveldatei
- * füllt worldobjects
+ * -lädt Leveldatei
+ * -füllt worldobjects
+ * -LevelScene wird eingestellt und aktiv geschaltet
+ * -verschiedene Grafikinitialisierungen
  */
 void Game::startNewGame(QString levelFileName, int levelNum) {
     // alles alte leeren
     worldObjects.clear();
 
-    //Levelscene einstellen
-    levelScene->setSceneRect(0,0,/* levelLength+sceneWidth */ 200000,768);  // verantwortlich für Fehler, es wurde nicht mehr Spieler zentriert (Rupi)
+    //Levelscene einstellen (Die Scene lässt sich leider durch ein QT internes Problem
+    //nicht exakt auf die Levellänge einstellen)
+    levelScene->setSceneRect(0,0,/* levelLength+sceneWidth */ 200000,768);
     window->setScene(levelScene);
+    // Szenen-Breite setzen
+    sceneWidth = 1024;
 
     //Level-Nummer speichern
     gameStats.actLevel = levelNum;
@@ -264,18 +279,17 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
 
     // Spieler hinzufügen
     worldObjects.push_back(playerObjPointer);
+
     //Grafik - Spieler der Scene hinzufügen und window auf ihn zentrieren
     levelScene->addItem(playerObjPointer);
-    //window->centerOn(playerObjPointer->getPosX() + 512 - 100 - 0.5 * playerObjPointer->getLength(), 384);
+    //Scene auf den Spieler zentrieren
     window->centerOn(playerObjPointer->getPosX(), 384);
-    // Szenen-Breite setzen
-    sceneWidth = 1024;
+
     // audioIDs initialisieren
     audioIDs = 20;
 
-    //Hintergründe initialisieren
+    //Hintergrund Ebenen initialisieren
     showBackground = new RenderBackground(levelScene, levelNum);
-
     //Anzeigen Leben, Highscore, Munition und Pegel initialisieren
     showGUI = new RenderGUI(levelScene);
 

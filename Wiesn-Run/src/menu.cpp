@@ -21,7 +21,6 @@ Menu::~Menu() {
     delete menuScene;
 }
 
-
 /**
  * @brief entfernt alle Einträge aus dem Menü
  * Titel wird danach wieder hinzugefügt
