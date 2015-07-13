@@ -48,7 +48,7 @@ const int playerScale = 60;
  * playerOffset: Distanz zwischen linkem Rand und Spieler
  */
 const int yOffset = 668;
-const int playerOffset = 100 + (playerScale/2);
+const int playerOffset = 100;
 
 /**
  * @brief Geschwindigkeit mit der sich die beweglichen Objekte durch die Welt bewegen

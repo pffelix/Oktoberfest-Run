@@ -279,8 +279,7 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
 
     // Spieler hinzufügen
     worldObjects.push_back(playerObjPointer);
-
-    //Grafik - Spieler der Scene hinzufügen und window auf ihn zentrieren
+    //Grafik - Spieler der Scene hinzufügen
     levelScene->addItem(playerObjPointer);
     //Scene auf den Spieler zentrieren
     window->centerOn(playerObjPointer->getPosX(), 384);
@@ -899,18 +898,20 @@ int Game::step() {
  * so wird das Objekt den worldObjects hinzugefügt und aus levelSpawn gelöscht. Die for-Schleife läuft solange, bis
  * das erste Mal ein Objekt weiter als levelSpawn vom Spieler entfernt ist. Dann wird abgebrochen, da alle folgenden
  * Objekte auf Grund der Sortierung noch weiter entfernt sein werden.
+ * Hier werden auch die Objekte der levelScene hinzugefügt.
  * @author Simon
  */
 void Game::appendWorldObjects(Player *playerPointer) {
     //Grafik - der Spieler wird vor der aktualisierung der Worldobjects entfernt
-    levelScene->removeItem(playerObjPointer);
+    levelScene->removeItem(playerPointer);
 
     while (!(levelSpawn.empty())) {
         GameObject *currentObj = *levelSpawn.begin();
         if ( (currentObj->getPosX() - playerPointer->getPosX()) < spawnDistance ) {
             worldObjects.push_back(currentObj);
             levelSpawn.pop_front();
-            //Grafik - Gegner der Scene hinzufügen
+
+            //Grafik - Objekt der Scene hinzufügen
             levelScene->addItem(currentObj);
         } else {
             break;
@@ -943,7 +944,7 @@ void Game::reduceWorldObjects(Player *playerPointer) {
         if (*it == currentObject) {
             worldObjects.erase(it);
             objectsToDelete.pop_front();
-            //Grafik - Bierkrüge löschen
+            //Grafik - Objekt von der Scene entfernen
             levelScene->removeItem(currentObject);
             //Speicher freigeben
             delete currentObject;
@@ -955,7 +956,7 @@ void Game::reduceWorldObjects(Player *playerPointer) {
         GameObject *currentObj = *worldObjects.begin();
         if ((playerPointer->getPosX() - currentObj->getPosX()) > deleteDistance) {
             worldObjects.pop_front();
-            //Grafik - Objekte aus der Scene löschen
+            //Grafik - Objekte von der Scene entfernen
             levelScene->removeItem(currentObj);
             //Speicher freigeben
             delete currentObj;
@@ -1702,7 +1703,7 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
     showBackground->updateParallaxe(playerStepMov);
 
     //Hintergrund Positionsupdate
-    showBackground->updateBackgroundPos(playerObjPointer->getPosX() - playerOffset);
+    showBackground->updateBackgroundPos(playerObjPointer->getPosX() - playerOffset - playerScale*0.5);
 
 
     //Positionsaktualisierungen aller Movingobjects

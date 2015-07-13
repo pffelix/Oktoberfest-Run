@@ -1,4 +1,5 @@
 #include "menu.h"
+#include "definitions.h"
 #include <QDebug>
 
 /**
@@ -17,7 +18,6 @@ Menu::Menu(std::string *menuTitle, menuType type) {
  * Gibt verwendeten Heap-Speicher frei
  */
 Menu::~Menu() {
-    delete background;
     delete menuScene;
 }
 
@@ -62,8 +62,12 @@ Menu::menuType Menu::getType() {
 int Menu::displayInit() {
     //Menü-Scene und Menü-Hintergrundbild werde initialisiert
     menuScene = new QGraphicsScene;
-    background = new QGraphicsPixmapItem(QPixmap(":/images/images/menubackground.png"));
-    menuScene->addItem(background);
+    background.setPixmap(QPixmap(":/images/images/menubackground.png"));
+    menuScene->addItem(&background);
+
+    //Bierkruggrafik welcher die aktuelle Selektion im Menü anzeigt
+    beerMug.setPixmap(QPixmap(":/images/images/beer.png"));
+    menuScene->addItem(&beerMug);
 
     //für jeden Menüeintrag wird ein QGraphicsTexItem angelegt, eingestellt und angezeigt
     for(std::list<menuEntry*>::iterator it = menuEntrys.begin(); it != menuEntrys.end(); it ++) {
@@ -103,6 +107,10 @@ int Menu::displayUpdate() {
     // färbt die aktuelle Selektion Rot ein
     getSelection()->showEntry.setDefaultTextColor(Qt::red);
     getSelection()->showEntry.setFont(QFont("Times",50,75,false));
+
+    //Bierkrug neben aktueller Selektion
+    beerMug.setPos(260,225 + 80*getSelection()->position);
+
     return 0;
 }
 

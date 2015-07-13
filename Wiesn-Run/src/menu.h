@@ -76,8 +76,11 @@ public:
     Menu::menuEntry *getEntry(int position);
 
     /// Zeiger auf die Menü-Scene und das Menü-Hintergrundbild
-    QGraphicsPixmapItem * background;
+    QGraphicsPixmapItem background;
     QGraphicsScene * menuScene;
+
+    ///Bierkrug im Menü
+    QGraphicsPixmapItem beerMug;
 
 private:
     /// Liste, die die Menü-Einträge enthalt
