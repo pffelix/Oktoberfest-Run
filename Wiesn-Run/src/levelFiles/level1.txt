@@ -42,7 +42,7 @@ Erläuterung
 # PowerUp,posX,posY,health,alcohol,ammo,immunityCooldown
 
 Player,130,0
-Levellänge,11500
+Levellaenge,11500
 
 
 # Der erste Level beginnt mit einem Bier ;)

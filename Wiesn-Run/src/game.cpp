@@ -341,7 +341,7 @@ void Game::loadLevelFile(QString fileSpecifier) {
 
             try {
 
-                if (strlist.at(0) == "Levellänge") {
+                if (strlist.at(0) == "Levellaenge") {
                     if (strlist.length() != 2) {
                         throw std::string("Ungültiger Eintrag für die Levellänge");
                     } else {

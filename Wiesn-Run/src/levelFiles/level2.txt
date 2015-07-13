@@ -46,7 +46,7 @@ Level2: Im Zelt
 ------------
 
 Player,130,0
-Levellänge,14000
+Levellaenge,14000
 
 # Dieses Level startet mit einem Hendl
 Hendl,800,40
