@@ -223,6 +223,7 @@ void Player::update() {
 
     //Schaden bei zu hohem Alkoholpegel
     if (alcoholLevel > maxAlcohol) {
+        //wenn der Alkoholpegel zu hoch wird dem Spieler alle 4 Sekunden ein Leben abgezogen
         if (alcoholDamageCooldown == 0) {
             health = health - 1;
             alcoholDamageCooldown = 4 * frameRate;

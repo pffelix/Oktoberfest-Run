@@ -1333,6 +1333,7 @@ void Game::handleCollisions() {
                 if (!(playerObjPointer->getImmunityCooldown())) {
                     gameStats.gameOver = playerObjPointer->receiveDamage(handleShoot->getInflictedDamage());
                     //Bierkrug zum löschen vormerken
+                    handleShoot->setToDelete();
                     objectsToDelete.push_back(handleShoot);
 
                     //Audioevent Krug zerbricht
@@ -1450,11 +1451,12 @@ void Game::handleCollisions() {
                      *  Bierkrug zum löschen vormerken
                      */
                     handleShoot = dynamic_cast<Shoot*>(handleEvent.causingObject);
-                    if ((handleShoot->getOrigin() == player)) {
+                    if ((handleShoot->getOrigin() == player) && (handleShoot->getHarming())) {
                         //Schaden zufügen
                         handleEnemy->receiveDamage(handleShoot->getInflictedDamage());
                         playerObjPointer->increaseEnemiesKilled();
                         //Bierkrug zum löschen vormerken
+                        handleShoot->setToDelete();
                         objectsToDelete.push_back(handleShoot);
 
                         //Audioevent Krug zerbricht
@@ -1491,13 +1493,14 @@ void Game::handleCollisions() {
             if (handleEvent.causingObject->getType() == shot) {
                 handleEnemy = dynamic_cast<Enemy*> (handleEvent.affectedObject);
                 handleShoot = dynamic_cast<Shoot*> (handleEvent.causingObject);
-                if (handleShoot->getOrigin() == player) {
+                if ((handleShoot->getOrigin() == player) && (handleShoot->getHarming())) {
                     //Schaden zufügen
                     if (handleEnemy->receiveDamage(handleShoot->getInflictedDamage())) {
                         playerObjPointer->increaseEnemiesKilled();
                         objectsToDelete.push_back(handleEnemy);
                     }
                     //Bierkrug zum löschen vormerken
+                    handleShoot->setToDelete();
                     objectsToDelete.push_back(handleShoot);
 
                     //Audioevent
@@ -1522,7 +1525,9 @@ void Game::handleCollisions() {
              * Bierkrug löschen, bei Kollision mit Hindernis
              */
             if ((handleEvent.causingObject->getType() == obstacle) || (handleEvent.causingObject->getType() == plane)){
-                objectsToDelete.push_back(dynamic_cast<Shoot*>(handleEvent.affectedObject));
+                handleShoot = dynamic_cast<Shoot*>(handleEvent.affectedObject);
+                handleShoot->setToDelete();
+                objectsToDelete.push_back(handleShoot);
 
                 //Audioevent
                 audioCooldownstruct newAudio;
