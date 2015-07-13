@@ -3,12 +3,21 @@
 
 #include "gameobject.h"
 
+/**
+ * @brief Das Moving-Object.
+ * Hierbei handelt es sich um eine abstrakte Klasse, die nicht instanziert werden kann. Die Klasse erbt von GameObject.
+ * Die wichtigsten Funktionen sind:
+ *  - Bewegungsausführung
+ *  - Graphik
+ *
+ * @author Simon, Rupert, Johann, Flo
+ */
 class MovingObject : public GameObject {
 
 public:
-    //Konstruktor und Destruktor
-    //MovingObject(int length, int hight, objectType type);
-    //MovingObject(int length, int hight, objectType type, int posX, int posY);
+
+    // ------------ Konstruktor, Destruktor ----------------
+
     MovingObject(int posX, int posY, objectType type, int speedX, int speedY);
     ~MovingObject();
 
@@ -16,37 +25,37 @@ public:
     void setPosX(int posX);
     void setPosY(int posY);
 
-    //Geschwindigkeit()
+    // ------------ Öffentliche Methoden -------------------
+
+    // -------Geschwindigkeit-------
     int getSpeedX() const;
     int getSpeedY() const;
     void setSpeedX(int speedX);
     void setSpeedY(int speedY);
 
 
-    //'Abstrakte Methode' update
+    // -------'Abstrakte Methode' update-------
     virtual void update()=0;
 
-    //aktualisiert die Framezahl die ohne Unterbrechung in eine Richtung gelaufen wurde
-    void updateFramesDirection();
+    // -------Graphik-------
+    void updateFramesDirection();   // aktualisiert die Framezahl die ohne Unterbrechung in eine Richtung gelaufen wurde
+    void flipHorizontal();          // spiegelt Grafiken
+    void swapImage();               // wechselt Grafiken um Animation zu erzeugen
 
-    //spiegelt Grafiken
-    void flipHorizontal();
-
-    //wechselt Grafiken um Animation zu erzeugen
-    void swapImage();
 
 protected:
-    //Positionsupdate
-    void updatePosition();
+    // -------Positionsupdate-------
+    void updatePosition();          // Bewegungsausführung
+
 
 private:
-    //Geschwindigkeit
+    // Horizontalgeschwindigkeit
     int speedX;
+    // Vertikalgeschwindigkeit
     int speedY;
 
     //gibt an für wieviele Frames ohne Unterbrechung in einer Richtung gelaufen wurde
     int framesDirection = 0;
-
     //merkt sich welches Bild gerade gesetzt ist (für Bewegungsanimation)
     bool imageState = true;
 

@@ -3,14 +3,15 @@
 /**
  * @brief Konstruktor für einen Schuss(Bierkrug).
  * Erzeugt einen fliegenden Bierkrug, dabei werden alle Werte gesetzt. Diese können später nur noch ausgelesen und nicht mehr geändert werden.
- * Es gilt, dass ein Bierkrug dreimal so schnell fliegt wie sich der Spieler bewegen kann und bei der Erzeugung eines Schusses nur die Richtung entscheidend ist.
+ * Es gilt, dass ein Bierkrug dreimal so schnell fliegt wie sich der Spieler bewegen kann.
+ * Bei der Erzeugung eines Schusses nur die Richtung entscheidend ist. >0 bedeutet nach Rechts
  *
- * @param posX x-Position
- * @param posY y-Position
- * @param direction Richtung
- * @param origin Schuss Erzeuger
+ * @param posX X-Position im Level
+ * @param posY Y-Position im Level
+ * @param direction Richtung, in die der Bierkrug fliegen soll
+ * @param origin Schuss-Erzeuger
  *
- * @author Johann
+ * @author Johann, Simon
  */
 //Da Länge und Breite konstante Werte beim Bierkrug sind, zur Zeit nur Optinal
 Shoot::Shoot(int posX, int posY, int direction, objectType origin) : MovingObject((posX + (playerScale / 2)), (posY + playerScale), shot, (direction * 3 * maxSpeed) , 0) {
@@ -19,6 +20,9 @@ Shoot::Shoot(int posX, int posY, int direction, objectType origin) : MovingObjec
     this->origin = origin;
 }
 
+/**
+ * @brief Destruktor
+ */
 Shoot::~Shoot() {
 
 }

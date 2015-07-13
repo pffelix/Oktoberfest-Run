@@ -12,7 +12,7 @@
  *  - Schaden
  * Die Bierkrüge führen alle Bewegungen selbständig aus
  *
- * @author Johann
+ * @author Johann, Simon
  */
 class Shoot : public MovingObject {
 
@@ -38,6 +38,7 @@ public:
 
     // -------update-------
     virtual void update();              // Automatische Aktualisierung
+
 
 private:
     // Schaden

@@ -9,8 +9,9 @@
  * @param posX X-Position
  * @param posY Y-Position
  * @param speedX Geschwindigkeit in X-Richtung
+ * @param enemy Gegnertyp
  *
- * @author Johann
+ * @author Johann, Simon
  */
 Enemy::Enemy(int posX, int posY, int speedX, objectType enemy) : MovingObject(posX, posY, enemy, speedX, -maxSpeedY) {
    //Unterscheiden der verschiedenen Gegnerarten
@@ -44,6 +45,9 @@ Enemy::Enemy(int posX, int posY, int speedX, objectType enemy) : MovingObject(po
     DeathCooldown = frameRate;
 }
 
+/**
+ * @brief Destruktor
+ */
 Enemy::~Enemy() {
 
 }

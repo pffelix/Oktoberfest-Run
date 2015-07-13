@@ -16,7 +16,7 @@
  *  - Schaden
  * Die Bewegungen des Spielers über die Eingabe erfolgt in der step()-Methode der game.cpp. Es werden hierbei nur die Attribute speedx/y gesetzt.
  *
- * @author Johann
+ * @author Johann, Simon
  */
 class Player : public MovingObject {
 
@@ -71,6 +71,7 @@ public:
 
     //update()
     virtual void update();      // Automatische Aktualisierung
+
 
 private:
     // Leben

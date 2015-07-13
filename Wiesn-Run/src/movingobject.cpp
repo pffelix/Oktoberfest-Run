@@ -2,48 +2,88 @@
 #include "player.h"
 #include <QTransform>
 
-
+/**
+ * @brief Konstruktor für ein MovingObject. Als abstrakte Klasse kann MovingObject nicht instanziert werden.
+ * Alle Attribute für diese Klasse müssen von den erbenden Klassen übergeben werden
+ *
+ * @param posX X-Position im Spiel
+ * @param posY Y-Position im Spiel
+ * @param type Objekt-Typ
+ * @param speedX horizontale Geschwindigkeit, >0 entspricht einer Bewegung nach rechts
+ * @param speedY vertikale Geschwindigkeit, >0 entspricht einer Bewegung nach oben
+ *
+ * @author Johann, Simon
+ */
 MovingObject::MovingObject(int posX, int posY, objectType type, int speedX, int speedY) : GameObject(posX, posY, type) {
     this->speedX = speedX;
     this->speedY = speedY;
 
 }
+
+/**
+ * @brief Destruktor
+ */
 MovingObject::~MovingObject() {
 
 }
 
+/**
+ * @brief Setzt die X-Position des Objekts.
+ *
+ * @param Position
+ */
 void MovingObject:: setPosX(int posX) {
     this->posX = posX;
 }
 
+/**
+ * @brief Setzt die Y-Position des Objekts.
+ *
+ * @param Position
+ */
 void MovingObject::setPosY(int posY) {
     this->posY = posY;
 }
 
+/**
+ * @brief Gibt die horizontale Geschwindigkeit zurück.
+ *
+ * @return int
+ */
 int MovingObject::getSpeedX() const {
     return speedX;
 }
 
+/**
+ * @brief Gibt die vertikale Geschwindigkeit zurück.
+ *
+ * @return int
+ */
 int MovingObject::getSpeedY() const {
     return speedY;
 }
 
+/**
+ * @brief Setzt die horizontale Geschwindigkeit.
+ *
+ * @param speedX horizontale Geschwindigkeit
+ */
 void MovingObject::setSpeedX(int speedX) {
     this->speedX = speedX;
 }
 
+/**
+ * @brief Setzt die vertikale Geschwindigkeit.
+ *
+ * @param speedY vertikale Geschwindigkeit
+ */
 void MovingObject::setSpeedY(int speedY) {
     this->speedY = speedY;
 }
 
-
-// Ist schon im Header mit =0 beschrieben
-/*void MovingObject::update() {
-
-}*/
-
 /**
- * @brief überschreibt die X und Y Position gemäß SpeedXY
+ * @brief überschreibt die X und Y Position gemäß SpeedXY.
+ *
  * @author Rupert
  */
 void MovingObject::updatePosition() {
@@ -61,6 +101,7 @@ void MovingObject::updatePosition() {
  * Wenn das Objekt steht oder die Richtung wechselt wird FramesDirection auf 0 gesetzt, ansonsten je nach Richtung
  * um eins erhöht (vorwärts) oder um eins erniedrigt (rückwärts).
  * So lässt sich auch die Richtung abfragen (> || < als 0) und mit dem aktuellen speedX-Wert ein Richtungswechsel festellen
+ *
  * @author Flo
  */
 void MovingObject::updateFramesDirection() {
@@ -93,6 +134,7 @@ void MovingObject::updateFramesDirection() {
  * kopiert von "https://forum.qt.io/topic/18131/solved-flip-a-qgraphicssvgitem-on-its-center-point/2" und angepasst.
  * Ermöglicht das Spiegeln von Bildern über eine Transformationsmatrix.
  * Am Anfang wird getestet ob ein Richtungswechsel statt gefunden hat.
+ *
  * @author Flo
  */
 void MovingObject::flipHorizontal()
@@ -132,7 +174,8 @@ void MovingObject::flipHorizontal()
  * Bild für die Bewegungsanimation. Es wird alle framRate/2 Frames gewechselt und sofort beim loslaufen.
  * Wenn der Spieler in der Luft ist bzw. springt setzt die Animation aus, wenn er nur noch ein Leben hat läuft
  * sie doppelt so schnell ab.
- * @Author Flo
+ *
+ * @author Flo
  */
 void MovingObject::swapImage()
 {

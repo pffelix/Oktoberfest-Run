@@ -13,7 +13,7 @@
  *  - Schaden
  * Die Gegner-Objekte führen alle Bewegungen selbstständig aus nur das Bierkrugwerfen wird von außen geregelt.
  *
- * @author Johann
+ * @author Johann, Simon
  */
 class Enemy : public MovingObject {
 
@@ -42,6 +42,7 @@ public:
 
     // -------update-------
     virtual void update();              // Automatische Aktualisierung
+
 
 private:
     // Leben

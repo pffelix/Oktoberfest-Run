@@ -1,13 +1,15 @@
 #include "player.h"
 
 /**
- * @brief Konstruktor
+ * @brief Konstruktor.
  * Erzeugt einen neuen Spieler.
  * Dabei werden Startwerte für alle Attribute festgelegt.
  *
- * @param posX X-Position in Level
- * @param posY Y-Position in Level
+ * @param posX X-Position im Level
+ * @param posY Y-Position im Level
  * @param speedX HorizontalGeschwindigkeit
+ *
+ * @author Johann, Simon
  */
 Player::Player(int posX, int posY, int speedX) : MovingObject(posX, posY, player, speedX, -maxSpeedY) {
     health = 3;

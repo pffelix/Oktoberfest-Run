@@ -1,14 +1,14 @@
 #include "gameobject.h"
 
 /**
- * @brief GameObject::GameObject
- * Konstruktor
- * @param length    : Länge
- * @param height    : Höhe
- * @param type      : Typ
- * @param posX      : X-Position
- * @param posY      : Y-Position
- * @param colType   : Kollisionstyp
+ * @brief Konstruktor für ein GameObject.
+ * Die Attribute Länge, Höhe und Objekt-Typ können nicht mehr geändert werden und X/Y-Position nur durhc erbende Klassen.
+ *
+ * @param posX X-Position
+ * @param posY Y-Position
+ * @param length Länge
+ * @param height Breite
+ * @param type Objekt-Typ
  *
  * @author Johann
  */
@@ -22,7 +22,9 @@ GameObject::GameObject(int posX, int posY, int length, int height, objectType ty
 
 /**
  * @brief GameObject Konstruktor
- * Jedes Objekt bekommt ihr seine Grafik zugewiesen und die "Startposition" wird in Scenenkoordinaten errechnet
+ * Je nach Objekt-Typ bekommt hier jedes Objekt Abmessungen und eine Grafik zugewiesen und die "Startposition" wird in Scenenkoordinaten errechnet.
+ * Die Attribute Länge, Höhe und Objekt-Typ können nicht mehr geändert werden und X/Y-Position nur durhc erbende Klassen.
+ *
  * @param posX      : X-Position
  * @param posY      : Y-Position
  * @param type      : Typ
@@ -126,34 +128,72 @@ GameObject::GameObject(int posX, int posY, objectType type) {
     };
 }
 
+/**
+ * @brief Destruktor
+ */
 GameObject::~GameObject() {
 
 }
 
+/**
+ * @brief Gibt die X-Position des Objekts zurück.
+ *
+ * @return int
+ */
 int GameObject::getPosX() const {
     return posX;
 }
 
+/**
+ * @brief Gibt die Y-Position des Objekts zurück.
+ *
+ * @return int
+ */
 int GameObject::getPosY() const {
     return posY;
 }
 
+/**
+ * @brief Gibt die Länge des Objekts zurück.
+ *
+ * @return int
+ */
 int GameObject::getLength() const {
     return length;
 }
 
+/**
+ * @brief Gibt die Höhe des Objekts zurück.
+ *
+ * @return int
+ */
 int GameObject::getHeight() const {
     return height;
 }
 
+/**
+ * @brief Gibt den Objekt-Typ des Objekts zurück.
+ *
+ * @return objectType
+ */
 objectType GameObject::getType() const	{
     return type;
 }
 
+/**
+ * @brief Setzt die Audio-ID fest. Diese wird in der game.cpp benötigt, um objektspezifische Sounds wiederzugeben.
+ *
+ * @param audioID Audio-ID
+ */
 void GameObject::setAudioID(int audioID) {
     this->audioID = audioID;
 }
 
+/**
+ * @brief Gibt die Audio-ID des Objekts zurück.
+ *
+ * @return int
+ */
 int GameObject::getAudioID() const {
     return audioID;
 }
