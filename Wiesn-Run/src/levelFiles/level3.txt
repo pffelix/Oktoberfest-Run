@@ -1,4 +1,4 @@
-﻿LevelDatei für den dritten Level
+LevelDatei für den dritten Level
 
 Diese Datei kann nur von der Methode "loadLevelFile" ausgelesen werden.
 Zeilen, die mit einem Keyword beginnen, werden interpretiert. Alle anderen Zeilen werden ignoriert.
@@ -50,10 +50,7 @@ Level3: Käfer-Zelt
 ------------
 
 Player,130,0
-Levellänge,28000
-
-# Boss ganz am Anfang zu testen (auskommentiert)
-Boss,500,0,0
+Levellänge,30000
 
 Obstacle,800,0
 
@@ -252,6 +249,14 @@ Bier,25700,40
 Hendl,26000,40
 Hendl,26200,40
 Bier,26500,40
+
+# Bossgegner
+Obstacle,28000,0
+Boss,28400,0,0
+Plane,28900
+
+# Das letzte Bier...laut postellion in 90% der Fälle schlecht
+Bier,29300
 
 # ENDE
 
