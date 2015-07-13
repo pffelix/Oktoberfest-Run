@@ -6,12 +6,21 @@
  * @param Zeiger auf String mit Menu-Titel
  * @author Rupert
  */
-Menu::Menu(std::string *menuTitle, menuType type)
-{
+Menu::Menu(std::string *menuTitle, menuType type) {
     title = menuTitle;
     this->type = type;
     this->addEntry(*menuTitle,0,false);
 }
+
+/**
+ * @brief Menu-Destruktor
+ * Gibt verwendeten Heap-Speicher frei
+ */
+Menu::~Menu() {
+    delete background;
+    delete menuScene;
+}
+
 
 /**
  * @brief entfernt alle Einträge aus dem Menü
@@ -47,12 +56,11 @@ Menu::menuType Menu::getType() {
 
 /**
  * @brief Initialisiert das sichtbare Menü , muss immer nach anlegen der Menü Entrys aufgerufen werden
+ * Jeder Menüeintrag hat auch QGraphicsTextItem welches hier eingestellt entsprechend eingestellt wird
  * @return 0 bei Erfolg
  * @author Flo
  */
 int Menu::displayInit() {
-    //qDebug("%s - %s",getTitle()->c_str(),getSelection()->name.c_str());
-
     //Menü-Scene und Menü-Hintergrundbild werde initialisiert
     menuScene = new QGraphicsScene;
     background = new QGraphicsPixmapItem(QPixmap(":/images/images/menubackground.png"));
@@ -79,6 +87,7 @@ int Menu::displayInit() {
 
 /**
  * @brief aktualisiert das sichtbare Menü
+ * Je nach Userinput wird immer der aktuell ausgewählte Menüeintrag rot dargestellt.
  * @return 0 bei Erfolg
  * @author Flo
  */
