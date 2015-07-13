@@ -1313,7 +1313,7 @@ void Game::handleCollisions() {
                 /* Zusammenstoß mit Endgegner
                  */
                 handleEnemy = dynamic_cast<Enemy*> (handleEvent.causingObject);
-                if (!(playerObjPointer->getImmunityCooldown() > 0)) {
+                if ((!(playerObjPointer->getImmunityCooldown() > 0)) && !(handleEnemy->getDeath())) {
                     gameStats.gameOver = playerObjPointer->receiveDamage(handleEnemy->getInflictedDamage());
                     //Audioevent
                     audioCooldownstruct newAudio;
@@ -1495,6 +1495,7 @@ void Game::handleCollisions() {
                     //Schaden zufügen
                     if (handleEnemy->receiveDamage(handleShoot->getInflictedDamage())) {
                         playerObjPointer->increaseEnemiesKilled();
+                        objectsToDelete.push_back(handleEnemy);
                     }
                     //Bierkrug zum löschen vormerken
                     objectsToDelete.push_back(handleShoot);
