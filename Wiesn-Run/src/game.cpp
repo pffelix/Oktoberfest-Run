@@ -236,8 +236,10 @@ bool Game::eventFilter(QObject *obj, QEvent *event) {
 }
 
 /**
- * @brief Diese Funktion wird aufgerufen wenn das Programm beendet werden soll.
- * @author: Felix
+ * @brief Game::exitGame()
+ * Diese Funktion wird aufgerufen wenn das Programm beendet werden soll.
+ * Hier werden alle Objekte gelöscht und der Speicher wieder freigegeben.
+ * @author: Felix, Johann
  */
 void Game::exitGame() {
     // Beende Audio Ausgabe Thread
@@ -249,6 +251,19 @@ void Game::exitGame() {
 
     // lösche AudioControl Objekt
     delete audioOutput;
+
+    // alle Objekte aus den Listen für die gameObjects werden gelöscht
+
+    while (!(worldObjects.empty())) {
+        GameObject *handleObject = worldObjects.front();
+        worldObjects.pop_front();
+        delete handleObject;
+    }
+    while (!(levelSpawn.empty())) {
+        GameObject *handleObject = levelSpawn.front();
+        levelSpawn.pop_front();
+        delete handleObject;
+    }
 }
 
 
@@ -606,27 +621,26 @@ void Game::endGame() {
     playerScore.name = bavarianNames[nameIndex];
     setState(gameMenuName);
 
-    //Listen leeren
+    // Audiolisten leeren
     audioevents.clear();
     audioStorage.clear();
 
     stepCount = 0;
 
-    playerObjPointer = 0;
     // alle Objekte aus den Listen für die gameObjects werden gelöscht
-    delete playerObjPointer;
 
     while (!(worldObjects.empty())) {
         GameObject *handleObject = worldObjects.front();
         worldObjects.pop_front();
         delete handleObject;
     }
-
     while (!(levelSpawn.empty())) {
         GameObject *handleObject = levelSpawn.front();
         levelSpawn.pop_front();
         delete handleObject;
     }
+    playerObjPointer = 0;
+
     //Anzeige der Spielerwerte entfernen & löschen
     delete showGUI;
 
