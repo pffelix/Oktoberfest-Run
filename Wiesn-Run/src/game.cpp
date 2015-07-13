@@ -56,7 +56,6 @@ struct compareScores {
 /**
  * @brief Konstruktor:
  * Initialisiert den appPointer
- * @author Rupert
  */
 Game::Game(int argc, char *argv[]) : QObject() {
     // Initialisiert den appPointer mit der QApplication
@@ -64,8 +63,8 @@ Game::Game(int argc, char *argv[]) : QObject() {
 }
 
 /**
- * @brief Destruktor
- * * Gibt verwendeten Heap-Speicher wieder frei.
+ * @brief Destruktor:
+ * Gibt verwendeten Heap-Speicher wieder frei.
  */
 Game::~Game() {
     //Speicherfreigabe von levelScene und window
@@ -216,7 +215,11 @@ void Game::menuInit() {
 }
 
 /**
- * @brief eventFilter wird aufgerufen, wenn ein neues QEvent auftritt. Diese Funktion überwacht die Betätigung von Tastatur Eingaben und handelt den Aufruf des QT Schließ-Button (x) im Spielfenster. Die Tastatureingaben werden über das keyInput Ojekt ausgewertet. Der Aufruf des QT Schließ-Button (x) ist neben dem Aufruf des Hauptmenüeintrags Exit die 2. Möglichkeit das Spiel zu beenden. Wird ein CloseEvent festgestellt wird die Variable exitGameevent auf False gesetzt und das Spiel zum Ende des aktuellen Steps in Game::timerEvent beendet.
+ * @brief eventFilter wird aufgerufen, wenn ein neues QEvent auftritt.
+ * Diese Funktion überwacht die Betätigung von Tastatur Eingaben und handelt den Aufruf des QT Schließ-Button (x) im Spielfenster.
+ * Die Tastatureingaben werden über das keyInput Ojekt ausgewertet.
+ * Der Aufruf des QT Schließ-Button (x) ist neben dem Aufruf des Hauptmenüeintrags Exit die 2. Möglichkeit das Spiel zu beenden.
+ * Wird ein CloseEvent festgestellt wird die Variable exitGameevent auf False gesetzt und das Spiel zum Ende des aktuellen Steps in Game::timerEvent beendet.
  * @param: QObject *obj
  * @param: QEvent *event
  * @return: QObject::eventFilter(obj, event)
@@ -230,13 +233,11 @@ bool Game::eventFilter(QObject *obj, QEvent *event) {
         // beende Spiel
         exitGameevent = true;
     }
-    //else {
-         return QObject::eventFilter(obj, event);
-    //}
+    return QObject::eventFilter(obj, event);
 }
 
 /**
- * @brief Game::exitGame()
+ * @brief Wird zum Spielende aufgerufen.
  * Diese Funktion wird aufgerufen wenn das Programm beendet werden soll.
  * Hier werden alle Objekte gelöscht und der Speicher wieder freigegeben.
  * @author: Felix, Johann
@@ -270,7 +271,7 @@ void Game::exitGame() {
 
 // --------------- Level starten und beenden ------------------------------------------------------
 /**
- * @brief Startet neues Spiel
+ * @brief Startet neues Level
  *
  * - lädt Leveldatei
  * - füllt worldobjects
@@ -324,7 +325,7 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
 
 /**
  * @brief Level-Datei auslesen
- * @param fileSpecifier
+ *
  * Diese Funktion liest Level-Dateien aus. In der Leveldatei werden Keywords für die anzulegenden Objekte
  * verwendet. Nach den Objekten stehen durch Kommata getrennt die benötigten Parameter.
  * Ein Player-Eintrag enthält posX und posY.
@@ -332,6 +333,7 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
  * Ein Obstacle-Eintrag enthält posX und posY.
  * Ein Plane-Eintrag (Zwischenebene) enthältn posX und posY.
  * Ein PowerUp-Eintrag enthält posX, posY und die jeweiligen Boni.
+ * @param fileSpecifier String mit Dateinamen der Leveldatei
  * @author Simon
  */
 void Game::loadLevelFile(QString fileSpecifier) {
@@ -476,8 +478,8 @@ void Game::loadLevelFile(QString fileSpecifier) {
 
 
 /**
- * @brief Game::updateHighScore
- * Diese Funktion liest und aktualisiert die Highscore des Spiels. Als Parameter wird ein std::string mode erwartet.
+ * @brief Diese Funktion liest und aktualisiert die Highscore des Spiels.
+ * Als Parameter wird ein std::string mode erwartet.
  * Ist der mode = "write", so wird die aktuelle Highscore unter Berücksichtigung der aktuellen playerScore neu geschrieben.
  * Alle anderen Werte für mode lesen nur die alte Highscore und die des Spielers in die Liste ein, um sie z.B. im Highscore-Menü
  * anzuzeigen.
@@ -542,8 +544,8 @@ void Game::updateHighScore(std::string mode) {
 
 
 /**
- * @brief füllt das Statistik- und HighscoreMenü
- * löscht das Statistik- und Highscore-Menü und füllt es mit aktuellen Werten
+ * @brief füllt das Statistik- und HighscoreMenü.
+ * Diese Funktion löscht das Statistik- und Highscore-Menü und füllt es mit aktuellen Werten.
  * @author Rupert
  */
 void Game::displayStatistics() {
@@ -600,15 +602,15 @@ void Game::displayStatistics() {
 
 
 /**
- * @brief Game::endGame
+ * @brief Wird beim Beenden des Levels aufgerufen.
  * Diese Funktion löscht nicht mehr nötige Variablen und Objekte wenn vom Spiel in das Statistikmenü gewechselt wird.
- * es werden auch die Statistik und Highscoremenüs aktualisiert
- * @author: Felix, Johann
+ * Es wird ein zufälliger Name aus einer Liste gewählt, der dann vom Spieler abgeändert werden kann.
+ * Dazu wird das Namen-Menü neu geschrieben und dorthin gewechselt.
+ * @author: Felix, Johann, Rupert
  */
 void Game::endGame() {
     // Namen Menü
     const string bavarianNames[208] = {"Ade", "Ali", "Loi", "Alosius", "Anderl", "Andi", "Ande", "Bäda", "Bare", "Bartl", "Baste", "Bastia", "Bastl", "Horstl", "Bene", " Benny", "Bep", "Beppa", "Beppe", "Bepperl", "Berne", "Hardl", "Ber", "Bert", "Berti", "Bini", "Blase", "Chris", "Christl", "Christ", "Christà", "Dam", "Dama", "Douma", "Doilfa", "Doilferl", "Don", "Dona", "Doner", "Dan", "Dannerl", "Donisl", "Ed", "Ederl", "Ferdl", "Fest", "Fesl", "Fidl", "Fips", "Flore", "Fonse", " Fone", "Franze", "Franzl", "Fre", "Fredl", "Fridl", "Fritz", "Girgl", "Gog", "Gog", "Gode", "Gottl", "Gore", "Grisch", "Grisse", "Guste", "Gustl", "Guste", "Hans", "Hanse", "Hans", "Hanse", "Hann", "Haan", "Hannas", "Hart", "Harte", "Hausl", "Heini", "Hias", "Irgei", "Jacher", " Jaherl", "Jack", "Joc", "Jock", "Jockei", "Kar", "Karle", "Kaschb", "Koschba", "Kone", "Kon", "Korbe", "Korw", "Kurwe", "Laure", "Len", "Lenze", "Lenze", "Le", "Poldi", "Loi", "Lois", "Loise", "Loisl", " Lui", "Luis", "Luisele", "Lug", "Lugge", "Wickerl", "Lugge", "Maiche", "Mane", "Marine", "Nuss", "Mareale", "Mart", "Masch", "Madd", "Maschde", "Mart", "Mort", "Mäa", "Märt", "Mat", "Mat", "Matte", "Matze", "Ma", "Max", "Maxl", "Michl", "Miche", "Müche", "Mih", "Müh", "Misch", "Michei", "Muck", "Naze", "Naa", "Nadsl", "Nic", "Nicke", "Nickl", "Polde", "Poidl", "Quire", "Quirl", "Reine", "Remme", "Rude", "Rudi", "Rul", "Rups", "Schoasch", "Schorschl", "Schor", "Schosc", "Schoo", "Schos", "Schurli", "Sepp", "Seppe", "Sepp", "Sepper", "Seppei", "Siege", "Siggi", "Simmal", "Stachus", "Steffl", "Steffe", "Stefferl", "Stoff", "Stoff", "Stofferl", "Ton", "Tona", "Tonerl", "Vale", "Veit", "Veit", "Vere", "Verl", "Vie", "Vinz", "Voitl", "Was", "Waste", "Wastl", "Wic", "Wiggl", "Wigge", "Wigger", "Wack", "Woife", "Woifer", "Wolle", "Xandi", "Xar", "Xavi", "Xaver", "Xide", "Zenz"};
-    //std::string bavarianNames[10] = {"Ade", "Loisl", "Anderl", "Bäda", "Bertl", "Wickerl", "Beppi", "Hias", "Xaver", "Miche"};
 
     int nameMax = 208;  //10;
     int nameIndex = rand() % nameMax;
@@ -652,9 +654,9 @@ void Game::endGame() {
 
 // --------------- Regelmäßig aufgerufene Funktionen timerEvent() und step() ----------------------
 /**
- * @brief wird regelmäßig aufgerufen
- * event muss drinstehen, damit der Timer die Funktion aufruft
- * @param event
+ * @brief Wird vom Timer in jedem Intervall aufgerufen.
+ * Hier wird dann wiederum step() aufgerufen.
+ * Außerdem wird überprüft ob das Fenster geschlossen wurde und gegebenenfalls exitGame() aufgerufen.
  * @author Rupert, Felix
  */
 void Game::timerEvent(QTimerEvent *event)
@@ -675,10 +677,14 @@ void Game::timerEvent(QTimerEvent *event)
 
 /**
  * @brief Game-Loop
+ *
  * Diese Funktion wird von timerEvent() aufgerufen und ist für den kompletten Ablauf des Spiels verantwortlich.
- * grober Ablauf:
- * LOOP:
- *  - Timer starten
+ * Der Ablauf sieht so aus:
+ *  - Input für Menü-Handling abfragen
+ *  - Läuft das Spiel oder ist ein Menü aktiv?
+ *  falls Menü:
+ *  -
+ *  falls Spiel:
  *  - Neue Objekte zur Welt hinzufügen
  *  - alte Objekte löschen
  *  - Input auslesesn
