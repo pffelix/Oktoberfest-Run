@@ -16,6 +16,10 @@ public:
     //Ursprung
     objectType getOrigin();
 
+    //toDelete
+    bool getHarming() const;
+    void setToDelete();
+
     //update()
     virtual void update();
 
@@ -24,6 +28,7 @@ private:
     int inflictedDamage;
     //Wer hat den Bierkrug geworfen? Spieler oder Gegner
     objectType origin;
+    bool harming;
 
 };
 

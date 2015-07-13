@@ -47,30 +47,37 @@ public:
     int getEnemiesKilled();
     void increaseEnemiesKilled();
 
+    // Geschwindigkeitsskalierung
+    int getSpeedScale() const;
+
     //update()
     virtual void update();
 
 private:
-    //Lebensstand
+    // Leben
     int health;
-    //Alkoholpegel
+    // Alkoholpegel
     int alcoholLevel;
-    //verbleibende Munition
+    // verbleibende Munition
     int ammunation;
-    //Schaden den der Spieler verursacht
+    // Schaden den der Spieler verursacht
     int inflictedDamage;
-    //Anzahl Frames Schadensimmunität (Unsterblichkeit)
+    // Anzahl Frames Schadensimmunität (Unsterblichkeit)
     int immunityCooldown;
-    //verbleibende Nachladezeit
+    // verbleibende Nachladezeit
     int fireCooldown;
-    //Feuergeschwindigkeit
+    // Feuergeschwindigkeit
     int fireRate;
-    //In-der-Luft-Zustand
+    // In-der-Luft-Zustand
     bool jumpState;
-    //In-der-Luft-'Ort'
+    // In-der-Luft-'Ort'
     int jumpCooldown;
     // Getötete Gegner
     int enemiesKilled;
+    // Skalierungsfaktor für Spielergeschwindigkeit
+    int speedScale;
+    // Wartezeit zwischen zwei Lebensabzügen wegen Alkoholüberdosis
+    int alcoholDamageCooldown;
 
 };
 

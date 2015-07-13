@@ -1,4 +1,4 @@
-﻿LevelDatei für den zweiten Level
+LevelDatei für den zweiten Level
 
 Diese Datei kann nur von der Methode "loadLevelFile" ausgelesen werden.
 Zeilen, die mit einem Keyword beginnen, werden interpretiert. Alle anderen Zeilen werden ignoriert.
@@ -46,66 +46,103 @@ Level2: Im Zelt
 ------------
 
 Player,130,0
-Levellänge,20000
+Levellänge,14000
 
+# Dieses Level startet mit einem Hendl
+Hendl,800,40
 
-# Ubahn-Station: 0 bis 2000
-Obstacle,45,0
-Plane,60,140
-Plane,180,140
-Plane,300,140
-Plane,420,140
-Plane,540,140
-Plane,660,140
-Plane,780,140
-Plane,900,140
-Plane,1020,140
-Plane,1140,150
-Plane,1260,150
-Plane,1380,160
-Plane,1500,160
-Plane,1620,170
-Plane,1740,180
-Plane,1860,200
-Plane,1980,200
+# Erste Obstacles und Planes
+Obstacle,1200,0
+Plane,1400,130
+Obstacle,1600,0
 
-#Beer
-PowerUp,300,0,0,1,1,0
-PowerUp,700,40,0,1,1,0
-PowerUp,900,120,0,1,1,0
-PowerUp,1300,0,0,1,1,0
-PowerUp,1700,140,0,1,1,0
-PowerUp,1900,0,0,1,1,0
-PowerUp,1900,60,0,1,1,0
+# Einzelner Security
+Security,2000,0
 
-# Weg zum Zelt: 2000 bis 5000
-PowerUp,2000,0,0,1,1,0
+# Treppe aus Obstacles
+Obstacle,2400,0
+Obstacle,2490,0
+Obstacle,2490,120
+Bier,2490,270
 
-Plane,3000,140
-Tourist,3100,140,0
-Plane,3120,140
-Plane,3240,140
-Security,3240,0
-Plane,3360,140
-Plane,3240,300
-Plane,3360,300
+# Plane mit Securites
+Plane,2900,130
+Plane,3020,130
+Plane,3140,120
+Plane,3260,120
+Security,3260,140
+Plane,3380,130
+Plane,3500,130
+Plane,3620,120
+Plane,3740,120
+Security,3740,140
+Plane,3860,130
+Plane,3980,130
+Bier,3980,170
 
-PowerUp,3000,40,0,1,1,0
-PowerUp,4000,120,0,1,1,0
+# Folge von Obstacles
+Obstacle,4500,0
+Obstacle,4700,0
+Obstacle,4900,0
 
+# Obstacles mit Security dazwischen
+Obstacle,5500,0
+Security,5650,0
+Obstacle,5800,0
 
-# Zelt: 5000
+# Die große Sturzmöglichkeit
+Obstacle,6200,0
+Obstacle,6290,0
+Obstacle,6290,120
+Obstacle,6380,0
+Obstacle,6380,120
+Obstacle,6380,240
+Bier,6380,400
+Plane,6480,360
+Plane,6600,360
+Plane,6720,360
+Bier,6800,450
+Plane,7080,360
+Plane,7200,360
+Plane,7320,360
+Bier,7400,450
+Plane,7680,360
+Plane,7800,360
+Plane,7920,360
+Bier,8000,450
+Plane,8280,360
+Security,8280,380
+Obstacle,8295,0
+Obstacle,8295,120
+Obstacle,8295,240
 
-PowerUp,5000,0,0,1,1,0
-PowerUp,5000,40,0,1,1,0
-PowerUp,5000,90,0,1,1,0
-PowerUp,5000,120,0,1,1,0
+# Folge von Obstacles
+Obstacle,9500,0
+Obstacle,9700,0
+Obstacle,9900,0
 
-Obstacle,5100,0
-Obstacle,5100,120
-Obstacle,5100,240
-Obstacle,5100,360
+# Security auf Obstacle
+Obstacle,10700,0
+Security,10700,120
 
-Obstacle,6000,0
+# Zwei Securities auf Plane
+Plane,11000,130
+Security,10980,150
+Security,11020,150
 
+# Zwei Ebenen und nur unten geht es weiter
+Plane,12000,140
+Plane,12120,140
+Plane,12240,140
+Plane,12360,140
+Obstacle,12375,160
+Obstacle,12375,280
+Hendl,12150,40
 
+# Der erste Tourist - willkommen auf der Wiesn
+Tourist,13300,0,-2
+
+# Bier am Ende
+Bier,13500,40
+
+# Ende

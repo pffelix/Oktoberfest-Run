@@ -41,6 +41,14 @@ int Shoot::getInflictedDamage() const {
     return inflictedDamage;
 }
 
+void Shoot::setToDelete() {
+    harming = false;
+}
+
+bool Shoot::getHarming() const {
+    return harming;
+}
+
 void Shoot::update() {
     //posX = posX + this->getSpeedX();
     updatePosition();

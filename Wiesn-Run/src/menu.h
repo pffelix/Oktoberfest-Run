@@ -83,10 +83,8 @@ public:
     // Gibt Menü-Eintrag an der entsprechenden Position zurück
     Menu::menuEntry *getEntry(int position);
 
-    // ---------------- Variablen ---------------------
-
     /// Zeiger auf das Menü-Hintergrundbild
-    QGraphicsPixmapItem background;
+    QGraphicsPixmapItem * background;
 
     /// Zeiger auf die Menü-Scene
     QGraphicsScene * menuScene;

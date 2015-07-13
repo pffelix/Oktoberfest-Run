@@ -130,13 +130,16 @@ void MovingObject::flipHorizontal()
  * @brief MovingObject::swapImage
  * Die Funktion testet mit Hilfe von "imageState" welches Bild gerade aktiv ist und wechselt dann jeweils auf das andere
  * Bild für die Bewegungsanimation. Es wird alle framRate/2 Frames gewechselt und sofort beim loslaufen.
- * Wenn der Spieler in der Luft ist bzw. springt setzt die Animation aus
+ * Wenn der Spieler in der Luft ist bzw. springt setzt die Animation aus, wenn er nur noch ein Leben hat läuft
+ * sie doppelt so schnell ab.
  * @Author Flo
  */
 void MovingObject::swapImage()
 {
+    //Wechselgeschwindigkeit
+    int swapSpeed = static_cast<int>(frameRate/2);
     //Tourist für frameRate/2 Frames in Bewegung seit letztem Bildwechsel?
-    if (getType() == enemy_tourist && framesDirection%(frameRate/2) == 0 && speedX != 0) {
+    if (getType() == enemy_tourist && framesDirection%swapSpeed == 0 && speedX != 0) {
 
         if(imageState == true) {
             setPixmap(QPixmap(":/images/images/tourist2.png"));
@@ -148,8 +151,12 @@ void MovingObject::swapImage()
         }
     }
 
+    //Spieler nur noch ein Leben?
+    if(getType() == player && dynamic_cast<Player*>(this)->getHealth() == 1) {
+        swapSpeed = static_cast<int>(frameRate/4);
+    }
     //Spieler für  frameRate/2 Frames in Bewegung seit letztem Bildwechsel und nicht in der Luft?
-    else if (getType() == player && framesDirection%(frameRate/2) == 0 && speedX != 0
+    if (getType() == player && framesDirection%swapSpeed == 0 && speedX != 0
         &&  dynamic_cast<Player*>(this)->inJump() == false) {
 
         if(imageState == true) {

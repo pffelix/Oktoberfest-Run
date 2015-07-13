@@ -999,7 +999,7 @@ void Game::reduceWorldObjects(Player *playerPointer) {
 void Game::evaluateInput() {
     // Pfeil rechts?
     if(keyInput->getKeyactions().contains(Input::Keyaction::Right)) {
-        playerObjPointer->setSpeedX(playerSpeed);
+        playerObjPointer->setSpeedX(playerSpeed * playerObjPointer->getSpeedScale());
         if (!(playerObjPointer->inJump())) {
             // Audioevent erzeugen
             audioStruct playerAudio = {19, player_walk, 0};
@@ -1061,7 +1061,7 @@ void Game::calculateMovement() {
             // Wenn der cast klappt, rufe update() auf.
             aktMovingObject->update();
             //falls es sich um einen Gegner handelt feuern
-            if ((aktMovingObject->getType() == enemy_security) || (aktMovingObject->getType() == enemy_tourist)){
+            if ((aktMovingObject->getType() == enemy_security) || (aktMovingObject->getType() == enemy_tourist) || (aktMovingObject->getType() == BOSS)){
                 Enemy *aktEnemy = dynamic_cast<Enemy*> (aktMovingObject);
                 if (aktEnemy->getDeathCooldown() == 0) {
                     objectsToDelete.push_back(aktEnemy);
@@ -1315,7 +1315,7 @@ void Game::handleCollisions() {
                 /* Zusammenstoß mit Endgegner
                  */
                 handleEnemy = dynamic_cast<Enemy*> (handleEvent.causingObject);
-                if (!(playerObjPointer->getImmunityCooldown() > 0)) {
+                if ((!(playerObjPointer->getImmunityCooldown() > 0)) && !(handleEnemy->getDeath())) {
                     gameStats.gameOver = playerObjPointer->receiveDamage(handleEnemy->getInflictedDamage());
                     //Audioevent
                     audioCooldownstruct newAudio;
@@ -1335,6 +1335,7 @@ void Game::handleCollisions() {
                 if (!(playerObjPointer->getImmunityCooldown())) {
                     gameStats.gameOver = playerObjPointer->receiveDamage(handleShoot->getInflictedDamage());
                     //Bierkrug zum löschen vormerken
+                    handleShoot->setToDelete();
                     objectsToDelete.push_back(handleShoot);
 
                     //Audioevent Krug zerbricht
@@ -1452,11 +1453,12 @@ void Game::handleCollisions() {
                      *  Bierkrug zum löschen vormerken
                      */
                     handleShoot = dynamic_cast<Shoot*>(handleEvent.causingObject);
-                    if ((handleShoot->getOrigin() == player)) {
+                    if ((handleShoot->getOrigin() == player) && (handleShoot->getHarming())) {
                         //Schaden zufügen
                         handleEnemy->receiveDamage(handleShoot->getInflictedDamage());
                         playerObjPointer->increaseEnemiesKilled();
                         //Bierkrug zum löschen vormerken
+                        handleShoot->setToDelete();
                         objectsToDelete.push_back(handleShoot);
 
                         //Audioevent Krug zerbricht
@@ -1493,12 +1495,14 @@ void Game::handleCollisions() {
             if (handleEvent.causingObject->getType() == shot) {
                 handleEnemy = dynamic_cast<Enemy*> (handleEvent.affectedObject);
                 handleShoot = dynamic_cast<Shoot*> (handleEvent.causingObject);
-                if (handleShoot->getOrigin() == player) {
+                if ((handleShoot->getOrigin() == player) && (handleShoot->getHarming())) {
                     //Schaden zufügen
                     if (handleEnemy->receiveDamage(handleShoot->getInflictedDamage())) {
                         playerObjPointer->increaseEnemiesKilled();
+                        objectsToDelete.push_back(handleEnemy);
                     }
                     //Bierkrug zum löschen vormerken
+                    handleShoot->setToDelete();
                     objectsToDelete.push_back(handleShoot);
 
                     //Audioevent
@@ -1523,7 +1527,9 @@ void Game::handleCollisions() {
              * Bierkrug löschen, bei Kollision mit Hindernis
              */
             if ((handleEvent.causingObject->getType() == obstacle) || (handleEvent.causingObject->getType() == plane)){
-                objectsToDelete.push_back(dynamic_cast<Shoot*>(handleEvent.affectedObject));
+                handleShoot = dynamic_cast<Shoot*>(handleEvent.affectedObject);
+                handleShoot->setToDelete();
+                objectsToDelete.push_back(handleShoot);
 
                 //Audioevent
                 audioCooldownstruct newAudio;
