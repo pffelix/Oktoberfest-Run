@@ -6,7 +6,6 @@
  * @author  Felix Pfreundtner
  */
 AudioControl::AudioControl() {
-
     /// erstelle für jede objektgruppe "type" ein audio Objekt welches unter anderem die Samples beinhaltet
     audioobjects.reserve(23);
     /// Quelle scene_flyingbeer: http://soundbible.com/1247-Wind.html
@@ -181,7 +180,9 @@ void AudioControl::updatePlayevents(std::list<struct audioStruct> *audioevents){
  */
 void AudioControl::playInitialize(){
     // initialisiere Port Audio
+    qDebug("vorher");   ///@todo entfernen: hier kommt die Speicherverletzung bei Rupert (Ubuntu)
     paerror = Pa_Initialize();
+    qDebug("danach");   ///@todo entfernen
     if(paerror != paNoError && paerror !=0) {
        fprintf(stderr, "Ein Error trat während der Benutzung der PortAudio Ausgabe auf\n" );
        fprintf(stderr, "Error Nummer: %d\n", paerror);

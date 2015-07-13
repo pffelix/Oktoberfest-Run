@@ -56,7 +56,6 @@ struct compareScores {
 /**
  * @brief Konstruktor:
  * Initialisiert den appPointer
- * @author Rupert
  */
 Game::Game(int argc, char *argv[]) : QObject() {
     // Initialisiert den appPointer mit der QApplication
@@ -64,8 +63,8 @@ Game::Game(int argc, char *argv[]) : QObject() {
 }
 
 /**
- * @brief Destruktor
- * * Gibt verwendeten Heap-Speicher wieder frei.
+ * @brief Destruktor:
+ * Gibt verwendeten Heap-Speicher wieder frei.
  */
 Game::~Game() {
     //Speicherfreigabe von levelScene und window
@@ -142,7 +141,7 @@ int Game::start() {
     setState(gameMenuStart);
 
     // Timer installieren
-    qDebug("Starte Timer mit 500msec-Intervall");
+    qDebug("Starte Timer mit Intervall: %d", stepIntervall);
     Game::startTimer(stepIntervall);
     return appPointer->exec();
 }
@@ -216,7 +215,11 @@ void Game::menuInit() {
 }
 
 /**
- * @brief eventFilter wird aufgerufen, wenn ein neues QEvent auftritt. Diese Funktion überwacht die Betätigung von Tastatur Eingaben und handelt den Aufruf des QT Schließ-Button (x) im Spielfenster. Die Tastatureingaben werden über das keyInput Ojekt ausgewertet. Der Aufruf des QT Schließ-Button (x) ist neben dem Aufruf des Hauptmenüeintrags Exit die 2. Möglichkeit das Spiel zu beenden. Wird ein CloseEvent festgestellt wird die Variable exitGameevent auf False gesetzt und das Spiel zum Ende des aktuellen Steps in Game::timerEvent beendet.
+ * @brief eventFilter wird aufgerufen, wenn ein neues QEvent auftritt.
+ * Diese Funktion überwacht die Betätigung von Tastatur Eingaben und handelt den Aufruf des QT Schließ-Button (x) im Spielfenster.
+ * Die Tastatureingaben werden über das keyInput Ojekt ausgewertet.
+ * Der Aufruf des QT Schließ-Button (x) ist neben dem Aufruf des Hauptmenüeintrags Exit die 2. Möglichkeit das Spiel zu beenden.
+ * Wird ein CloseEvent festgestellt wird die Variable exitGameevent auf False gesetzt und das Spiel zum Ende des aktuellen Steps in Game::timerEvent beendet.
  * @param: QObject *obj
  * @param: QEvent *event
  * @return: QObject::eventFilter(obj, event)
@@ -230,13 +233,11 @@ bool Game::eventFilter(QObject *obj, QEvent *event) {
         // beende Spiel
         exitGameevent = true;
     }
-    //else {
-         return QObject::eventFilter(obj, event);
-    //}
+    return QObject::eventFilter(obj, event);
 }
 
 /**
- * @brief Game::exitGame()
+ * @brief Wird zum Spielende aufgerufen.
  * Diese Funktion wird aufgerufen wenn das Programm beendet werden soll.
  * Hier werden alle Objekte gelöscht und der Speicher wieder freigegeben.
  * @author: Felix, Johann
@@ -270,7 +271,7 @@ void Game::exitGame() {
 
 // --------------- Level starten und beenden ------------------------------------------------------
 /**
- * @brief Startet neues Spiel
+ * @brief Startet neues Level
  *
  * - lädt Leveldatei
  * - füllt worldobjects
@@ -324,7 +325,7 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
 
 /**
  * @brief Level-Datei auslesen
- * @param fileSpecifier
+ *
  * Diese Funktion liest Level-Dateien aus. In der Leveldatei werden Keywords für die anzulegenden Objekte
  * verwendet. Nach den Objekten stehen durch Kommata getrennt die benötigten Parameter.
  * Ein Player-Eintrag enthält posX und posY.
@@ -332,6 +333,7 @@ void Game::startNewGame(QString levelFileName, int levelNum) {
  * Ein Obstacle-Eintrag enthält posX und posY.
  * Ein Plane-Eintrag (Zwischenebene) enthältn posX und posY.
  * Ein PowerUp-Eintrag enthält posX, posY und die jeweiligen Boni.
+ * @param fileSpecifier String mit Dateinamen der Leveldatei
  * @author Simon
  */
 void Game::loadLevelFile(QString fileSpecifier) {
@@ -476,8 +478,8 @@ void Game::loadLevelFile(QString fileSpecifier) {
 
 
 /**
- * @brief Game::updateHighScore
- * Diese Funktion liest und aktualisiert die Highscore des Spiels. Als Parameter wird ein std::string mode erwartet.
+ * @brief Diese Funktion liest und aktualisiert die Highscore des Spiels.
+ * Als Parameter wird ein std::string mode erwartet.
  * Ist der mode = "write", so wird die aktuelle Highscore unter Berücksichtigung der aktuellen playerScore neu geschrieben.
  * Alle anderen Werte für mode lesen nur die alte Highscore und die des Spielers in die Liste ein, um sie z.B. im Highscore-Menü
  * anzuzeigen.
@@ -542,8 +544,8 @@ void Game::updateHighScore(std::string mode) {
 
 
 /**
- * @brief füllt das Statistik- und HighscoreMenü
- * löscht das Statistik- und Highscore-Menü und füllt es mit aktuellen Werten
+ * @brief füllt das Statistik- und HighscoreMenü.
+ * Diese Funktion löscht das Statistik- und Highscore-Menü und füllt es mit aktuellen Werten.
  * @author Rupert
  */
 void Game::displayStatistics() {
@@ -600,15 +602,15 @@ void Game::displayStatistics() {
 
 
 /**
- * @brief Game::endGame
+ * @brief Wird beim Beenden des Levels aufgerufen.
  * Diese Funktion löscht nicht mehr nötige Variablen und Objekte wenn vom Spiel in das Statistikmenü gewechselt wird.
- * es werden auch die Statistik und Highscoremenüs aktualisiert
- * @author: Felix, Johann
+ * Es wird ein zufälliger Name aus einer Liste gewählt, der dann vom Spieler abgeändert werden kann.
+ * Dazu wird das Namen-Menü neu geschrieben und dorthin gewechselt.
+ * @author: Felix, Johann, Rupert
  */
 void Game::endGame() {
     // Namen Menü
     const string bavarianNames[208] = {"Ade", "Ali", "Loi", "Alosius", "Anderl", "Andi", "Ande", "Bäda", "Bare", "Bartl", "Baste", "Bastia", "Bastl", "Horstl", "Bene", " Benny", "Bep", "Beppa", "Beppe", "Bepperl", "Berne", "Hardl", "Ber", "Bert", "Berti", "Bini", "Blase", "Chris", "Christl", "Christ", "Christà", "Dam", "Dama", "Douma", "Doilfa", "Doilferl", "Don", "Dona", "Doner", "Dan", "Dannerl", "Donisl", "Ed", "Ederl", "Ferdl", "Fest", "Fesl", "Fidl", "Fips", "Flore", "Fonse", " Fone", "Franze", "Franzl", "Fre", "Fredl", "Fridl", "Fritz", "Girgl", "Gog", "Gog", "Gode", "Gottl", "Gore", "Grisch", "Grisse", "Guste", "Gustl", "Guste", "Hans", "Hanse", "Hans", "Hanse", "Hann", "Haan", "Hannas", "Hart", "Harte", "Hausl", "Heini", "Hias", "Irgei", "Jacher", " Jaherl", "Jack", "Joc", "Jock", "Jockei", "Kar", "Karle", "Kaschb", "Koschba", "Kone", "Kon", "Korbe", "Korw", "Kurwe", "Laure", "Len", "Lenze", "Lenze", "Le", "Poldi", "Loi", "Lois", "Loise", "Loisl", " Lui", "Luis", "Luisele", "Lug", "Lugge", "Wickerl", "Lugge", "Maiche", "Mane", "Marine", "Nuss", "Mareale", "Mart", "Masch", "Madd", "Maschde", "Mart", "Mort", "Mäa", "Märt", "Mat", "Mat", "Matte", "Matze", "Ma", "Max", "Maxl", "Michl", "Miche", "Müche", "Mih", "Müh", "Misch", "Michei", "Muck", "Naze", "Naa", "Nadsl", "Nic", "Nicke", "Nickl", "Polde", "Poidl", "Quire", "Quirl", "Reine", "Remme", "Rude", "Rudi", "Rul", "Rups", "Schoasch", "Schorschl", "Schor", "Schosc", "Schoo", "Schos", "Schurli", "Sepp", "Seppe", "Sepp", "Sepper", "Seppei", "Siege", "Siggi", "Simmal", "Stachus", "Steffl", "Steffe", "Stefferl", "Stoff", "Stoff", "Stofferl", "Ton", "Tona", "Tonerl", "Vale", "Veit", "Veit", "Vere", "Verl", "Vie", "Vinz", "Voitl", "Was", "Waste", "Wastl", "Wic", "Wiggl", "Wigge", "Wigger", "Wack", "Woife", "Woifer", "Wolle", "Xandi", "Xar", "Xavi", "Xaver", "Xide", "Zenz"};
-    //std::string bavarianNames[10] = {"Ade", "Loisl", "Anderl", "Bäda", "Bertl", "Wickerl", "Beppi", "Hias", "Xaver", "Miche"};
 
     int nameMax = 208;  //10;
     int nameIndex = rand() % nameMax;
@@ -652,9 +654,9 @@ void Game::endGame() {
 
 // --------------- Regelmäßig aufgerufene Funktionen timerEvent() und step() ----------------------
 /**
- * @brief wird regelmäßig aufgerufen
- * event muss drinstehen, damit der Timer die Funktion aufruft
- * @param event
+ * @brief Wird vom Timer in jedem Intervall aufgerufen.
+ * Hier wird dann wiederum step() aufgerufen.
+ * Außerdem wird überprüft ob das Fenster geschlossen wurde und gegebenenfalls exitGame() aufgerufen.
  * @author Rupert, Felix
  */
 void Game::timerEvent(QTimerEvent *event)
@@ -675,24 +677,36 @@ void Game::timerEvent(QTimerEvent *event)
 
 /**
  * @brief Game-Loop
+ *
  * Diese Funktion wird von timerEvent() aufgerufen und ist für den kompletten Ablauf des Spiels verantwortlich.
- * grober Ablauf:
- * LOOP:
- *  - Timer starten
+ * Der Ablauf sieht so aus:
+ *  - Input abfragen
+ *  - Läuft das Spiel oder ist ein Menü aktiv?
+ *
+ *  falls Menü:
+ *  - Hintergrundmusik
+ *  - Up/Down auswerten
+ *  - Enter auswerten: Hier wird im aktuellen Menü die Eigenschaft menuOnEnter überprüft, also ob wieder ein Menü folgt.
+ *  Wenn ja, wird die Eigenschaft stateOnClick aus dem Menü Eintrag als neues Menü gesetzt.
+ *  - Die Einträge, auf die kein weiteres Menü folgt, werden einzeln ausgewertet, z.B. Level starten/Spiel beenden.
+ *  - Namen-Menü: Hier erfolgt die Auswertung der Namenseingabe
+ *
+ *  falls Spiel:
+ *  - auf ESC testen
  *  - Neue Objekte zur Welt hinzufügen
  *  - alte Objekte löschen
- *  - Input auslesesn
+ *  - Audioevents updaten
+ *  - Input auslesen
  *  - Bewegungen berechnen
- *  - Kollisionskontrolle
- *  - Bewegungen korrigieren
+ *  - Kollisionskontrolle und Bewegungen korrigieren
  *  - Events behandeln (Treffer..)
+ *  - Score aktualisieren
  *  - Grafik rendern und ausgeben
- *  - Audio ausgeben
- *  - verbleibende Zeit im Slot berechnen (Timer auslesen)
- *  - entsprechend warten
- * goto LOOP
+ *  - Level zu Ende?
+ *  - Spieler tot?
+ *
  * @return 0 bei fehlerfreiem Beenden
- * @author Rupert, Felix
+ * @author Rupert, Felix, Johann
  */
 int Game::step() {
     using namespace std::chrono;
@@ -829,11 +843,8 @@ int Game::step() {
         appendWorldObjects(playerObjPointer);
         reduceWorldObjects(playerObjPointer);
 //        timeNeeded("WorldObjects");
-
-
         updateAudioevents();
 //        timeNeeded("audio");
-
         evaluateInput();
 //        timeNeeded("input");
         worldObjects.sort(compareGameObjects());
@@ -844,10 +855,8 @@ int Game::step() {
 //        timeNeeded("detectCol");
         handleCollisions();
 //        timeNeeded("handleCol");
-
         updateScore();
 //        timeNeeded("score");
-
         renderGraphics(&worldObjects, playerObjPointer);
 //        timeNeeded("Graphics");
 
@@ -911,14 +920,14 @@ int Game::step() {
 
 // --------------- Funktionen in der Loop ---------------------------------------------------------
 /**
- * @brief Game::appendWorldObjects
- * @param playerPointer
- * Diese Funktion fügt der Spielwelt dynamisch Gegner hinzu. In jedem Zeitschritt wird die sortierte Liste
+ * @brief Diese Funktion fügt der Spielwelt dynamisch Gegner hinzu.
+ * In jedem Zeitschritt wird die sortierte Liste
  * levelSpawn vom Anfang her durchlaufen. Ist die Distanz des Spielers zum Gegner kleiner als die Distanz levelSpawn,
  * so wird das Objekt den worldObjects hinzugefügt und aus levelSpawn gelöscht. Die for-Schleife läuft solange, bis
  * das erste Mal ein Objekt weiter als levelSpawn vom Spieler entfernt ist. Dann wird abgebrochen, da alle folgenden
  * Objekte auf Grund der Sortierung noch weiter entfernt sein werden.
  * Hier werden auch die Objekte der levelScene hinzugefügt.
+ * @param playerPointer
  * @author Simon
  */
 void Game::appendWorldObjects(Player *playerPointer) {
@@ -943,11 +952,11 @@ void Game::appendWorldObjects(Player *playerPointer) {
 
 
 /**
- * @brief Game::reduceWorldObjects
- * @param playerPointer
- * Alle Objekteaus der Liste objectsToDelete werden in der wolrdObjects gesucht und entfernt. Ihr Speicher wird wieder freigegeben.
+ * @brief Diese Funktion löscht nicht mehr benötigte Objecte.
+ * Alle Objekte aus der Liste objectsToDelete werden in der wolrdObjects gesucht und entfernt. Ihr Speicher wird wieder freigegeben.
  * Die Funktion reduceWorldObjects löscht die GameObjects und gibt den Speicher wieder frei, von denen der Spieler bereits
  * weiter rechts als die spawnDistance entfernt ist.
+ * @param playerPointer
  * @author Simon, Johann
  */
 void Game::reduceWorldObjects(Player *playerPointer) {
@@ -1003,12 +1012,14 @@ void Game::reduceWorldObjects(Player *playerPointer) {
 
 
 /**
- * @brief Checkt welche Tasten für die Spielkontrolle gedrückt sind
+ * @brief Checkt, welche Tasten für die Spielkontrolle gedrückt sind.
  * mögliche Tasten:
  *  - Pfeil rechts zum laufen
  *  - Pfeil hoch zum springen
  *  - Leertaste zum schießen
  *  - ESC für Menü
+ *
+ * es wird entsprechend die Spielergeschwindigkeit geändert, ein Sprung oder Schuss initialisiert und Audioevents erzeugt.
  * @author Rupert
  */
 void Game::evaluateInput() {
@@ -1051,10 +1062,10 @@ void Game::evaluateInput() {
 
 
 /**
- * @brief Geht die worldObjects durch und aktualisiert bei jedem die Position,
- *      Gegner bei denen der DeathCooldown abgelaufen ist, werden zum loeschen vorgemerkt,
- *      Gegner bei denen der FireCooldownabgelaufen ist feuern.
- * wird momentan auch über Debug ausgegeben
+ * @brief Geht die worldObjects-Liste durch und aktualisiert bei jedem Object die Position.
+ *      Gegner, bei denen der DeathCooldown abgelaufen ist, werden zum löschen vorgemerkt,
+ *      Gegner, bei denen der FireCooldownabgelaufen ist, feuern.
+ * Wird auch über Debug ausgegeben.
  * @author Rupert, Johann
  */
 void Game::calculateMovement() {
@@ -1124,12 +1135,14 @@ void Game::calculateMovement() {
 
 
 /**
- * @brief Game::detectCollision
+ * @brief Kollisionsdetektion
+ *
  * Diese Funktion berechnet, ob Kollisionen zwischen benachbarten Objekten auftreten und falls ja, aus welcher
  * Richtung diese stattfinden.
  * Da die Liste worldObjects in jedem Zeitschritt sortiert wird, müssen die Kollisionen nur für die nächsten Nachbarn
  * berechnet werden. Allerdings können durch ungünstige Lage auch Objekte kollidieren, die nicht direkt nebeneinander
  * in der Liste liegen. Dafür werden die fünf Nachbarn links und rechts jedes MovingObjects geprüft, falls vorhanden.
+ * @todo Simon, willst du hier die normalen Kommentare noch einarbeiten und die Funktion genauer erklären? - Rupi
  * @author Simon
  */
 void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
@@ -1223,7 +1236,7 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
  * Mögliche Objekte: Spieler(player), Gegner(enemy), Bierkrug(shot)
  * mögliche Kollision mit Spieler(player), Hindernis(obstacle), Gegner(enemy), Bierkrug(shot), Power-Up(powerUp)
  *
- * @author Johann (15.6.15)
+ * @author Johann
  */
 void Game::handleCollisions() {
 
@@ -1572,10 +1585,8 @@ void Game::handleCollisions() {
 
 
 /**
- * @brief Game::updateScore
- * Aktualisiert die Score des Spielers. Diese Score wird von der Grafik
- * während des Spiels ausgegeben und am Ende des Spiels in die Highscore
- * aufgenommen.
+ * @brief Aktualisiert die Score des Spielers.
+ * Diese Score wird von der Grafik während des Spiels ausgegeben und am Ende des Spiels in die Highscore aufgenommen.
  * @author Simon
  */
 void Game::updateScore() {
@@ -1587,8 +1598,7 @@ void Game::updateScore() {
 
 
 /**
- * @brief Game::updateAudioevents
- * Übergibt vom Spiel erzeugte Audioevents an den Output
+ * @brief Übergibt vom Spiel erzeugte Audioevents an den Output.
  * Audioevents der Hintergrundmusik für das entsprechende Level werden übergeben,
  * Überprüfen, ob sich der Spieler in einem Kritischen zustand befindet und entsprechende Audioevents übergeben.
  * Für Gegner und fliegende Bierkrüge Ausioevents übergeben.
@@ -1713,10 +1723,13 @@ void Game::updateAudioevents() {
 }
 
 /**
- * @brief Game::renderGraphics
- * @param objectList
- * @param playerPointer
- * @author Flo
+ * @brief Grafik wird ausgegeben.
+ *
+ * @todo Flo, willst du hier die normalen Kommentare noch einarbeiten und die Funktion genauer erklären? - Rupi
+ *
+ * @param objectList Liste der Objekte (worldObjects)
+ * @param playerPointer Pointer auf den Spieler, wird für Positionsabfrage gebraucht
+ * @author Florian
  */
 void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPointer) {
     //Berechnung der X-Positionsänderung des Spielers im aktuellen Step
@@ -1727,7 +1740,7 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
 
     //Leben,Highscore,Pegel,Munition wird aktualisiert
     showGUI->setValues(playerPointer->getHealth(),playerPointer->getAlcoholLevel(),
-                       playerPointer->getAmmunatiuon(),playerScore.totalPoints);
+                       playerPointer->getAmmunatiuon(),playerScore.totalPoints, stepCount);
 
     //Parralaxe Positionsupdate
     showBackground->updateParallaxe(playerStepMov);
@@ -1764,8 +1777,9 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
 
 
 // --------------- Hilfsfunktionen ----------------------------------------------------------------
-/** gibt stepIntervall zurück
- * wird für Zeit auslesen gebraucht
+/**
+ * Gibt stepIntervall zurück.
+ * Wird zum Auslesen der Zeit gebraucht.
  * @return int Stepintervall in ms
  * @author Rupert
  */
@@ -1773,9 +1787,10 @@ int Game::getStepIntervall() {
     return stepIntervall;
 }
 
+///@todo Kommentieren, Johann?
 void Game::timeNeeded(string name) {
 
-    // Zeit seit dem letzten aufruf messen
+    // Zeit seit dem letzten Aufruf messen
     chrono::high_resolution_clock::time_point lastStep = testStep;
     testStep = chrono::high_resolution_clock::now();
     chrono::duration<int, milli> difference = chrono::duration_cast<std::chrono::milliseconds> (testStep - lastStep);
@@ -1783,8 +1798,9 @@ void Game::timeNeeded(string name) {
 }
 
 /**
- * @brief setzt den Spielstatus
- * @param newState
+ * @brief setzt den Spielstatus.
+ * Hier wird der aktuelle Spielzustand geändert, z.B. von Menü-Anzeige zu laufendem Level.
+ * @param newState neuer Status aus der enum gameState
  * @author Rupert
  */
 void Game::setState(enum gameState newState) {

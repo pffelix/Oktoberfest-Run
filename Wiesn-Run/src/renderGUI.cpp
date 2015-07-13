@@ -70,16 +70,32 @@ void RenderGUI::setPos(int x) {
 /**
  * @brief RenderGUI::setValues
  * Aktualisierung aller angezeigten Wert, Gesundheits- und Pegelbalken sind immer auf die maximal
- * möglichen Werte normiert
+ * möglichen Werte normiert. Wird der maximale Alkoholwert überschritten blinkt der Balken Rot
+ * da der Spieler Schaden bekommt.
  * @param health    : aktueller Gesundheitswert
  * @param alcohol   : altueller Alkoholpegelwert
  * @param ammo      : aktueller Munitionsstand
  * @param score     : aktueller Punktestad
  * @author Flo
  */
-void RenderGUI::setValues(int health, int alcohol, int ammo, int score) {
+void RenderGUI::setValues(int health, int alcohol, int ammo, int score, int stepCount) {
     this->showHealthBar[0].setRect(210,10,(static_cast<float>(health)/maxHealth)*BARLENGTH,BARHEIGHT);
-    this->showAlcoholBar[0].setRect(210,60,(static_cast<float>(alcohol)/maxAlcohol)*BARLENGTH,BARHEIGHT);
     this->showAmmo.setPlainText(QString("Munition: " + QString::number(ammo)));
     this->showScore.setPlainText(QString("Score: " + QString::number(score)));
+
+    //AlkoholMax überschritten?
+    if(alcohol>maxAlcohol) {
+        this->showAlcoholBar[0].setRect(210,60,BARLENGTH,BARHEIGHT);
+
+        //Balken blinkt rot auf
+        if(stepCount%(frameRate*2) == 0) {
+            this->showAlcoholBar[0].setBrush(Qt::darkBlue);
+        }
+        else if(stepCount%frameRate == 0) {
+            this->showAlcoholBar[0].setBrush(Qt::red);
+        }
+    }
+    else {
+        this->showAlcoholBar[0].setRect(210,60,(static_cast<float>(alcohol)/maxAlcohol)*BARLENGTH,BARHEIGHT);
+    }
 }
