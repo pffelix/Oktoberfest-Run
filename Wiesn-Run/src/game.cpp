@@ -1059,7 +1059,7 @@ void Game::calculateMovement() {
             // Wenn der cast klappt, rufe update() auf.
             aktMovingObject->update();
             //falls es sich um einen Gegner handelt feuern
-            if ((aktMovingObject->getType() == enemy_security) || (aktMovingObject->getType() == enemy_tourist)){
+            if ((aktMovingObject->getType() == enemy_security) || (aktMovingObject->getType() == enemy_tourist) || (aktMovingObject->getType() == BOSS)){
                 Enemy *aktEnemy = dynamic_cast<Enemy*> (aktMovingObject);
                 if (aktEnemy->getDeathCooldown() == 0) {
                     objectsToDelete.push_back(aktEnemy);
