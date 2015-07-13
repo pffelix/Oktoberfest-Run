@@ -23,7 +23,7 @@
 
 // --------------- Komparatoren -------------------------------------------------------------------
 /**
- * @brief Vergleich zweier GameObjects bezüglich der X-Position
+ * @brief Vergleich zweier GameObjects bezüglich der X-Position.
  * Die Methode std::list::sort benötig ein struct mit einem boolschen Operator zur Sortierung.
  * Diese Implementierung des Operators sortiert aufsteigend.
  * @param 1.Objekt
@@ -39,7 +39,7 @@ struct compareGameObjects {
 
 
 /**
- * @brief Vergleich zweier Scores
+ * @brief Vergleich zweier Scores.
  * Der Vergleich findet über die Summe der Punkte in den einzelnen Kategorien statt.
  * Der Operator im struct ist mit größer (>) programmiert, da die Liste absteigend sortiert werden soll.
  * @author Simon
@@ -54,10 +54,8 @@ struct compareScores {
 
 // --------------- Konstruktor und Destruktor -----------------------------------------------------
 /**
- * @brief Konstruktor
+ * @brief Konstruktor:
  * Initialisiert den appPointer
- * @param argc
- * @param argv
  * @author Rupert
  */
 Game::Game(int argc, char *argv[]) : QObject() {
@@ -80,6 +78,7 @@ Game::~Game() {
 // --------------- Applikation starten und beenden ------------------------------------------------
 /**
  * @brief Die Startfunktion, erstellt Fenster und Menüs, wird von main() aufgerufen
+ *
  * Grafik (Flo):
  * Es wird ein QGraphicsView Widget "window" angelegt in der Größe 1024x768 angelegt welches Das Spiel visualisiert.
  * Verschiedene Einstellungen werden vorgenommen wie zb. das deaktivieren der Scrollbars.
@@ -93,6 +92,7 @@ Game::~Game() {
  * Logik (Rupert):
  * Außerdem wird ein Timer gestartet, der in jedem Intervall timerEvent(...) aufruft, wo dann step() aufgerufen wird.
  * Das ist dann unsere Game-Loop. Der Timer funktioniert auch bei 5ms Intervall noch genau.
+ *
  * Menüs (Rupert):
  * Alle Menüs werden angelegt
  *
@@ -150,8 +150,9 @@ int Game::start() {
 
 
 /**
- * @brief Initialisierung der Menüs
+ * @brief Initialisierung der Menüs.
  * wird in start() aufgerufen
+ *
  * Logik:
  *  Startmenü
  *      Credits
@@ -256,10 +257,11 @@ void Game::exitGame() {
 // --------------- Level starten und beenden ------------------------------------------------------
 /**
  * @brief Startet neues Spiel
- * -lädt Leveldatei
- * -füllt worldobjects
- * -LevelScene wird eingestellt und aktiv geschaltet
- * -verschiedene Grafikinitialisierungen
+ *
+ * - lädt Leveldatei
+ * - füllt worldobjects
+ * - LevelScene wird eingestellt und aktiv geschaltet
+ * - verschiedene Grafikinitialisierungen
  */
 void Game::startNewGame(QString levelFileName, int levelNum) {
     // alles alte leeren

@@ -9,13 +9,11 @@ using namespace std;
 
 
 /**
- * @brief main
- * main() wird am Anfang aufgerufen. Erstellt eine Instanz von Game und startet das Spiel.
+ * @brief main-Funktion, startet das Spiel.
+ * main() wird am Anfang aufgerufen, erstellt eine Instanz von Game und startet das Spiel.
  * @return 0 bei Erfolg, -1 bei Fehler
  * @author Rupert
  */
-
-
 int main(int argc, char *argv[]) {
     Game *game = new Game(argc, argv);                  // Spielinstanz erstellen
     std::cout << "Spiel wird gestartet\n";

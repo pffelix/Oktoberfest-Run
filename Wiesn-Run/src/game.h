@@ -32,7 +32,7 @@ using namespace std;
  * Enthält affectedObject als Objekt, aus dessen Sicht die Kollision berechnet wurde. affectedObject ist immer ein MovingObject,
  * causingObject kann beides sein.
  * Die Art und Richtung der Kollision werden mit gespeichert.
- * @author Simon, Johann(15.6)
+ * @author Simon, Johann
  */
 struct collisionStruct {
     GameObject *affectedObject;
@@ -41,15 +41,13 @@ struct collisionStruct {
 };
 
 /**
- * @brief Game-Klasse
- * Die Game-Klasse bündelt alle Kern-Funktionalitäten des Spiels.
+ * @brief Kern-FUnktionalität des Spiels
+ *
  * Innerhalb der main.cpp wird eine Instanz dieser Klasse angelegt,
  * aus der heraus das gesamte Spiel läuft.
  * Die einzelnen Methoden werden in der game.cpp jeweils erklärt.
  *
- * @lastChanges funtion handleCollisions hinzugefügt
- *
- * @author Simon, Johann, Felix
+ * @author Simon, Johann, Felix, Rupert
  */
 class Game : QObject {
     //Q_OBJECT
