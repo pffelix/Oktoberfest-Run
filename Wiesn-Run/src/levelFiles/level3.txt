@@ -249,6 +249,7 @@ Bier,25700,40
 Hendl,26000,40
 Hendl,26200,40
 Bier,26500,40
+Bier,26700,40
 
 # Bossgegner
 Obstacle,28000,0
