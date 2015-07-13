@@ -3,9 +3,11 @@
 #include <QDebug>
 
 /**
- * @brief Menu-Konstruktor
- * @param Zeiger auf String mit Menu-Titel
- * @author Rupert
+ * @brief Konstruktor:
+ * Erzeugt ein neues Menü, Titel und Type werden festgelegt.
+ * Danch können Einträge hinzugefügt werden.
+ * @param menuTitle Zeiger auf String mit Menu-Titel
+ * @param type normal/highscore, für Hintergrundmusik
  */
 Menu::Menu(std::string *menuTitle, menuType type) {
     title = menuTitle;
@@ -14,17 +16,17 @@ Menu::Menu(std::string *menuTitle, menuType type) {
 }
 
 /**
- * @brief Menu-Destruktor
+ * @brief Menu-Destruktor:
  * Gibt verwendeten Heap-Speicher frei
  */
 Menu::~Menu() {
+    clear();
     delete menuScene;
 }
 
 /**
- * @brief entfernt alle Einträge aus dem Menü
- * Titel wird danach wieder hinzugefügt
- * wird für Statistik und Highscore benötigt
+ * @brief entfernt alle Einträge aus dem Menü außer den Titel.
+ * Wird für Statistik und Highscore benötigt, nur so können Menüeinträge verändert werden
  */
 void Menu::clear() {
     // jeden Menüeintrag außer den ersten löschen und Speicher freigeben
@@ -36,25 +38,26 @@ void Menu::clear() {
 }
 
 /**
- * @brief gibt den Menü-Titel zurück
- * @return Zeiger auf String
- * @author Rupert
- */
-std::string *Menu::getTitle() {
-    return title;
-}
-
-/**
  * @brief gibt den Menü-Typ zurück
+ * normal/highscore
  * @return enum menuType
- * @author Rupert
  */
 Menu::menuType Menu::getType() {
     return type;
 }
 
 /**
- * @brief Initialisiert das sichtbare Menü , muss immer nach anlegen der Menü Entrys aufgerufen werden
+ * @brief gibt den Menü-Titel zurück
+ * @return Zeiger auf std::tring
+ */
+std::string *Menu::getTitle() {
+    return title;
+}
+
+
+/**
+ * @brief Initialisiert das sichtbare Menü.
+ * Muss immer nach anlegen der Menü Entrys aufgerufen werden.
  * Jeder Menüeintrag hat auch QGraphicsTextItem welches hier eingestellt entsprechend eingestellt wird
  * @return 0 bei Erfolg
  * @author Flo
@@ -89,8 +92,8 @@ int Menu::displayInit() {
 }
 
 /**
- * @brief aktualisiert das sichtbare Menü
- * Je nach Userinput wird immer der aktuell ausgewählte Menüeintrag rot dargestellt.
+ * @brief aktualisiert das sichtbare Menü.
+ * Je nach Userinput wird immer der aktuell ausgewählte Menüeintrag rot dargestellt und der Bierkrug wird links daneben angezeigt.
  * @return 0 bei Erfolg
  * @author Flo
  */
@@ -117,56 +120,38 @@ int Menu::displayUpdate() {
 /**
  * @brief Neuen Eintrag hinzufügen
  * @param name String, der angezeigt wird
- * @param id zur eindeutigen Identifizierung, kann zB aus enum gecastet werden
+ * @param id zur eindeutigen Identifizierung, kann zB aus enum menuIds gecastet werden
+ * @param clickable Einträg auswählbar?
+ * @param stateOnClick nächstes Menü
+ *
+ * Legt einen neuen menuEntry an und speichert darin die Informationen
  * @return 0 bei Erfolg
- * @author Rupert
  */
 int Menu::addEntry(std::string name, int id, bool clickable, gameState stateOnClick) {
-    // fehlerüberprüfung
 
     struct menuEntry *entry = new menuEntry;
+
     entry->id = id;
     entry->name = name;
     entry->position = numberOfEntrys;
     entry->isClickable = clickable;
     entry->stateOnClick = stateOnClick;
-    if(stateOnClick != (gameState)NULL) {
+    if(stateOnClick != (gameState)NULL) {   // Folgt ein weiteres Menü? Ansonsten ist stateOnClick wertlos
         entry->menuOnEnter = true;
     } else {
         entry->menuOnEnter = false;
     }
+
     numberOfEntrys++;
     menuEntrys.push_back(entry);
     selectFirstEntry();
-
     return 0;
 }
 
 /**
- * @brief aktiviert ersten klickbaren Eintrag
- * @return int 0 bei Erfolg, -1 sonst
- * @author Rupert
- */
-int Menu::selectFirstEntry() {
-    int tmpPos = 0;
-    while (tmpPos < numberOfEntrys) {
-        menuEntry *entry = getEntry(tmpPos);
-        if(entry->isClickable) {
-            currentPosition = tmpPos;
-            return 0;
-        } else {
-            tmpPos++;
-        }
-    }
-    // keinen Eintrag gefunden
-    return -1;
-}
-
-/**
  * @brief wird nach Tastendruck aufgerufen
- * @param changeType entweder up oder down
- * @return 0 bei Erfolg, -1 wenn kein klickbarer Eintrag vorhanden
- * @author Rupert
+ * @param changeType up/down
+ * @return 0 bei Erfolg, -1 wenn kein klickbarer Eintrag gefunden
  */
 int Menu::changeSelection(enum menuSelectionChange changeType) {
     switch(changeType) {
@@ -214,7 +199,6 @@ int Menu::changeSelection(enum menuSelectionChange changeType) {
  * @brief gibt den gewählten Eintrag zurück
  * sollte nach Enter aufgerufen werden
  * @return Zeiger auf menuEntry des aktuellen Eintrags, NULL bei Fehler
- * @author Rupert
  */
 struct Menu::menuEntry *Menu::getSelection() {
     return getEntry(currentPosition);
@@ -224,7 +208,6 @@ struct Menu::menuEntry *Menu::getSelection() {
  * @brief gibt Eintrag an der gesuchten Position zurück
  * @param position
  * @return Zeiger auf gefundenen Eintrag, sonst NULL
- * @author Rupert
  */
 struct Menu::menuEntry *Menu::getEntry(int position) {
     using namespace std;               // für std::list
@@ -238,5 +221,24 @@ struct Menu::menuEntry *Menu::getEntry(int position) {
     }
     qDebug("ERROR | Menu::getEntry(): menuEntry not found");
     return NULL;
+}
+
+/**
+ * @brief aktiviert ersten klickbaren Eintrag
+ * @return int 0 bei Erfolg, -1 sonst
+ */
+int Menu::selectFirstEntry() {
+    int tmpPos = 0;
+    while (tmpPos < numberOfEntrys) {
+        menuEntry *entry = getEntry(tmpPos);
+        if(entry->isClickable) {
+            currentPosition = tmpPos;
+            return 0;
+        } else {
+            tmpPos++;
+        }
+    }
+    // keinen Eintrag gefunden
+    return -1;
 }
 
