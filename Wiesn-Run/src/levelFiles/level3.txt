@@ -1,4 +1,4 @@
-LevelDatei für den dritten Level
+﻿LevelDatei für den dritten Level
 
 Diese Datei kann nur von der Methode "loadLevelFile" ausgelesen werden.
 Zeilen, die mit einem Keyword beginnen, werden interpretiert. Alle anderen Zeilen werden ignoriert.
@@ -50,7 +50,7 @@ Level3: Käfer-Zelt
 ------------
 
 Player,130,0
-Levellänge,30000
+Levellaenge,30000
 
 Obstacle,800,0
 

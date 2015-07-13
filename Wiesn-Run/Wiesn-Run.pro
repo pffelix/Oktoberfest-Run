@@ -101,3 +101,6 @@ INSTALLS += \
     audios \
     images \
     levelFiles
+
+# Workaround für den strip-Error unter Ubuntu (Rupert).
+QMAKE_STRIP = echo

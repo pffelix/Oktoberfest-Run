@@ -1,4 +1,4 @@
-LevelDatei für den zweiten Level
+﻿LevelDatei für den zweiten Level
 
 Diese Datei kann nur von der Methode "loadLevelFile" ausgelesen werden.
 Zeilen, die mit einem Keyword beginnen, werden interpretiert. Alle anderen Zeilen werden ignoriert.
@@ -46,7 +46,7 @@ Level2: Im Zelt
 ------------
 
 Player,130,0
-Levellänge,14000
+Levellaenge,14000
 
 # Dieses Level startet mit einem Hendl
 Hendl,800,40
