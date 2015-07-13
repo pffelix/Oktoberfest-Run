@@ -63,15 +63,41 @@ RESOURCES += \
 
 # Kopiere Dateien in Build Verzeichnis (zu große Dateigrößen für Ressources)
 # Sources Verzeichnispfad und Build Verzeichnis Pfad darf keine Umlaute oder Sonderzeichen (z.B. ++) enthalten.
-audios.path = $$OUT_PWD/audios
+
+CONFIG(debug, debug|release) {
+    DESTDIR = $$OUT_PWD/debug
+} else {
+    DESTDIR = $$OUT_PWD/release
+}
+
+linux-g++ | linux-g++-64 | linux-g++-32 {
+    # Linux includes
+portaudio.path = $$DESTDIR
+portaudio.files = -L/usr/lib/x86_64-linux-gnu/libportaudiocpp.so -lportaudio
+}
+
+win32 {
+    # Windows 32 includes
+portaudio.path = $$DESTDIR
+portaudio.files = C:\portaudio\libportaudio-2.dll
+}
+
+win64 {
+    # Windows 64 includes
+portaudio.path = $$DESTDIR
+portaudio.files = C:\portaudio\libportaudio-2.dll
+}
+
+audios.path = $$DESTDIR/audios
 audios.files = src/audios/*
-images.path = $$OUT_PWD/images
+images.path = $$DESTDIR/images
 images.files = src/images/*
-levelFiles.path = $$OUT_PWD/levelFiles
+levelFiles.path = $$DESTDIR/levelFiles
 levelFiles.files = src/levelFiles/*
 
 
 INSTALLS += \
+    portaudio \
     audios \
     images \
     levelFiles
