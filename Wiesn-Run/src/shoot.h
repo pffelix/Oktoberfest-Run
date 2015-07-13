@@ -3,31 +3,48 @@
 
 #include "movingobject.h"
 
+/**
+ * @brief Das Schuss Objekt.
+ * Dieses Objekt repräsentiert einen geworfenen Bierkrug. Das Objekt erbt von MovingObjekt und die wichtigsten Funktionen sind:
+ *  - Automatische Aktualisierung
+ * die wichtigsten Attribute sind:
+ *  - Ursprung
+ *  - Schaden
+ * Die Bierkrüge führen alle Bewegungen selbständig aus
+ *
+ * @author Johann
+ */
 class Shoot : public MovingObject {
 
 public:
-    //Konstruktor und Destruktor
+
+    // ------------ Konstruktor, Destruktor ----------------
+
     Shoot(int posX, int posY, int direction, objectType origin);
     ~Shoot();
 
-    //Damage()
-    int getInflictedDamage() const;
 
-    //Ursprung
-    objectType getOrigin();
+    // ------------ Öffentliche Methoden -------------------
 
-    //toDelete
-    bool getHarming() const;
-    void setToDelete();
+    // -------Schaden-------
+    int getInflictedDamage() const;     // Gibt den Schaden zurück, den der Bierkrug verursacht
 
-    //update()
-    virtual void update();
+    // -------Ursprung-------
+    objectType getOrigin();             // Gibt zurück, wer den Bierkrug geworfen hat
+
+    // -------Löschen-------
+    bool getHarming() const;            // Gibt zurück, ob der Bierkrug noch Schaden zufügt
+    void setToDelete();                 // Setzt, dass der Bierkrug keinen Schaden mehr zufügt
+
+    // -------update-------
+    virtual void update();              // Automatische Aktualisierung
 
 private:
-    //Schaden den der Bierkrug zufügt
+    // Schaden
     int inflictedDamage;
-    //Wer hat den Bierkrug geworfen? Spieler oder Gegner
+    // Ursprung Spieler oder Gegner
     objectType origin;
+    // fügt Schaden zu?
     bool harming;
 
 };

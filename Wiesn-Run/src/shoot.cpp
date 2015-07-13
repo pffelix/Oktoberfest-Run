@@ -1,13 +1,14 @@
 #include "shoot.h"
 
 /**
- * @brief Konstruktor für einen Schuss(Bierkrug)
- * @param posX      : x-Position
- * @param posY      : y-Position
- * @param origin    : Schuss Erzeuger
+ * @brief Konstruktor für einen Schuss(Bierkrug).
+ * Erzeugt einen fliegenden Bierkrug, dabei werden alle Werte gesetzt. Diese können später nur noch ausgelesen und nicht mehr geändert werden.
+ * Es gilt, dass ein Bierkrug dreimal so schnell fliegt wie sich der Spieler bewegen kann und bei der Erzeugung eines Schusses nur die Richtung entscheidend ist.
  *
- * Schuss bewegt sich dreimal so schnell wie der spieler
- * @lastChanges Größe des Bierkruges festgesetzt (erste idee)
+ * @param posX x-Position
+ * @param posY y-Position
+ * @param direction Richtung
+ * @param origin Schuss Erzeuger
  *
  * @author Johann
  */
@@ -23,34 +24,42 @@ Shoot::~Shoot() {
 }
 
 /**
- * @brief Shoot::getOrigin
- * gibt den Ursprung des Bierkrugs zurück, Wer hat ihn geworfen (Player/Enemy)
- * @return Ursprung des Bierkruges
- * @author Johann
+ * @brief Gibt den Ursprung des Bierkrugs zurück.
+ *
+ * @return objectType
  */
 objectType Shoot::getOrigin() {
     return origin;
 }
 
 /**
- * @brief Shoot::getInflictedDamage
- * gibt den Schaden den der Schuss zufügt zurück
- * @return Schaden
- * @author Johann
+ * @brief Gibt den Schaden zurück, den der Bierkrug zufügt.
+ *
+ * @return int
  */
 int Shoot::getInflictedDamage() const {
     return inflictedDamage;
 }
 
+/**
+ * @brief Setzt den Wert, damit der Schuss keinen Schaden mehr zufügt.
+ * Dies ist wichtig, damit man nicht zwei Gegner mit einem Bierkrug besiegen kann.
+ */
 void Shoot::setToDelete() {
     harming = false;
 }
 
+/**
+ * @brief Gibt zurück, ob der Bierkrug noch Schaden zufügt
+ * @return true, wenn der Bierkrug noch nichts getroffen hat und Schaden zufügt
+ */
 bool Shoot::getHarming() const {
     return harming;
 }
 
+/**
+ * @brief Die Funktion aktualisiert die Position des Bierkruges
+ */
 void Shoot::update() {
-    //posX = posX + this->getSpeedX();
     updatePosition();
 }

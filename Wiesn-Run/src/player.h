@@ -5,11 +5,16 @@
 
 /**
  * @brief Das Spieler-Objekt.
- * Dieses Objekt repräsentiert den Spieler. Das Objekt erbt von MovingObject und die wichtigsten Attribute sind:
+ * Dieses Objekt repräsentiert den Spieler. Das Objekt erbt von MovingObject und die wichtigsten Funktionen sind:
+ *  - Automatische Aktualisierung
+ *  - Schaden erhalten
+ *  - Springen
+ * des weiteren sind die wichtigsten Attribute:
  *  - Leben
  *  - Alkoholpegel
  *  - Munition
  *  - Schaden
+ * Die Bewegungen des Spielers über die Eingabe erfolgt in der step()-Methode der game.cpp. Es werden hierbei nur die Attribute speedx/y gesetzt.
  *
  * @author Johann
  */
@@ -26,7 +31,7 @@ public:
 
     // -------Leben------
     int getHealth() const;              // Gibt Leben des Spielers zurück
-    void setHealth(int health);         // Setzt das Leben des Spielers auf einen Wert
+    void setHealth(int health);         // Setzt das Leben des Spielers auf den übergebenen Wert
     void increaseHealth (int health);   // erhöht das Leben des Spielers um den Wert health
     bool receiveDamage(int damage);     // fügt dem Spieler Schaden, im Wert von damage, zu, falls möglich
 
@@ -65,22 +70,22 @@ public:
     int getSpeedScale() const;      // Gibt den Skalierungsfaktor für die Geschwindigkeit zurück
 
     //update()
-    virtual void update();
+    virtual void update();      // Automatische Aktualisierung
 
 private:
-    /// Leben
+    // Leben
     int health;
-    /// Alkoholpegel
+    // Alkoholpegel
     int alcoholLevel;
-    /// Munition
+    // Munition
     int ammunation;
-    /// Schaden, den der Spieler verursacht
+    // Schaden, den der Spieler verursacht
     int inflictedDamage;
-    /// Nachladezeit
+    // Nachladezeit
     int fireCooldown;
-    /// Feuergeschwindigkeit
+    // Feuergeschwindigkeit
     int fireRate;
-    /// Schadensimmunität (Unsterblichkeit)
+    // Schadensimmunität (Unsterblichkeit)
     int immunityCooldown;
     // Sprungzustand
     bool jumpState;
@@ -90,7 +95,7 @@ private:
     int speedScale;
     // Wartezeit zwischen zwei Lebensabzügen wegen Alkoholüberdosis
     int alcoholDamageCooldown;
-    /// Anzahl getöteter Gegner
+    // Anzahl getöteter Gegner
     int enemiesKilled;
 
 };
