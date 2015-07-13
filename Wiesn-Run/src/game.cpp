@@ -1727,7 +1727,7 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
 
     //Leben,Highscore,Pegel,Munition wird aktualisiert
     showGUI->setValues(playerPointer->getHealth(),playerPointer->getAlcoholLevel(),
-                       playerPointer->getAmmunatiuon(),playerScore.totalPoints);
+                       playerPointer->getAmmunatiuon(),playerScore.totalPoints, stepCount);
 
     //Parralaxe Positionsupdate
     showBackground->updateParallaxe(playerStepMov);

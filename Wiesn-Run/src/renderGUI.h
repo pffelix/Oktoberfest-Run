@@ -29,7 +29,7 @@ public:
     void setPos(int x);
 
     //aktualisiert die angezeigten Werte
-    void setValues(int health, int alcohol, int ammo, int score);
+    void setValues(int health, int alcohol, int ammo, int score, int stepCount);
 
 private:
 
