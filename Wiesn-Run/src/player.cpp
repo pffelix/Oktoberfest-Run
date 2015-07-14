@@ -13,7 +13,7 @@
  */
 Player::Player(int posX, int posY, int speedX) : MovingObject(posX, posY, player, speedX, -maxSpeedY) {
     health = 3;
-    alcoholLevel = 5 * (5 * frameRate);     // Startpegel 5 alle 5 Sekunden wird eins abgebaut
+    alcoholLevel = 4 * (5 * frameRate);     // Startpegel 5 alle 5 Sekunden wird eins abgebaut
     jumpState = false;
     speedScale = 1;
     ammunation = 5;

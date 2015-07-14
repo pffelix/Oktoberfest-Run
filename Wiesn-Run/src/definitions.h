@@ -5,7 +5,8 @@
 #include <list>
 #include <chrono>
 
-/** @file  definitions.h
+/**
+ * @file  definitions.h
  * @brief  definitions beinhaltet Datentyp Definitionen.
  * @author Johann, Simon, Felix
  */
@@ -301,19 +302,13 @@ enum powerUpType {
 };
 
 /**
- * @brief Struktur für die States des Spiels
- * Sowohl Sound- als auch Grafik-Ausgabe erhalten aus den States Informationen darüber, was gerade im Spiel passiert,
- * z.B. dass gerade der Spieler angreift, ein Gegner stribt etc.
- * @todo Diese Struktur ist vermutlich überflüssig.
- * @author Simon
+ * @brief Struktur für die AudioLevels und Spielzustand
+ *
+ * @author Johann
  */
 struct stateStruct {
     bool gameOver = false;
     int actLevel = 0;
-    int audioID_Background = 0;
-
-    bool beerCollected = 0;
-    bool chickenCollected = 0;
 
 };
 

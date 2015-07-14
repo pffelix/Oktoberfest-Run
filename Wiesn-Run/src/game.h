@@ -27,14 +27,15 @@
 #include <thread>
 using namespace std;
 
+
 /**
  * @brief Struktur für die Events.
  * Enthält affectedObject als Objekt, aus dessen Sicht die Kollision berechnet wurde. affectedObject ist immer ein MovingObject,
  * causingObject kann beides sein.
  * Die Art und Richtung der Kollision werden mit gespeichert.
+ *
  * @author Simon, Johann
  */
-///@todo Was macht das hier, muss das nicht in definitions.h? - Rupi
 struct collisionStruct {
     GameObject *affectedObject;
     GameObject *causingObject;
@@ -199,11 +200,15 @@ private:
     /// Auslesen der vergangenen Zeit: stepCount * getStepIntervall()
     int stepCount = 0;
 
-    /// @todo Kommentieren: Felix, Johann
+    /// audioIDs wird mit jedem AudioEvent erhöht. Jedes AudioEvent erhält eine feste ID
     int audioIDs;
+    /// Struktur zur Erstellung von Audio-Cooldown-Events
     audioCooldownStruct audioCooldown;
+    /// Struktur zur Erstellung von AudioEvents, gibt die Lautstärke des AudioEvents an
     audioDistanceStruct audioDistance;
+    /// Zeitpunkt zur Bestimmung der Dauer eines "Steps". Wird in updateAudioevents benutzt um den Cooldown von Audioevents zu verringern
     chrono::high_resolution_clock::time_point thisStep;
+    /// Zeitpunkt zur Bestimmung der Dauer zwischen zwei timeNeeded aufrufen
     chrono::high_resolution_clock::time_point testStep;
 
 };

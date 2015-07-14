@@ -1787,7 +1787,11 @@ int Game::getStepIntervall() {
     return stepIntervall;
 }
 
-///@todo Kommentieren, Johann?
+/**
+ * @brief Misst die Zeit, die zwischen dem letzten Aufruf und dem aktuellen Aufruf vergangen ist und gibt diese in der Konsole mit dem übergebenen String aus.
+ *
+ * @param name String für die Ausgabe
+ */
 void Game::timeNeeded(string name) {
 
     // Zeit seit dem letzten Aufruf messen
