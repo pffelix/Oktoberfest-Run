@@ -101,7 +101,7 @@ void RenderGUI::setValues(int health, int alcohol, int ammo, int score, int step
         }
     }
     else {
-        this->showAlcoholBar[0].setBrush(QT::darkBlue);
+        this->showAlcoholBar[0].setBrush(Qt::darkBlue);
         this->showAlcoholBar[0].setRect(140,90,(static_cast<float>(alcohol)/maxAlcohol)*BARLENGTH,BARHEIGHT);
     }
 }
