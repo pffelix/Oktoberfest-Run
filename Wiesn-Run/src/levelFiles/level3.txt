@@ -192,18 +192,31 @@ Tourist,19860,150,0
 Tourist,20100,150,0
 Tourist,20340,150,0
 
-# Tourist macht oben nur Angst, fällt aber nicht runter
+# Tourist macht kommt von unten hinten
+#Plane,20800,150
+#Plane,20920,150
+#Plane,21040,150
+#Plane,21160,150
+#Plane,21280,150
+#Plane,21400,150
+#Plane,21520,150
+#Obstacle,20785,170
+#Obstacle,20785,290
+#Tourist,20920,170,2
+#Obstacle,21900,0
+
 Plane,20800,150
 Plane,20920,150
 Plane,21040,150
 Plane,21160,150
+Obstacle,21160,0
+Obstacle,21160,170
 Plane,21280,150
 Plane,21400,150
 Plane,21520,150
-Obstacle,20785,170
-Obstacle,20785,290
-Tourist,20920,170,2
+Tourist,21300,0,-1
 Obstacle,21900,0
+Security,21900,150
 
 # Erholungsstrecke
 Bier,22400,40
@@ -256,7 +269,7 @@ Obstacle,28000,0
 Boss,28400,0,0
 Plane,28900
 
-# Das letzte Bier...laut postellion in 90% der Fälle schlecht
+# Das letzte Bier...laut Postillon in 90% der Fälle schlecht
 Bier,29300
 
 # ENDE

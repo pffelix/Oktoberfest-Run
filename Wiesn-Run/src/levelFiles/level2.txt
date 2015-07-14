@@ -78,11 +78,13 @@ Plane,3740,120
 Security,3740,140
 Plane,3860,130
 Plane,3980,130
-Bier,3980,170
+#Bier,3980,170
 
-# Folge von Obstacles
+# Folge von Obstacles und Hendl-Pause
 Obstacle,4500,0
+Hendl,4600,40
 Obstacle,4700,0
+Hendl,4800,40
 Obstacle,4900,0
 
 # Obstacles mit Security dazwischen
@@ -90,14 +92,18 @@ Obstacle,5500,0
 Security,5650,0
 Obstacle,5800,0
 
-# Die große Sturzmöglichkeit
+# Die große Sturzmöglichkeit mit Türstehern zum abwerfen
+Security,6110,0
 Obstacle,6200,0
+Security,6200,120
 Obstacle,6290,0
 Obstacle,6290,120
+Security,6290,240
 Obstacle,6380,0
 Obstacle,6380,120
 Obstacle,6380,240
-Bier,6380,400
+Security,6380,360
+#Bier,6380,400
 Plane,6480,360
 Plane,6600,360
 Plane,6720,360
@@ -105,7 +111,7 @@ Bier,6800,450
 Plane,7080,360
 Plane,7200,360
 Plane,7320,360
-Bier,7400,450
+#Bier,7400,450
 Plane,7680,360
 Plane,7800,360
 Plane,7920,360
