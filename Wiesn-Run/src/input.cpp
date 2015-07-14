@@ -1,7 +1,7 @@
 #include "input.h"
 
 /**
- * @brief  Konstruktor instanziert ein Objekt der Klasse Input.
+ * @brief  Konstruktor instanziiert ein Objekt der Klasse Input.
  * @author  Felix Pfreundtner
  */
 Input::Input() {

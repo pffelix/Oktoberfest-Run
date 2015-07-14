@@ -2,11 +2,11 @@
 #include "portaudio.h"
 
 /**
- * @brief  Konstruktor instanziert ein Objekt der Klasse AudioControl.
+ * @brief  Konstruktor instanziiert ein Objekt der Klasse AudioControl. Es wird für jede audioEventgruppe type ein audio Objekt erstellt, welches unter anderem die Samples der zugehörigen WAVE Datei beinhaltet.
  * @author  Felix Pfreundtner
  */
 AudioControl::AudioControl() {
-    /// erstelle für jede objektgruppe "type" ein audio Objekt welches unter anderem die Samples beinhaltet
+    ///
     audioobjects.reserve(23);
     /// Quelle scene_flyingbeer: http://soundbible.com/1247-Wind.html
     audioobjects.insert(audioobjects.begin() + audioType::scene_flyingbeer, Audio("scene_flyingbeer")); // 16bit
@@ -61,12 +61,12 @@ AudioControl::AudioControl() {
     blockcounter = 0;
     // setzte Wartezeit von Portaudio auf 100 ms
     waitinms = 100;
-    // setzte maximale Anzahl an Playevents auf 5
+    // setzte maximale Anzahl an Playevents auf 7
     // Wird der Wert höher gesetzt wird die Lautstärke geringer.
     // Wird der Wert geringer gesetzt steigt die Gefahr des Clippings des Ausgabesignals
     // Ein Normalisieren aller Ausgabeblöcke wäre möglich, würde jedoch 2D Audio nicht erlauben,
     // da auch die Dynamik zwischen zwei Blöcken normalisiert wird
-    // -> Distanz- und somit Lautstärkeänderungen von Objekten werden mit normalisiert.
+    // -> Distanz- und somit Lautstärkeänderungen von Objekten würden mit normalisiert werden.
     max_playevents = 7;
 
 }
@@ -81,7 +81,7 @@ AudioControl::~AudioControl() {
 }
 
 /**
- * @brief  updatePlayevents aktualisert nach Aufruf über Game::step alle im Moment abgespielten, in der Liste "playevents" gespeicherten playStruct's mit aktuellen audioStruct's aus der übergebenen Liste audioevents.
+ * @brief  updatePlayevents aktualisiert nach Aufruf über Game::step alle im Moment abgespielten, in der Liste "playevents" gespeicherten playStruct's mit aktuellen audioStruct's aus der übergebenen Liste audioevents.
  * @param  std::list<struct audioStruct> *audioevents
  * @author  Felix Pfreundtner
  */
@@ -175,14 +175,12 @@ void AudioControl::updatePlayevents(std::list<struct audioStruct> *audioevents){
 
 
 /**
- * @brief  playInitialize initialisiert die Abspielbibliothek Portaudio, öffenet den PortAudio Stream pastream und startet eine Callback Audiowiedergabe
+ * @brief  playInitialize initialisiert die Abspielbibliothek Portaudio, öffnet einen PortAudio Stream und startet eine Callback Audiowiedergabe
  * @author  Felix Pfreundtner
  */
 void AudioControl::playInitialize(){
     // initialisiere Port Audio
-    qDebug("vorher");   ///@todo entfernen: hier kommt die Speicherverletzung bei Rupert (Ubuntu)
     paerror = Pa_Initialize();
-    qDebug("danach");   ///@todo entfernen
     if(paerror != paNoError && paerror !=0) {
        fprintf(stderr, "Ein Error trat während der Benutzung der PortAudio Ausgabe auf\n" );
        fprintf(stderr, "Error Nummer: %d\n", paerror);
@@ -221,7 +219,7 @@ void AudioControl::playInitialize(){
 
 
 /**
- * @brief  instancepaCallback wird von Portaudio aufgerufen wenn nahezu letzer Audioblock abgespielt wurde und neu Audiosamples benötigt werden.
+ * @brief  instancepaCallback wird von Portaudio aufgerufen wenn der letze Audioblock abgespielt wurde und ein neuer Ausgabe Audioblock geniert werden muss.
  * @param  const void *inputBuffer
  * @param  void *outputBuffer
  * @param  unsigned long framesPerBuffer,

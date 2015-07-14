@@ -1,7 +1,7 @@
 #include "audio.h"
 
 /**
- * @brief  Konstruktor instanziert ein Objekt der Klasse Audio.
+ * @brief  Konstruktor instanziiert ein Objekt der Klasse Audio.
  * @author  Felix Pfreundtner
  */
 Audio::Audio(std::string type_name) {
