@@ -194,7 +194,7 @@ void AudioControl::playInitialize(){
                                     paInt16,  // setze Bittiefe der Audioausgabe 16 bit Integer
                                     SAMPLERATE, // setze Samplerate der Audioausgabe zu 44100 Hz
                                     BLOCKSIZE, // setze Anzahl an Samples per Bufferblock auf 1024
-                                    &AudioControl::staticpaCallback, // verweise auf Static Callback Funktion
+                                    &AudioControl::staticpaCallback, // verweise auf Statistische Callback Methode
                                     this); // übergebe User-Data
     if(paerror != paNoError && paerror != 0) {
        fprintf(stderr, "Ein Error trat während der Benutzung der PortAudio Ausgabe auf\n" );
@@ -210,7 +210,7 @@ void AudioControl::playInitialize(){
        fprintf(stderr, "Error Nachricht: %s\n", Pa_GetErrorText(paerror));
     }
 
-    // Pausiere Funktion wenn Audiostream gerade aktiv ist (Audiowiedergabe übernimmt Callback Funktion)
+    // Pausiere Methode wenn Audiostream gerade aktiv ist (Audiowiedergabe übernimmt Callback Methode)
     while (Pa_IsStreamActive(pastream) == 1) {
         Pa_Sleep(waitinms);
         // std::this_thread::sleep_for(std::chrono::milliseconds(waitnms)); Ersatz für sleep() ?

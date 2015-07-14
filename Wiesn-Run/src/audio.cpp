@@ -46,7 +46,7 @@ int Audio::getSamplenumber() {
 
 
 /**
- * @brief  readSamples liest bei Aufruf alle Samples der zu Audioobjekt gehörigen Wave Datei in die Variable "samples" ein. Eingelesen werden sollen RIFF Mono Wave Dateien mit 44100Hz Samplerate. Die Bittiefe ist hierbei variabel 8 oder 16bit. Es greift hierfür auf die zum Objekt gehörige, in der Ressourcendatenbank gespeicherte Wave Datei mit Pfadnamen "source" zurück. Die Funktion wertet den fmt Header des Wave File aus und liest im Anschluss den data Chunk ein. Die Bittiefe wird in float konvertiert um eine Weiterbearbeitung der Samples ohne Dynamikverlust durchführen zu können.
+ * @brief  readSamples liest bei Aufruf alle Samples der zu Audioobjekt gehörigen Wave Datei in die Variable "samples" ein. Eingelesen werden sollen RIFF Mono Wave Dateien mit 44100Hz Samplerate. Die Bittiefe ist hierbei variabel 8 oder 16bit. Es greift hierfür auf die zum Objekt gehörige, in der Ressourcendatenbank gespeicherte Wave Datei mit Pfadnamen "source" zurück. Die Methode wertet den fmt Header des Wave File aus und liest im Anschluss den data Chunk ein. Die Bittiefe wird in float konvertiert um eine Weiterbearbeitung der Samples ohne Dynamikverlust durchführen zu können.
  * @author  Felix Pfreundtner
  */
 void Audio::readSamples() {

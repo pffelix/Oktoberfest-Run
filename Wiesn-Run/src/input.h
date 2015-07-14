@@ -8,7 +8,7 @@
 #include <QKeyEvent>
 
 /**
- * @brief  Die Input-Klasse aktualisiert die für das Spiel relevanten Tastatureingaben. Eine Instanz dieser Klasse wird innerhalb der game.h angelegt. Im Ojekt der Game Klasse wird über die Funktion eventFilter ein QEvent Filter installiert. Dieser ruft bei neuen Events die Funktion evaluatekeyEvent auf, welche prüft ob das Event ein KeyEvent war. Ist dies der Fall wird über die Funktion updateKeys überprüft ob mit den aktuellen Eingaben ein Tastaturkombination erfolgt, welche für das Spiel relevant ist. Ist dies der Fall wird die aktuelle Tastatureingabe als Enum Wert Keyaction in keyactions gespeichert. War die Eingabe ein Buchstabe wird dieser im std::set keyletters als enum Keyletter gespeichert.  Das Game Objekt kann über die Funktionen getKeyactions(), getKeyletters(), getLastKeyaction() und getLastKeyletter() alle für dies Spiel relevanten Eingaben aus den Variablen auslesen.
+ * @brief  Die Input-Klasse aktualisiert die für das Spiel relevanten Tastatureingaben. Eine Instanz dieser Klasse wird innerhalb der game.h angelegt. Im Ojekt der Game Klasse wird über die Methode eventFilter ein QEvent Filter installiert. Dieser ruft bei neuen Events die Methode evaluatekeyEvent auf, welche prüft ob das Event ein KeyEvent war. Ist dies der Fall wird über die Methode updateKeys überprüft ob mit den aktuellen Eingaben ein Tastaturkombination erfolgt, welche für das Spiel relevant ist. Ist dies der Fall wird die aktuelle Tastatureingabe als Enum Wert Keyaction in keyactions gespeichert. War die Eingabe ein Buchstabe wird dieser im std::set keyletters als enum Keyletter gespeichert.  Das Game Objekt kann über die Methoden getKeyactions(), getKeyletters(), getLastKeyaction() und getLastKeyletter() alle für dies Spiel relevanten Eingaben aus den Variablen auslesen.
  *
  * @author  Felix Pfreundtner
  */
@@ -91,7 +91,7 @@ public:
         Backspace = (int)'\b',
     };
 
-    // Funktionen
+    // Methoden
     Input();
     ~Input();
     void evaluatekeyEvent(QEvent *event);
@@ -102,7 +102,7 @@ public:
 
 private:
 
-    // Funktionen
+    // Methoden
     void updateKeys();
 
     // Variablen
