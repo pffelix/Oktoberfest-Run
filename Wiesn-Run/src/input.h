@@ -8,7 +8,8 @@
 #include <QKeyEvent>
 
 /**
- * @brief  Die Input-Klasse aktualisiert die für das Spiel relevanten Tastatureingaben. Eine Instanz dieser Klasse wir innerhalb der game.h angelegt.
+ * @brief  Die Input-Klasse aktualisiert die für das Spiel relevanten Tastatureingaben. Eine Instanz dieser Klasse wird innerhalb der game.h angelegt. Im Ojekt der Game Klasse wird über die Funktion eventFilter ein QEvent Filter installiert. Dieser ruft bei neuen Events die Funktion evaluatekeyEvent auf, welche prüft ob das Event ein KeyEvent war. Ist dies der Fall wird über die Funktion updateKeys überprüft ob mit den aktuellen Eingaben ein Tastaturkombination erfolgt, welche für das Spiel relevant ist. Ist dies der Fall wird die aktuelle Tastatureingabe als Enum Wert Keyaction in keyactions gespeichert. War die Eingabe ein Buchstabe wird dieser im std::set keyletters als enum Keyletter gespeichert.  Das Game Objekt kann über die Funktionen getKeyactions(), getKeyletters(), getLastKeyaction() und getLastKeyletter() alle für dies Spiel relevanten Eingaben aus den Variablen auslesen.
+ *
  * @author  Felix Pfreundtner
  */
 class Input {
@@ -117,7 +118,7 @@ private:
     QSet<int> keyactions;
     /**
      * @var  std::set<char> keyletters
-     * @brief  Die Variable keyletters speichert die die Buchstababen als "strings" aller im Moment gepressten Buchstaben Tasten.
+     * @brief  Die Variable keyletters speichert die Buchstaben als "strings" aller im Moment gepressten Buchstaben Tasten.
      */
     std::set<char> keyletters;
     /**
