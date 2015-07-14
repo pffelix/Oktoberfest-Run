@@ -90,7 +90,7 @@ void RenderGUI::setValues(int health, int alcohol, int ammo, int score, int step
 
     //AlkoholMax überschritten?
     if(alcohol>maxAlcohol) {
-        this->showAlcoholBar[0].setRect(140,60,BARLENGTH,BARHEIGHT);
+        this->showAlcoholBar[0].setRect(140,90,BARLENGTH,BARHEIGHT);
 
         //Balken blinkt rot auf
         if(stepCount%(frameRate*2) == 0) {
