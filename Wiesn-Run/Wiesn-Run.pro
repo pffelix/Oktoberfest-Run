@@ -90,17 +90,12 @@ portaudio.files = C:\portaudio\libportaudio-2.dll
 
 audios.path = $$DESTDIR/audios
 audios.files = src/audios/*
-images.path = $$DESTDIR/images
-images.files = src/images/*
-levelFiles.path = $$DESTDIR/levelFiles
-levelFiles.files = src/levelFiles/*
 
 
 INSTALLS += \
     portaudio \
     audios \
-    images \
-    levelFiles
+
 
 # Workaround für den strip-Error unter Ubuntu (Rupert).
-QMAKE_STRIP = echo
+#QMAKE_STRIP = echo

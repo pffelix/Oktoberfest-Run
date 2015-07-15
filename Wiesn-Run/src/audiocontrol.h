@@ -18,14 +18,17 @@
 #include <mutex>
 
 /**
- * @brief  Die AudioControl-Klasse synchronisiert alle Audioausgabeanweisungen und spielt passende Audioobjekte ab. Eine Instanz dieser Klasse wir innerhalb der game.h angelegt.
- * @author  Felix Pfreundtner
+ * @brief  Die AudioControl Klasse synchronisiert alle aktuellen Audioausgabeanweisungen des Game Objekt mit dem PortAudio Wiedergabe Thread und ermöglicht das blockweise Abspielen von Samples unter Einbezug der Distanzinformationen Spieler zum audioEvent (2D Audio). Dine Instanz der Klasse AudioControl audioOutput wird zum Spielstart im game Objekt erstellt. Beim Erstellen wird über den Konstruktor für alle im Audio Ordner gespeicherten WAVE Dateien (WAVE Datei -> audioEventgruppe audioType) ein Objekt der Klasse Audio erstellt und an die Liste audioobjects angehängt. Der Datentyp eines audioEvents ist ein audioStruct, welches eine ID, einen audioType und eine Distanzinformation besitzt, genaueres siehe Definitions.h. Der Datentyp der zugehörigen Abspielinformation ist ein playStruct, welches eine id, einen audioType, eine Lautstärkeinformation, einen Zeiger auf das passende Audio Objekt mit den Samples und eine aktuelle Abspielpostion in Samples besitzt. In jedem Spiel-Step erzeugt das Game Objekt alle im Moment abzuspielenden audioEvents über die Funktion updateaudioEvents() und übergibt die Liste audioEvents der updatePlayevents() Methode. Jedes audioStruct wird aus der Liste entnommen und dessen id mit allen ids, der im Moment in der Liste playEvents stehenden playStructs, verglichen. Die Distanzinformation "|Spieler - Ort audioEvent|" des audioStruct wird linear in eine Volumeninformation umgerechnet. Ist das zum audioStruct zugehörige playStruct bereits vorhanden, so wird nur die Distanzinformation aktualisiert. Ist kein passendes playStruct vorhanden wird ein neues playStruct aus der audioStruct Information erzeugt und der Liste playevents angehängt. Wird ein vorher abgespieltes playStruct nun nicht mehr vom Game Objekt als audioStruct gesendet, wird das playStruct aus der Liste playevents entfernt und das audioEvent nicht weiter abgespielt.
+ *
+ * Für die Audio Wiedergabe wurde die Bibliothek PortAudio gewählt. Sie ermöglicht eine Low Level Audioausgabe auf Sampleebene. PortAudio wird zum Programmstart über die Methode playInitialize() als Thread gestartet, was eine gleichzeitige Erstellung von audioEvents im Spielablauf durch das Game Objekt und Rückgriff auf die aktuellen, in der Instanzvariable playevents, stehenden Ausgabeinformationen über eine Instanz Callbackfunktion instancepaCallback() ermöglicht. Das Abspielen erfolgt unabhängig vom Step Takt des Game Objekts, was die Stabilität der Wiedergabe garantiert. Die Audioausgabe wird hierbei blockweise mit Blöckgröße 1024 Samples (44100 Hz Samplingfrequenz) erstellt. Die statische Callback Methode der Klasse staticpaCallback() wird von PortAudio automatisch immer dann aufgerufen, wenn der PortAudio Stream einen neuen Ausgabeblock benötigt, da der letzte abgespielt wurde. Die Methode ruft im Anschluss die Instanz Callback Funktion instancepaCallback() des AudioControl Objekt audioOutput auf, welche über eine Mutex auf die Instanzvariable playevents zugreift. Bei jedem Aufruf wird in instancepaCallback() die Liste playevents ausgewertet und für jedes playStruct über den Zeiger auf das zugehörige Audio Objekt mit getSample() ein Sample eingelesen. Durch Multiplikation mit der aktuellen im playStruct stehenden Volumeninformation wird die Distanz des audioEvents zum Spieler in jedem Block neu berücksichtigt. Nach Auswerten eines Samples wird im playStruct der Positionswert um 1 erhöht. Ist der Positionswert größer als getSamplenumber() wird die Position auf 0 gesetzt und das audioEvent wieder von Beginn an abgespielt (Loop). Das Gleiche wird für die anderen playStructs in der Liste playevents durchgeführt. Durch Summation aller Samples wird der aktuelle Ausgabeblock gemischt, welcher von PortAudio wiedergeben wird. Es wurden zudem zwei Filter Effekte programmiert, welche auftreten wenn der Spieler betrunken ist (Audiowiedergabe ausgewählter audioTypes wird pro Sample um ein Sample verzögert) und der Spieler nur noch einen Lebenspunkt hat (Audiowiedergabe ausgewählter audioTypes wird pro Sample um ein Sample erhöht).
+ *
+ * @author  Felix
  */
 class AudioControl{
 
 public:
 
-    // Funktionen
+    // Methoden
     AudioControl();
     ~AudioControl();
     void playInitialize();
@@ -35,20 +38,20 @@ public:
 private:
 
     /**
-     * @brief  playStruct definiert die Struktur eines Playevents
+     * @brief  playStruct definiert die Struktur eines playEvents
      */
     struct playStruct{
         /// id des playStruct
         int id;
-        /// type des playStruct
+        /// audioType des playStruct
         audioType type;
         /// Lautstärke des playStruct
         float volume;
-        /// variable welche angibt ob sound im moment abgespielt wird
+        /// variable welche angibt ob das playEvent im Moment abgespielt wird
         bool playnext;
-        /// Zeiger auf das (Audio-)object des playStruct, welches Eventgruppe "type" zugeordnet ist.
+        /// Zeiger auf das Audio Object des playEvents, welches der audioEventgruppe type zugeordnet ist
         Audio* audioobject;
-        /// aktuelle Abspielposition in Audiobjekt in Samples (Beginn des Abspielblockes mit Länge 1024 Samples
+        /// aktuelle Abspielposition des Audiobjekt in Samples
         int position;
 
     };
@@ -63,14 +66,14 @@ private:
         lifecritical
     };
 
-    // Funktionen
+    // Methoden
     int instancepaCallback(const void *input, void *output,
                            unsigned long frameCount,
                            const PaStreamCallbackTimeInfo* timeInfo,
                            PaStreamCallbackFlags statusFlags);
 
     /**
-     * @brief  staticpaCallback ist die Statische Callback Funktion der AudioControl Klasse. Die Funktion wird immer dann aufgerufen, wenn der PortAudio Stream einen neuen Ausgabeblock benötigt, da der letzte abgespielt wurde. Die Funktion ruft die Funktion instancepaCallback auf, welche nicht statisch ist und auf alle instance variablen und Funktionen (des von Game erzeugten AudioControl Ojektes audioOutput) zugreifen kann. Dies ermöglicht einen Einfachen Austasch von Audio Blöcken zwischen Game Thread und Portaudio Wiedergabethread.
+     * @brief  Die Methode staticpaCallback ist die statische Callback Methode der AudioControl Klasse. Die Methode wird immer dann aufgerufen, wenn der PortAudio Stream einen neuen Ausgabeblock benötigt, da der letzte abgespielt wurde. Die Methode ruft die Methode instancepaCallback auf, welche nicht statisch ist und auf alle Instanz Variablen und Methoden (des von Game erzeugten AudioControl Ojektes audioOutput) zugreifen kann. Dies ermöglicht einen einfachen Austausch von audiobezogenen Informationen zwischen Game Thread und Portaudio Wiedergabethread.
  * @param  const void *inputBuffer
  * @param  void *outputBuffer
  * @param  unsigned long framesPerBuffer,
@@ -78,7 +81,7 @@ private:
  * @param  PaStreamCallbackFlags statusFlags
  * @return  ((AudioControl*)userData)
          ->instancepaCallback(input, output, frameCount, timeInfo, statusFlags)
- * @author  Felix Pfreundtner
+ * @author  Felix
  */
     static int staticpaCallback(
                               const void *input, void *output,
@@ -105,22 +108,17 @@ private:
     std::list<playStruct> playevents;
     /**
      * @var  std::vector<Audio> audioobjects
-     * @brief  audioobjects beinhaltet eine Array mit allen vorhandenen Objekten der Klasse Audio( beispielsweise deren Samples als QVector).
+     * @brief  audioobjects beinhaltet eine vector mit allen vorhandenen Objekten der Klasse Audio.
      */
     std::vector<Audio> audioobjects;
     /**
      * @var  int waitinms
-     * @brief  waitinms speichert die wartezeit bis zum Beenden von PortAudio in Millisekunden.
+     * @brief  waitinms speichert die Wartezeit bis zum Beenden von PortAudio in Millisekunden.
      */
     int waitinms;
     /**
      * @var  PaError playinitializeerror
      * @brief  playinitializeerror speichert eventuell auftretende Error beim Öffenen und Schließen des PortAudio Streams.
-     */
-    PaError playinitializeerror;
-    /**
-     * @var int max_playevents
-     * @brief  max_playevents definiert die maximale Anzahl an abgespielten playEvents ohne Clipping Effekte.
      */
     int max_playevents;
     /**
@@ -130,12 +128,12 @@ private:
     int blockcounter;
     /**
      * @var  float mixed_sample
-     * @brief  mixed_sample beinhaltet das aktuell von mixSample() gemixte Sample aller audioEvents.
+     * @brief  mixed_sample beinhaltet das aktuell gemischte Sample aller audioEvents.
      */
     float mixed_sample;
     /**
      * @var  int playeventsnumber
-     * @brief  playeventsnumber beinhaltet die Anzahl an aktuelle abzuspielenden audioEvents. Float Format da mit diesem Wert in mixsamples effizient gerechnet werden muss ohne Castumwandlung Integer in Float.
+     * @brief  playeventsnumber beinhaltet die Anzahl an aktuelle abzuspielenden audioEvents.
      */
     int playeventsnumber;
     /**
@@ -150,7 +148,7 @@ private:
     PaError paerror;
     /**
      * @var  status_filter
-     * @brief  status_filter gibt den Filterstatus an. Wenn kein Audioevent in der audiovents List den Type status_alcohol hat -> enum none-> 0. Wenn mindestens ein Audioevent in der audiovents List den Type status_alcohol hat -> enum alcohol-> 1. Wenn mindestens ein Audioevent in der audiovents List den Type status_life hat -> enum alcohol-> 2. Wenn mindestens ein Audioevent in der audiovents List den Type status_lifecritical hat -> enum alcohol-> 3.
+     * @brief  status_filter gibt den Filterstatus an. Wenn kein Audioevent in der audiovents List den Type status_alcohol hat -> enum statusFilter no-> 0. Wenn mindestens ein Audioevent in der audiovents List den Type status_alcohol hat -> enum statusFilter alcohol-> 1. Wenn mindestens ein Audioevent in der audiovents Liste den Type status_lifecritical hat -> enum statusFilter lifecritical-> 2.
      */
     int status_filter;
 

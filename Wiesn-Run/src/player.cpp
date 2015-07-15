@@ -12,11 +12,11 @@
  * @author Johann, Simon
  */
 Player::Player(int posX, int posY, int speedX) : MovingObject(posX, posY, player, speedX, -maxSpeedY) {
-    health = 3;
-    alcoholLevel = 5 * (5 * frameRate);     // Startpegel 5 alle 5 Sekunden wird eins abgebaut
+    health = maxHealth; // Start mit maxHealth;
+    alcoholLevel = 0; // Startpegel auf Null
     jumpState = false;
     speedScale = 1;
-    ammunation = 5;
+    ammunation = 0; // Keine Maßkrüge zu Anfang
     inflictedDamage = 1;
     immunityCooldown = 0;
     fireRate =  frameRate / 2;              // default-Wert für die Nachladezeit: 0.5 Sekunden

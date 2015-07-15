@@ -2,11 +2,11 @@
 #include "portaudio.h"
 
 /**
- * @brief  Konstruktor instanziert ein Objekt der Klasse AudioControl.
- * @author  Felix Pfreundtner
+ * @brief  Konstruktor instanziiert ein Objekt der Klasse AudioControl. Wird einmal zum Spielstart von dem game Objekt aufgerufen, welche ein Instanz audioOutput erstellt. Es wird für jede audioEventgruppe type ein audio Objekt erstellt, welches unter anderem die Samples der zugehörigen WAVE Datei beinhaltet.
+ * @author  Felix
  */
 AudioControl::AudioControl() {
-    /// erstelle für jede objektgruppe "type" ein audio Objekt welches unter anderem die Samples beinhaltet
+    ///
     audioobjects.reserve(23);
     /// Quelle scene_flyingbeer: http://soundbible.com/1247-Wind.html
     audioobjects.insert(audioobjects.begin() + audioType::scene_flyingbeer, Audio("scene_flyingbeer")); // 16bit
@@ -61,12 +61,12 @@ AudioControl::AudioControl() {
     blockcounter = 0;
     // setzte Wartezeit von Portaudio auf 100 ms
     waitinms = 100;
-    // setzte maximale Anzahl an Playevents auf 5
+    // setzte maximale Anzahl an Playevents auf 7
     // Wird der Wert höher gesetzt wird die Lautstärke geringer.
     // Wird der Wert geringer gesetzt steigt die Gefahr des Clippings des Ausgabesignals
     // Ein Normalisieren aller Ausgabeblöcke wäre möglich, würde jedoch 2D Audio nicht erlauben,
     // da auch die Dynamik zwischen zwei Blöcken normalisiert wird
-    // -> Distanz- und somit Lautstärkeänderungen von Objekten werden mit normalisiert.
+    // -> Distanz- und somit Lautstärkeänderungen von Objekten würden mit normalisiert werden.
     max_playevents = 7;
 
 }
@@ -74,16 +74,16 @@ AudioControl::AudioControl() {
 
 /**
  * @brief  Destruktor löscht ein Objekt der Klasse AudioControl
- * @author  Felix Pfreundtner
+ * @author  Felix
  */
 AudioControl::~AudioControl() {
 
 }
 
 /**
- * @brief  updatePlayevents aktualisert nach Aufruf über Game::step alle im Moment abgespielten, in der Liste "playevents" gespeicherten playStruct's mit aktuellen audioStruct's aus der übergebenen Liste audioevents.
+ * @brief  Die Methode updatePlayevents aktualisiert nach Aufruf über Game::step alle im Moment abgespielten, in der Liste "playevents" gespeicherten playStruct's , mit aktuellen audioStructs aus der übergebenen Liste audioevents.
  * @param  std::list<struct audioStruct> *audioevents
- * @author  Felix Pfreundtner
+ * @author  Felix
  */
 void AudioControl::updatePlayevents(std::list<struct audioStruct> *audioevents){
     // erstelle neues temporäres audioStruct, welches stets das aktuelle audioStruct Element der Liste audioevents beinhaltet.
@@ -175,14 +175,14 @@ void AudioControl::updatePlayevents(std::list<struct audioStruct> *audioevents){
 
 
 /**
- * @brief  playInitialize initialisiert die Abspielbibliothek Portaudio, öffenet den PortAudio Stream pastream und startet eine Callback Audiowiedergabe
- * @author  Felix Pfreundtner
+ * @brief  Die Methode playInitialize initialisiert die Abspielbibliothek Portaudio, öffnet einen PortAudio Stream und startet eine Callback Audiowiedergabe
+ * @author  Felix
  */
 void AudioControl::playInitialize(){
     // initialisiere Port Audio
-    qDebug("vorher");   ///@todo entfernen: hier kommt die Speicherverletzung bei Rupert (Ubuntu)
+    qDebug("Audio-Threat: In audiocontrol.cpp vor portaudio-Initialisierung.");
     paerror = Pa_Initialize();
-    qDebug("danach");   ///@todo entfernen
+    qDebug("Audio-Threat: In audiocontrol.cpp nach portaudio-Initialisierung.");
     if(paerror != paNoError && paerror !=0) {
        fprintf(stderr, "Ein Error trat während der Benutzung der PortAudio Ausgabe auf\n" );
        fprintf(stderr, "Error Nummer: %d\n", paerror);
@@ -196,7 +196,7 @@ void AudioControl::playInitialize(){
                                     paInt16,  // setze Bittiefe der Audioausgabe 16 bit Integer
                                     SAMPLERATE, // setze Samplerate der Audioausgabe zu 44100 Hz
                                     BLOCKSIZE, // setze Anzahl an Samples per Bufferblock auf 1024
-                                    &AudioControl::staticpaCallback, // verweise auf Static Callback Funktion
+                                    &AudioControl::staticpaCallback, // verweise auf Statistische Callback Methode
                                     this); // übergebe User-Data
     if(paerror != paNoError && paerror != 0) {
        fprintf(stderr, "Ein Error trat während der Benutzung der PortAudio Ausgabe auf\n" );
@@ -212,7 +212,7 @@ void AudioControl::playInitialize(){
        fprintf(stderr, "Error Nachricht: %s\n", Pa_GetErrorText(paerror));
     }
 
-    // Pausiere Funktion wenn Audiostream gerade aktiv ist (Audiowiedergabe übernimmt Callback Funktion)
+    // Pausiere Methode wenn Audiostream gerade aktiv ist (Audiowiedergabe übernimmt Callback Methode)
     while (Pa_IsStreamActive(pastream) == 1) {
         Pa_Sleep(waitinms);
         // std::this_thread::sleep_for(std::chrono::milliseconds(waitnms)); Ersatz für sleep() ?
@@ -221,14 +221,14 @@ void AudioControl::playInitialize(){
 
 
 /**
- * @brief  instancepaCallback wird von Portaudio aufgerufen wenn nahezu letzer Audioblock abgespielt wurde und neu Audiosamples benötigt werden.
+ * @brief  Die Methode instancepaCallback wird von Portaudio aufgerufen wenn der letze Audioblock abgespielt wurde und ein neuer Ausgabe Audioblock geniert werden muss.
  * @param  const void *inputBuffer
  * @param  void *outputBuffer
  * @param  unsigned long framesPerBuffer,
  * @param  const PaStreamCallbackTimeInfo* timeInfo,
  * @param  PaStreamCallbackFlags statusFlags
  * @return  int returncode
- * @author  Felix Pfreundtner
+ * @author  Felix
  */
 int AudioControl::instancepaCallback(
                            const void *inputBuffer,
@@ -315,8 +315,8 @@ int AudioControl::instancepaCallback(
 }
 
 /**
- * @brief  playTerminate stoppt bei Aufruf die PortAudio Audioausgabe, beendet im Anschluss den Portaudio Stream und beendet zuletzt PortAudio.
- * @author  Felix Pfreundtner
+ * @brief  Die Methode playTerminate stoppt bei Aufruf die PortAudio Audioausgabe, beendet im Anschluss den Portaudio Stream und beendet zuletzt PortAudio.
+ * @author  Felix
  */
 void AudioControl::playTerminate(){
 

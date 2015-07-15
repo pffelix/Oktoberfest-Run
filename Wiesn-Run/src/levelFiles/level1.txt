@@ -60,7 +60,7 @@ Bier,1900,170
 # Springen von einer Plane zur nächsten
 Plane,2400,130
 Plane,2670,130
-Bier,2670,170
+Hendl,2670,170
 
 # Treppe aus Planes
 Plane,3000,40
@@ -131,12 +131,14 @@ Plane,10700,130
 Plane,9620,280
 Plane,9740,280
 Plane,9860,280
-Bier,9860,340
+Hendl,9860,340
+Bier,9860,40
 Plane,9980,280
 Plane,10100,280
 Plane,10220,280
 Plane,10340,280
 Bier,10340,340
+Hendl,10340,40
 Plane,10460,280
 Plane,10580,280
 Plane,10700,280

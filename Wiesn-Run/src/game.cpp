@@ -559,13 +559,13 @@ void Game::displayStatistics() {
 
     string name = "Name: ";
     name.append(playerScore.name);
-    string enemies = "Verstorbene: ";
+    string enemies = "Tote: ";
     enemies.append(to_string(playerScore.enemiesKilled));
-    string distance = "glafne Meter: ";
+    string distance = "Wegpunkte: ";
     distance.append(to_string(playerScore.distanceCovered));
-    string alk = "Promille: ";
+    string alk = "Alkohol: ";
     alk.append(to_string(playerScore.alcoholPoints));
-    string points = "Punkte:";
+    string points = "Gesamt:";
     points.append(to_string(playerScore.totalPoints));
 
     menuStatistics->addEntry(name,menuId_NonClickable,false);
@@ -1142,7 +1142,17 @@ void Game::calculateMovement() {
  * Da die Liste worldObjects in jedem Zeitschritt sortiert wird, müssen die Kollisionen nur für die nächsten Nachbarn
  * berechnet werden. Allerdings können durch ungünstige Lage auch Objekte kollidieren, die nicht direkt nebeneinander
  * in der Liste liegen. Dafür werden die fünf Nachbarn links und rechts jedes MovingObjects geprüft, falls vorhanden.
- * @todo Simon, willst du hier die normalen Kommentare noch einarbeiten und die Funktion genauer erklären? - Rupi
+ * Die bis zu fünf Nachbarn vor und nach dem Objekt werden in eine Liste möglicher Kollisionen aufgenommen.
+ * Für das aktuelle affectedObject wird zunächst die relative Lage zum aktuellen causingObject festgestellt. Dabei werden
+ * die booelschen Variablen "affectedLeftFromCausing" und "affectedAboveCausing" gesetzt.
+ * Abhängig von der relativen Lage werden die Überlappungen der Objekte geprüft und in die Variablen "overlayX" und
+ * "overlayY" gespeichert. Damit eine Kollision vorliegt, müssen die Überlappung in X- und Y-Richtung positiv sein.
+ * Sind beide Überlappungen positiv, so wird geprüft, welche Überlappung größer ist. Bei einer horizontalen Kollision ist die
+ * Überlappung in vertikaler Richtung größer. bei einer vertikalen Kollision ist die Überlappung in horizontaler Richtung größer.
+ * Sind die Überlappungen gleich groß, wird die Kollision als vertikal angesehen.
+ * Durch die bereits bekannte Lage der Objekte zueinander kann aus dem Wissen der Überlappungen auf die genaue Richtung
+ * der Kollision geschlossen werden. Für jede Kollision wird ein "collisionStruct" angelegt, welches in der Funktion "handleCollisions"
+ * abgearbeitet wird.
  * @author Simon
  */
 void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
@@ -1172,7 +1182,7 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
                 ++counter;
             }
 
-            // Durchlaufe die Schleife möglicher Kollisionen, bis sie leer ist
+            // Durchlaufe die Liste möglicher Kollisionen, bis sie leer ist
             while (!(possibleCollisions.empty())) {
                 // Setze causingObject auf das erste Element in der Liste und lösche den ersten Listeneintrag
                 GameObject *causingObject = *possibleCollisions.begin();
@@ -1590,10 +1600,10 @@ void Game::handleCollisions() {
  * @author Simon
  */
 void Game::updateScore() {
-    playerScore.distanceCovered = playerObjPointer->getPosX();
+    playerScore.distanceCovered = (playerObjPointer->getPosX() / 20);
     playerScore.enemiesKilled = playerObjPointer->getEnemiesKilled();
     playerScore.alcoholPoints = playerScore.alcoholPoints + (playerObjPointer->getAlcoholLevel() / 100);
-    playerScore.totalPoints = playerScore.distanceCovered + playerScore.enemiesKilled + playerScore.alcoholPoints;
+    playerScore.totalPoints = (playerScore.distanceCovered*4 + playerScore.enemiesKilled*1000 + playerScore.alcoholPoints) / 10;
 }
 
 
@@ -1633,7 +1643,7 @@ void Game::updateAudioevents() {
         break;
     }
     }
-    if (playerObjPointer->getAlcoholLevel() > maxAlcohol*0.6) {
+    if (playerObjPointer->getAlcoholLevel() > maxAlcohol*0.8) {
         newAudio = {13, status_alcohol, audioDistance.status_alcohol};
         audioevents.push_back(newAudio);
     }
@@ -1787,7 +1797,11 @@ int Game::getStepIntervall() {
     return stepIntervall;
 }
 
-///@todo Kommentieren, Johann?
+/**
+ * @brief Misst die Zeit, die zwischen dem letzten Aufruf und dem aktuellen Aufruf vergangen ist und gibt diese in der Konsole mit dem übergebenen String aus.
+ *
+ * @param name String für die Ausgabe
+ */
 void Game::timeNeeded(string name) {
 
     // Zeit seit dem letzten Aufruf messen
