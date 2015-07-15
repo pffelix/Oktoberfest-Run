@@ -303,7 +303,6 @@ enum powerUpType {
 
 /**
  * @brief Struktur für die AudioLevels und Spielzustand
- *
  * @author Johann
  */
 struct stateStruct {
