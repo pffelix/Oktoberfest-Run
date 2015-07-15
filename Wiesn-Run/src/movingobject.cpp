@@ -130,7 +130,7 @@ void MovingObject::updateFramesDirection() {
 }
 
 /**
- * @brief spiegelt Grafiken an der Y-Achse
+ * @brief spiegelt Grafiken an der Y-Achse.
  * kopiert von "https://forum.qt.io/topic/18131/solved-flip-a-qgraphicssvgitem-on-its-center-point/2" und angepasst.
  * Ermöglicht das Spiegeln von Bildern über eine Transformationsmatrix.
  * Am Anfang wird getestet ob ein Richtungswechsel statt gefunden hat.
@@ -169,7 +169,7 @@ void MovingObject::flipHorizontal()
 }
 
 /**
- * @brief MovingObject::swapImage
+ * @brief tauscht Grafiken aus für Bewegungsanimationen.
  * Die Funktion testet mit Hilfe von "imageState" welches Bild gerade aktiv ist und wechselt dann jeweils auf das andere
  * Bild für die Bewegungsanimation. Es wird alle framRate/2 Frames gewechselt und sofort beim loslaufen.
  * Wenn der Spieler in der Luft ist bzw. springt setzt die Animation aus, wenn er nur noch ein Leben hat läuft

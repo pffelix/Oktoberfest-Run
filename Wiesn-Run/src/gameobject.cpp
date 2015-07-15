@@ -23,7 +23,7 @@ GameObject::GameObject(int posX, int posY, int length, int height, objectType ty
 /**
  * @brief GameObject Konstruktor
  * Je nach Objekt-Typ bekommt hier jedes Objekt Abmessungen und eine Grafik zugewiesen und die "Startposition" wird in Scenenkoordinaten errechnet.
- * Die Attribute Länge, Höhe und Objekt-Typ können nicht mehr geändert werden und X/Y-Position nur durhc erbende Klassen.
+ * Die Attribute Länge, Höhe und Objekt-Typ können nicht mehr geändert werden und X/Y-Position nur durch erbende Klassen.
  *
  * @param posX      : X-Position
  * @param posY      : Y-Position

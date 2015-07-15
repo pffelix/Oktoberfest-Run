@@ -5,7 +5,7 @@
 #include <QGraphicsScene>
 
 /**
- * @brief Hintergrund-Klasse
+ * @brief Hintergrund-Klasse.
  * Eine Instanz wird bei jedem Levelstart in der Funktion Game::startNewGame angelegt.
  * Die Klasse initialisiert alle Hintergrundgrafiken und aktualisiert deren Positionen im
  * laufendem Spiel. Auch die Bewegungsparallaxe wird hier berechnet.
@@ -13,6 +13,8 @@
  * Ist eines davon, bedingt durch die Vorwärtsbewegung des Spielers nicht mehr sichtbar, so wird es wieder
  * am zweiten Bild vorbei, nach vorne geschoben. So wird gewährleistet das der Spieler nicht
  * an den Bildern "vorbeiläuft".
+ * Im ersten Level gibt es zusätzlich ein drehends Riesenrad. Dieses wird auch über diese Klasse angelegt bzw.
+ * kontrolliert.
  * @author Flo
  */
 class RenderBackground {

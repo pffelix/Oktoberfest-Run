@@ -8,7 +8,7 @@
 /**
  * @file  definitions.h
  * @brief  definitions beinhaltet Datentyp Definitionen.
- * @author Johann, Simon, Felix
+ * @author Johann, Simon, Felix, Flo
  */
 
 /**
