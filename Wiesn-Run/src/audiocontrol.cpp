@@ -180,7 +180,9 @@ void AudioControl::updatePlayevents(std::list<struct audioStruct> *audioevents){
  */
 void AudioControl::playInitialize(){
     // initialisiere Port Audio
+    qDebug("Audio-Threat: In audiocontrol.cpp vor portaudio-Initialisierung.");
     paerror = Pa_Initialize();
+    qDebug("Audio-Threat: In audiocontrol.cpp nach portaudio-Initialisierung.");
     if(paerror != paNoError && paerror !=0) {
        fprintf(stderr, "Ein Error trat während der Benutzung der PortAudio Ausgabe auf\n" );
        fprintf(stderr, "Error Nummer: %d\n", paerror);
