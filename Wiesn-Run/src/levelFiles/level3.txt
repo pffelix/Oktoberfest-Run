@@ -50,7 +50,7 @@ Level3: Käfer-Zelt
 ------------
 
 Player,130,0
-Levellaenge,29000
+Levellaenge,29500
 
 Obstacle,800,0
 

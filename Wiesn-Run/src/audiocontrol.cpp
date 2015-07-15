@@ -2,7 +2,7 @@
 #include "portaudio.h"
 
 /**
- * @brief  Konstruktor instanziiert ein Objekt der Klasse AudioControl. Wird einmal zum Spielstart von dem game Objekt aufgerufen und ein Objekt audioOutput erstellt. Es wird für jede audioEventgruppe type ein audio Objekt erstellt, welches unter anderem die Samples der zugehörigen WAVE Datei beinhaltet.
+ * @brief  Konstruktor instanziiert ein Objekt der Klasse AudioControl. Wird einmal zum Spielstart von dem game Objekt aufgerufen, welche ein Instanz audioOutput erstellt. Es wird für jede audioEventgruppe type ein audio Objekt erstellt, welches unter anderem die Samples der zugehörigen WAVE Datei beinhaltet.
  * @author  Felix Pfreundtner
  */
 AudioControl::AudioControl() {

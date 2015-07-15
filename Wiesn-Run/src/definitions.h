@@ -178,7 +178,7 @@ enum audioType {
 };
 
 /**
- * @brief  Typdef Struct mit Konstanten für den Audiocooldown jedes Audiotypes. In diesen Konstanten wird festgelegt wie viele millisekunden für ein Event (mit "id=...") eines audioTypes trotz verschwinden in der Grafik nachwievor audioStructs gesendet werden. Ein 0 bedeteutet, dass kein Cooldown erfolgt, die Audiostructs werden hier solange gesendet wie das Event sichtbar ist.
+ * @brief  Typdef Struct mit Konstanten für den Audiocooldown jedes Audiotypes. In diesen Konstanten wird festgelegt wie viele millisekunden für ein Event (mit id=...) eines audioTypes trotz verschwinden in der Grafik nachwievor audioStructs gesendet werden. Ein 0 bedeteutet, dass kein Cooldown erfolgt, die Audiostructs werden hier solange gesendet wie das Event sichtbar ist.
  * @author  Felix, Johann
  */
 typedef struct {
@@ -208,7 +208,7 @@ typedef struct {
 } audioCooldownStruct;
 
 /**
- * @brief  Typdef Struct mit Konstanten für die Distance jedes Audiotypes. In diesen Konstanten wird festgelegt wie weit entfernt ein Event (mit "id=...) eines audioTypes vom Spieler standardmäßig auftritt [Werbereicht 0 (beim spieler) bis 1(maximale Distanz des Fensters). Ist die Konstante -1 ist die Distance eines Events vom Typ audioType variabel und muss von dem Game Ojekt in jedem Step neu bestimmt werden (2D Audio).
+ * @brief  Typdef Struct mit Konstanten für die Distance jedes Audiotypes. In diesen Konstanten wird festgelegt wie weit entfernt ein Event (mit id=...) eines audioTypes vom Spieler standardmäßig auftritt [Wertebereich 0 (beim spieler) bis 1(maximale Distanz des Fensters). Ist die Konstante -1 ist die Distance eines Events vom Typ audioType variabel und muss von dem Game Ojekt in jedem Step über updateAudioevents() neu bestimmt werden (2D Audio).
  * @author  Felix, Johann
  */
 typedef struct {
@@ -241,10 +241,10 @@ typedef struct {
 /**
  * @brief  Struktur für einzelne Audio Events.
  * Das AudioControl Objekt audioOutput arbeitet Events von dieser Struktur ab.
- * Jedes Audioevent hat eine eindeutige int id, einen enum Audiogruppen type und eine float distance Information
+ * Jedes audioEvent hat eine eindeutige int id, einen enum Audiogruppen type und eine float distance Information
  * und ordnet somit jedem Objekt einen Sound zu, wobei sich die Distanzinformation des Sounds bei Veränderung der relativen Position Spieler - AudioEvent ändert.
  * Ein Distanzwert beträgt dabei minimal 0 und maximal 1 (größte Entfernung x-Achse im Gamefenster).
- * Die Standarddistanzwerte sind in typedef struct audioDistance für jeden AudioStruct "type" definiert.
+ * Die Standarddistanzwerte sind in typedef struct audioDistance für jeden Audiogruppen type definiert.
  *
  * Alle in einem Step auftretetenden audioStruct's werden in einer std::list audioevents vom Game Objekt
  * gesammelt und über die Methode updatePlayevents() in jedem Step der Klasse Audiocontrol übergeben.
