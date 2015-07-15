@@ -1753,7 +1753,7 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
                        playerPointer->getAmmunatiuon(),playerScore.totalPoints, stepCount);
 
     //Parralaxe Positionsupdate
-    showBackground->updateParallaxe(playerStepMov);
+    showBackground->updateParallaxe(playerStepMov, stepCount);
 
     //Hintergrund Positionsupdate
     showBackground->updateBackgroundPos(playerPointer->getPosX() - playerOffset - playerScale*0.5);

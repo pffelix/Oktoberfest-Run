@@ -26,7 +26,7 @@ public:
     void setPos(int x, QGraphicsPixmapItem *background);
 
     //berechnet die Bewegung der Hintergrund Bewegungsparallaxe
-    void updateParallaxe(int x);
+    void updateParallaxe(int x, int stepCount);
 
     //schiebt Hintergrundgrafiken wieder vor den Spieler wenn dieser an ihnen vorbeigelaufen ist
     void updateBackgroundPos(int x);
@@ -38,6 +38,9 @@ private:
     QGraphicsPixmapItem backgroundTwo;
     QGraphicsPixmapItem backgroundThree;
     QGraphicsPixmapItem backgroundFour;
+
+    //QGraphicsPixmapItem giantWheel[3];
+   // QGraphicsPixmapItem giantWheelBasket[12];
 
     //Bildbreite der Hintergrundgrafiken
     int imageLength = 2560;

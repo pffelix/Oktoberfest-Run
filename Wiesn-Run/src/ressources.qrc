@@ -27,6 +27,10 @@
         <file>images/score.png</file>
         <file>images/heart.png</file>
         <file>images/pegel.png</file>
+        <file>images/giantwheel_base.png</file>
+        <file>images/giantwheel_basket.png</file>
+        <file>images/kasten.png</file>
+        <file>images/giantwheel.png</file>
     </qresource>
     <qresource prefix="/levelFiles">
         <file>levelFiles/level1.txt</file>
