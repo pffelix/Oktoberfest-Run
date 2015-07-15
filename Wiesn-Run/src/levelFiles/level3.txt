@@ -50,7 +50,7 @@ Level3: Käfer-Zelt
 ------------
 
 Player,130,0
-Levellaenge,30000
+Levellaenge,29000
 
 Obstacle,800,0
 
@@ -265,7 +265,6 @@ Bier,26500,40
 Bier,26700,40
 
 # Bossgegner
-Obstacle,28000,0
 Boss,28400,0,0
 Plane,28900
 

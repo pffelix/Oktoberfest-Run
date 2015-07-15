@@ -8,7 +8,7 @@
 #include <QKeyEvent>
 
 /**
- * @brief  Die Input-Klasse aktualisiert die für das Spiel relevanten Tastatureingaben. Eine Instanz dieser Klasse wird innerhalb der game.h angelegt. Im Ojekt der Game Klasse wird über die Methode eventFilter ein QEvent Filter installiert. Dieser ruft bei neuen Events die Methode evaluatekeyEvent auf, welche prüft ob das Event ein KeyEvent war. Ist dies der Fall wird über die Methode updateKeys überprüft ob mit den aktuellen Eingaben ein Tastaturkombination erfolgt, welche für das Spiel relevant ist. Ist dies der Fall wird die aktuelle Tastatureingabe als Enum Wert Keyaction in keyactions gespeichert. War die Eingabe ein Buchstabe wird dieser im std::set keyletters als enum Keyletter gespeichert.  Das Game Objekt kann über die Methoden getKeyactions(), getKeyletters(), getLastKeyaction() und getLastKeyletter() alle für dies Spiel relevanten Eingaben aus den Variablen auslesen.
+ * @brief  Die Input-Klasse aktualisiert die für das Spiel relevanten Tastatureingaben. Eine Instanz dieser Klasse wird innerhalb des game Objekt angelegt. Im Ojekt der Game Klasse wird über die Methode eventFilter ein QEvent Filter installiert. Dieser ruft bei neuen Events die Methode evaluatekeyEvent() auf, welche prüft ob das Event ein KeyEvent war. Ist dies der Fall wird die aktuelle Tastatureingabe als zusätzlicher Enum in dem QSet keyevents gespeichert oder bei Loslassen der Taste gelöscht. Im Anschluss wird über die Methode updateKeys() überprüft ob mit allen aktuell gedrückten Eingaben (gespeichert in keyevents) eine Tastaturkombination erfolgt, welche für das Spiel relevant ist. Ist dies der Fall wird die aktuelle Tastatureingabe-Aktion als enum Keyaction in dem QSet keyactions gespeichert. War die Eingabe ein Buchstabe wird diese im std::set keyletters als char gespeichert. Das Game Objekt kann über die Methoden getKeyactions(), getKeyletters(), getLastKeyaction() und getLastKeyletter()alle, für das Spiel relevanten, Eingaben aus den Variablen auslesen.
  *
  * @author  Felix Pfreundtner
  */
@@ -18,7 +18,7 @@ public:
 
     /**
      * @var  enum Keyaction
-     * @brief  Keyaction definiert alle auszuwertenden Tastenkominbationen Bezeichner
+     * @brief  Keyaction definiert alle auszuwertenden Tastenkominbationen
      */
     enum Keyaction{
         noKeyaction,
@@ -118,7 +118,7 @@ private:
     QSet<int> keyactions;
     /**
      * @var  std::set<char> keyletters
-     * @brief  Die Variable keyletters speichert die Buchstaben als "strings" aller im Moment gepressten Buchstaben Tasten.
+     * @brief  Die Variable keyletters speichert die Buchstaben als char aller im Moment gepressten Buchstaben Tasten.
      */
     std::set<char> keyletters;
     /**

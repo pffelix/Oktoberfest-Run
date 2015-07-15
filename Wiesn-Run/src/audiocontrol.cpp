@@ -2,7 +2,7 @@
 #include "portaudio.h"
 
 /**
- * @brief  Konstruktor instanziiert ein Objekt der Klasse AudioControl. Es wird für jede audioEventgruppe type ein audio Objekt erstellt, welches unter anderem die Samples der zugehörigen WAVE Datei beinhaltet.
+ * @brief  Konstruktor instanziiert ein Objekt der Klasse AudioControl. Wird einmal zum Spielstart von dem game Objekt aufgerufen und ein Objekt audioOutput erstellt. Es wird für jede audioEventgruppe type ein audio Objekt erstellt, welches unter anderem die Samples der zugehörigen WAVE Datei beinhaltet.
  * @author  Felix Pfreundtner
  */
 AudioControl::AudioControl() {
@@ -81,7 +81,7 @@ AudioControl::~AudioControl() {
 }
 
 /**
- * @brief  updatePlayevents aktualisiert nach Aufruf über Game::step alle im Moment abgespielten, in der Liste "playevents" gespeicherten playStruct's mit aktuellen audioStruct's aus der übergebenen Liste audioevents.
+ * @brief  updatePlayevents aktualisiert nach Aufruf über Game::step alle im Moment abgespielten, in der Liste "playevents" gespeicherten playStruct's , mit aktuellen audioStructs aus der übergebenen Liste audioevents.
  * @param  std::list<struct audioStruct> *audioevents
  * @author  Felix Pfreundtner
  */
