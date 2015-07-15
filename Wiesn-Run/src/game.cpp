@@ -376,6 +376,9 @@ void Game::loadLevelFile(QString fileSpecifier) {
 
                 if (strlist.at(0) == "Player") {
                     if (strlist.length() != 3) {
+                        // Spielkritisch, daher Ende (eingefügt von Rupi)
+                        qDebug("Ungültiger Player-Eintrag");
+                        exit(-1);
                         throw std::string("Ungültiger Player-Eintrag: ");
                     } else {
                         // Erstelle das Spieler-Objekt und setze den playerObjPointer
