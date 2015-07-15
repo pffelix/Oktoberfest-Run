@@ -1,6 +1,0 @@
-doxygen doxygen_config
-cd Doxygen/latex
-make
-cd ../..
-mv Doxygen/latex/refman.pdf Dokumentation.pdf
-
