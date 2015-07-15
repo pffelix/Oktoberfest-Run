@@ -1600,10 +1600,10 @@ void Game::handleCollisions() {
  * @author Simon
  */
 void Game::updateScore() {
-    playerScore.distanceCovered = playerObjPointer->getPosX();
+    playerScore.distanceCovered = (playerObjPointer->getPosX() / 20);
     playerScore.enemiesKilled = playerObjPointer->getEnemiesKilled();
     playerScore.alcoholPoints = playerScore.alcoholPoints + (playerObjPointer->getAlcoholLevel() / 100);
-    playerScore.totalPoints = playerScore.distanceCovered + playerScore.enemiesKilled + playerScore.alcoholPoints;
+    playerScore.totalPoints = (playerScore.distanceCovered*4 + playerScore.enemiesKilled*1000 + playerScore.alcoholPoints) / 10;
 }
 
 
