@@ -6,4 +6,6 @@ Hinweise zum Kompilieren unter Linux
 
 Da die verwendeten Audio-Dateien zum Programmstart in den build-Ordner kopiert werden müssen, bedarf es einer kleinen Änderung des build-Schritts "Make". Bitte im QTCreator beim build-Schritt "Make" das Kommandozeilenargument "install" hinzufügen.
 
-Getestet wurde das Spiel auf Ubuntu und Debian mit QT Version 5.4.1
+Getestet wurde das Spiel auf folgenden Umgebungen:
+ - Ubuntu mit QT Version 5.2.1
+ - Debian mit QT Version 5.4.1
