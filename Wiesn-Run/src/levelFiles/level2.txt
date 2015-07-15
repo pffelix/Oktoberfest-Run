@@ -217,15 +217,15 @@ Obstacle,17935,150
 Tourist,17935,270,0
 
 # Hohe Ebene, schwierig zu erreichen, mit Belohnung
-Plane,18220,380
+Plane,18220,370
 Bier,18400,400
 Plane,18340,380
-Plane,18460,380
-Plane,18580,380
-Bier,18700,400
-Plane,18700,380
-Plane,18820,380
-Plane,18940,380
+Plane,18460,390
+Plane,18580,400
+Bier,18700,440
+Plane,18700,400
+Plane,18820,400
+Plane,18940,400
 
 # Ebene darunter, einfacher, dafür nur Hendl
 Plane,18300,130
@@ -238,6 +238,12 @@ Plane,18900,130
 
 Obstacle,18915,0
 Obstacle,18915,140
+
+Nur über zu erreichende Gegner
+Plane,19500,400
+Tourist,19500,420,0
+Plane,19650,240
+Tourist,19650,260,0
 
 # Bier am Ende
 Bier,19800,40
