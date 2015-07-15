@@ -1142,7 +1142,17 @@ void Game::calculateMovement() {
  * Da die Liste worldObjects in jedem Zeitschritt sortiert wird, müssen die Kollisionen nur für die nächsten Nachbarn
  * berechnet werden. Allerdings können durch ungünstige Lage auch Objekte kollidieren, die nicht direkt nebeneinander
  * in der Liste liegen. Dafür werden die fünf Nachbarn links und rechts jedes MovingObjects geprüft, falls vorhanden.
- * @todo Simon, willst du hier die normalen Kommentare noch einarbeiten und die Funktion genauer erklären? - Rupi
+ * Die bis zu fünf Nachbarn vor und nach dem Objekt werden in eine Liste möglicher Kollisionen aufgenommen.
+ * Für das aktuelle affectedObject wird zunächst die relative Lage zum aktuellen causingObject festgestellt. Dabei werden
+ * die booelschen Variablen "affectedLeftFromCausing" und "affectedAboveCausing" gesetzt.
+ * Abhängig von der relativen Lage werden die Überlappungen der Objekte geprüft und in die Variablen "overlayX" und
+ * "overlayY" gespeichert. Damit eine Kollision vorliegt, müssen die Überlappung in X- und Y-Richtung positiv sein.
+ * Sind beide Überlappungen positiv, so wird geprüft, welche Überlappung größer ist. Bei einer horizontalen Kollision ist die
+ * Überlappung in vertikaler Richtung größer. bei einer vertikalen Kollision ist die Überlappung in horizontaler Richtung größer.
+ * Sind die Überlappungen gleich groß, wird die Kollision als vertikal angesehen.
+ * Durch die bereits bekannte Lage der Objekte zueinander kann aus dem Wissen der Überlappungen auf die genaue Richtung
+ * der Kollision geschlossen werden. Für jede Kollision wird ein "collisionStruct" angelegt, welches in der Funktion "handleCollisions"
+ * abgearbeitet wird.
  * @author Simon
  */
 void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
@@ -1172,7 +1182,7 @@ void Game::detectCollision(std::list<GameObject*> *objectsToCalculate) {
                 ++counter;
             }
 
-            // Durchlaufe die Schleife möglicher Kollisionen, bis sie leer ist
+            // Durchlaufe die Liste möglicher Kollisionen, bis sie leer ist
             while (!(possibleCollisions.empty())) {
                 // Setze causingObject auf das erste Element in der Liste und lösche den ersten Listeneintrag
                 GameObject *causingObject = *possibleCollisions.begin();

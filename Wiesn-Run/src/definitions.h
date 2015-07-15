@@ -108,7 +108,6 @@ enum collisionDirection {
  * @brief Struktur für die Score des Spielers
  * In dieser Struktur werden Name des Spielers, getötete Gegner, zurückgelegte Entfernung und Alkohol-Punkte gespeichert.
  * Alkohol-Punkte erhält der Spieler für einen gewissen Pegel in einem Zeitabschnitt.
- * @todo Das Konzept der Alkohol-Punkte muss noch ausgearbeitet werden.
  * @author Simon
  */
 struct scoreStruct {
@@ -304,7 +303,6 @@ enum powerUpType {
 
 /**
  * @brief Struktur für die AudioLevels und Spielzustand
- *
  * @author Johann
  */
 struct stateStruct {
