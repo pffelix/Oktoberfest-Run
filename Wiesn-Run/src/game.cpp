@@ -212,6 +212,11 @@ void Game::menuInit() {
     menuHighscore = new Menu(new std::string("Highscores"), Menu::menuType::highscore);
     menuHighscore->addEntry("weida",menuHighscoreId_Next,true,gameMenuStart);
     menuHighscore->displayInit();
+
+    menuEnd = new Menu(new std::string(" "), Menu::menuType::highscore);
+    menuEnd->addEntry("Gewonnen!",menuId_NonClickable);
+    menuEnd->addEntry("Weida",menuEndId_Next,true,gameMenuName);
+    menuEnd->displayInit();
 }
 
 /**
@@ -371,6 +376,9 @@ void Game::loadLevelFile(QString fileSpecifier) {
 
                 if (strlist.at(0) == "Player") {
                     if (strlist.length() != 3) {
+                        // Spielkritisch, daher Ende (eingefügt von Rupi)
+                        qDebug("Ungültiger Player-Eintrag");
+                        exit(-1);
                         throw std::string("Ungültiger Player-Eintrag: ");
                     } else {
                         // Erstelle das Spieler-Objekt und setze den playerObjPointer
@@ -863,10 +871,14 @@ int Game::step() {
         // Level zu Ende?
         if (playerObjPointer->getPosX() - playerScale >= levelLength) {
             endGame();
-            setState(gameMenuName);
-            ///@todo Erfolgreich Schriftzug einfügen
+            setState(gameMenuEnd);
+            // Gewonnen anzeigen
+            menuEnd->clear();
+            menuEnd->addEntry("Gewonnen!",menuId_NonClickable);
+            menuEnd->addEntry("Weida",menuEndId_Next,true,gameMenuName);
+            menuEnd->displayInit();
 
-            // Sound für erfolgreichen abschluss spielen
+            // Sound für erfolgreichen Abschluss spielen
             audioCooldownstruct newAudio;
             newAudio.audioEvent = {4, background_levelfinished, audioDistance.background_levelfinished};
             newAudio.cooldown = audioCooldown.background_levelfinished;
@@ -885,8 +897,12 @@ int Game::step() {
         // Spieler tot?
         if (gameStats.gameOver) {
             endGame();
-            setState(gameMenuName);
-            ///@todo GameOver schriftzug einfügen
+            setState(gameMenuEnd);
+            // Gameover anzeigen
+            menuEnd->clear();
+            menuEnd->addEntry("Game Over!",menuId_NonClickable);
+            menuEnd->addEntry("Weida",menuEndId_Next,true,gameMenuName);
+            menuEnd->displayInit();
 
             //Audio event wenn der Spieler stirbt
             audioCooldownstruct newAudio;
@@ -1735,8 +1751,6 @@ void Game::updateAudioevents() {
 /**
  * @brief Grafik wird ausgegeben.
  *
- * @todo Flo, willst du hier die normalen Kommentare noch einarbeiten und die Funktion genauer erklären? - Rupi
- *
  * @param objectList Liste der Objekte (worldObjects)
  * @param playerPointer Pointer auf den Spieler, wird für Positionsabfrage gebraucht
  * @author Florian
@@ -1846,6 +1860,9 @@ void Game::setState(enum gameState newState) {
             break;
         case gameMenuHighscore:
             aktMenu = menuHighscore;
+            break;
+        case gameMenuEnd:
+            aktMenu = menuEnd;
             break;
     }
 }
