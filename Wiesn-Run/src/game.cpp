@@ -559,13 +559,13 @@ void Game::displayStatistics() {
 
     string name = "Name: ";
     name.append(playerScore.name);
-    string enemies = "Verstorbene: ";
+    string enemies = "Tote: ";
     enemies.append(to_string(playerScore.enemiesKilled));
-    string distance = "glafne Meter: ";
+    string distance = "Wegpunkte: ";
     distance.append(to_string(playerScore.distanceCovered));
-    string alk = "Promille: ";
+    string alk = "Alkohol: ";
     alk.append(to_string(playerScore.alcoholPoints));
-    string points = "Punkte:";
+    string points = "Gesamt:";
     points.append(to_string(playerScore.totalPoints));
 
     menuStatistics->addEntry(name,menuId_NonClickable,false);
