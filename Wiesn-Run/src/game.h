@@ -47,17 +47,6 @@ public:
     // Startet das die Game-Loop, wird einmalig von main() aufgerufen
     int step();
 
-    /// States des Spiels
-    struct stateStruct gameStats;
-    /// Liste von Kollisionen
-    std::list<struct collisionStruct> collisionsToHandle;
-
-    // Starten der Applikation
-    int start();
-
-    // Hilfsfunktion
-    void setState(enum gameState newState);
-
     /**
      * @brief Struktur für die Events.
      * Enthält affectedObject als Objekt, aus dessen Sicht die Kollision berechnet wurde. affectedObject ist immer ein MovingObject.
@@ -71,6 +60,17 @@ public:
         GameObject *causingObject;
         enum collisionDirection direction;
     };
+
+    /// States des Spiels
+    struct stateStruct gameStats;
+    /// Liste von Kollisionen
+    std::list<struct collisionStruct> collisionsToHandle;
+
+    // Starten der Applikation
+    int start();
+
+    // Hilfsfunktion
+    void setState(enum gameState newState);
 
 protected:
     void timerEvent(QTimerEvent *event);
