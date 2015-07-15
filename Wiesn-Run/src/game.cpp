@@ -762,6 +762,7 @@ int Game::step() {
             switch(aktStepMenu->getSelection()->id) {
                 case menuStartId_EndGame:
                     exitGameevent = true;
+                    break;
                 case menuLevelId_Demo:
                     startNewGame("level_test.txt",1);
                     setState(gameIsRunning);
