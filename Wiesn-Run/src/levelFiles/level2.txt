@@ -46,7 +46,7 @@ Level2: Im Zelt
 ------------
 
 Player,130,0
-Levellaenge,14000
+Levellaenge,20000
 
 # Dieses Level startet mit einem Hendl
 Hendl,800,40
@@ -146,9 +146,100 @@ Obstacle,12375,280
 Hendl,12150,40
 
 # Der erste Tourist - willkommen auf der Wiesn
-Tourist,13300,0,-2
+Tourist,13300,0,0
+
+# Bier unter Beschuss
+Obstacle,13500,0
+Bier,13500,140
+
+Obstacle,13900,0
+Tourist,13900,120,0
+
+# Zwei Ebenen, gefährlich oder nicht? mit Belohnung
+Plane,14200,130
+Obstacle,14185,0
+Plane,14320,130
+Plane,14440,130
+Plane,14560,130
+Plane,14680,130
+Plane,14320,280
+Plane,14440,280
+Plane,14560,280
+Plane,14680,280
+Plane,14800,280
+Plane,14920,280
+
+Security,14290,300
+Bier,14400,320
+
+Tourist,14400,0,2
+Tourist,14800,0,2
+
+Bier,1480,40
+
+Obstacle,15200,0
+Tourist,15200,120,0
+
+# Geschafft
+Hendl,15300,40
+Bier,15350,40
+
+
+Plane,15450,130
+Plane,15570,130
+Plane,15690,130
+Plane,15810,130
+Plane,15930,130
+Tourist,15570,150,0
+Tourist,15810,150,0
+
+# Ebene mit Löchern und Securitys, die immer größer werden
+Plane,16000,130
+Plane,16120,130
+Plane,16240,130
+
+Security,16450,150
+Plane,16480,130
+Plane,16600,130
+
+Security,16930,150
+Plane,16960,130
+Plane,17080,130
+
+Security,17410,150
+Plane,17440,130
+Plane,17560,130
+Plane,17680,130
+Plane,17800,130
+Plane,17920,130
+Obstacle,17935,0
+Obstacle,17935,150
+Tourist,17935,270,0
+
+# Hohe Ebene, schwierig zu erreichen, mit Belohnung
+Plane,18220,380
+Bier,18400,400
+Plane,18340,380
+Plane,18460,380
+Plane,18580,380
+Bier,18700,400
+Plane,18700,380
+Plane,18820,380
+Plane,18940,380
+
+# Ebene darunter, einfacher, dafür nur Hendl
+Plane,18300,130
+Plane,18420,130
+Hendl,18400,150
+Plane,18540,130
+Plane,18660,130
+Plane,18780,130
+Plane,18900,130
+
+Obstacle,18915,0
+Obstacle,18915,140
 
 # Bier am Ende
-Bier,13500,40
+Bier,19800,40
 
 # Ende
