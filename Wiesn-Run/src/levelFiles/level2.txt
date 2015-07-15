@@ -93,16 +93,16 @@ Security,5650,0
 Obstacle,5800,0
 
 # Die große Sturzmöglichkeit mit Türstehern zum abwerfen
-Security,6110,0
+#Security,6110,0
 Obstacle,6200,0
-Security,6200,120
+#Security,6200,120
 Obstacle,6290,0
 Obstacle,6290,120
-Security,6290,240
+#Security,6290,240
 Obstacle,6380,0
 Obstacle,6380,120
 Obstacle,6380,240
-Security,6380,360
+#Security,6380,360
 #Bier,6380,400
 Plane,6480,360
 Plane,6600,360
