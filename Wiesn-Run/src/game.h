@@ -29,20 +29,6 @@ using namespace std;
 
 
 /**
- * @brief Struktur für die Events.
- * Enthält affectedObject als Objekt, aus dessen Sicht die Kollision berechnet wurde. affectedObject ist immer ein MovingObject,
- * causingObject kann beides sein.
- * Die Art und Richtung der Kollision werden mit gespeichert.
- *
- * @author Simon, Johann
- */
-struct collisionStruct {
-    GameObject *affectedObject;
-    GameObject *causingObject;
-    enum collisionDirection direction;
-};
-
-/**
  * @brief Kern-Funktionalität des Spiels
  *
  * Innerhalb der main.cpp wird eine Instanz dieser Klasse angelegt,
@@ -60,6 +46,20 @@ public:
 
     // Startet das die Game-Loop, wird einmalig von main() aufgerufen
     int step();
+
+    /**
+     * @brief Struktur für die Events.
+     * Enthält affectedObject als Objekt, aus dessen Sicht die Kollision berechnet wurde. affectedObject ist immer ein MovingObject.
+     * causingObject ist das Objekt, mit dem affectedObject kollidiert.
+     * direction gibt die Richtung an, in der die Kollision stattgefunden hat
+     *
+     * @author Simon, Johann
+     */
+    struct collisionStruct {
+        GameObject *affectedObject;
+        GameObject *causingObject;
+        enum collisionDirection direction;
+    };
 
     /// States des Spiels
     struct stateStruct gameStats;
