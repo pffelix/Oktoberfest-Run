@@ -11,8 +11,9 @@
  * @param scene     : levelScene
  */
 RenderGUI::RenderGUI(QGraphicsScene *scene) {
-    //TextItem der Gesundheitsanzeige wird initalisiert
+    //Gesundheitsanzeigesymbol wird initalisiert
     this->showHealth.setPos(20, 15);
+    //Quelle: "https://openclipart.org/detail/21281/red-glossy-valentine-heart"
     this->showHealth.setPixmap(QPixmap(":/images/images/heart.png"));
 
     //Gesundheitsbalken wird initialisiert
@@ -21,18 +22,18 @@ RenderGUI::RenderGUI(QGraphicsScene *scene) {
     this->showHealthBar[1].setParentItem(&showHealth);
     this->showHealthBar[1].setRect(137,12,BARLENGTH+6,BARHEIGHT+6);
 
-    //TextItem der Scoreanzeige wird initalisiert
+    //Scoreanzeige wird initalisiert
     this->showScoreValue.setParentItem(&showHealth);
     this->showScoreValue.setPos(760, -15);
     this->showScoreValue.setDefaultTextColor(Qt::black);
     this->showScoreValue.setFont(QFont("Times",50));
 
-    //
+    //Scoreanzeigesymbol
     this->showScore.setParentItem(&showHealth);
     this->showScore.setPixmap(QPixmap(":/images/images/score.png"));
     this->showScore.setPos(550, 0);
 
-    //TextItem der Alkoholanzeige wird initalisiert
+    //Alkoholpegelsymbol wird initalisiert
     this->showAlcohol.setParentItem(&showHealth);
     this->showAlcohol.setPixmap(QPixmap(":/images/images/pegel.png"));
     this->showAlcohol.setPos(0, 75);
@@ -43,13 +44,15 @@ RenderGUI::RenderGUI(QGraphicsScene *scene) {
     this->showAlcoholBar[1].setParentItem(&showHealth);
     this->showAlcoholBar[1].setRect(137,87,BARLENGTH+6,BARHEIGHT+6);
 
-    //TextItem der Munitionssanzeige wird initalisiert
+    //Munitionssanzeige wird initalisiert
     this->showAmmoValue.setParentItem(&showHealth);
     this->showAmmoValue.setPos(760, 60);
     this->showAmmoValue.setDefaultTextColor(Qt::darkGreen);
     this->showAmmoValue.setFont(QFont("Times",50));
 
+    //Munitionssymbol wird initialisiert
     this->showAmmo.setParentItem(&showHealth);
+    // Quelle: "https://openclipart.org/detail/14854/beer-mug"
     this->showAmmo.setPixmap(QPixmap(":/images/images/ammo.png"));
     this->showAmmo.setPos(600, 75);
 
@@ -83,6 +86,7 @@ void RenderGUI::setPos(int x) {
  * @param stepCount : aktueller Step
  */
 void RenderGUI::setValues(int health, int alcohol, int ammo, int score, int stepCount) {
+    //Werte aktualisieren außer Alkohol
     this->showHealthBar[0].setRect(140,15,(static_cast<float>(health)/maxHealth)*BARLENGTH,BARHEIGHT);
     this->showAmmoValue.setPlainText(QString(QString::number(ammo)));
     this->showScoreValue.setPlainText(QString(QString::number(score)));
@@ -91,7 +95,7 @@ void RenderGUI::setValues(int health, int alcohol, int ammo, int score, int step
     if(alcohol>maxAlcohol) {
         this->showAlcoholBar[0].setRect(140,90,BARLENGTH,BARHEIGHT);
 
-        //Balken blinkt rot auf
+        //Balken blinkt abwechselnd rot und blau
         if(stepCount%(frameRate*2) == 0) {
             this->showAlcoholBar[0].setBrush(Qt::darkBlue);
         }
@@ -101,6 +105,7 @@ void RenderGUI::setValues(int health, int alcohol, int ammo, int score, int step
     }
     else {
         this->showAlcoholBar[0].setBrush(Qt::darkBlue);
+        //Alhoholwert aktualisieren
         this->showAlcoholBar[0].setRect(140,90,(static_cast<float>(alcohol)/maxAlcohol)*BARLENGTH,BARHEIGHT);
     }
 }

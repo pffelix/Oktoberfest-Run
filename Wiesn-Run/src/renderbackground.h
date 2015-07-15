@@ -41,6 +41,7 @@ private:
     QGraphicsPixmapItem backgroundThree;
     QGraphicsPixmapItem backgroundFour;
 
+    //PixmapItems für das Riesenrad
     QGraphicsPixmapItem giantWheel[3];
     QGraphicsPixmapItem giantWheelBasket[12];
 

@@ -15,6 +15,7 @@
  */
 RenderBackground::RenderBackground(QGraphicsScene *scene, int level) {
     //Hintergrundgrafiken werden initialisiert
+    //Quelle CrowdSilhoutte level 2 & 3 : "http://365psd.com/psd/happy-crowd-silhouettes-53766"
     this->backgroundOne.setPixmap(QPixmap(":/images/images/bg_lev"+ QString::number(level) + "_1.png"));
     this->backgroundTwo.setPixmap(QPixmap(":/images/images/bg_lev"+ QString::number(level) + "_2.png"));
     this->backgroundThree.setPixmap(QPixmap(":/images/images/bg_lev"+ QString::number(level) + "_3.png"));
@@ -24,22 +25,27 @@ RenderBackground::RenderBackground(QGraphicsScene *scene, int level) {
     this->backgroundTwo.setPos(imageLength,0);
     this->backgroundFour.setPos(imageLength,0);
 
+    //level 1?
     if(level == 1) {
+        //Riesenrad Base einstellen
         this->giantWheel[0].setPixmap(QPixmap(":/images/images/giantwheel_base.png"));
         this->giantWheel[0].setPos(800,335);
 
+        //Riesenrad Rad einstellen
         this->giantWheel[1].setPixmap(QPixmap(":/images/images/giantwheel.png"));
         this->giantWheel[1].setParentItem(&giantWheel[0]);
         this->giantWheel[1].setPos(-81,-225);
+        //legt Rotationspunkt in den Mittelpunkt des Rads
         this->giantWheel[1].setTransformOriginPoint(251,251);
 
+        //Riesenrad Körbe einstellen
         for(int i=0;i<12;i++) {
             double param = (30*i*PI)/180;
             this->giantWheelBasket[i].setPixmap(QPixmap(":/images/images/giantwheel_basket.png"));
             this->giantWheelBasket[i].setParentItem(&giantWheel[1]);
             this->giantWheelBasket[i].setPos(sin(param)*243+234,cos(param)*243+245);
+            //legt Rotationspunkt der Körper auf den Punkt der Aufhängung am Rad
             this->giantWheelBasket[i].setTransformOriginPoint(17,3);
-
         }
     }
 
@@ -108,11 +114,14 @@ void RenderBackground::updateBackgroundPos(int x, int level) {
 void RenderBackground::updateParallaxe(int x, int stepCount, int level) {
     this->setPos(x*0.8, &(this->backgroundOne));
     this->setPos(x*0.8, &(this->backgroundTwo));
-    this->setPos(x*0.2, &(this->giantWheel[0]));
 
     if(level == 1) {
+        this->setPos(x*0.2, &(this->giantWheel[0]));
+        //das Riesenrad dreht sich um einen halben Grad pro Step
         this->giantWheel[1].setRotation(-(stepCount/2));
         for(int i=0;i<12;i++) {
+            /*Die Körbe werden durch das Rad als Elternitem auch mit rotiert. Damit sie weiterhin senkrecht
+            nach unten hängen, müssen sie mit der invertierten Drehgeschwindigkeit des Rades rotiert werden*/
             this->giantWheelBasket[i].setRotation(stepCount/2);
         }
     }

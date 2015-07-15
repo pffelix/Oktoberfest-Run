@@ -35,7 +35,7 @@ public:
 
 private:
 
-    //PixmapItems der angezeigten Spielerwerte
+    //GraphicItems der angezeigten Spielerwerte
     QGraphicsPixmapItem showHealth;
     QGraphicsRectItem showHealthBar[2];
     QGraphicsPixmapItem showScore;

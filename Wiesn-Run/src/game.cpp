@@ -1765,7 +1765,7 @@ void Game::updateAudioevents() {
  * Der Maßstab ist zwar identisch, der Ursprung der Gamelogic Koordinaten befindent sich jedoch unten in der Mitte und bei
  * QT oben links.
  *
- * Grafiken wurden mit Paint selbst erstellt und gezeichnet, wenn nicht anders bei der Initialisierung angegeben.
+ * Grafiken wurden mit Paint :P selbst erstellt und gezeichnet, wenn nicht anders bei der Initialisierung angegeben.
  * @param objectList    : Liste der Objekte (worldObjects)
  * @param playerPointer : Pointer auf den Spieler, wird für Positionsabfrage gebraucht
  * @author Flo
