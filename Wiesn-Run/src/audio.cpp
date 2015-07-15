@@ -2,7 +2,7 @@
 
 /**
  * @brief  Konstruktor instanziiert ein Objekt der Klasse Audio. Wird mehrmals zum Spielstart von dem audioControl Objekt audioOutput aufgerufen.
- * @author  Felix Pfreundtner
+ * @author  Felix
  */
 Audio::Audio(std::string type_name) {
     source = type_name;
@@ -11,7 +11,7 @@ Audio::Audio(std::string type_name) {
 
 /**
  * @brief  Destruktor löscht ein Objekt der Klasse Audio
- * @author  Felix Pfreundtner
+ * @author  Felix
  */
 Audio::~Audio() {
 }
@@ -19,7 +19,7 @@ Audio::~Audio() {
 /**
  * @brief  Die Methode getSource gibt bei Aufruf den Namen des Objektes zurück, welcher dem Dateinamen der zugehörigen WAVE Datei entspricht.
  * @return  std::string source
- * @author  Felix Pfreundtner
+ * @author  Felix
  */
 std::string Audio::getSource() {
     return source;
@@ -28,7 +28,7 @@ std::string Audio::getSource() {
 /**
  * @brief  Methode getSample gibt bei Aufruf das Sample an Position = pos der zu Audioobjekt gehörigen Wave Datei mit Bittiefe 32 bit float zurück.
  * @return  float sample
- * @author  Felix Pfreundtner
+ * @author  Felix
  */
 float Audio::getSample(int pos) {
         //gebe Sample des Audioobjekts an der Stelle pos zurück
@@ -38,7 +38,7 @@ float Audio::getSample(int pos) {
 /**
  * @brief  Die Methode getSamplenumber gibt bei Aufruf die Anzahl an Samples, der zu Audioobjekt gehörigen Wave Datei zurück.
  * @return  int Instanzvariable samplenumber
- * @author  Felix Pfreundtner
+ * @author  Felix
  */
 int Audio::getSamplenumber() {
     return samplenumber;
@@ -47,7 +47,7 @@ int Audio::getSamplenumber() {
 
 /**
  * @brief  Die Methode readSamples liest bei Aufruf alle Samples der zu Audioobjekt gehörigen Wave Datei in die Variable samples ein. Eingelesen werden sollen RIFF Mono Wave Dateien mit 44100Hz Samplerate. Die Bittiefe ist hierbei variabel 8 oder 16bit. Es greift hierfür auf die zum Objekt gehörige, in der Ressourcendatenbank gespeicherte Wave Datei mit Pfadnamen "source" zurück. Die Methode wertet den fmt Header des Wave File aus und liest im Anschluss den data Chunk ein. Die Bittiefe wird in float konvertiert um eine Weiterbearbeitung der Samples ohne Dynamikverlust durchführen zu können.
- * @author  Felix Pfreundtner
+ * @author  Felix
  */
 void Audio::readSamples() {
     std::string sourcepath; // Pfad zur Wave Datei in den Ressourcendateien
@@ -145,7 +145,7 @@ void Audio::readSamples() {
  * @brief  Die Methode to16bitSample konvertiert ein 8 bit integer Sample in ein 16 bit Integer Sample. Ziel ist eine einheitlich Bearbeitung der Samples verschiedener Audioobjekte vornehmen zu können.
  * @param  quint8 sample8bit
  * @return  qint16 sample16bit
- * @author  Felix Pfreundtner
+ * @author  Felix
  */
 qint16 Audio::to16bitSample(quint8 sample8bit) {
     qint16 sample16bit;
@@ -156,7 +156,7 @@ qint16 Audio::to16bitSample(quint8 sample8bit) {
 
 /**
  * @brief  Die Methode normalize normalisiert den 16 bit float vector samples. Es wird hierfür die größte Betrag-Amplitude eines Sample in samples bestimmt. Diese Amplitude wird auf den maximalen signed Integer 16 Bit Wert gesetzt. Alle anderen Samples werden entsprechend ihres Verhältnises zur größten Betrag-Amplitude skaliert.
- * @author  Felix Pfreundtner
+ * @author  Felix
  */
 void Audio::normalize() {
     // maxabs speichert die großte Betrag-Amplitude eines Samples aus sample

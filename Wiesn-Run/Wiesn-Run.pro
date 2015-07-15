@@ -98,4 +98,4 @@ INSTALLS += \
 
 
 # Workaround für den strip-Error unter Ubuntu (Rupert).
-QMAKE_STRIP = echo
+#QMAKE_STRIP = echo

@@ -122,7 +122,7 @@ struct scoreStruct {
 
 /**
  * @brief  Enum für den audioType, welcher eine audioEventgruppe definiert und in audioControl angibt welches WAVE File zum audioType abgespielt werden soll.
- * @author  Felix Pfreundtner
+ * @author  Felix
  */
 
 enum audioType {
@@ -275,7 +275,7 @@ typedef struct {
  *
  * Ist gerade das Level 1 aktiv so wird in jedem Step ein audioStruct mit id=... und type=background_level1 an die Liste angehängt.
  * Bei Background Musik ist distance=0.5. Dies bewirkt dass sie leiser als Playersounds (distance = 0) abgespielt wird.
- * @author  Felix Pfreundtner
+ * @author  Felix
  */
 struct audioStruct {
     int id;
