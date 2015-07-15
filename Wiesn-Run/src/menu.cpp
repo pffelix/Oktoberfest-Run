@@ -83,7 +83,7 @@ int Menu::displayInit() {
             (*it)->showEntry.setFont(QFont("Times",60,66));
         }
         else {
-            (*it)->showEntry.setPos(310,200 + 80*(*it)->position );
+            (*it)->showEntry.setPos(310,190 + 80*(*it)->position );
             (*it)->showEntry.setDefaultTextColor(Qt::darkBlue);
             (*it)->showEntry.setFont(QFont("Times",50));
         }

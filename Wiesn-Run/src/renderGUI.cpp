@@ -7,8 +7,8 @@
 /**
  * @brief Konstruktor für alle Spielerwert Anzeigen
  * Die Grafikelemente der Anzeigen werden initialisiert, eingestellt und der Scene hinzugefügt
+ * Alle Elemente bekommen die Gesundheitsanzeige als Elternobjekt zugewiesen.
  * @param scene     : levelScene
- * @author Flo
  */
 RenderGUI::RenderGUI(QGraphicsScene *scene) {
     //TextItem der Gesundheitsanzeige wird initalisiert
@@ -66,7 +66,6 @@ RenderGUI::~RenderGUI() {
  * sorgt für eine Positionsänderung identisch mit der des Spielers auf der X-Achse
  * (Anzeigen bleiben auf den Spieler zentriert)
  * @param x     : x-Wert der Positionsänderung des Spielers im aktuellen Step
- * @author Flo
  */
 void RenderGUI::setPos(int x) {
     this->showHealth.setPos(this->showHealth.x()+x, this->showHealth.y());
@@ -81,7 +80,7 @@ void RenderGUI::setPos(int x) {
  * @param alcohol   : altueller Alkoholpegelwert
  * @param ammo      : aktueller Munitionsstand
  * @param score     : aktueller Punktestad
- * @author Flo
+ * @param stepCount : aktueller Step
  */
 void RenderGUI::setValues(int health, int alcohol, int ammo, int score, int stepCount) {
     this->showHealthBar[0].setRect(140,15,(static_cast<float>(health)/maxHealth)*BARLENGTH,BARHEIGHT);

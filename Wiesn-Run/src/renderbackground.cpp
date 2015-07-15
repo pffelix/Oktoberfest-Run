@@ -1,13 +1,14 @@
 #include "renderbackground.h"
 
 #include <QGraphicsScene>
-#include <math.h>       /* sin */
+#include <math.h>       /* sin,cos */
 
 #define PI 3.14159265
 
 /**
  * @brief Konstruktor für alle Hintergrundgrafiken
- * Hintergrundgrafiken werden initialisiert, positioniert und der Scene hinzugefügt
+ * Hintergrundgrafiken werden initialisiert, positioniert und der Scene hinzugefügt.
+ * Auch das Riesenrad in Level 1 wird hier initialisiert.
  * @param scene     : levelScene
  * @param level     : aktuelles Level
  * @author Flo
@@ -52,27 +53,28 @@ RenderBackground::RenderBackground(QGraphicsScene *scene, int level) {
     scene->addItem(&(this->backgroundFour));
 }
 
+/**
+ * @brief Destruktor
+ */
 RenderBackground::~RenderBackground() {
-
 }
 
 /**
- * @brief RenderBackground::setPos
+ * @brief verändern Position von Hintergrundgrafiken.
  * Funktion positioniert Hintergrundgrafiken neu.(nur "x" ändert sich, "y" ist immer 0)
  * @param x          : x-Position
  * @param background : Hintergrundgrafikitem
- * @author Flo
  */
 void RenderBackground::setPos(int x, QGraphicsPixmapItem *background) {
     background->setPos(background->x() + x , background->y());
 }
 
 /**
- * @brief RenderBackground::updateBackgroundPos
+ * @brief schiebt Hintergrundgrafiken vor den Spieler wenn dieser an ihnen vorbeigelaufen ist.
  * Immer wenn eine Hintergrundgrafik durch Spieler-Vorwärtsbewegung nicht mehr sichtbar ist wird sie
  * wieder nach vorne, vor den Spieler versetzt. So ist ein ständig sichtbarer Hintergrund gewährleistet.
  * @param x     : x-Position des linken Bildrandes im Level
- * @author Flo
+ * @param level : aktuelles Level
  */
 void RenderBackground::updateBackgroundPos(int x, int level) {
     if(x >= this->backgroundOne.x() + imageLength) {
@@ -95,11 +97,13 @@ void RenderBackground::updateBackgroundPos(int x, int level) {
 }
 
 /**
- * @brief RenderBackground::updateParallaxe
+ * @brief bewegt Parallaxe Ebenen mit einem bestimmten Anteil der Spielergeschwindigkeit.
  * Die Position der hinteren Hintergrundebene wird laufend so aktualisiert. Und zwar so dass sie sich mit
- * halber Geschwindigkeit des Spielers bewegt und eine Parallaxeeffekt entsteht.
- * @param x     : x-Wert der Positionsänderung des Spielers im aktuellen Step
- * @author Flo
+ * mit einem gewissen Teil der Geschwindigkeit des Spielers bewegt und eine Parallaxeeffekt entsteht.
+ * Hier wird auch das Riesenrad rotiert.
+ * @param x         : x-Wert der Positionsänderung des Spielers im aktuellen Step
+ * @param stepCount : aktueller step
+ * @param level     : aktuelles level
  */
 void RenderBackground::updateParallaxe(int x, int stepCount, int level) {
     this->setPos(x*0.8, &(this->backgroundOne));
