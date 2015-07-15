@@ -23,27 +23,31 @@ RenderBackground::RenderBackground(QGraphicsScene *scene, int level) {
     this->backgroundTwo.setPos(imageLength,0);
     this->backgroundFour.setPos(imageLength,0);
 
-   /* this->giantWheel[0].setPixmap(QPixmap(":/images/images/giantwheel_base.png"));
-    this->giantWheel[0].setPos(800,426);
+    if(level == 1) {
+        this->giantWheel[0].setPixmap(QPixmap(":/images/images/giantwheel_base.png"));
+        this->giantWheel[0].setPos(800,335);
 
-    this->giantWheel[1].setPixmap(QPixmap(":/images/images/giantwheel.png"));
-    this->giantWheel[1].setParentItem(&giantWheel[0]);
-    this->giantWheel[1].setPos(-15,-165);
-    this->giantWheel[1].setTransformOriginPoint(186,186);
+        this->giantWheel[1].setPixmap(QPixmap(":/images/images/giantwheel.png"));
+        this->giantWheel[1].setParentItem(&giantWheel[0]);
+        this->giantWheel[1].setPos(-81,-225);
+        this->giantWheel[1].setTransformOriginPoint(251,251);
 
-    for(int i=0;i<12;i++) {
-        double param = (30*i*PI)/180;
-        this->giantWheelBasket[i].setPixmap(QPixmap(":/images/images/giantwheel_basket.png"));
-        this->giantWheelBasket[i].setParentItem(&giantWheel[1]);
-        this->giantWheelBasket[i].setPos(sin(param)*178+169,cos(param)*178+182);
-        this->giantWheelBasket[i].setTransformOriginPoint(17,3);
+        for(int i=0;i<12;i++) {
+            double param = (30*i*PI)/180;
+            this->giantWheelBasket[i].setPixmap(QPixmap(":/images/images/giantwheel_basket.png"));
+            this->giantWheelBasket[i].setParentItem(&giantWheel[1]);
+            this->giantWheelBasket[i].setPos(sin(param)*243+234,cos(param)*243+245);
+            this->giantWheelBasket[i].setTransformOriginPoint(17,3);
 
-    }*/
+        }
+    }
 
     //Grafiken werden der Scene hinzugefügt
     scene->addItem(&(this->backgroundOne));
     scene->addItem(&(this->backgroundTwo));
-    //scene->addItem(&(this->giantWheel[0]));
+    if(level == 1) {
+        scene->addItem(&(this->giantWheel[0]));
+    }
     scene->addItem(&(this->backgroundThree));
     scene->addItem(&(this->backgroundFour));
 }
@@ -70,7 +74,7 @@ void RenderBackground::setPos(int x, QGraphicsPixmapItem *background) {
  * @param x     : x-Position des linken Bildrandes im Level
  * @author Flo
  */
-void RenderBackground::updateBackgroundPos(int x) {
+void RenderBackground::updateBackgroundPos(int x, int level) {
     if(x >= this->backgroundOne.x() + imageLength) {
         this->setPos(imageLength*2, &(this->backgroundOne));
     }
@@ -83,9 +87,11 @@ void RenderBackground::updateBackgroundPos(int x) {
     if(x >= this->backgroundFour.x() + imageLength) {
         this->setPos(imageLength*2, &(this->backgroundFour));
     }
-    /*if(x >= this->giantWheel[0].x() + imageLength) {
-        this->setPos(imageLength*2, &(this->giantWheel[0]));
-    }*/
+    if(level == 1) {
+        if(x >= this->giantWheel[0].x() + imageLength) {
+            this->setPos(imageLength*1.5, &(this->giantWheel[0]));
+        }
+    }
 }
 
 /**
@@ -95,13 +101,15 @@ void RenderBackground::updateBackgroundPos(int x) {
  * @param x     : x-Wert der Positionsänderung des Spielers im aktuellen Step
  * @author Flo
  */
-void RenderBackground::updateParallaxe(int x, int stepCount) {
+void RenderBackground::updateParallaxe(int x, int stepCount, int level) {
     this->setPos(x*0.8, &(this->backgroundOne));
     this->setPos(x*0.8, &(this->backgroundTwo));
-    //this->setPos(x*0.2, &(this->giantWheel[0]));
+    this->setPos(x*0.2, &(this->giantWheel[0]));
 
-    /*this->giantWheel[1].setRotation(-(stepCount/2));
-    for(int i=0;i<12;i++) {
-        this->giantWheelBasket[i].setRotation(stepCount/2);
-    }*/
+    if(level == 1) {
+        this->giantWheel[1].setRotation(-(stepCount/2));
+        for(int i=0;i<12;i++) {
+            this->giantWheelBasket[i].setRotation(stepCount/2);
+        }
+    }
 }

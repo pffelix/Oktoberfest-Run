@@ -1753,10 +1753,10 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
                        playerPointer->getAmmunatiuon(),playerScore.totalPoints, stepCount);
 
     //Parralaxe Positionsupdate
-    showBackground->updateParallaxe(playerStepMov, stepCount);
+    showBackground->updateParallaxe(playerStepMov, stepCount, gameStats.actLevel);
 
     //Hintergrund Positionsupdate
-    showBackground->updateBackgroundPos(playerPointer->getPosX() - playerOffset - playerScale*0.5);
+    showBackground->updateBackgroundPos(playerPointer->getPosX() - playerOffset - playerScale*0.5, gameStats.actLevel);
 
     //Die GameObjectliste wird durchgelaufen
     for (std::list<GameObject*>::iterator it = objectList->begin(); it != objectList->end(); ++it) {
