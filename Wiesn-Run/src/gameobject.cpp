@@ -45,8 +45,14 @@ GameObject::GameObject(int posX, int posY, objectType type) {
         height = playerScale * 2;
 
         //Grafik - Obstacle Images initialisieren
-        setPixmap(QPixmap(":/images/images/barrel.png"));
-        setPos(posX - length*0.5, yOffset - posY - height - 7);
+        if(rand()%2 == 0) {
+            setPixmap(QPixmap(":/images/images/barrel.png"));
+            setPos(posX - length*0.5, yOffset - posY - height - 7);
+        }
+        else {
+            setPixmap(QPixmap(":/images/images/kasten.png"));
+            setPos(posX - length*0.5, yOffset - posY - height);
+        }
         qDebug("   Obstacle erstellt");
         break;
     }
