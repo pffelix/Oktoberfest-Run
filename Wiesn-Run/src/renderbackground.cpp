@@ -1,6 +1,9 @@
 #include "renderbackground.h"
 
 #include <QGraphicsScene>
+#include <math.h>       /* sin */
+
+#define PI 3.14159265
 
 /**
  * @brief Konstruktor für alle Hintergrundgrafiken
@@ -20,9 +23,27 @@ RenderBackground::RenderBackground(QGraphicsScene *scene, int level) {
     this->backgroundTwo.setPos(imageLength,0);
     this->backgroundFour.setPos(imageLength,0);
 
+   /* this->giantWheel[0].setPixmap(QPixmap(":/images/images/giantwheel_base.png"));
+    this->giantWheel[0].setPos(800,426);
+
+    this->giantWheel[1].setPixmap(QPixmap(":/images/images/giantwheel.png"));
+    this->giantWheel[1].setParentItem(&giantWheel[0]);
+    this->giantWheel[1].setPos(-15,-165);
+    this->giantWheel[1].setTransformOriginPoint(186,186);
+
+    for(int i=0;i<12;i++) {
+        double param = (30*i*PI)/180;
+        this->giantWheelBasket[i].setPixmap(QPixmap(":/images/images/giantwheel_basket.png"));
+        this->giantWheelBasket[i].setParentItem(&giantWheel[1]);
+        this->giantWheelBasket[i].setPos(sin(param)*178+169,cos(param)*178+182);
+        this->giantWheelBasket[i].setTransformOriginPoint(17,3);
+
+    }*/
+
     //Grafiken werden der Scene hinzugefügt
     scene->addItem(&(this->backgroundOne));
     scene->addItem(&(this->backgroundTwo));
+    //scene->addItem(&(this->giantWheel[0]));
     scene->addItem(&(this->backgroundThree));
     scene->addItem(&(this->backgroundFour));
 }
@@ -39,7 +60,7 @@ RenderBackground::~RenderBackground() {
  * @author Flo
  */
 void RenderBackground::setPos(int x, QGraphicsPixmapItem *background) {
-    background->setPos(background->x() + x , 0);
+    background->setPos(background->x() + x , background->y());
 }
 
 /**
@@ -53,15 +74,18 @@ void RenderBackground::updateBackgroundPos(int x) {
     if(x >= this->backgroundOne.x() + imageLength) {
         this->setPos(imageLength*2, &(this->backgroundOne));
     }
-    else if(x >= this->backgroundTwo.x() + imageLength) {
+    if(x >= this->backgroundTwo.x() + imageLength) {
         this->setPos(imageLength*2, &(this->backgroundTwo));
     }
-    else if(x >= this->backgroundThree.x() + imageLength) {
+    if(x >= this->backgroundThree.x() + imageLength) {
         this->setPos(imageLength*2, &(this->backgroundThree));
     }
-    else if(x >= this->backgroundFour.x() + imageLength) {
+    if(x >= this->backgroundFour.x() + imageLength) {
         this->setPos(imageLength*2, &(this->backgroundFour));
     }
+    /*if(x >= this->giantWheel[0].x() + imageLength) {
+        this->setPos(imageLength*2, &(this->giantWheel[0]));
+    }*/
 }
 
 /**
@@ -71,7 +95,13 @@ void RenderBackground::updateBackgroundPos(int x) {
  * @param x     : x-Wert der Positionsänderung des Spielers im aktuellen Step
  * @author Flo
  */
-void RenderBackground::updateParallaxe(int x) {
-    this->setPos(x/2, &(this->backgroundOne));
-    this->setPos(x/2, &(this->backgroundTwo));
+void RenderBackground::updateParallaxe(int x, int stepCount) {
+    this->setPos(x*0.8, &(this->backgroundOne));
+    this->setPos(x*0.8, &(this->backgroundTwo));
+    //this->setPos(x*0.2, &(this->giantWheel[0]));
+
+    /*this->giantWheel[1].setRotation(-(stepCount/2));
+    for(int i=0;i<12;i++) {
+        this->giantWheelBasket[i].setRotation(stepCount/2);
+    }*/
 }

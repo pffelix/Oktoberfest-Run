@@ -90,7 +90,7 @@ void RenderGUI::setValues(int health, int alcohol, int ammo, int score, int step
 
     //AlkoholMax überschritten?
     if(alcohol>maxAlcohol) {
-        this->showAlcoholBar[0].setRect(140,60,BARLENGTH,BARHEIGHT);
+        this->showAlcoholBar[0].setRect(140,90,BARLENGTH,BARHEIGHT);
 
         //Balken blinkt rot auf
         if(stepCount%(frameRate*2) == 0) {
@@ -101,6 +101,7 @@ void RenderGUI::setValues(int health, int alcohol, int ammo, int score, int step
         }
     }
     else {
+        this->showAlcoholBar[0].setBrush(Qt::darkBlue);
         this->showAlcoholBar[0].setRect(140,90,(static_cast<float>(alcohol)/maxAlcohol)*BARLENGTH,BARHEIGHT);
     }
 }
