@@ -1,0 +1,42 @@
+Grundsätzlich:
+// normaler Kommentar
+/* normaler 
+		mehrzeiliger
+		Kommentar
+ */
+
+/// Doxygen-Kommentar
+/** mehrzeiliger
+ * Doxygen-Kommentar
+ */
+ 
+Vor Funktionen:
+/**
+ * \brief main-Funktion
+ *     wird als erstes aufgerufen
+ *	mehr zu den Parametern: http://www.stack.nl/~dimitri/doxygen/manual/commands.html
+ * \param parA Beschreibung
+ * \return Status-Code, 0 bei Success
+ * \author XY
+*/
+function(int parA) {
+	abcde;
+	return -1;
+}
+
+
+/// spezieller Kommentar kurz: klasseA oder FunktionB macht dies und das
+class klasseA {
+private:
+  /// Kurzbeschreibung Variable a
+  /** Langbeschreibung Variable a */
+  int a;
+  /** Kurzbeschreibung Variable b geht bis zum Punkt. Was jetzt
+   *  kommt, ist die ausführliche Beschreibung.
+   */
+  int b;
+public:
+};
+
+
+
