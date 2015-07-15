@@ -3,7 +3,7 @@
 
 /**
  * @brief  Konstruktor instanziiert ein Objekt der Klasse AudioControl. Wird einmal zum Spielstart von dem game Objekt aufgerufen, welche ein Instanz audioOutput erstellt. Es wird für jede audioEventgruppe type ein audio Objekt erstellt, welches unter anderem die Samples der zugehörigen WAVE Datei beinhaltet.
- * @author  Felix Pfreundtner
+ * @author  Felix
  */
 AudioControl::AudioControl() {
     ///
@@ -74,7 +74,7 @@ AudioControl::AudioControl() {
 
 /**
  * @brief  Destruktor löscht ein Objekt der Klasse AudioControl
- * @author  Felix Pfreundtner
+ * @author  Felix
  */
 AudioControl::~AudioControl() {
 
@@ -83,7 +83,7 @@ AudioControl::~AudioControl() {
 /**
  * @brief  Die Methode updatePlayevents aktualisiert nach Aufruf über Game::step alle im Moment abgespielten, in der Liste "playevents" gespeicherten playStruct's , mit aktuellen audioStructs aus der übergebenen Liste audioevents.
  * @param  std::list<struct audioStruct> *audioevents
- * @author  Felix Pfreundtner
+ * @author  Felix
  */
 void AudioControl::updatePlayevents(std::list<struct audioStruct> *audioevents){
     // erstelle neues temporäres audioStruct, welches stets das aktuelle audioStruct Element der Liste audioevents beinhaltet.
@@ -176,7 +176,7 @@ void AudioControl::updatePlayevents(std::list<struct audioStruct> *audioevents){
 
 /**
  * @brief  Die Methode playInitialize initialisiert die Abspielbibliothek Portaudio, öffnet einen PortAudio Stream und startet eine Callback Audiowiedergabe
- * @author  Felix Pfreundtner
+ * @author  Felix
  */
 void AudioControl::playInitialize(){
     // initialisiere Port Audio
@@ -226,7 +226,7 @@ void AudioControl::playInitialize(){
  * @param  const PaStreamCallbackTimeInfo* timeInfo,
  * @param  PaStreamCallbackFlags statusFlags
  * @return  int returncode
- * @author  Felix Pfreundtner
+ * @author  Felix
  */
 int AudioControl::instancepaCallback(
                            const void *inputBuffer,
@@ -314,7 +314,7 @@ int AudioControl::instancepaCallback(
 
 /**
  * @brief  Die Methode playTerminate stoppt bei Aufruf die PortAudio Audioausgabe, beendet im Anschluss den Portaudio Stream und beendet zuletzt PortAudio.
- * @author  Felix Pfreundtner
+ * @author  Felix
  */
 void AudioControl::playTerminate(){
 
