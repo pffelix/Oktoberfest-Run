@@ -16,7 +16,7 @@ Input::~Input() {
 }
 
 /**
- * @brief  Nach Aufruf über Game::eventFilter wertet evaluatekeyEvent alle im Momment gleichzeitig gepressten Tastatur Eingaben aus und speichert die zugehörigen enum ids in der Instanzvariable keyevents. Wird eine Taste nicht mehr gedrück wird die enum id in keyevents gelöscht. Wird eine Taste neu gedrückt wird die enum id in keyevents hinzugefügt. Um die relevanten Tastaturkombinationen auszuwerten wird die Methode updateKeys aufgerufen.
+ * @brief  Nach Aufruf über Game::eventFilter wertet die Methode evaluatekeyEvent alle im Momment gleichzeitig gepressten Tastatur Eingaben aus und speichert die zugehörigen enum ids in der Instanzvariable keyevents. Wird eine Taste nicht mehr gedrück wird die enum id in keyevents gelöscht. Wird eine Taste neu gedrückt wird die enum id in keyevents hinzugefügt. Um die relevanten Tastaturkombinationen auszuwerten wird die Methode updateKeys aufgerufen.
  * @param  QEvent *event
  * @author  Felix Pfreundtner
  */
@@ -37,7 +37,7 @@ void Input::evaluatekeyEvent(QEvent *event) {
 }
 
 /**
- * @brief  updateKeys berechnet aus allen in keyevents gespeicherten Tastatureingaben die für das Spiel relevanten Kombinationen und speichert diese im QSet keyactions oder set keyletters. Jede aktuell gedrückte Tastaturkombination ist im QSet keyactions als Integer gespeichert, welche über die enumeration Keyaction adressiert wird. Jeder aktuell gedrückte Buchstabe ist im set keyletters als char gespeichert, welche über die enumeration Keyletter und einen int to char Typecast adressiert wird. Wird durch die Methode evaluatekeyEvent ein KeyRelease oder KeyPress Event aufgezeichnet, so nach Aufruf der Methode das QSet keyactions und set keyletters gelöscht. Im Anschluss wird geprüft ob in der neuen Situation in keyevents relevante Tastaturkombinationen vorhanden sind. Sind Tasten oder Tastenkombinationen gedrückt worden, welche für das Spiel relevant sind so wird die zur Aktion gehörige enum Keyaction integer ID im QSet keyactions hinzugefügt. Ist ein Buchstabe in keyevents gespeichert, so wird der zugehörige char im set keyletters gespeichert.
+ * @brief  Die Methode updateKeys berechnet aus allen in keyevents gespeicherten Tastatureingaben die für das Spiel relevanten Kombinationen und speichert diese im QSet keyactions oder set keyletters. Jede aktuell gedrückte Tastaturkombination ist im QSet keyactions als Integer gespeichert, welche über die enumeration Keyaction adressiert wird. Jeder aktuell gedrückte Buchstabe ist im set keyletters als char gespeichert, welche über die enumeration Keyletter und einen int to char Typecast adressiert wird. Wird durch die Methode evaluatekeyEvent ein KeyRelease oder KeyPress Event aufgezeichnet, so nach Aufruf der Methode das QSet keyactions und set keyletters gelöscht. Im Anschluss wird geprüft ob in der neuen Situation in keyevents relevante Tastaturkombinationen vorhanden sind. Sind Tasten oder Tastenkombinationen gedrückt worden, welche für das Spiel relevant sind so wird die zur Aktion gehörige enum Keyaction integer ID im QSet keyactions hinzugefügt. Ist ein Buchstabe in keyevents gespeichert, so wird der zugehörige char im set keyletters gespeichert.
  * @author  Felix Pfreundtner
  */
 void Input::updateKeys() {
@@ -399,7 +399,7 @@ void Input::updateKeys() {
 }
 
 /**
- * @brief  getKeyactions gibt bei Aufruf das QSet keyactions zurück, welches alle im Moment gedrückten Spielaktionen als Enum beinhaltet. Jeder Tastaturkombination wird eine Integer ID zugeordnet welche im QSet keyactions gespeichert ist. Über die Enumeration Input::Keyaction ist jeder Spielbefehl mit dem zugehörigen Index in keyactions verknüft. Möchte man nun bespielsweise abfragen ob der Spieler im Moment schießt so überprüft man: input->getKeyactions().contains(Input::Keyaction::Shoot) == True.
+ * @brief  Die Methode getKeyactions gibt bei Aufruf das QSet keyactions zurück, welches alle im Moment gedrückten Spielaktionen als Enum beinhaltet. Jeder Tastaturkombination wird eine Integer ID zugeordnet welche im QSet keyactions gespeichert ist. Über die Enumeration Input::Keyaction ist jeder Spielbefehl mit dem zugehörigen Index in keyactions verknüft. Möchte man nun bespielsweise abfragen ob der Spieler im Moment schießt so überprüft man: input->getKeyactions().contains(Input::Keyaction::Shoot) == True.
  * @return  QSet<int> Instanzvariable keyactions
  * @author  Felix Pfreundtner
  */
@@ -408,7 +408,7 @@ QSet<int> Input::getKeyactions() {
 }
 
 /**
- * @brief  getKeyletters gibt bei Aufruf das set keyletters zurück, welches alle im Moment gedrückten Buchstaben als Enum beinhaltet. Jeder Buchststaben Taste wird ein String Buchstaben zugeordnet, welcher im set keyletters gespeichert ist. Über die Enumeration Input::Keyletter ist jeder Buchstabe mit dem zugehörigen Index in keyletters verknüft.
+ * @brief  Die Methode getKeyletters gibt bei Aufruf das set keyletters zurück, welches alle im Moment gedrückten Buchstaben als Enum beinhaltet. Jeder Buchststaben Taste wird ein String Buchstaben zugeordnet, welcher im set keyletters gespeichert ist. Über die Enumeration Input::Keyletter ist jeder Buchstabe mit dem zugehörigen Index in keyletters verknüft.
  * @return  std::set<char> Instanzvariable keyletters
  * @author  Felix Pfreundtner
  */
@@ -417,7 +417,7 @@ std::set<char> Input::getKeyletters() {
 }
 
 /**
- * @brief  Gibt die letzte gedrücke Spielaktion als Enum Keyaction zurück und setzt die Variable lastKeyaction auf noKeyaction. Wird für die Menüführung gebraucht, da ein dauerhaftes Auswerten der Tasten dort zu Sprüngen beim Auswählen der Menü Einträge führt.
+ * @brief  Die Methode getLastKeyaction gibt die letzte gedrücke Spielaktion als Enum Keyaction zurück und setzt die Variable lastKeyaction auf noKeyaction. Wird für die Menüführung gebraucht, da ein dauerhaftes Auswerten der Tasten dort zu Sprüngen beim Auswählen der Menü Einträge führt.
  * @return  Enum Keyaction Instanzvariable lastKeyaction
  * @author  Rupert, Felix
  */
@@ -428,7 +428,7 @@ Input::Keyaction Input::getLastKeyaction() {
 }
 
 /**
- * @brief  Gibt letzten gedrücken Buchstaben als enum Keyletter zurück und setzt die Variable lastKeyletter auf noKeyletter. Wurde eine Taste gedrückt (lastKeyletter_return != noKeyletter) so kann aus dem Enum Keyletter über eine Typenumwandlung der zugehörige Char berechnet werden: a = (char)lastKeyletter_return. Verwendung findet die Methode bei der Eingabe des Highscore Namens.
+ * @brief  Die Methode getLastKeyletter gibt letzten gedrücken Buchstaben als enum Keyletter zurück und setzt die Variable lastKeyletter auf noKeyletter. Wurde eine Taste gedrückt (lastKeyletter_return != noKeyletter) so kann aus dem Enum Keyletter über eine Typenumwandlung der zugehörige Char berechnet werden: a = (char)lastKeyletter_return. Verwendung findet die Methode bei der Eingabe des Highscore Namens.
  * @return  Enum Keyletter Instanzvariable lastKeyletter
  * @author  Felix
  */

@@ -73,7 +73,7 @@ private:
                            PaStreamCallbackFlags statusFlags);
 
     /**
-     * @brief  staticpaCallback ist die statische Callback Methode der AudioControl Klasse. Die Methode wird immer dann aufgerufen, wenn der PortAudio Stream einen neuen Ausgabeblock benötigt, da der letzte abgespielt wurde. Die Methode ruft die Methode instancepaCallback auf, welche nicht statisch ist und auf alle Instanz Variablen und Methoden (des von Game erzeugten AudioControl Ojektes audioOutput) zugreifen kann. Dies ermöglicht einen einfachen Austausch von audiobezogenen Informationen zwischen Game Thread und Portaudio Wiedergabethread.
+     * @brief  Die Methode staticpaCallback ist die statische Callback Methode der AudioControl Klasse. Die Methode wird immer dann aufgerufen, wenn der PortAudio Stream einen neuen Ausgabeblock benötigt, da der letzte abgespielt wurde. Die Methode ruft die Methode instancepaCallback auf, welche nicht statisch ist und auf alle Instanz Variablen und Methoden (des von Game erzeugten AudioControl Ojektes audioOutput) zugreifen kann. Dies ermöglicht einen einfachen Austausch von audiobezogenen Informationen zwischen Game Thread und Portaudio Wiedergabethread.
  * @param  const void *inputBuffer
  * @param  void *outputBuffer
  * @param  unsigned long framesPerBuffer,

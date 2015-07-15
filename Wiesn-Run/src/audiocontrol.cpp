@@ -81,7 +81,7 @@ AudioControl::~AudioControl() {
 }
 
 /**
- * @brief  updatePlayevents aktualisiert nach Aufruf über Game::step alle im Moment abgespielten, in der Liste "playevents" gespeicherten playStruct's , mit aktuellen audioStructs aus der übergebenen Liste audioevents.
+ * @brief  Die Methode updatePlayevents aktualisiert nach Aufruf über Game::step alle im Moment abgespielten, in der Liste "playevents" gespeicherten playStruct's , mit aktuellen audioStructs aus der übergebenen Liste audioevents.
  * @param  std::list<struct audioStruct> *audioevents
  * @author  Felix Pfreundtner
  */
@@ -175,7 +175,7 @@ void AudioControl::updatePlayevents(std::list<struct audioStruct> *audioevents){
 
 
 /**
- * @brief  playInitialize initialisiert die Abspielbibliothek Portaudio, öffnet einen PortAudio Stream und startet eine Callback Audiowiedergabe
+ * @brief  Die Methode playInitialize initialisiert die Abspielbibliothek Portaudio, öffnet einen PortAudio Stream und startet eine Callback Audiowiedergabe
  * @author  Felix Pfreundtner
  */
 void AudioControl::playInitialize(){
@@ -219,7 +219,7 @@ void AudioControl::playInitialize(){
 
 
 /**
- * @brief  instancepaCallback wird von Portaudio aufgerufen wenn der letze Audioblock abgespielt wurde und ein neuer Ausgabe Audioblock geniert werden muss.
+ * @brief  Die Methode instancepaCallback wird von Portaudio aufgerufen wenn der letze Audioblock abgespielt wurde und ein neuer Ausgabe Audioblock geniert werden muss.
  * @param  const void *inputBuffer
  * @param  void *outputBuffer
  * @param  unsigned long framesPerBuffer,
@@ -313,7 +313,7 @@ int AudioControl::instancepaCallback(
 }
 
 /**
- * @brief  playTerminate stoppt bei Aufruf die PortAudio Audioausgabe, beendet im Anschluss den Portaudio Stream und beendet zuletzt PortAudio.
+ * @brief  Die Methode playTerminate stoppt bei Aufruf die PortAudio Audioausgabe, beendet im Anschluss den Portaudio Stream und beendet zuletzt PortAudio.
  * @author  Felix Pfreundtner
  */
 void AudioControl::playTerminate(){
