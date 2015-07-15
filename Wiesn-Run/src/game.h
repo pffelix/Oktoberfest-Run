@@ -182,6 +182,8 @@ private:
     Menu *menuHighscore;
     /// Hilfemenü
     Menu *menuHelp;
+    /// Menu nach Spielende (Gameover/Gewonnen)
+    Menu *menuEnd;
 
     /// zur Unterscheidung und Identifizierung der Menü-Einträge
     enum menuIds {
@@ -193,7 +195,8 @@ private:
         menuStatisticsId_Next,  // Statistik
         menuNameId_Next,        // Name eingeben
         menuHighscoreId_Next,   // Highscoretabelle
-        menuHelpId_Back         // Hilfemenü
+        menuHelpId_Back,        // Hilfemenü
+        menuEndId_Next          // GameOver
     };
 
     /// stepCount wird mit jedem Step um ein erhöht

@@ -212,6 +212,11 @@ void Game::menuInit() {
     menuHighscore = new Menu(new std::string("Highscores"), Menu::menuType::highscore);
     menuHighscore->addEntry("weida",menuHighscoreId_Next,true,gameMenuStart);
     menuHighscore->displayInit();
+
+    menuEnd = new Menu(new std::string(" "), Menu::menuType::highscore);
+    menuEnd->addEntry("Gewonnen!",menuId_NonClickable);
+    menuEnd->addEntry("Weida",menuEndId_Next,true,gameMenuName);
+    menuEnd->displayInit();
 }
 
 /**
@@ -863,10 +868,14 @@ int Game::step() {
         // Level zu Ende?
         if (playerObjPointer->getPosX() - playerScale >= levelLength) {
             endGame();
-            setState(gameMenuName);
-            ///@todo Erfolgreich Schriftzug einfügen
+            setState(gameMenuEnd);
+            // Gewonnen anzeigen
+            menuEnd->clear();
+            menuEnd->addEntry("Gewonnen!",menuId_NonClickable);
+            menuEnd->addEntry("Weida",menuEndId_Next,true,gameMenuName);
+            menuEnd->displayInit();
 
-            // Sound für erfolgreichen abschluss spielen
+            // Sound für erfolgreichen Abschluss spielen
             audioCooldownstruct newAudio;
             newAudio.audioEvent = {4, background_levelfinished, audioDistance.background_levelfinished};
             newAudio.cooldown = audioCooldown.background_levelfinished;
@@ -885,8 +894,12 @@ int Game::step() {
         // Spieler tot?
         if (gameStats.gameOver) {
             endGame();
-            setState(gameMenuName);
-            ///@todo GameOver schriftzug einfügen
+            setState(gameMenuEnd);
+            // Gameover anzeigen
+            menuEnd->clear();
+            menuEnd->addEntry("Game Over!",menuId_NonClickable);
+            menuEnd->addEntry("Weida",menuEndId_Next,true,gameMenuName);
+            menuEnd->displayInit();
 
             //Audio event wenn der Spieler stirbt
             audioCooldownstruct newAudio;
@@ -1846,6 +1859,9 @@ void Game::setState(enum gameState newState) {
             break;
         case gameMenuHighscore:
             aktMenu = menuHighscore;
+            break;
+        case gameMenuEnd:
+            aktMenu = menuEnd;
             break;
     }
 }
