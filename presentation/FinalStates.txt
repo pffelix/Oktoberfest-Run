@@ -1,0 +1,6 @@
+-Schuss:
+	*SpeedX = 3 x maxSpeed
+
+
+-Gegner:
+	*fireRate = 2 x frameRate
