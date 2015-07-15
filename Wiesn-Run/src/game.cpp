@@ -1751,8 +1751,6 @@ void Game::updateAudioevents() {
 /**
  * @brief Grafik wird ausgegeben.
  *
- * @todo Flo, willst du hier die normalen Kommentare noch einarbeiten und die Funktion genauer erklären? - Rupi
- *
  * @param objectList Liste der Objekte (worldObjects)
  * @param playerPointer Pointer auf den Spieler, wird für Positionsabfrage gebraucht
  * @author Florian
