@@ -9,14 +9,15 @@
 #include <QGraphicsPixmapItem>
 
 /**
- * @brief Anzeigen der Spielerwerte-Klasse
+ * @brief Anzeigen der Spielerwerte-Klasse.
  * Eine Instanz wird bei jedem Levelstart in der Funktion Game::startNewGame angelegt.
  * Die Klasse initialisiert alle Grafikelemente die mit der Anzeige von Spielerwerten zu tun hat
  * (Gesundheit, Alkoholpegel, Munitionsvorrat, Punkte). Außerdem werden hier auch die angezeigten
  * Werte im Spiel fortlaufend aktualisiert.
  * Alle Elemente sind "Kinder" der Gesundheitsanzeige um Positionsaktualisierungen zu vereinfachen
  * (Kindelemente verhalten sich immer relativ um Elternobjekt und werden auch automatisch mit diesem
- * der Scene hinzugefügt bzw. auch wieder entfernt)
+ * der Scene hinzugefügt bzw. auch wieder entfernt.
+ * Auch bewegen Sie sich immer automatisch mit dem Elternobjekt zusammen).
  * @author Flo
  */
 class RenderGUI {

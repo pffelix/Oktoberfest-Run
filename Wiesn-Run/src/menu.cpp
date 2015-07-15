@@ -59,7 +59,7 @@ std::string *Menu::getTitle() {
 /**
  * @brief Initialisiert das sichtbare Menü.
  * Muss immer nach anlegen der Menü Entrys aufgerufen werden.
- * Jeder Menüeintrag hat auch QGraphicsTextItem welches hier eingestellt entsprechend eingestellt wird
+ * Jeder Menüeintrag hat auch ein QGraphicsTextItem welches hier entsprechend eingestellt wird
  * @return 0 bei Erfolg
  * @author Flo
  */
@@ -87,6 +87,7 @@ int Menu::displayInit() {
             (*it)->showEntry.setDefaultTextColor(Qt::darkBlue);
             (*it)->showEntry.setFont(QFont("Times",50));
         }
+        //Items der Scene hinzufügen
         menuScene->addItem(&(*it)->showEntry);
     }
     return 0;

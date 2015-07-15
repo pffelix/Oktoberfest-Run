@@ -1750,11 +1750,25 @@ void Game::updateAudioevents() {
 }
 
 /**
- * @brief Grafik wird ausgegeben.
+ * @brief gibt die Grafik aus und arbeitet alle Aufgaben ab die damit zusammenhängen.
+ *  - Die Anzeigen für Leben, Pegel, Munition, Punkte werden fortlaufend aktualisiert und bewegen sicht mit dem
+ *    Spieler mit, damit sie immer an der gleichen Position vom Fenster sichtbar bleiben.
+ *  - Die Positionen der Hintergrundgrafiken werden hier aktualisert, sowie die Bewegungen der Hintergrundebenen
+ *    relativ zum Spieler ausgeführt damit der Parallaxeeffekt entsteht.
+ *  - Es wird geprüft ob Spieler oder Gegnergrafiken getauscht(Bewegungsanimation) oder gespiegelt(Richtungswechsel)
+ *    werden sollen und ggf. wird das ausgeführt.
+ *  - Die Positionen aller MovingObjects werden geupdatet.
+ *  - Am Schluss wird die QGraphicsView Instanz "window" wieder auf den Spieler zentriert.
+ *  So bewegt sich der Spieler zwar durch das level, sichtbar läuft er jedoch auf der Stelle und das level bewegt sich auf ihn zu.
  *
- * @param objectList Liste der Objekte (worldObjects)
- * @param playerPointer Pointer auf den Spieler, wird für Positionsabfrage gebraucht
- * @author Florian
+ * Grundsätzlich müssen immer die Koordinaten der Gamelogic in QT-Koordinaten umgerechnet werden.
+ * Der Maßstab ist zwar identisch, der Ursprung der Gamelogic Koordinaten befindent sich jedoch unten in der Mitte und bei
+ * QT oben links.
+ *
+ * Grafiken wurden mit Paint selbst erstellt und gezeichnet, wenn nicht anders bei der Initialisierung angegeben.
+ * @param objectList    : Liste der Objekte (worldObjects)
+ * @param playerPointer : Pointer auf den Spieler, wird für Positionsabfrage gebraucht
+ * @author Flo
  */
 void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPointer) {
     //Berechnung der X-Positionsänderung des Spielers im aktuellen Step
@@ -1795,7 +1809,6 @@ void Game::renderGraphics(std::list<GameObject*> *objectList, Player *playerPoin
                                     yOffset - aktMovingObject->getPosY() - aktMovingObject->getHeight());
         }
     }
-
     //View wird wieder auf den Spieler zentriert
     window->centerOn(playerPointer->getPosX() - playerOffset - (playerScale/2) + (WINDOWLENGTH/2), (WINDOWHEIGHT/2));
 }
