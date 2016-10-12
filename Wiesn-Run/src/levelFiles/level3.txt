@@ -266,7 +266,6 @@ Bier,26700,40
 
 # Bossgegner
 Boss,28400,0,0
-Plane,28900
 
 # Das letzte Bier...laut Postillon in 90% der Fälle schlecht
 Bier,29300

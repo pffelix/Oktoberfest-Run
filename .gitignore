@@ -3,4 +3,6 @@
 *.pro.user*
 build*
 Doxygen/*
+Project/*
+Build alt
 
