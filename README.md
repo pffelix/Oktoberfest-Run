@@ -4,17 +4,13 @@
 </p>
 <br>
 Oktoberfest-Run, or in Bavarian language Wiesn-Run, is a C++ Game that allows the user to experience the Oktoberfest on the own PC.
-
+<br>
 For developing and testing we used following environments:
 
  - Ubuntu with QT Version 5.2.1
  - Debian with QT Version 5.3.2
  - Windows with QT Version 5.4.1
 
-Hinweise zum Kompilieren unter Linux
-+Unter Linux muss zum Kompilieren die Audiobibliothek PortAudio vorhanden sein. Genau genommen sollte es die Version 19+svn20111121-1 sein. Unter Debian/Ubuntu genügt es, das Paket portaudio19-dev zu installieren. Dann sollte sich unter dem Pfad /usr/lib/x86_64-linux-gnu die Datei libportaudiocpp.so befinden.
-+Im Release-Mode gelten striktere Laufzeitregeln als im Debug-Mode. Durch einen Bug in der Linux-Version der portaudio-Bibliothek kann das Spiel unter einigen Linux-Varianten nicht ausgeführt werden, wenn es im Release-Modus kompiliert wurde. In diesem Fall muss das Spiel im Debug-Modus kompiliert werden.
- -> In der audiocontrol.cpp werden Meldungen vor und nach dem Aufruf der Bibliothektsfunktion Pa_Initialize() ausgegeben. Im Debug-Modus werden die Meldungen von und nach dem Aufruf ausgegeben und das Spiel gestartet. Im Release-Modus wird auf einigen Systemen nur die Meldung vor Pa_Initialize() ausgegeben, danach stürzt das Spiel ab.
+Notes for compiling under Linux, the PortAudio audio library must be present for compiling. Strictly speaking, it should be version 19+svn20111121-1. Under Debian/Ubuntu it is sufficient to install the portaudio19-dev package. Then under the path /usr/lib/x86_64-linux-gnu you should find the file libportaudiocpp.so. Stricter runtime rules apply in release mode than in debug mode. Due to a bug in the Linux version of the portaudio library, the game cannot be run on some Linux flavors when compiled in release mode. In this case the game must be compiled in debug mode. -> In audiocontrol.cpp messages are output before and after the call of the library function Pa_Initialize(). In debug mode the messages are output from and after the call and the game is started. In release mode, on some systems only the message before Pa_Initialize() is output.
 
-Da die verwendeten Audio-Dateien zum Programmstart in den build-Ordner kopiert werden müssen, bedarf es einer kleinen Änderung des build-Schritts "Make". Bitte im QTCreator beim build-Schritt "Make" das Kommandozeilenargument "install" hinzufügen.
-
+Since the used audio files have to be copied into the build folder to start the program, a small change of the build step "Make" is required. Please add the command line argument "install" to the build step "Make" in the QTCreator.
