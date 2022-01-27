@@ -3,9 +3,7 @@
 <img src="images/app.png">
 </p>
 <br>
-Oktoberfest-Run, or in Bavarian language Wiesn-Run, is a C++ Game that allows the user to experience the Oktoberfest on the own PC.
-<br>
-For developing and testing we used following environments:
+Oktoberfest-Run, or in Bavarian language Wiesn-Run, is a C++ Game that allows the user to experience the Oktoberfest on the own PC. For developing and testing we used following environments:
 
  - Ubuntu with QT Version 5.2.1
  - Debian with QT Version 5.3.2
