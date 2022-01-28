@@ -8,7 +8,6 @@ Oktoberfest-Run, or in Bavarian language Wiesn-Run, is a C++ Game that allows th
 <br>
 ### Setup
 For developing and testing following environments are required:
-
  - Ubuntu with QT Version 5.2.1
  - Debian with QT Version 5.3.2
  - Windows with QT Version 5.4.1
