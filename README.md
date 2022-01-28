@@ -19,3 +19,4 @@ The PortAudio audio library must be present for compiling. Strictly speaking, it
 Since the used audio files have to be copied into the build folder to start the program, a small change of the build step "Make" is required. Please add the command line argument "install" to the build step "Make" in the QTCreator.
 
 ### Authors
+Simon Gasse, Johannes Bruckner, Felix Pfreundtner, Rupert Amann, Florian Kälber
